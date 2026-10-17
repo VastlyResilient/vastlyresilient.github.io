@@ -138,12 +138,26 @@ details.recall .a p{margin:0 0 .5em}
 .toc .how{margin:16px 0;color:var(--mut)}
 
 @media (max-width:640px){
-  .pg{padding:48px 16px 54px}
-  .cover h1{font-size:2.4em}
-  .chapter h1{font-size:1.55em}
-  table{font-size:.8em}
+  .pg{padding:44px 12px 50px}
+  .cover{min-height:calc(100vh - 120px);padding:10px}
+  .cover h1{font-size:1.9em;margin:0 0 8px}
+  .cover .kicker{margin-bottom:10px;font-size:10px}
+  .cover .subtitle{margin:0 auto 12px;font-size:.92em}
+  .cover .cimg{max-width:52%;margin:2px 0 12px}
+  .cover .rule{margin:0 auto 10px}
+  .chapter h1{font-size:1.5em}
+  table{font-size:.74em}
+  th,td{padding:5px 6px}
   td.c1{white-space:normal}
-  .art{max-width:85%}
+  .art{max-width:66%;margin:12px auto}
+  .toc h1{font-size:1.6em}
+  .toc .part{margin:14px 0 3px;font-size:12.5px}
+  .toc a.t{padding:5px 0;font-size:.88em}
+  .toc .how{margin:10px 0}
+  .box{padding:11px 13px;margin:12px 0}
+  .stats{grid-template-columns:1fr 1fr;gap:7px}
+  .lead{font-size:1em}
+  .fig{margin:12px 0}
 }
 @media print{
   #bar,#barbot,#aapanel,#prog,#scrim,#drawer{display:none!important}
