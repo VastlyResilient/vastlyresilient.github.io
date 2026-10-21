@@ -11,6 +11,7 @@
 <title>Asking the Right Questions</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="claude:viewport-fit-sides" content="cover">
+<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Caveat:wght@600;700&family=Public+Sans:wght@400;500;600;700&display=swap">
 <style>
@@ -607,10 +608,10 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
 .next.locked span{font-size:clamp(14px,4.1vw,17px);letter-spacing:.04em}
 .shake{animation:wob .45s ease-in-out}
 @keyframes wob{30%{transform:rotate(-1.2deg)}60%{transform:rotate(1.2deg)}}
-.ghost{position:absolute;z-index:8;width:38px;height:44px;margin:-4px 0 0 -12px;pointer-events:none;display:none}
-.ghost.on{display:block}
-.ghost svg{width:38px;height:44px;filter:drop-shadow(0 3px 4px rgba(14,31,63,.25))}
-.ghost i{position:absolute;left:-2px;top:-14px;width:28px;height:28px;border-radius:50%;border:3px solid var(--verm);opacity:0}
+.ghostHand{position:absolute;z-index:8;width:38px;height:44px;margin:-4px 0 0 -12px;pointer-events:none;display:none}
+.ghostHand.on{display:block}
+.ghostHand svg{width:38px;height:44px;filter:drop-shadow(0 3px 4px rgba(14,31,63,.25))}
+.ghostHand i{position:absolute;left:-2px;top:-14px;width:28px;height:28px;border-radius:50%;border:3px solid var(--verm);opacity:0}
 /* read the owner's answers */
 .vtabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
 .vtabs button{border-radius:10px;border:1.5px solid var(--sand3);background:var(--cream);min-height:38px;font-family:var(--display);font-weight:800;font-size:14.5px;text-transform:uppercase;color:var(--navy);padding:3px 6px}
@@ -715,6 +716,22 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
 
 .exb .bub{padding:4px 10px;font-size:13px}.exb .bub small{font-size:10.5px}
 .hit:not(.nosee)::before{top:-6px;right:-6px;box-shadow:0 0 0 2px var(--paper)}
+
+.sigRow{display:flex;gap:8px;flex-wrap:wrap}
+.listenBtn{display:inline-flex;align-items:center;gap:8px}
+.listenBtn svg{width:15px;height:15px}
+.listenBtn .pa,.listenBtn.playing .pl{display:none}.listenBtn.playing .pa{display:inline}
+.listenBtn.noaudio{display:none}
+.eq{display:none;align-items:flex-end;gap:2px;height:14px}
+.listenBtn.playing .eq{display:inline-flex}
+.eq b{width:3px;background:var(--verm);border-radius:2px;height:4px;animation:eqb .8s ease-in-out infinite alternate}
+.eq b:nth-child(2){animation-delay:-.3s}.eq b:nth-child(3){animation-delay:-.55s}
+@keyframes eqb{to{height:14px}}
+.sig.playing{box-shadow:0 0 0 2px var(--c)}
+.sig.playing .spk{animation:spkp .6s ease-in-out infinite alternate}
+@keyframes spkp{to{opacity:.4}}
+.sigRow>*{flex:none;white-space:nowrap}
+.card .ra{min-height:150px}
 </style>
 
 </head>
@@ -839,7 +856,7 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
       <div class="wrap">
         <div class="pocketRow"><svg viewBox="0 0 40 52" aria-hidden="true" style="width:26px;height:34px"><g class="pop"><rect x="4" y="2" width="32" height="48" rx="6" fill="#142B55"/><rect x="8" y="8" width="24" height="34" rx="2" fill="#FFF4DE"/></g><path class="draw" d="M12 16 h16 M12 23 h16 M12 30 h10" stroke="#EE6A2C" stroke-width="2.5"/></svg><p class="eyebrow" id="pocketTitle">Read along</p></div>
         <h2 class="t2">The 8 questions, <span>out loud.</span></h2>
-        <p class="lead">A read-along of all 8 questions, in visit order. <b class="k">Say each one out loud as it lights up.</b> Saying it, not just reading it, is what makes it stick.</p>
+        <p class="lead">All 8, in visit order. <b class="k">Say each one out loud as it lights up.</b> Saying it, not just reading it, makes it stick.</p>
         <div class="box ra" id="ra" aria-live="polite"></div>
         <div class="raCtl"><button class="sq" id="raPrev" type="button" aria-label="Previous question"><svg viewBox="0 0 20 20"><path d="M12 4 6 10l6 6" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="btnA" id="raPlay" type="button">Pause</button><div class="raDots" id="raDots"></div><button class="sq" id="raNext" type="button" aria-label="Next question"><svg viewBox="0 0 20 20"><path d="m8 4 6 6-6 6" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
         <button class="btnA ghost" id="copyPocket" type="button" style="min-height:38px;padding:5px 12px;font-size:15px">Copy all 8 to my phone</button>
@@ -861,11 +878,11 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
       <div class="wrap">
         <p class="eyebrow">Spot the signals</p>
         <svg class="art" viewBox="0 0 360 34" aria-hidden="true" style="max-height:34px"><path class="draw" d="M8 22 H250" stroke="#F2B33D" stroke-width="14" stroke-linecap="round" opacity=".55"/><g class="pop"><path d="M256 6 l22 22 -10 4 -18 -18z" fill="#142B55"/><path d="M262 2 l26 26 l8 -8 l-26 -26z" fill="#2E6CCB"/><path d="M248 30 l8 -8 4 4z" fill="#F2B33D"/></g><text x="300" y="26" font-family="Caveat,cursive" font-weight="700" font-size="20" fill="#C64A1C" class="pop">mark it</text></svg>
-        <p class="mute" style="font-size:13.5px">Mike (an example owner) says this. Find the signals before you tap.</p>
+        <p class="mute" style="font-size:13.5px">Listen to Mike (an example owner) or read along. Find the signals before you tap Show.</p>
         <div class="box quote" id="quote">
           <p>July comes and <mark class="s-rep">the phones<sup>repeat</sup></mark> are nuts. After five it goes to voicemail. <mark class="s-work">We just call people back in the morning<sup>workaround</sup></mark>, but half already booked somebody else. <mark class="s-emo">(sighs)<sup>energy</sup></mark> I send <mark class="s-num">fifteen quotes a week<sup>number</sup></mark> and never chase them. <mark class="s-one">Only I know how to price those.<sup>one person</sup></mark> <mark class="s-alw">Always done it that way.<sup>always</sup></mark> Honestly, <mark class="s-rep">the phones<sup>repeat</sup></mark> are the biggest thing.</p>
         </div>
-        <button class="btnA" id="sigToggle" type="button" aria-pressed="false" data-g="show">Show the signals</button>
+        <div class="sigRow"><button class="btnA ghost listenBtn noaudio" id="mikeBtn" type="button" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="pl" d="M4 2.5v11l9-5.5z" fill="currentColor"/><path class="pa" d="M4 2.5h3v11H4zM9 2.5h3v11H9z" fill="currentColor"/></svg><span>Hear Mike</span><i class="eq"><b></b><b></b><b></b></i></button><button class="btnA" id="sigToggle" type="button" aria-pressed="false" data-g="show">Show the signals</button></div>
         <div class="found" id="found" hidden>
           <div><p><b>Dig first:</b> after-hours calls (said twice).</p></div><div><p><b>Ask:</b> how many of the 15 quotes become jobs?</p></div>
         </div>
@@ -1022,7 +1039,7 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
       </div>
     </section>
 
-    <div class="ghost" id="ghost" aria-hidden="true"><svg viewBox="0 0 48 56"><path d="M18 30 V8 q0 -5 5 -5 t5 5 v16 l2 -1 q4 -1 5 3 l1 1 q4 -1 5 3 l1 1 q4 -1 4 4 v10 q0 12 -12 12 h-6 q-7 0 -11 -6 l-9 -13 q-2 -4 2 -6 q3 -1 5 2z" fill="#FFF4DE" stroke="#142B55" stroke-width="2.6" stroke-linejoin="round"/></svg><i></i></div>
+    <div class="ghostHand" id="ghost" aria-hidden="true"><svg viewBox="0 0 48 56"><path d="M18 30 V8 q0 -5 5 -5 t5 5 v16 l2 -1 q4 -1 5 3 l1 1 q4 -1 5 3 l1 1 q4 -1 4 4 v10 q0 12 -12 12 h-6 q-7 0 -11 -6 l-9 -13 q-2 -4 2 -6 q3 -1 5 2z" fill="#FFF4DE" stroke="#142B55" stroke-width="2.6" stroke-linejoin="round"/></svg><i></i></div>
     <div class="morehint" id="morehint" hidden><span>scroll a little ↓</span></div>
   </main>
 
@@ -1427,12 +1444,21 @@ var sigEx=document.getElementById('sigEx');
 sigEx.innerHTML='<p class="handnote">Tap a signal to hear what it sounds like.</p>';
 function showSig(i){var s=SIGS[i];document.querySelectorAll('[data-sig]').forEach(function(b,k){b.setAttribute('aria-pressed',String(k===i));b.classList.remove('playing');});
   sigEx.innerHTML='<p class="row"><b>Sounds like</b><span class="q">'+esc(s[3])+'</span></p><p class="row"><b>What it means</b>'+s[4]+'</p><p class="row"><b>Your move</b><span class="say">'+esc(s[5])+'</span></p>';fadeIn(sigEx);
-  if(curAudio){try{curAudio.pause();}catch(e){}}
+  stopAudio();
   if(audioOK[s[2]]){curAudio=new Audio(AUDIO_BASE+s[2]);var b=document.querySelector('[data-sig="'+i+'"]');b.classList.add('playing');curAudio.addEventListener('ended',function(){b.classList.remove('playing');});curAudio.play().catch(function(){b.classList.remove('playing');});}
   checkOverflow();}
 document.getElementById('sigs').addEventListener('click',function(e){var b=e.target.closest('[data-sig]');if(b)showSig(+b.dataset.sig);});
 (function(){var g='';for(var i=0;i<45;i++){var h=5+Math.abs(Math.sin(i*1.7))*22;g+='<rect x="'+(i*8)+'" y="'+(15-h/2)+'" width="5" height="'+h+'" rx="2.5" fill="'+(i%9===4?'#EE6A2C':'#2E6CCB')+'" style="animation-delay:-'+(i*.07).toFixed(2)+'s"/>';}document.getElementById('waveArt').innerHTML=g;})();
 var sigBtn=document.getElementById('sigToggle'),quote=document.getElementById('quote');
+/* full read of Mike's quote */
+var mikeBtn=document.getElementById('mikeBtn'),mikeA=null;
+(function(){try{var t=new Audio();t.preload='metadata';t.addEventListener('loadedmetadata',function(){mikeBtn.classList.remove('noaudio');});t.src=AUDIO_BASE+'mike-transcript.mp3';}catch(e){}})();
+function mikeSet(on){mikeBtn.classList.toggle('playing',on);mikeBtn.setAttribute('aria-pressed',String(on));mikeBtn.querySelector('span').textContent=on?'Pause':'Hear Mike';}
+mikeBtn.addEventListener('click',function(){if(mikeA&&!mikeA.paused){mikeA.pause();mikeSet(false);return;}
+  stopAudio();if(!mikeA){mikeA=new Audio(AUDIO_BASE+'mike-transcript.mp3');mikeA.addEventListener('ended',function(){mikeSet(false);mikeA.currentTime=0;});}
+  mikeA.play().then(function(){mikeSet(true);}).catch(function(){mikeSet(false);});});
+function stopAudio(){try{if(curAudio)curAudio.pause();}catch(e){}try{if(mikeA&&!mikeA.paused){mikeA.pause();mikeSet(false);}}catch(e){}document.querySelectorAll('.sig.playing').forEach(function(x){x.classList.remove('playing');});}
+
 sigBtn.addEventListener('click',function(){var on=!quote.classList.contains('show');quote.classList.toggle('show',on);document.getElementById('found').hidden=!on;sigBtn.setAttribute('aria-pressed',String(on));sigBtn.textContent=on?'Hide the signals':'Show the signals';
   if(on&&!RM)document.querySelectorAll('#found>div').forEach(function(d,k){d.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:350,delay:k*120,fill:'backwards'});});checkOverflow();});
 
@@ -1603,7 +1629,7 @@ function show(i,dir){if(i<0||i>=cards.length)return;if(!NAME&&i>0)i=0;var prev=c
   prevBtn.disabled=i===0;nextBtn.classList.remove('unlock');updateNav();
   try{history.replaceState(null,'','#'+id);}catch(e){}
   if(NAME&&i>0)store('atrq-card-'+NAME,String(i));
-  ghostStop();animateCard(c);armIdle();setTimeout(function(){if(cards[cur]===c)ghostDemo(c);},RM?0:1600);requestAnimationFrame(checkOverflow);if(c===raCard)raStart();else raClear();
+  ghostStop();stopAudio();animateCard(c);armIdle();setTimeout(function(){if(cards[cur]===c)ghostDemo(c);},RM?0:1600);requestAnimationFrame(checkOverflow);if(c===raCard)raStart();else raClear();
   if(c.querySelector('#tlBox')&&!tlBox.innerHTML)showTL(0);}
 function step(d){if(d>0&&cur>=0){var c=cards[cur];if((stopOf(cur)==='hello'&&!NAME)||!isOpen(c)){nextBtn.classList.remove('shake');void nextBtn.offsetWidth;nextBtn.classList.add('shake');pointOut(c);return;}}
   var n=cur+d;if(n>=cards.length)n=1;if(n<0)return;show(n,d);}
