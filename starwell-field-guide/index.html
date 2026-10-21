@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#142B55">
-<meta name="description" content="Starwell SI: how to ask HVAC owners the right questions, listen, sort real problems, check what AI can really do, and never overpromise.">
+<meta name="description" content="Starwell SI: how to ask HVAC owners the right questions, listen well, find what matters, and never overpromise.">
 <meta property="og:title" content="Asking the Right Questions">
 <meta property="og:description" content="Starwell SI field guide for HVAC owner visits.">
 <meta name="robots" content="noindex">
@@ -401,6 +401,208 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
 .on .spin{animation:spin var(--sd,3s) linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.t1 span:not(.w),.t2 span:not(.w){background-size:100% 30%}}
+
+/* ===== v3 additions ===== */
+.k{font-weight:700;text-decoration:underline;text-decoration-color:var(--verm);text-decoration-thickness:2px;text-underline-offset:3px}
+.rule .k,.fc .k,.verdict .k{text-decoration-color:var(--gold)}
+.lead{font-size:15.5px;line-height:1.45}
+@media (max-height:640px){.lead{font-size:14.5px;line-height:1.4}}
+/* gate: nudge + locked next */
+[data-g]{position:relative}
+.nudge{animation:nudge 1.5s ease-in-out infinite}
+@keyframes nudge{0%,100%{box-shadow:0 0 0 0 rgba(238,106,44,.6)}55%{box-shadow:0 0 0 8px rgba(238,106,44,0)}}
+.nudge::after{content:"TAP";position:absolute;top:-9px;right:-6px;background:var(--verm);color:var(--cream);font-family:var(--display);font-weight:800;font-size:11px;letter-spacing:.08em;border-radius:6px;padding:1px 5px;line-height:1.3;animation:tapb 1.5s ease-in-out infinite;pointer-events:none;z-index:2}
+@keyframes tapb{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.hit:not(.nosee)::before{content:"";position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:50%;background:var(--go);z-index:1}
+.next.locked{background:var(--sand2);color:var(--navy)}
+.next.locked:hover{background:var(--sand2)}
+.next .lk{display:none;width:18px;height:18px;flex:none}
+.next.locked .lk{display:block}
+.next.locked .arr{display:none}
+.next span{font-size:clamp(15px,4.6vw,20px)}
+.next.locked span{font-size:clamp(14px,4.1vw,17px)}
+.next.unlock{animation:unl .7s cubic-bezier(.3,1.6,.5,1)}
+@keyframes unl{0%{transform:scale(.94)}50%{transform:scale(1.05)}100%{transform:none}}
+.next{position:relative;overflow:hidden}
+.next.unlock::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,244,222,.7) 50%,transparent 70%);animation:shine .8s ease-out forwards}
+@keyframes shine{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.shake{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-3px)}}
+/* how-it-works rows */
+.how{display:grid;gap:6px}
+.how div{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:center;font-size:14.5px;line-height:1.35}
+.how svg{width:30px;height:30px}
+/* timeline box */
+.tlBox{min-height:150px}
+.tlBox .q{font-weight:600;font-style:italic}
+.tlBox p{font-size:14px;line-height:1.42}
+/* reveal study boxes */
+.study{text-align:left;border:1.5px solid var(--sand3);background:var(--cream);border-radius:12px;padding:9px 12px;display:grid;gap:3px;font-size:14px;line-height:1.38;width:100%}
+.study .sh{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.study .sh b{font-family:var(--display);font-weight:800;font-size:16px;text-transform:uppercase;color:var(--navy)}
+.study .more{font-family:var(--hand);font-weight:700;font-size:17px;color:var(--ember);white-space:nowrap}
+.study .res{display:none;border-top:2px dashed var(--sand3);padding-top:5px;margin-top:2px}
+.study.open .res{display:grid;gap:3px}
+.study.open .more{display:none}
+.study .you{color:var(--go);font-weight:700}
+/* equation */
+.eqn{display:grid;gap:6px;justify-items:center}
+.eqrow{display:flex;gap:6px;align-items:center;justify-content:center;flex-wrap:nowrap}
+.eqrow i{font-style:normal;font-family:var(--display);font-weight:800;font-size:20px;color:var(--navy)}
+.chip{border:2px solid var(--sand3);background:var(--cream);border-radius:10px;padding:5px 9px;min-height:40px;font-family:var(--display);font-weight:800;font-size:15px;line-height:1.05;text-transform:uppercase;color:var(--navy)}
+.chip.up{border-color:var(--go)}.chip.down{border-color:var(--stop)}
+.chip[aria-pressed="true"]{background:var(--navy);color:var(--cream);border-color:var(--navy)}
+.eqline{width:100%;height:10px}
+.eqPanel{min-height:132px;font-size:14px;line-height:1.4}
+.eqPanel .nm{font-family:var(--display);font-weight:800;font-size:19px;text-transform:uppercase}
+.eqPanel .dir{font-size:12.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+/* sliders */
+.sl{display:grid;gap:1px;padding:5px 11px;border-radius:12px;background:var(--cream);border:1.5px solid var(--line)}
+.sl .slt{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.sl .slt b{font-family:var(--display);font-weight:800;font-size:16px;text-transform:uppercase;color:var(--navy)}
+.sl .slt small{font-size:12px;color:var(--mute)}
+.sl input{width:100%;accent-color:var(--navy);margin:0;height:24px}
+.alert{font-size:12.5px;font-weight:600;border-radius:7px;padding:2px 8px;line-height:1.3;transition:background .25s,color .25s}
+.alert.g{background:var(--go-bg);color:var(--go)}.alert.a{background:var(--maybe-bg);color:var(--maybe)}.alert.r{background:var(--stop-bg);color:var(--stop)}
+.alert.bump{animation:bump .35s}
+@keyframes bump{50%{transform:scale(1.03)}}
+.slgrid{display:grid;gap:6px}
+/* talk reveal */
+.talk .hide{display:none}.talk.open .hide{display:block}
+/* visit bar */
+.vbarArt{width:100%;height:auto;display:block}
+.segBtns{display:grid;grid-template-columns:5fr 10fr 15fr 10fr;gap:4px}
+.segBtns button{border:0;border-radius:9px;min-height:44px;font-family:var(--display);font-weight:800;font-size:14px;line-height:1;text-transform:uppercase;color:var(--cream);padding:3px 2px;display:grid;align-content:center;gap:2px}
+.segBtns button small{font-weight:600;font-size:11.5px;opacity:.85}
+.segBtns button[aria-pressed="true"]{outline:3px solid var(--navy);outline-offset:2px}
+.p1{background:#2E6CCB}.p2{background:#2F7D52}.p3{background:#EE6A2C}.p4{background:#7A4FB0}
+.partBox{min-height:150px;font-size:14px;line-height:1.4}
+.partBox .nm{font-family:var(--display);font-weight:800;font-size:22px;text-transform:uppercase;color:var(--navy);line-height:1}
+/* phase header + question accordion */
+.phHead{display:flex;align-items:center;gap:10px}
+.phHead svg{width:44px;height:44px;flex:none}
+.phHead .eyebrow{line-height:1.2}
+.minibar{display:grid;grid-template-columns:5fr 10fr 15fr 10fr;gap:3px;margin-top:4px}
+.minibar i{height:6px;border-radius:3px;background:var(--sand2)}
+.minibar i.on{background:var(--verm)}
+.goal{font-size:14.5px;line-height:1.4}
+.qa{display:grid;gap:6px}
+.qi{border-radius:12px;background:var(--cream);border:1.5px solid var(--sand3);overflow:hidden}
+.qi>button{width:100%;text-align:left;border:0;background:transparent;padding:6px 12px;display:grid;gap:1px}
+.qi .qn{display:flex;justify-content:space-between;gap:8px;font-family:var(--display);font-weight:800;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ember)}
+.qi .qq{font-family:var(--display);font-weight:800;font-size:19px;line-height:1.08;text-transform:uppercase;color:var(--navy)}
+.qi .qw{font-size:13px;color:var(--mute);line-height:1.3}
+.qi .qw b{color:var(--navy)}
+.qi .qtap{font-family:var(--hand);font-weight:700;font-size:16px;letter-spacing:0;text-transform:none;color:var(--ember)}
+.qi .qd{display:none;padding:0 12px 9px;gap:4px;font-size:13.5px;line-height:1.36}
+.qi.open .qd{display:grid}
+.qi.open .qtap{display:none}
+.qi.open{border-color:var(--navy)}
+.qd dt{font-family:var(--display);font-weight:800;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ember);display:inline;margin-right:5px}
+.qd dd{margin:0;display:inline}
+.qd div{line-height:1.36}
+.qd .av dt{color:var(--stop)}
+/* follow-up moves */
+.moves{display:flex;flex-wrap:wrap;gap:6px}
+.moves button{border-radius:999px;border:1.5px solid var(--navy);background:var(--cream);color:var(--navy);padding:6px 12px;min-height:38px;font-size:14px;font-weight:600}
+.moves button[aria-pressed="true"]{background:var(--navy);color:var(--cream)}
+.demo{display:grid;gap:6px;min-height:178px;align-content:start}
+.demo .when{font-size:13.5px;color:var(--mute);line-height:1.35}
+.demo .when b{color:var(--navy)}
+.ring3{display:flex;align-items:center;gap:8px;justify-self:end;font-family:var(--hand);font-weight:700;font-size:18px;color:var(--ember)}
+.ring3 svg{width:34px;height:34px}
+.ring3 circle.r{stroke-dasharray:88;stroke-dashoffset:88;animation:ring3 3s linear forwards}
+@keyframes ring3{to{stroke-dashoffset:0}}
+/* recall */
+.recall{display:grid;gap:4px}
+.recall button{display:grid;grid-template-columns:60px minmax(0,1fr);gap:8px;align-items:center;text-align:left;border-radius:10px;border:1.5px dashed var(--sand3);background:var(--cream);padding:4px 10px;min-height:36px;font-size:13.5px;line-height:1.25}
+.recall button .pt{font-family:var(--display);font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;border-radius:6px;color:var(--cream);text-align:center;padding:2px 4px}
+.recall button .tx{color:var(--mute);font-style:italic}
+.recall button.shown{border-style:solid;border-color:var(--sand3)}
+.recall button.shown .tx{color:var(--navy);font-style:normal;font-weight:600}
+/* signals detail */
+.sigEx{min-height:118px;font-size:14px;line-height:1.38;display:grid;gap:4px;align-content:start}
+.sigEx .q{font-size:15px}
+.sigEx .row b{font-family:var(--display);font-weight:800;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ember);margin-right:5px}
+.spk{display:inline-flex;align-items:center;gap:5px;font-family:var(--display);font-weight:800;font-size:12px;letter-spacing:.06em;color:var(--ultra)}
+.spk svg{width:16px;height:16px}
+.noaudio .spk{display:none}
+.playing .spk{color:var(--verm)}
+/* play-back builder */
+.slotB{display:inline;border:1.5px dashed var(--verm);background:#FFF0E3;border-radius:7px;padding:1px 6px;font-weight:600;color:var(--ember);cursor:pointer;font-size:inherit;font-family:inherit}
+.slotB.filled{border-style:solid;border-color:var(--go);background:var(--go-bg);color:var(--go)}
+/* steps check */
+.stepsC{display:grid;gap:5px}
+.stepsC button{display:grid;grid-template-columns:auto minmax(0,1fr);gap:9px;align-items:start;text-align:left;padding:6px 11px;border-radius:11px;background:var(--cream);border:1.5px solid var(--line);font-size:13.8px;line-height:1.36}
+.stepsC .tag{font-family:var(--display);font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:var(--navy);color:var(--cream);border-radius:6px;padding:3px 7px;white-space:nowrap}
+.stepsC button.hit{border-color:var(--go);background:#F1F8EE}
+.stepsC button.hit .tag{background:var(--go)}
+/* pebble cards */
+.vsrow button{display:grid;justify-items:center;text-align:center;gap:3px;padding:9px;border-radius:12px;background:var(--cream);border:1.5px solid var(--line);min-height:120px}
+.vsrow button.bad{border-color:var(--stop)}
+.vsrow button .bk{display:none;font-size:13px;line-height:1.35;text-align:left}
+.vsrow button.open .bk{display:block}
+.vsrow button.open .fr{display:none}
+.vsrow svg{width:54px;height:54px}
+/* pain test v3 */
+.pq{display:grid;gap:4px}
+.pq .lb{font-family:var(--display);font-weight:800;font-size:15px;text-transform:uppercase;color:var(--navy)}
+.pq .bs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+.pq .bs button{min-height:42px;border-radius:9px;border:1.5px solid var(--sand3);background:var(--cream);font-size:13.5px;line-height:1.15;padding:3px 4px;color:var(--ink)}
+.pq .bs button[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:var(--cream);font-weight:600}
+.pqs{display:grid;gap:7px}
+/* promise reveal */
+.bucket{cursor:pointer;text-align:left;border:0;width:100%;font:inherit;color:var(--cream)}
+.bucket small{display:none}
+.bucket.open small{display:block}
+.bucket .tp{font-family:var(--hand);font-weight:700;font-size:16px;opacity:.85}
+.bucket.open .tp{display:none}
+/* practice v3 */
+.optsV{display:grid;gap:6px}
+.optsV button{text-align:left;border-radius:11px;border:1.5px solid var(--sand3);background:var(--cream);min-height:44px;padding:7px 12px;font-size:14.5px;line-height:1.3;color:var(--ink);display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;align-items:start}
+.optsV button .l{font-family:var(--display);font-weight:800;font-size:16px;color:var(--ember)}
+.optsV button.right{background:var(--go-bg);border-color:var(--go)}
+.optsV button.wrong{background:var(--stop-bg);border-color:var(--stop)}
+.optsV button.dim{opacity:.55}
+.situ{font-size:13px;color:var(--mute);font-style:italic}
+.ans .why2{font-size:13.5px;color:var(--mute)}
+.prin{display:inline-flex;font-family:var(--display);font-weight:800;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;background:var(--navy);color:var(--gold);border-radius:6px;padding:2px 8px}
+@media (max-height:640px){
+  .optsV button{padding:5px 11px;font-size:13.5px;min-height:40px}
+  .tlBox{min-height:0}.eqPanel,.partBox{min-height:0}.demo{min-height:0}
+  .qi .qq{font-size:17px}
+  .sigEx{min-height:0}
+}
+.bucket.kn{background:var(--go)}
+
+.tlBox .qt{font-weight:600;color:var(--navy)}
+.cover-art svg{max-height:190px;width:auto;margin:0 auto;display:block}
+.study .res{font-size:13.5px}
+.cmp svg{max-height:100px}
+.quote{font-size:14.5px;line-height:1.6}
+#noteArt svg{max-height:84px}
+.ownerq{grid-template-columns:74px minmax(0,1fr)}
+.ownerq svg{width:74px}
+.said{font-size:16px;padding:9px 12px}
+.recall button{min-height:32px;padding:3px 10px;font-size:13px}
+.recall button.shown .tx{font-size:12.8px}
+.bucket{padding-top:6px!important;padding-bottom:6px!important}
+.bucket b{font-size:19px}
+.vsrow button{min-height:0;padding:7px}
+.vsrow svg{width:46px;height:46px}
+@media (max-height:640px){.cover-art svg{max-height:120px}.how div{font-size:13.5px}.sl .slt small{display:none}.ownerq svg{width:60px}.ownerq{grid-template-columns:60px minmax(0,1fr)}.said{font-size:15px}.optsV button{font-size:13px;line-height:1.25}#noteArt svg{max-height:64px}}
+.cover-art svg{max-height:160px}
+.card[data-stop="why"] .art.sm{max-height:78px}
+.recall{gap:3px}.recall button{min-height:30px}
+.qd{font-size:13.2px}
+.vsrow .bk b{font-family:var(--body);font-size:13px;text-transform:none;font-weight:700;color:var(--navy)}
+.vsrow .bk .k{color:var(--stop)}
+.pq .bs button{min-height:38px}
+.pqs{gap:5px}
+.verdict{padding:6px 14px}.verdict svg{width:96px}
+.cover-art svg{max-height:140px}
+#noteArt svg{max-height:70px}
+.calc{gap:5px}.calc input{min-height:40px;padding:6px 10px}.calc .out b{font-size:36px}
 </style>
 
 </head>
@@ -425,7 +627,7 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
         <p class="eyebrow">Starwell SI · Asking the Right Questions</p>
         <h1 class="t1">Who's walking in <span>today?</span></h1>
         <div class="who" id="who"></div>
-        <p class="mute opt">Your progress, score and checklist are saved under your name.</p>
+        <p class="mute opt">Your progress and practice score are saved under your name on this device.</p>
       </div>
     </section>
 
@@ -435,21 +637,25 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
         <div class="cover-art" id="heroArt"></div>
         <p class="eyebrow" id="hiName">Welcome</p>
         <h1 class="t1">Asking the <span>right questions.</span></h1>
-        <p class="handnote" style="font-size:24px">The methodology, start to finish.</p>
-        <p class="idea" id="coverPromise">Here's the deal. By the end, you'll know the 8 questions that make an HVAC owner tell you what's really broken, and how to prove AI can fix it.</p>
+        <p class="lead" id="coverPromise">By the end you'll know <b class="k">exactly what to ask an HVAC owner, when to ask it, and why it works</b>, so they feel heard and you find what's really broken.</p>
+        <div class="how">
+          <div><svg viewBox="0 0 30 30" aria-hidden="true"><circle class="pop" cx="15" cy="15" r="13" fill="#EE6A2C"/><path d="M11 9 v10 l3 -3 l2 5 l2 -1 l-2 -5 h4z" fill="#FFF4DE"/></svg><p><b>Tap to unlock.</b> Most screens have one thing to try. Next unlocks once you've tried it.</p></div>
+          <div><svg viewBox="0 0 30 30" aria-hidden="true"><circle class="pop" cx="15" cy="15" r="13" fill="#2E6CCB"/><text x="15" y="20" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="800" font-size="14" fill="#FFF4DE">1</text></svg><p><b>One idea per screen.</b> Read it, try it, move on.</p></div>
+          <div><svg viewBox="0 0 30 30" aria-hidden="true"><circle class="pop" cx="15" cy="15" r="13" fill="#2F7D52"/><path d="M9 15 l4 4 8 -9" stroke="#FFF4DE" stroke-width="3" fill="none" stroke-linecap="round"/></svg><p><b>Your move.</b> Each stop ends with one thing to do on your next visit.</p></div>
+        </div>
       </div>
     </section>
 
-    <!-- 1 WHY QUESTIONS WIN -->
-    <section class="card" data-stop="why">
+    <!-- STOP 1 -->
+    <section class="card" data-stop="why" data-gate="6" data-glabel="Tap all 6 moments">
       <div class="wrap">
         <p class="eyebrow">Stop 1 · Why questions win</p>
         <h2 class="t2">The one who asks <span>steers.</span></h2>
-        <div class="tl"><svg class="art" viewBox="0 0 360 74" id="tlArt" aria-hidden="true"></svg><div class="tlBtns" id="tlBtns" role="tablist" aria-label="History of asking"></div></div>
+        <div class="tl"><svg class="art" viewBox="0 0 360 74" id="tlArt" aria-hidden="true"></svg><div class="tlBtns" id="tlBtns" role="tablist" aria-label="Moments in history"></div></div>
         <div class="box tlBox" id="tlBox" aria-live="polite"></div>
       </div>
     </section>
-    <section class="card" data-stop="why">
+    <section class="card" data-stop="why" data-gate="2" data-glabel="Open both studies">
       <div class="wrap">
         <p class="eyebrow">Human nature</p>
         <h2 class="t2">People love talking <span>about themselves.</span></h2>
@@ -460,174 +666,147 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
           <g class="pop"><rect x="262" y="18" width="88" height="40" rx="18" fill="#FFF4DE" stroke="#D7AA68" stroke-width="2"/><text x="306" y="44" text-anchor="middle" font-family="Caveat,cursive" font-weight="700" font-size="20" fill="#C64A1C">reward!</text></g>
           <g class="pop"><rect x="6" y="20" width="96" height="40" rx="18" fill="#142B55"/><text x="54" y="46" text-anchor="middle" font-family="Caveat,cursive" font-weight="700" font-size="19" fill="#FFF4DE">"So I..."</text></g>
         </svg>
-        <div class="box"><p><b>Harvard, 2012:</b> talking about ourselves lights up the brain's reward system. People even gave up money to do it.</p><p><b>Harvard, 2017:</b> people who ask more follow-up questions are liked more.</p></div>
-        <p class="rule">The more they talk, the more they like you, and the more you learn.</p>
+        <button class="study" type="button" data-g="s1"><span class="sh"><b>Harvard, 2012 · brain scans</b><span class="more">what happened?</span></span><span>People chose between answering a question <b>about themselves</b> or <b>about someone else</b>. Each choice paid a few cents.</span><span class="res"><span>They kept picking questions about themselves, even when it paid less. They gave up <b class="k">about 17% of what they could have earned</b>, and the brain's reward areas lit up when they did.</span><span class="you">For you: letting an owner talk about their business genuinely feels good to them.</span></span></button>
+        <button class="study" type="button" data-g="s2"><span class="sh"><b>Harvard, 2017 · real conversations</b><span class="more">what happened?</span></span><span>Researchers studied hundreds of chats and speed dates, counting the questions people asked.</span><span class="res"><span>People who asked <b class="k">more follow-up questions were liked more</b>, and those speed daters got more second dates.</span><span class="you">For you: follow-ups prove you were actually listening.</span></span></button>
       </div>
     </section>
-    <section class="card" data-stop="why">
+    <section class="card" data-stop="why" data-gate="4" data-glabel="Tap all 4 parts">
       <div class="wrap">
-        <p class="eyebrow">Business · Hormozi's value equation</p>
-        <h2 class="t2">Every question maps <span>to value.</span></h2>
-        <div class="veq" id="veq"></div>
-        <div class="vout"><span>Value</span><div class="vmeter"><i id="vMeter"></i></div><span id="vWord">High</span></div>
-        <p class="mute opt">Slide the dials. Ask a question for each part, and you'll know what the owner will pay for.</p>
+        <p class="eyebrow">Business · Alex Hormozi's value equation</p>
+        <h2 class="t2">Why people <span>say yes.</span></h2>
+        <p class="lead">In <i>$100M Offers</i>, Hormozi explains that people say yes when something <b class="k">feels worth more than it costs them</b>. That feeling comes from four parts. Tap each.</p>
+        <div class="eqn" id="eqn"></div>
+        <div class="box eqPanel" id="eqPanel" aria-live="polite"></div>
       </div>
     </section>
-    <section class="card" data-stop="why">
+    <section class="card" data-stop="why" data-gate="4" data-glabel="Move all 4 dials">
+      <div class="wrap">
+        <p class="eyebrow">Try it · slide each dial, read the alert</p>
+        <h2 class="t2">Read the owner's <span>answers.</span></h2>
+                <div class="slgrid" id="slgrid"></div>
+        <div class="vout"><span>Value</span><div class="vmeter"><i id="vMeter"></i></div><span id="vWord">Medium</span></div>
+      </div>
+    </section>
+    <section class="card" data-stop="why" data-gate="1" data-glabel="Tap to dig deeper" data-mission="why">
       <div class="wrap">
         <p class="eyebrow">Mindset</p>
         <h2 class="t2">Be the tech, <span>not the salesperson.</span></h2>
         <div class="cmp" id="cmpArt"></div>
-        <div class="box talk"><p><b>Owner:</b> "We need a chatbot."</p><p class="you"><b>You:</b> "What would that fix for you?"</p><p><b>Owner:</b> "Honestly? We miss calls at night."</p><p class="handnote" style="font-size:19px;margin-top:2px">Owners describe fixes. Find the problem.</p></div>
+        <p class="lead"><b class="k">Owners often describe a fix. Your job is to find the problem under it.</b></p>
+        <div class="box talk" id="talk"><p><b>Owner:</b> "We need a chatbot."</p><p class="you hide"><b>You:</b> "What would that fix for you?"</p><p class="hide"><b>Owner:</b> "Honestly? We miss calls at night."</p><button class="btnA ghost" type="button" data-g="dig" id="digBtn" style="min-height:38px;padding:5px 12px;font-size:15px">Ask what's underneath</button></div>
       </div>
     </section>
 
-    <!-- 2 LADDER -->
-    <section class="card" data-stop="ladder">
+    <!-- STOP 2 -->
+    <section class="card" data-stop="visit" data-gate="4" data-glabel="Tap all 4 parts">
       <div class="wrap">
-        <p class="eyebrow">Stop 2 · The question ladder</p>
-        <h2 class="t2">Climb it <span>in order.</span></h2>
-        <div class="lad"><svg viewBox="0 0 96 300" id="ladArt" aria-label="Ladder: tap a rung"></svg><div class="lpanel" id="lpanel" aria-live="polite"></div></div>
+        <p class="eyebrow">Stop 2 · The visit blueprint</p>
+        <h2 class="t2">Four parts, <span>in order.</span></h2>
+        <p class="lead">A first visit runs about <b class="k">40 minutes</b>. The minutes show roughly how long to spend on each part. They're a guide, not a stopwatch.</p>
+        <svg class="vbarArt" viewBox="0 0 360 34" aria-hidden="true" id="vbarArt"></svg>
+        <div class="segBtns" id="segBtns"></div>
+        <div class="box partBox" id="partBox" aria-live="polite"></div>
       </div>
     </section>
-    <section class="card" data-stop="ladder">
+    <section class="card" data-stop="visit" data-part="0" data-gate="1" data-glabel="Open the question"><div class="wrap phase"></div></section>
+    <section class="card" data-stop="visit" data-part="1" data-gate="2" data-glabel="Open both questions"><div class="wrap phase"></div></section>
+    <section class="card" data-stop="visit" data-part="2" data-gate="3" data-glabel="Open all 3 questions"><div class="wrap phase"></div></section>
+    <section class="card" data-stop="visit" data-part="3" data-gate="2" data-glabel="Open both questions"><div class="wrap phase"></div></section>
+    <section class="card" data-stop="visit" data-gate="5" data-glabel="Try all 5 moves">
       <div class="wrap">
-        <p class="eyebrow">Follow-ups</p>
-        <h2 class="t2">The second question <span>is the real one.</span></h2>
-        <div class="chipset"><span>"Tell me more."</span><span>"What happened next?"</span><span>"How often?"</span><span>"Give me a recent example."</span><span>Repeat their last 3 words</span></div>
-        <div class="silence">
-          <button type="button" id="silBtn" aria-label="Start a three-second silence"><svg viewBox="0 0 110 110"><circle cx="55" cy="55" r="46" fill="#FFF4DE" stroke="#E7C690" stroke-width="10"/><circle id="ring" cx="55" cy="55" r="46" fill="none" stroke="#EE6A2C" stroke-width="10" stroke-linecap="round" transform="rotate(-90 55 55)" stroke-dasharray="289" stroke-dashoffset="289"/><text id="silNum" x="55" y="66" text-anchor="middle" font-family="Barlow Condensed,Arial Narrow,sans-serif" font-weight="800" font-size="34" fill="#142B55">TAP</text></svg></button>
-          <div><p class="handnote">Then wait three seconds.</p><p style="font-size:14.5px">Silence feels awkward to you. To the owner it's room to keep talking. The best answer usually comes right after the pause. Tap the circle and practice.</p></div>
-        </div>
+        <p class="eyebrow">Follow-ups · use them in every part</p>
+        <h2 class="t2">The second answer <span>is the real one.</span></h2>
+        <p class="lead">The first answer is the polished version. <b class="k">A follow-up gets the real story.</b> Tap each move.</p>
+        <div class="moves" id="moves"></div>
+        <div class="box demo" id="demo" aria-live="polite"></div>
       </div>
     </section>
-    <section class="card" data-stop="ladder">
+    <section class="card" data-stop="visit" data-gate="8" data-glabel="Recall all 8" data-mission="visit">
       <div class="wrap">
-        <p class="eyebrow">Fix the weak question</p>
-        <h2 class="t2">Same goal. <span>Better words.</span></h2>
-        <div class="box flip" id="flipWrap"><div id="flip" aria-live="polite" style="display:grid;gap:6px"></div><svg class="flipGear" id="flipGear" viewBox="-70 -70 140 140" aria-hidden="true"></svg></div>
-        <div class="pager"><button class="sq" id="flipPrev" type="button" aria-label="Previous example"><svg viewBox="0 0 20 20"><path d="M12 4 6 10l6 6" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="btnA" id="flipBtn" type="button" style="justify-self:auto;flex:1;justify-content:center">Show the better question</button><div class="dots" id="flipDots" hidden></div><button class="sq" id="flipNext" type="button" aria-label="Next example"><svg viewBox="0 0 20 20"><path d="m8 4 6 6-6 6" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
-      </div>
-    </section>
-
-    <!-- 3 ULTIMATE QUESTIONS -->
-    <section class="card" data-stop="ultimate">
-      <div class="wrap">
-        <p class="eyebrow">Stop 3 · The 8 ultimate questions</p>
-        <div class="box uq" id="uq" aria-live="polite"></div>
-        <div class="pager"><button class="sq" id="uqPrev" type="button" aria-label="Previous question"><svg viewBox="0 0 20 20"><path d="M12 4 6 10l6 6" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="dots" id="uqDots"></div><button class="sq" id="uqNext" type="button" aria-label="Next question"><svg viewBox="0 0 20 20"><path d="m8 4 6 6-6 6" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
-      </div>
-    </section>
-    <section class="card" data-stop="ultimate">
-      <div class="wrap">
-        <p class="eyebrow" id="pocketTitle">Your pocket list</p>
-        <h2 class="t2 opt">Memorize <span>these.</span></h2>
-        <div class="box pocket" id="pocket"></div>
-        <div class="pocketRow"><svg viewBox="0 0 40 60" aria-hidden="true"><g class="pop"><rect x="4" y="2" width="32" height="56" rx="6" fill="#142B55"/><rect x="8" y="9" width="24" height="40" rx="2" fill="#FFF4DE"/><path d="M11 16 h17 M11 22 h17 M11 28 h12 M11 34 h17 M11 40 h10" stroke="#EE6A2C" stroke-width="2.5"/></g></svg><button class="btnA" id="copyPocket" type="button">Copy to my phone notes</button></div>
+        <div class="pocketRow"><svg viewBox="0 0 40 52" aria-hidden="true" style="width:26px;height:34px"><g class="pop"><rect x="4" y="2" width="32" height="48" rx="6" fill="#142B55"/><rect x="8" y="8" width="24" height="34" rx="2" fill="#FFF4DE"/></g><path class="draw" d="M12 16 h16 M12 23 h16 M12 30 h10" stroke="#EE6A2C" stroke-width="2.5"/></svg><p class="eyebrow" id="pocketTitle">Lock it in</p></div>
+                <p class="mute" style="font-size:13px">Say each question <b class="k">before</b> you tap. Recalling beats rereading.</p>
+        <div class="recall" id="recall"></div>
+        <button class="btnA ghost" id="copyPocket" type="button" style="min-height:38px;padding:5px 12px;font-size:15px">Copy all 8 to my phone</button>
       </div>
     </section>
 
-    <!-- 4 LISTEN & CAPTURE -->
-    <section class="card" data-stop="listen">
+    <!-- STOP 3 -->
+    <section class="card" data-stop="listen" data-gate="6" data-glabel="Tap all 6 signals">
       <div class="wrap">
-        <p class="eyebrow">Stop 4 · Listen and capture</p>
+        <p class="eyebrow">Stop 3 · Listen and capture</p>
         <h2 class="t2">Listen for <span>six signals.</span></h2>
-        <svg class="art wave" viewBox="0 0 360 40" aria-hidden="true" id="waveArt"></svg>
+        <p class="lead opt">Owners rarely say "this is my biggest problem." <b class="k">They signal it.</b> Tap each to hear it.</p>
+        <svg class="art wave" viewBox="0 0 360 30" aria-hidden="true" id="waveArt" style="max-height:30px"></svg>
         <div class="sigs" id="sigs"></div>
         <div class="box sigEx" id="sigEx" aria-live="polite"></div>
       </div>
     </section>
-    <section class="card" data-stop="listen">
+    <section class="card" data-stop="listen" data-gate="1" data-glabel="Show the signals">
       <div class="wrap">
         <p class="eyebrow">Spot the signals</p>
         <svg class="art" viewBox="0 0 360 34" aria-hidden="true" style="max-height:34px"><path class="draw" d="M8 22 H250" stroke="#F2B33D" stroke-width="14" stroke-linecap="round" opacity=".55"/><g class="pop"><path d="M256 6 l22 22 -10 4 -18 -18z" fill="#142B55"/><path d="M262 2 l26 26 l8 -8 l-26 -26z" fill="#2E6CCB"/><path d="M248 30 l8 -8 4 4z" fill="#F2B33D"/></g><text x="300" y="26" font-family="Caveat,cursive" font-weight="700" font-size="20" fill="#C64A1C" class="pop">mark it</text></svg>
+        <p class="mute" style="font-size:13.5px">Mike (an example owner) says this. Find the signals before you tap.</p>
         <div class="box quote" id="quote">
-          <p><b class="say">Mike, owner (example):</b> July comes and <mark class="s-rep">the phones<sup>repeat</sup></mark> are nuts. After five it goes to voicemail. <mark class="s-work">We just call people back in the morning<sup>workaround</sup></mark>, but half already booked somebody else. <mark class="s-emo">(sighs)<sup>energy</sup></mark> I send <mark class="s-num">fifteen quotes a week<sup>number</sup></mark> and never chase them. <mark class="s-one">Only I know how to price those.<sup>one person</sup></mark> <mark class="s-alw">Always done it that way.<sup>always</sup></mark> Honestly, <mark class="s-rep">the phones<sup>repeat</sup></mark> are the biggest thing.</p>
+          <p>July comes and <mark class="s-rep">the phones<sup>repeat</sup></mark> are nuts. After five it goes to voicemail. <mark class="s-work">We just call people back in the morning<sup>workaround</sup></mark>, but half already booked somebody else. <mark class="s-emo">(sighs)<sup>energy</sup></mark> I send <mark class="s-num">fifteen quotes a week<sup>number</sup></mark> and never chase them. <mark class="s-one">Only I know how to price those.<sup>one person</sup></mark> <mark class="s-alw">Always done it that way.<sup>always</sup></mark> Honestly, <mark class="s-rep">the phones<sup>repeat</sup></mark> are the biggest thing.</p>
         </div>
-        <button class="btnA" id="sigToggle" type="button" aria-pressed="false">Show the signals</button>
+        <button class="btnA" id="sigToggle" type="button" aria-pressed="false" data-g="show">Show the signals</button>
         <div class="found" id="found" hidden>
-          <div><p><b>Must-fix:</b> after-hours calls, said twice.</p></div>
-          <div><p><b>Real pain:</b> 15 quotes a week, never chased.</p></div>
-          <div><p><b>Bottleneck:</b> only Mike can price.</p></div>
+          <div><p><b>Dig first:</b> after-hours calls (said twice).</p></div><div><p><b>Ask:</b> how many of the 15 quotes become jobs?</p></div>
         </div>
       </div>
     </section>
-    <section class="card" data-stop="listen">
+    <section class="card" data-stop="listen" data-gate="3" data-glabel="Fill all 3 blanks">
       <div class="wrap">
         <p class="eyebrow">Play it back</p>
         <h2 class="t2">Get them to say <span>"That's right."</span></h2>
-        <p class="formula">"So what I'm hearing is <span class="slot">their problem, their words</span>. It happens <span class="slot">how often</span>, and it costs you <span class="slot">time, money or stress</span>. Did I get that right?"</p>
-        <div class="bubbles"><p class="bub they"><small>Owner</small>…and it all goes to voicemail.</p><p class="bub you"><small>You · mirror</small>Goes to voicemail?</p><p class="bub you"><small>You · label</small>It sounds like evenings really hurt.</p></div>
-        <p class="mute opt">Negotiator Chris Voss: "That's right" means they feel understood. "You're right" often means "please stop."</p>
+        <p class="lead">Before you leave, sum up what you heard <b class="k">in their words</b>. In a 2010 study, people felt more understood when a listener paraphrased them than when the listener gave advice.</p>
+        <p class="formula">"So what I'm hearing is <button type="button" class="slotB" data-g="b1" data-fill="the phones go to voicemail after five">their problem</button>. It happens <button type="button" class="slotB" data-g="b2" data-fill="most nights in summer">how often</button>, and it's costing you <button type="button" class="slotB" data-g="b3" data-fill="jobs to whoever picks up first">what it costs</button>. Did I get that right?"</p>
+        <p class="mute" style="font-size:13.5px">Negotiator Chris Voss: <b class="k">"That's right"</b> means they feel understood. "You're right" often means "please stop." If you hear it, try again in their words.</p>
       </div>
     </section>
-    <section class="card" data-stop="listen">
+    <section class="card" data-stop="listen" data-gate="3" data-glabel="Check all 3 steps" data-mission="listen">
       <div class="wrap">
-        <p class="eyebrow">Your AI note taker · before and during</p>
+        <p class="eyebrow">Your AI note taker</p>
         <h2 class="t2">Let the phone write. <span>You listen.</span></h2>
         <div id="noteArt"></div>
-        <svg hidden viewBox="0 0 360 120" aria-hidden="true">
-          <g class="pop"><rect x="120" y="70" width="120" height="26" rx="6" fill="#142B55"/><rect x="128" y="76" width="70" height="14" rx="3" fill="#2E6CCB"/><circle class="recdot" cx="222" cy="83" r="5" fill="#EE6A2C"/></g>
-          <path class="draw" d="M40 60 q20 -30 40 0 t40 0" fill="none" stroke="#2E6CCB" stroke-width="4" stroke-linecap="round"/>
-          <path class="draw" d="M240 60 q20 -30 40 0 t40 0" fill="none" stroke="#2E6CCB" stroke-width="4" stroke-linecap="round"/>
-          <g class="pop"><circle cx="60" cy="24" r="16" fill="#F1C7A1"/><circle cx="300" cy="24" r="16" fill="#D9A074"/><path d="M286 14 q14 -14 30 0 v-4 h-30z" fill="#EE6A2C"/></g>
-          <text x="180" y="40" text-anchor="middle" font-family="Caveat,cursive" font-weight="700" font-size="20" fill="#C64A1C" class="pop">eyes up, phone down</text>
-        </svg>
-        <div class="steps3">
-          <div><span class="tag">Ask first</span><p class="say" id="permScript">"Mind if my AI note taker records? Then I can listen to you instead of scribbling."</p></div>
-          <div><span class="tag">During</span><p>Phone face-down. Eyes on the owner. Jot only the time when something big lands.</p></div>
-          <div><span class="tag">The law</span><p>CT phone calls need everyone's consent to record. Ask in person too; it builds trust. Not legal advice.</p></div>
+        <div class="stepsC">
+          <button type="button" data-g="n1"><span class="tag">1 · Ask</span><span class="say" id="permScript">"Mind if my AI note taker records? It lets me listen to you instead of scribbling."</span></button>
+          <button type="button" data-g="n2"><span class="tag">2 · Hide it</span><span>Face-down, off to the side. In a 2013 study, <b class="k">a phone in view lowered trust and closeness</b>.</span></button>
+          <button type="button" data-g="n3"><span class="tag">3 · The law</span><span>CT phone calls need everyone's consent to record. In person, ask anyway. (Not legal advice.)</span></button>
         </div>
-      </div>
-    </section>
-    <section class="card" data-stop="listen">
-      <div class="wrap">
-        <p class="eyebrow">Your AI note taker · after</p>
-        <h2 class="t2">Debrief in <span>five minutes.</span></h2>
-        <svg class="art" viewBox="0 0 360 64" aria-hidden="true">
-          <g class="pop"><rect x="6" y="10" width="78" height="46" rx="8" fill="#FFF4DE" stroke="#D7AA68" stroke-width="2"/><path d="M18 24h54M18 33h54M18 42h36" stroke="#566078" stroke-width="3"/></g>
-          <path class="draw" d="M92 33 H134 M126 25 l8 8 -8 8" fill="none" stroke="#EE6A2C" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <g class="pop"><circle cx="180" cy="33" r="26" fill="#142B55"/><text x="180" y="40" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="800" font-size="20" fill="#F2B33D">AI</text></g>
-          <path class="draw" d="M214 33 H256 M248 25 l8 8 -8 8" fill="none" stroke="#EE6A2C" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <g class="pop"><rect x="264" y="8" width="90" height="50" rx="8" fill="#DCEBD8"/><text x="309" y="29" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="800" font-size="14" fill="#2F7D52">TOP 3 PAINS</text><text x="309" y="47" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="800" font-size="14" fill="#2F7D52">+ RECAP</text></g>
-        </svg>
-        <p class="mute" style="font-size:14px">Paste the transcript into your AI with this prompt:</p>
-        <div class="copyable" id="debrief"></div>
-        <button class="btnA" id="copyDebrief" type="button">Copy the debrief prompt</button>
       </div>
     </section>
 
-    <!-- 5 SORT -->
-    <section class="card" data-stop="sort">
+    <!-- STOP 4 -->
+    <section class="card" data-stop="sort" data-gate="2" data-glabel="Tap both">
       <div class="wrap">
-        <p class="eyebrow">Stop 5 · Sort</p>
+        <p class="eyebrow">Stop 4 · What matters most</p>
         <h2 class="t2">Pebble or cracked <span>heat exchanger?</span></h2>
+        <p class="lead">A <b>pebble</b> in a condenser rattles loudly but is harmless. A <b>cracked heat exchanger</b> is quiet but <b class="k">can leak carbon monoxide into the home</b>, so a tech shuts the furnace down. Owners' problems work the same way.</p>
         <div class="vsrow">
-          <div><svg viewBox="0 0 110 110" aria-hidden="true"><ellipse cx="55" cy="92" rx="40" ry="7" fill="rgba(14,31,63,.18)"/><path class="pop" d="M22 74 Q18 46 44 40 Q70 32 86 52 Q96 70 80 84 Q52 96 30 88 Q22 84 22 74Z" fill="#9AA3B5"/></svg><b>Pebble</b><p>Annoying. Costs nothing real.</p></div>
-          <div class="bad"><svg viewBox="0 0 110 110" aria-hidden="true"><rect x="20" y="14" width="70" height="86" rx="6" fill="#142B55"/><rect x="30" y="26" width="50" height="40" rx="4" fill="#1F4C9C"/><path class="draw" d="M48 26 L54 40 L46 48 L56 66" stroke="#F2B33D" stroke-width="4" fill="none" stroke-linejoin="round"/><circle class="pop" cx="55" cy="82" r="8" fill="#B5361F"/></svg><b>Must-fix</b><p>Loses money, customers or safety.</p></div>
+          <button type="button" data-g="pb"><svg viewBox="0 0 110 110" aria-hidden="true"><ellipse cx="55" cy="92" rx="40" ry="7" fill="rgba(14,31,63,.18)"/><path class="pop" d="M22 74 Q18 46 44 40 Q70 32 86 52 Q96 70 80 84 Q52 96 30 88 Q22 84 22 74Z" fill="#9AA3B5"/></svg><b>Pebble</b><span class="fr mute">Loud. Harmless.</span><span class="bk"><b>In a business:</b> "Our website font looks dated." Annoying, costs nothing real. Note it, move on.</span></button>
+          <button type="button" class="bad" data-g="hx"><svg viewBox="0 0 110 110" aria-hidden="true"><rect x="20" y="14" width="70" height="86" rx="6" fill="#142B55"/><rect x="30" y="26" width="50" height="40" rx="4" fill="#1F4C9C"/><path class="draw" d="M48 26 L54 40 L46 48 L56 66" stroke="#F2B33D" stroke-width="4" fill="none" stroke-linejoin="round"/><circle class="pop" cx="55" cy="82" r="8" fill="#B5361F"/></svg><b>Must-fix</b><span class="fr mute">Quiet. Dangerous.</span><span class="bk"><b>In a business:</b> calls go to voicemail after 5pm and customers book someone else. Quiet, but it <b class="k">costs jobs every week</b>.</span></button>
         </div>
-        <div class="traps">
-          <div><b>Trap 1: Loudest isn't largest.</b> The most emotional complaint can be a pebble. Check it with numbers.</div>
-          <div><b>Trap 2: The silent must-fix.</b> They won't mention what they think is "just part of the job." Ask: <span class="say">"What do you just put up with?"</span></div>
-        </div>
+        <p class="rule">Loudest isn't costliest. Ask: "What do you just put up with?"</p>
       </div>
     </section>
-    <section class="card" data-stop="sort">
+    <section class="card" data-stop="sort" data-gate="4" data-glabel="Answer all 4">
       <div class="wrap">
         <p class="eyebrow">The pain test</p>
-        <div class="dials" id="dials"></div>
+        <p class="lead">Not a diagnosis (the transcript helps later). It tells you <b class="k">which problem deserves your follow-ups</b>.</p>
+        <div class="pqs" id="pqs"></div>
         <div class="verdict" aria-live="polite">
           <svg viewBox="0 0 300 168" aria-hidden="true"><path d="M30 150 A120 120 0 0 1 90 46" stroke="#9AA3B5" stroke-width="24" fill="none"/><path d="M96 42 A120 120 0 0 1 204 42" stroke="#F2B33D" stroke-width="24" fill="none"/><path d="M210 46 A120 120 0 0 1 270 150" stroke="#EE6A2C" stroke-width="24" fill="none"/><g id="needle"><path d="M142 150 L150 50 L158 150Z" fill="#FFF4DE"/></g><circle cx="150" cy="150" r="15" fill="#EE6A2C"/></svg>
-          <div><div class="v" id="vName">Must-fix</div><p id="vText"></p></div>
+          <div><div class="v" id="vName">?</div><p id="vText">Answer all 4 to see where it lands.</p></div>
         </div>
-        <div class="exs"><span class="mute">Try:</span><button type="button" data-ex="calls">After-hours calls</button><button type="button" data-ex="font">Website font</button><button type="button" data-ex="invoices">Chasing invoices</button></div>
       </div>
     </section>
-    <section class="card" data-stop="sort">
+    <section class="card" data-stop="sort" data-gate="2" data-glabel="Try both tabs" data-mission="sort">
       <div class="wrap">
         <p class="eyebrow">Put a number on it</p>
         <h2 class="t2">Owners act on <span>dollars.</span></h2>
-        <div class="tabs" role="tablist" style="--n:2"><button type="button" role="tab" aria-selected="true" data-calc="jobs">Lost jobs</button><button type="button" role="tab" aria-selected="false" data-calc="time">Lost time</button></div>
+        <p class="lead">Ask gently: <b class="k">"Roughly how many a week? A ballpark is fine."</b></p>
+        <div class="tabs" role="tablist" style="--n:2"><button type="button" role="tab" aria-selected="true" data-calc="jobs" data-g="cj">Lost jobs</button><button type="button" role="tab" aria-selected="false" data-calc="time" data-g="ct">Lost time</button></div>
         <div class="calc" id="calcJobs">
           <div class="r"><label for="c1">Missed calls a week</label><input id="c1" type="number" min="0" value="10" inputmode="decimal"></div>
           <div class="r"><label for="c2">Share that would book (%)</label><input id="c2" type="number" min="0" max="100" value="30" inputmode="decimal"></div>
@@ -643,120 +822,61 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
         <p class="mute" style="font-size:13px">Per year. Example numbers; always use the owner's.</p>
       </div>
     </section>
-    <section class="card" data-stop="sort">
-      <div class="wrap">
-        <p class="eyebrow">Find the bottleneck</p>
-        <svg class="art opt" viewBox="0 0 360 40" aria-hidden="true" style="max-height:30px"><path class="draw" d="M0 8 H140 C160 8 168 16 180 16 C192 16 200 8 220 8 H360 M0 32 H140 C160 32 168 24 180 24 C192 24 200 32 220 32 H360" fill="none" stroke="#C64A1C" stroke-width="4"/></svg>
-        <div class="flow" id="flow" role="tablist" aria-label="Stages of an HVAC job"></div>
-        <div class="box stgbox" id="stgbox" aria-live="polite"></div>
-      </div>
-    </section>
 
-    <!-- 6 CAN AI FIX IT -->
-    <section class="card" data-stop="ai">
+    <!-- STOP 5 -->
+    <section class="card" data-stop="ai" data-gate="3" data-glabel="Tap all 3 tabs">
       <div class="wrap">
-        <p class="eyebrow">Stop 6 · Can AI fix it?</p>
-        <h2 class="t2">Check the panel <span>before you install.</span></h2>
-        <svg class="art sm" viewBox="0 0 360 110" aria-hidden="true">
-          <g class="pop"><rect x="20" y="8" width="70" height="94" rx="6" fill="#142B55"/><g fill="#FFF4DE"><rect x="30" y="20" width="22" height="9" rx="2"/><rect x="58" y="20" width="22" height="9" rx="2"/><rect x="30" y="36" width="22" height="9" rx="2"/><rect x="58" y="36" width="22" height="9" rx="2" fill="#EE6A2C"/><rect x="30" y="52" width="22" height="9" rx="2"/><rect x="58" y="52" width="22" height="9" rx="2"/></g></g>
-          <path class="draw" d="M96 54 H150" stroke="#D7AA68" stroke-width="4" stroke-dasharray="6 6" fill="none"/>
-          <g class="pop"><rect x="156" y="20" width="190" height="70" rx="12" fill="#FFF4DE" stroke="#D7AA68" stroke-width="2"/><text x="251" y="48" text-anchor="middle" font-family="Caveat,cursive" font-weight="700" font-size="20" fill="#1F4C9C">AI = a new office hire</text><text x="251" y="72" text-anchor="middle" font-family="Public Sans,sans-serif" font-size="12.5" fill="#566078">needs rules + a checker</text></g>
-        </svg>
-        <div class="checks3">
-          <div><p><b>Words or data on a screen or phone?</b> Answering, scheduling, reminding: yes. Anything at the unit: no.</p></div>
-          <div><p><b>Repeatable, and mistakes catchable?</b> A wrong reminder is cheap. A wrong $14,000 quote is not.</p></div>
-          <div><p><b>Can AI reach the data?</b> That's the plug-in ladder, two cards ahead.</p></div>
-        </div>
+        <p class="eyebrow">Stop 5 · AI and promises</p>
+        <svg class="art" viewBox="0 0 360 58" aria-hidden="true" style="max-height:52px" id="light"><rect class="pop" x="96" y="4" width="168" height="50" rx="25" fill="#142B55"/><circle class="pop" data-l="go" cx="130" cy="29" r="16"/><circle class="pop" data-l="maybe" cx="180" cy="29" r="16"/><circle class="pop" data-l="stop" cx="230" cy="29" r="16"/><path class="draw" d="M10 29 H90 M270 29 H350" stroke="#D7AA68" stroke-width="4" stroke-dasharray="4 8" fill="none"/></svg>
+        <h2 class="t2">What AI <span>should touch.</span></h2>
+        <div class="tabs" role="tablist" style="--n:3"><button type="button" role="tab" aria-selected="true" data-fit="go" data-g="fg">Good fit</button><button type="button" role="tab" aria-selected="false" data-fit="maybe" data-g="fm">Person checks</button><button type="button" role="tab" aria-selected="false" data-fit="stop" data-g="fs">Keep human</button></div>
+        <div data-fitlist="go"><p class="mute" style="font-size:13.5px"><b class="k">Why:</b> words or data on a screen, repeated daily, and a mistake is cheap to catch.</p><ul class="fitlist go"><li>Answer after-hours calls and text back</li><li>Follow up on sent quotes</li><li>Review requests and tune-up reminders</li><li>Turn tech notes into clean invoices</li></ul></div>
+        <div data-fitlist="maybe" hidden><p class="mute" style="font-size:13.5px"><b class="k">Why:</b> AI drafts, a person approves, because a mistake costs money or trust.</p><ul class="fitlist maybe"><li>Dispatch suggestions and ETA texts</li><li>Quote drafts from past jobs</li><li>Payment reminders (a person handles disputes)</li><li>Rebate paperwork drafts</li></ul></div>
+        <div data-fitlist="stop" hidden><p class="mute" style="font-size:13.5px"><b class="k">Why:</b> safety, judgment or emotions. A mistake could hurt someone.</p><ul class="fitlist stop"><li>Gas smell or CO calls: straight to a person or 911</li><li>Diagnosing equipment remotely</li><li>Final pricing decisions</li><li>Upset customers in a dispute</li></ul></div>
       </div>
     </section>
-    <section class="card" data-stop="ai">
+    <section class="card" data-stop="ai" data-gate="4" data-glabel="Open all 4">
       <div class="wrap">
-        <p class="eyebrow">What fits in an HVAC shop</p>
-        <svg class="art" viewBox="0 0 360 58" aria-hidden="true" style="max-height:58px" id="light"><rect class="pop" x="96" y="4" width="168" height="50" rx="25" fill="#142B55"/><circle class="pop" data-l="go" cx="130" cy="29" r="16"/><circle class="pop" data-l="maybe" cx="180" cy="29" r="16"/><circle class="pop" data-l="stop" cx="230" cy="29" r="16"/><path class="draw" d="M10 29 H90 M270 29 H350" stroke="#D7AA68" stroke-width="4" stroke-dasharray="4 8" fill="none"/></svg>
-        <div class="tabs" role="tablist" style="--n:3"><button type="button" role="tab" aria-selected="true" data-fit="go">Good fit</button><button type="button" role="tab" aria-selected="false" data-fit="maybe">Person checks</button><button type="button" role="tab" aria-selected="false" data-fit="stop">Keep human</button></div>
-        <ul class="fitlist go" data-fitlist="go"><li>Answer after-hours calls and text back</li><li>Follow up on sent quotes</li><li>Ask for reviews after a job</li><li>Tune-up and maintenance reminders</li><li>Turn tech notes into clean invoices</li><li>Call summaries for the office</li></ul>
-        <ul class="fitlist maybe" data-fitlist="maybe" hidden><li>Dispatch suggestions and ETA texts</li><li>Draft quotes from past jobs; owner approves</li><li>Payment reminders; a person handles disputes</li><li>Rebate paperwork drafts (Energize CT); a person submits</li></ul>
-        <ul class="fitlist stop" data-fitlist="stop" hidden><li>Gas smell or CO calls: straight to a person or 911</li><li>Diagnosing equipment remotely</li><li>Final pricing decisions</li><li>Upset customers in a dispute</li></ul>
-        <p class="rule">If a mistake could hurt someone or cost thousands, a person decides.</p>
-      </div>
-    </section>
-    <section class="card" data-stop="ai">
-      <div class="wrap">
-        <p class="eyebrow">The plug-in ladder</p>
-        <h2 class="t2">Start at the <span>lowest rung.</span></h2>
-        <svg class="art" viewBox="0 0 360 40" aria-hidden="true" style="max-height:32px"><g class="pop"><rect x="6" y="10" width="44" height="22" rx="6" fill="#142B55"/><path d="M50 15 h12 M50 27 h12" stroke="#D7AA68" stroke-width="5" stroke-linecap="round"/></g><path class="draw" d="M6 21 C-20 21 -10 38 20 38 H290" stroke="#142B55" stroke-width="3" fill="none" opacity="0"/><path class="draw" d="M68 21 C120 21 140 6 190 6 S260 34 300 21" stroke="#EE6A2C" stroke-width="4" fill="none" stroke-linecap="round"/><g class="pop"><rect x="300" y="6" width="50" height="30" rx="8" fill="#FFF4DE" stroke="#D7AA68" stroke-width="2.5"/><circle cx="317" cy="21" r="3.5" fill="#142B55"/><circle cx="333" cy="21" r="3.5" fill="#142B55"/></g></svg>
+        <p class="eyebrow">How AI connects</p>
+        <h2 class="t2">It can only use what <span>it can reach.</span></h2>
+        <svg class="art" viewBox="0 0 360 40" aria-hidden="true" style="max-height:32px"><g class="pop"><rect x="6" y="10" width="44" height="22" rx="6" fill="#142B55"/><path d="M50 15 h12 M50 27 h12" stroke="#D7AA68" stroke-width="5" stroke-linecap="round"/></g><path class="draw" d="M68 21 C120 21 140 6 190 6 S260 34 300 21" stroke="#EE6A2C" stroke-width="4" fill="none" stroke-linecap="round"/><g class="pop"><rect x="300" y="6" width="50" height="30" rx="8" fill="#FFF4DE" stroke="#D7AA68" stroke-width="2.5"/><circle cx="317" cy="21" r="3.5" fill="#142B55"/><circle cx="333" cy="21" r="3.5" fill="#142B55"/></g></svg>
+        <p class="lead">Think of it like wiring: some software has an outlet ready, some needs an adapter, some has no power at all. <b class="k">Ask what software they use before promising anything.</b></p>
         <div class="acc" id="plug"></div>
-        <p class="mute opt" style="font-size:13.5px">Example: an AI phone agent can start on plain call forwarding with text summaries. Booking into the schedule needs the API.</p>
       </div>
     </section>
-    <section class="card" data-stop="ai">
+    <section class="card" data-stop="ai" data-gate="3" data-glabel="Tap all 3 buckets" data-mission="ai">
       <div class="wrap">
-        <p class="eyebrow">Their software · as of Oct 2026</p>
-        <svg class="art" viewBox="0 0 360 42" aria-hidden="true" style="max-height:34px"><g class="pop"><rect x="4" y="6" width="46" height="30" rx="6" fill="#1F4C9C"/><rect x="10" y="12" width="20" height="5" rx="2" fill="#FFF4DE"/><rect x="10" y="21" width="32" height="4" rx="2" fill="#FFF4DE" opacity=".6"/></g><g class="pop"><rect x="60" y="6" width="46" height="30" rx="6" fill="#2F7D52"/><rect x="66" y="12" width="20" height="5" rx="2" fill="#FFF4DE"/><rect x="66" y="21" width="32" height="4" rx="2" fill="#FFF4DE" opacity=".6"/></g><g class="pop"><rect x="116" y="6" width="46" height="30" rx="6" fill="#EE6A2C"/><rect x="122" y="12" width="20" height="5" rx="2" fill="#FFF4DE"/><rect x="122" y="21" width="32" height="4" rx="2" fill="#FFF4DE" opacity=".6"/></g><path class="draw" d="M168 21 H280" stroke="#142B55" stroke-width="3" stroke-dasharray="6 6" fill="none"/><g class="pop"><circle cx="304" cy="21" r="18" fill="#142B55"/><path d="M296 21 v-5 a8 8 0 0 1 16 0 v5" stroke="#F2B33D" stroke-width="3" fill="none"/><rect x="293" y="20" width="22" height="13" rx="3" fill="#F2B33D"/></g><text x="330" y="26" font-family="Caveat,cursive" font-weight="700" font-size="16" fill="#C64A1C" class="pop">key?</text></svg>
-        <div class="acc sw" id="soft"></div>
-        <p class="mute opt" style="font-size:13.5px">None has an official MCP connector (a standard AI plug, like USB-C). Confirm inside the owner's account.</p>
-        <div class="box"><p class="say"><span class="handnote" style="font-size:20px">Ask: </span>"What software runs the business, which plan, and who's the admin?"</p></div>
-      </div>
-    </section>
-    <section class="card" data-stop="ai">
-      <div class="wrap">
-        <p class="eyebrow">Blockers</p>
-        <h2 class="t2">Six <span>blockers.</span></h2>
-        <div class="acc" id="blockers"></div>
-      </div>
-    </section>
-
-    <!-- 7 PROMISE -->
-    <section class="card" data-stop="promise">
-      <div class="wrap">
-        <p class="eyebrow">Stop 7 · Promise</p>
+        <p class="eyebrow">Never overpromise</p>
         <h2 class="t2">Quote after <span>the diagnosis.</span></h2>
-        <div class="buckets">
-          <div class="bucket k"><svg class="bi" viewBox="0 0 40 40" aria-hidden="true"><g class="pop"><circle cx="20" cy="20" r="17" fill="#FFF4DE" opacity=".2"/><path d="M11 21 l6 6 12 -14" stroke="#FFF4DE" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></svg><b>We know we can</b><p class="q">This works today. We've seen it work.</p><small>After-hours answering with a text summary.</small></div>
-          <div class="bucket t"><svg class="bi" viewBox="0 0 40 40" aria-hidden="true"><g class="pop"><path d="M15 6 h10 M17 6 v10 l-8 15 q-2 4 3 4 h16 q5 0 3 -4 l-8 -15 v-10" stroke="#FFF4DE" stroke-width="3" fill="none" stroke-linejoin="round"/><path d="M12 28 h16 l2 4 q1 2 -2 2 h-16 q-3 0 -2 -2z" fill="#F2B33D"/></g></svg><b>We think we can</b><p class="q">This should work. Here's how we'll test it.</p><small>Booking into your schedule, once your plan allows.</small></div>
-          <div class="bucket w"><svg class="bi" viewBox="0 0 40 40" aria-hidden="true"><g class="pop"><path d="M13 22 v-11 q0 -3 3 -3 t3 3 v8 v-12 q0 -3 3 -3 t3 3 v12 v-9 q0 -3 3 -3 t3 3 v14 q0 10 -10 10 h-2 q-6 0 -9 -6 l-4 -7 q-1 -3 2 -4 q2 0 3 2z" fill="#EE6A2C"/></g></svg><b>We wouldn't</b><p class="q">I'd keep this human, and here's why.</p><small>Gas calls, final pricing, disputes.</small></div>
+                <div class="buckets">
+          <button type="button" class="bucket kn" data-g="bk"><svg class="bi" viewBox="0 0 40 40" aria-hidden="true"><g class="pop"><path d="M11 21 l6 6 12 -14" stroke="#FFF4DE" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></svg><b>We know we can</b><p class="q">This works today. We've seen it work.</p><span class="tp">tap for an example</span><small>After-hours answering with a text summary.</small></button>
+          <button type="button" class="bucket t" data-g="bt"><svg class="bi" viewBox="0 0 40 40" aria-hidden="true"><g class="pop"><path d="M15 6 h10 M17 6 v10 l-8 15 q-2 4 3 4 h16 q5 0 3 -4 l-8 -15 v-10" stroke="#FFF4DE" stroke-width="3" fill="none" stroke-linejoin="round"/><path d="M12 28 h16 l2 4 q1 2 -2 2 h-16 q-3 0 -2 -2z" fill="#F2B33D"/></g></svg><b>We think we can</b><p class="q">This should work. Here's how we'll test it.</p><span class="tp">tap for an example</span><small>Booking into their schedule, once we confirm their software allows it.</small></button>
+          <button type="button" class="bucket w" data-g="bw"><svg class="bi" viewBox="0 0 40 40" aria-hidden="true"><g class="pop"><path d="M13 22 v-11 q0 -3 3 -3 t3 3 v8 v-12 q0 -3 3 -3 t3 3 v12 v-9 q0 -3 3 -3 t3 3 v14 q0 10 -10 10 h-2 q-6 0 -9 -6 l-4 -7 q-1 -3 2 -4 q2 0 3 2z" fill="#EE6A2C"/></g></svg><b>We wouldn't</b><p class="q">I'd keep this human, and here's why.</p><span class="tp">tap for an example</span><small>Gas calls, final pricing, disputes.</small></button>
         </div>
-        <div class="pairs"><div><s>"It's 100% accurate."</s><b>"It will make mistakes. Here's how we'll catch them."</b></div></div>
-      </div>
-    </section>
-    <section class="card" data-stop="promise">
-      <div class="wrap">
-        <p class="eyebrow">Prove it small</p>
-        <h2 class="t2">One problem. <span>Two weeks.</span></h2>
-        <div class="loopArt">
-          <svg viewBox="0 0 150 150" aria-hidden="true"><circle class="draw" cx="75" cy="75" r="58" fill="none" stroke="#EE6A2C" stroke-width="8" stroke-linecap="round" stroke-dasharray="330 400"/><path class="pop" d="M128 46 l8 -16 l-18 2z" fill="#EE6A2C"/><text x="75" y="70" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="800" font-size="26" fill="#142B55">BEFORE</text><text x="75" y="96" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="800" font-size="26" fill="#EE6A2C">AFTER</text></svg>
-          <div class="loopList"><div><p><b>Measure today.</b> Missed calls, last 2 weeks.</p></div><div><p><b>Pick one problem.</b> The clearest number.</p></div><div><p><b>Run it 2 weeks.</b> A person checks daily.</p></div><div><p><b>Compare.</b> Same number, after.</p></div><div><p><b>Decide together.</b> Keep, adjust or stop.</p></div></div>
-        </div>
-        <p class="rule">Agree on the number that proves it before you build anything.</p>
-      </div>
-    </section>
-    <section class="card" data-stop="promise">
-      <div class="wrap">
-        <div class="pocketRow"><svg viewBox="0 0 40 52" aria-hidden="true" style="width:26px;height:34px"><g class="pop"><rect x="3" y="6" width="34" height="44" rx="5" fill="#D7AA68"/><rect x="8" y="12" width="24" height="34" rx="2" fill="#FFF4DE"/><rect x="13" y="2" width="14" height="8" rx="3" fill="#142B55"/></g><path class="draw" d="M12 22 l3 3 6 -7 M12 34 l3 3 6 -7" stroke="#2F7D52" stroke-width="3" fill="none" stroke-linecap="round"/></svg><p class="eyebrow" id="checkTitle">Before you leave</p></div>
-        <div class="checklist" id="checklist"></div>
+        <p class="mute" style="font-size:13.5px">Never say "100% accurate." Say: <b class="k">"It will make mistakes. Here's how we'll catch them."</b></p>
       </div>
     </section>
 
-    <!-- 8 PRACTICE: cases inserted before scoreCard -->
+    <!-- PRACTICE: cases inserted before scoreCard -->
     <section class="card" data-stop="practice" id="scoreCard">
       <div class="wrap">
-        <p class="eyebrow">Stop 8 · Your score</p>
+        <p class="eyebrow">Stop 6 · Your score</p>
         <div class="bigscore" id="bigScore">0/7</div>
         <svg class="art" viewBox="0 0 360 40" aria-hidden="true" style="max-height:40px" id="scoreDots"></svg>
-        <h2 class="t2" id="scoreMsg">Sorted correctly</h2>
-        <p class="idea" id="scoreTip">Every miss is a question you'll ask better next time.</p>
-        <button class="btnA ghost" id="retry" type="button">Try the cases again</button>
+        <h2 class="t2" id="scoreMsg">Best replies picked</h2>
+        <p class="idea" id="scoreTip">Every miss is a reply you'll say better on a real visit.</p>
+        <button class="btnA ghost" id="retry" type="button">Try the conversations again</button>
       </div>
     </section>
 
     <!-- FIELD CARD -->
-    <section class="card" data-stop="card">
+    <section class="card" data-stop="card" data-gate="3" data-glabel="Tap all 3 tabs">
       <div class="wrap">
         <p class="eyebrow" id="fcTitle">Field card</p>
-        <div class="tabs" role="tablist" style="--n:3"><button type="button" role="tab" aria-selected="true" data-fc="0">Before</button><button type="button" role="tab" aria-selected="false" data-fc="1">During</button><button type="button" role="tab" aria-selected="false" data-fc="2">After</button></div>
-        <div class="fc" data-fcp="0"><div><h4>Mindset</h4><ul><li>Be the tech, not the salesperson</li><li>Goal: they say "That's right"</li><li>Owners describe fixes. Find the problem.</li></ul></div><div><h4>Set up</h4><ul><li>Check their software and reviews</li><li>Ask before the note taker records</li><li>Phone face-down, eyes up</li></ul></div></div>
-        <div class="fc" data-fcp="1" hidden><div><h4>Ladder</h4><ol><li>Day: "Walk me through yesterday."</li><li>Leak: "What do you just put up with?"</li><li>Cost: "When did that last happen? What did it cost?"</li><li>Want: "If this were fixed, what changes for you?"</li></ol></div><div><h4>Listen for</h4><ul><li>Repeats · workarounds · sighs · numbers · one person · "always"</li><li>Follow up, then wait 3 seconds</li><li>Play it back until "That's right"</li></ul></div></div>
-        <div class="fc" data-fcp="2" hidden><div><h4>Sort and check</h4><ul><li>How often · what it costs · who feels it · what if nothing changes</li><li>Words or data? Mistakes catchable? Data reachable?</li></ul></div><div><h4>Promise</h4><ul><li>Know / Think / Wouldn't</li><li>Run the debrief prompt</li><li>Recap in 24 hours, in their words</li></ul></div></div>
+        <div class="tabs" role="tablist" style="--n:3"><button type="button" role="tab" aria-selected="true" data-fc="0" data-g="f0">Before</button><button type="button" role="tab" aria-selected="false" data-fc="1" data-g="f1">During</button><button type="button" role="tab" aria-selected="false" data-fc="2" data-g="f2">After</button></div>
+        <div class="fc" data-fcp="0"><div><h4>Mindset</h4><ul><li>Look to their interests, not just yours (Phil. 2:4)</li><li>Be the tech: diagnose before you prescribe</li><li>Goal: they say "That's right"</li></ul></div><div><h4>Set up</h4><ul><li>Ask before the note taker records</li><li>Phone face-down, out of view</li><li>Plan ~40 min: Open, Map, Dig, Future</li></ul></div></div>
+        <div class="fc" data-fcp="1" hidden><div><h4>The 8 questions</h4><ol><li>How did you get into HVAC?</li><li>Walk me through yesterday.</li><li>Where do things slow down or slip?</li><li>When did that last happen? Then what?</li><li>What do you just put up with?</li><li>What have you tried before?</li><li>If fixed, what changes for you?</li><li>What would make you nervous?</li></ol></div><div><h4>Follow up</h4><ul><li>Tell me more · What happened next? · What causes that? · Mirror · Pause 3 sec</li></ul></div></div>
+        <div class="fc" data-fcp="2" hidden><div><h4>Before you leave</h4><ul><li>Play it back in their words</li><li>Ask: "Did I get that right?"</li><li>Know / Think / Wouldn't, never overpromise</li></ul></div><div><h4>After</h4><ul><li>Let the AI turn the transcript into notes</li><li>Recap to the owner within 24 hours, in their words</li></ul></div></div>
         <button class="btnA" id="copyCard" type="button">Copy the whole field card</button>
         <div id="fcArt" class="opt"></div>
       </div>
@@ -765,12 +885,12 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
       <div class="wrap">
         <div class="pocketRow"><svg viewBox="0 0 60 44" aria-hidden="true" style="width:48px;height:36px"><g class="pop"><rect x="2" y="30" width="54" height="11" rx="2" fill="#1F4C9C"/></g><g class="pop"><rect x="6" y="18" width="48" height="11" rx="2" fill="#EE6A2C"/></g><g class="pop"><rect x="10" y="6" width="40" height="11" rx="2" fill="#2F7D52"/></g></svg><p class="eyebrow">Sources</p></div>
         <div class="src"><ul>
-          <li>Alex Hormozi, <i>$100M Offers</i> (2021): the value equation.</li>
-          <li>Dale Carnegie, <i>How to Win Friends and Influence People</i> (1936). <a href="https://britannica.com/topic/How-to-Win-Friends-and-Influence-People" target="_blank" rel="noopener">Britannica</a></li>
-          <li>Tamir &amp; Mitchell, PNAS 2012. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3361411/" target="_blank" rel="noopener">Paper</a> · Huang et al., 2017. <a href="https://dash.harvard.edu/handle/1/35647952" target="_blank" rel="noopener">Paper</a></li>
-          <li>Chris Voss, <i>Never Split the Difference</i> (2016). Rob Fitzpatrick, <i>The Mom Test</i> (2013). Eliyahu Goldratt, <i>The Goal</i> (1984).</li>
-          <li><a href="https://www.carrier.com/us/en/history/invention-of-air-conditioning/" target="_blank" rel="noopener">Carrier, 1902</a> · <a href="https://en.wikipedia.org/wiki/Five_whys" target="_blank" rel="noopener">Five whys</a> · <a href="https://www.gong.io/resources/guides/discovery-call-checklist" target="_blank" rel="noopener">Gong discovery research</a></li>
-          <li><a href="https://help.servicetitan.com/commercial/docs/get-started-with-api-dev-portal-v2" target="_blank" rel="noopener">ServiceTitan API</a> · <a href="https://developer.getjobber.com/docs/getting_started" target="_blank" rel="noopener">Jobber</a> · <a href="https://docs.api.fieldedge.com/" target="_blank" rel="noopener">FieldEdge</a> · <a href="https://supergood.ai/api-report-card/housecall-pro" target="_blank" rel="noopener">Housecall Pro review</a> · <a href="https://www.ibm.com/topics/model-context-protocol" target="_blank" rel="noopener">MCP (IBM)</a> · <a href="https://www.rcfp.org/reporters-recording-guide/connecticut/" target="_blank" rel="noopener">CT recording law</a></li>
+          <li>Philippians 2:4 (ESV). <a href="https://www.esv.org/verses/Phil%202%3A4/" target="_blank" rel="noopener">ESV.org</a></li>
+          <li>Alex Hormozi, <i>$100M Offers</i> (2021). Dale Carnegie, <i>How to Win Friends and Influence People</i> (1936). Chris Voss, <i>Never Split the Difference</i> (2016). Rob Fitzpatrick, <i>The Mom Test</i> (2013).</li>
+          <li>Tamir &amp; Mitchell, 2012 (talking about yourself is rewarding). <a href="https://www.apa.org/gradpsych/2012/09/research" target="_blank" rel="noopener">APA summary</a> · Huang et al., 2017 (follow-up questions). <a href="https://www.hks.harvard.edu/centers/cpl/publications/it-doesnt-hurt-ask-question-asking-increases-liking" target="_blank" rel="noopener">Harvard</a></li>
+          <li>Konrath et al., 2011 (empathy decline). <a href="https://news.umich.edu/index.php?p=7724" target="_blank" rel="noopener">U. Michigan</a> · Przybylski &amp; Weinstein, 2013 (phone presence). <a href="https://www.scientificamerican.com/article/how-your-cell-phone-hurts-your-relationships/" target="_blank" rel="noopener">Scientific American</a></li>
+          <li>Rowe (wait time). <a href="https://www.kent.edu/ctl/wait-time-making-space-authentic-learning" target="_blank" rel="noopener">Kent State</a> · Weger et al., 2010 (paraphrasing). <a href="https://stars.library.ucf.edu/scopus2010/9657/" target="_blank" rel="noopener">Abstract</a> · Roediger &amp; Karpicke, 2006 (retrieval practice).</li>
+          <li><a href="https://www.carrier.com/us/en/history/invention-of-air-conditioning/" target="_blank" rel="noopener">Carrier, 1902</a> · <a href="https://en.wikipedia.org/wiki/Five_whys" target="_blank" rel="noopener">Five whys</a> · <a href="https://www.gong.io/resources/guides/discovery-call-checklist" target="_blank" rel="noopener">Gong</a> · <a href="https://www.technicalsafetybc.ca/regulatory-resources/incident-investigations/cracked-heat-exchanger-residential-furnace-results-carbon-monoxide-exposure" target="_blank" rel="noopener">Heat exchanger CO</a> · <a href="https://www.rcfp.org/reporters-recording-guide/connecticut/" target="_blank" rel="noopener">CT recording law</a></li>
         </ul></div>
         <button class="btnA ghost" data-jump="start" type="button">Back to the start</button>
       </div>
@@ -782,7 +902,7 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
   <footer class="bottom">
     <div class="wrap">
       <button class="back" id="prev" type="button" aria-label="Previous card"><svg viewBox="0 0 20 20"><path d="M12 4 6 10l6 6" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-      <button class="next" id="next" type="button"><span id="nextLabel">Next</span><svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="m8 4 6 6-6 6" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button class="next" id="next" type="button"><svg class="lk" viewBox="0 0 20 20" aria-hidden="true"><rect x="4" y="9" width="12" height="9" rx="2" fill="currentColor"/><path d="M7 9 V6 a3 3 0 0 1 6 0 V9" stroke="currentColor" stroke-width="2" fill="none"/></svg><span id="nextLabel">Next</span><svg class="arr" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="m8 4 6 6-6 6" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
   </footer>
 </div>
@@ -931,12 +1051,30 @@ function glowDisc(cx,cy,r,col,op){return '<circle cx="'+cx+'" cy="'+cy+'" r="'+r
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v);}catch(e){return null;}}
 var stage=document.getElementById('stage');
+var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+var cards=Array.prototype.slice.call(stage.querySelectorAll('.card')),cur=-1;
+function checkOverflow(){}
+function fadeIn(el){if(el&&el.animate&&!RM)el.animate([{opacity:.15,transform:'translateY(6px)'},{opacity:1,transform:'none'}],{duration:300,easing:'ease-out'});}
 
 /* ---------- people ---------- */
-var PEOPLE={Bobby:{c:'#EE6A2C',role:'Founder'},RJ:{c:'#2E6CCB',role:'Starwell team'},Dan:{c:'#2F7D52',role:'Starwell team'}};
+var PEOPLE={Bobby:{c:'#EE6A2C'},RJ:{c:'#2E6CCB'},Dan:{c:'#2F7D52'}};
 var NAME=store('atrq-user');if(!PEOPLE[NAME])NAME=null;
 function team(){return Object.keys(PEOPLE).filter(function(n){return n!==NAME;}).join(' and ');}
-document.getElementById('who').innerHTML=Object.keys(PEOPLE).map(function(n){return '<button type="button" data-who="'+n+'" aria-pressed="'+(n===NAME)+'"><span class="av" style="background:'+PEOPLE[n].c+'">'+n.charAt(0)+'</span><span><b>'+n+'</b><small>'+PEOPLE[n].role+'</small></span><span class="ck">✓</span></button>';}).join('');
+document.getElementById('who').innerHTML=Object.keys(PEOPLE).map(function(n){return '<button type="button" data-who="'+n+'" aria-pressed="'+(n===NAME)+'"><span class="av" style="background:'+PEOPLE[n].c+'">'+n.charAt(0)+'</span><span><b>'+n+'</b><small>Starwell team</small></span><span class="ck">✓</span></button>';}).join('');
+
+/* ---------- gates ---------- */
+var DONE={};
+function loadDone(){DONE={};try{DONE=JSON.parse(store('atrq-done-'+NAME)||'{}')||{};}catch(e){}}
+function need(c){return +(c.dataset.gate||0);}
+function got(c){return Object.keys(c._got||{}).length;}
+function isOpen(c){var n=need(c);return !n||!!DONE[c.dataset.key]||got(c)>=n;}
+function hit(el,id){var c=el&&el.closest&&el.closest('.card');if(!c)return;el.classList&&el.classList.add('hit');if(!need(c))return;c._got=c._got||{};if(c._got[id])return;c._got[id]=1;
+  if(got(c)>=need(c)&&!DONE[c.dataset.key]){DONE[c.dataset.key]=1;if(NAME)store('atrq-done-'+NAME,JSON.stringify(DONE));if(cards[cur]===c){nextBtn.classList.remove('unlock');void nextBtn.offsetWidth;nextBtn.classList.add('unlock');}}
+  nudge(c);if(cards[cur]===c)updateNav();}
+function nudge(c){c.querySelectorAll('.nudge').forEach(function(x){x.classList.remove('nudge');});if(isOpen(c))return;
+  var t=Array.prototype.filter.call(c.querySelectorAll('[data-g]'),function(e){return !(c._got||{})[e.dataset.g]&&e.getClientRects().length;})[0];if(t)t.classList.add('nudge');}
+stage.addEventListener('click',function(e){var g=e.target.closest('[data-g]');if(g&&g.type!=='range')hit(g,g.dataset.g);},true);
+stage.addEventListener('input',function(e){var g=e.target.closest('[data-g]');if(g)hit(g,g.dataset.g);},true);
 
 /* ---------- hero ---------- */
 (function(){var g='';
@@ -953,16 +1091,7 @@ document.getElementById('who').innerHTML=Object.keys(PEOPLE).map(function(n){ret
   document.getElementById('heroArt').innerHTML='<svg class="on" viewBox="0 0 1200 620" role="img" aria-label="A Starwell team member listens to an HVAC owner.">'+g+'</svg>';
 })();
 
-
-/* ---------- extra drawings ---------- */
-var BICON=[
- '<circle cx="8" cy="12" r="5" fill="none" stroke="#EE6A2C" stroke-width="2.6"/><path d="M13 12 h9 M19 12 v4 M22 12 v3" stroke="#EE6A2C" stroke-width="2.6" stroke-linecap="round"/>',
- '<ellipse cx="12" cy="5" rx="8" ry="3" fill="#EE6A2C"/><path d="M4 5 v14 q0 3 8 3 t8 -3 v-14 M4 12 q0 3 8 3 t8 -3" stroke="#EE6A2C" stroke-width="2.4" fill="none"/>',
- '<path d="M12 3 v18 M5 21 h14 M4 7 h16 M4 7 l-3 7 h6z M20 7 l-3 7 h6z" stroke="#EE6A2C" stroke-width="2.2" fill="none" stroke-linejoin="round"/>',
- '<path d="M12 2 l8 3 v6 q0 7 -8 11 q-8 -4 -8 -11 v-6z" fill="#EE6A2C"/><path d="M8 12 l3 3 5 -6" stroke="#FFF4DE" stroke-width="2.4" fill="none" stroke-linecap="round"/>',
- '<circle cx="12" cy="12" r="10" fill="#EE6A2C"/><text x="12" y="17" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="800" font-size="15" fill="#FFF4DE">$</text>',
- '<circle cx="8" cy="8" r="4" fill="#EE6A2C"/><circle cx="17" cy="9" r="3.4" fill="#EE6A2C" opacity=".7"/><path d="M1 21 q0 -8 7 -8 t7 8z" fill="#EE6A2C"/><path d="M13 21 q1 -7 5 -7 t5 7z" fill="#EE6A2C" opacity=".7"/>'
-];
+/* ---------- other drawings ---------- */
 (function(){
   var road='<rect x="0" y="210" width="1200" height="50" fill="'+P.sand3+'"/><path d="M40 236 H1160" stroke="'+P.cream+'" stroke-width="6" stroke-dasharray="40 30"/>';
   document.getElementById('loginArt').innerHTML='<svg class="art" viewBox="0 0 1200 260" aria-hidden="true" style="max-height:72px">'+road+condenser(1040,214,.55)+'<g class="drive">'+van(380,222,.85)+'</g><text x="760" y="110" font-family="'+HF+'" font-weight="700" font-size="44" fill="'+P.ember+'" class="pop">on the way…</text></svg>';
@@ -974,140 +1103,184 @@ var BICON=[
   t+='<path class="draw" d="M520 222 q40 -24 80 0 t80 0" stroke="'+P.cobalt+'" stroke-width="7" fill="none" stroke-linecap="round"/>';
   t+='<text x="600" y="176" text-anchor="middle" font-family="'+HF+'" font-weight="700" font-size="40" fill="'+P.ember+'" class="pop">eyes up, phone down</text>';
   document.getElementById('noteArt').innerHTML='<svg class="art sm on" viewBox="140 130 920 270" aria-hidden="true">'+t+'</svg>';
-  document.getElementById('flipGear').innerHTML='<g class="spin" style="--sd:6s">'+gear(0,0,40,P.sand3)+'</g>';
-  var ow='<svg viewBox="0 0 300 420" aria-hidden="true" class="on">'+shadow(150,410,.95)+person(mix(OWNER,{x:150,y:410,s:.95,talk:true,aR:30,eR:66,clsR:'talkArm',aL:8,eL:20}))+'</svg>';
-  window.__OWNER_SVG=ow;
-})();
-function paintLight(v){document.querySelectorAll('#light [data-l]').forEach(function(c){var on=c.dataset.l===v,col={go:'#3FAE6A',maybe:'#F2B33D',stop:'#E5482B'}[c.dataset.l];c.setAttribute('fill',on?col:'#2A3A60');c.setAttribute('stroke',on?'#FFF4DE':'none');c.setAttribute('stroke-width','3');});}
-paintLight('go');document.querySelectorAll('[data-fit]').forEach(function(b){b.addEventListener('click',function(){paintLight(b.dataset.fit);});});
-/* ---------- tech vs salesperson ---------- */
-(function(){
   var SALES={skin:SK[0],hair:HR.dark,hairStyle:'short',top:P.cream,jacket:'#566078',collar:P.cream,pants:'#3B3F4C',shoe:P.ink};
   function scene(o,extra,lab,col){return '<svg viewBox="0 0 300 220" aria-hidden="true"><rect x="0" y="190" width="300" height="30" fill="'+P.sand3+'"/><text x="150" y="214" text-anchor="middle" font-family="'+DF+'" font-weight="800" font-size="22" letter-spacing="1" fill="'+col+'">'+lab+'</text>'+extra+shadow(150,192,.62)+person(mix(o.p,{x:150,y:192,s:.62,aR:o.aR,eR:o.eR,holdR:o.hold,aL:6,eL:10,smile:o.smile}))+'</svg>';}
-  var gauge='<g class="pop"><circle cx="232" cy="80" r="30" fill="'+P.navy+'"/><circle cx="232" cy="80" r="23" fill="'+P.cream+'"/><path d="M232 80 L246 66" stroke="'+P.verm+'" stroke-width="4" stroke-linecap="round"/></g><text x="232" y="136" text-anchor="middle" font-family="'+HF+'" font-weight="700" font-size="22" fill="'+P.go+'" class="pop">checks first</text>';
-  var brochure='<g class="pop"><rect x="206" y="50" width="64" height="74" rx="4" fill="'+P.verm+'"/><text x="238" y="94" text-anchor="middle" font-family="'+DF+'" font-weight="800" font-size="20" fill="'+P.cream+'">BUY!</text></g><text x="238" y="150" text-anchor="middle" font-family="'+HF+'" font-weight="700" font-size="22" fill="'+P.stop+'" class="pop">pitches first</text>';
-  P.go='#2F7D52';P.stop='#B5361F';
+  var gauge='<g class="pop"><circle cx="232" cy="80" r="30" fill="'+P.navy+'"/><circle cx="232" cy="80" r="23" fill="'+P.cream+'"/><path d="M232 80 L246 66" stroke="'+P.verm+'" stroke-width="4" stroke-linecap="round"/></g><text x="232" y="136" text-anchor="middle" font-family="'+HF+'" font-weight="700" font-size="22" fill="#2F7D52" class="pop">tests first</text>';
+  var brochure='<g class="pop"><rect x="206" y="50" width="64" height="74" rx="4" fill="'+P.verm+'"/><text x="238" y="94" text-anchor="middle" font-family="'+DF+'" font-weight="800" font-size="20" fill="'+P.cream+'">BUY!</text></g><text x="238" y="150" text-anchor="middle" font-family="'+HF+'" font-weight="700" font-size="22" fill="#B5361F" class="pop">pitches first</text>';
   document.getElementById('cmpArt').innerHTML='<div class="good">'+scene({p:TECH,aR:46,eR:34,hold:HOLD.wrench,smile:true},gauge,'THE TECH','#14532F')+'</div><div class="bad">'+scene({p:SALES,aR:70,eR:14,hold:HOLD.folder,smile:true},brochure,'THE SALESPERSON','#8A2414')+'</div>';
+  window.__OWNER_SVG='<svg viewBox="0 0 300 420" aria-hidden="true" class="on">'+shadow(150,410,.95)+person(mix(OWNER,{x:150,y:410,s:.95,talk:true,aR:30,eR:66,clsR:'talkArm',aL:8,eL:20}))+'</svg>';
 })();
 
 /* ---------- timeline ---------- */
 var TL=[
- ['~400 BC','Socrates','Taught by asking questions, never by lecturing. Students found the answers themselves, so they believed them.','People trust conclusions they reach on their own.'],
- ['1902','Willis Carrier','A Brooklyn printer\'s colors wouldn\'t line up. He asked why until he found the cause: humidity. His fix became air conditioning.','HVAC itself was born from diagnosing first.'],
- ['1936','Dale Carnegie','His first rule for being liked: become genuinely interested in other people.','Interest is the strategy, not a warm-up.'],
- ['1950s','Toyota','Taiichi Ohno trained workers to ask "why" five times to find the root cause, not the symptom.','Never fix a symptom.'],
- ['2010s','Gong','Analysis of 519,000 sales calls: top sellers ask 11 to 14 questions and spread them out. They listen more than they talk.','The data agrees with Socrates.'],
- ['Today','AI note takers','Your phone captures every word, so your eyes and attention stay on the owner.','Technology now pays you to listen.']
+ ['~AD 60','Philippians 2:4','Paul wrote to the church in Philippi: <i class="qt">"Let each of you look not only to his own interests, but also to the interests of others."</i>','Serve first. Every question in this guide starts from that posture.'],
+ ['1902','Willis Carrier','A Brooklyn printing plant couldn\'t keep its colors lined up because the paper kept swelling and shrinking. Instead of guessing, Carrier asked what was really changing. <b class="k">The cause was humidity.</b> His fix became modern air conditioning.','The HVAC industry was born from diagnosing first.'],
+ ['1936','Dale Carnegie','<i class="qt">"You can make more friends in two months by becoming interested in other people than you can in two years by trying to get other people interested in you."</i>','Being interested is the strategy, not the warm-up.'],
+ ['1950s','Toyota','Taiichi Ohno taught workers to ask "why?" up to five times when something broke. <b class="k">The first answer is usually a symptom; the last one is the cause.</b>','Keep asking until you reach the cause.'],
+ ['2010s','Gong','A study of 519,000 recorded sales calls found the best ones had <b class="k">11–14 questions</b>, spread through the conversation, and top sellers talked <b class="k">less than half the time</b>.','The data now proves what Carnegie said.'],
+ ['Today','More ways to talk, less listening','Telegraph (1844), telephone (1876), texting (1992), smartphones (2007), AI today: each made messages faster, but attention got scarcer. A 2010 review of 72 studies found <b class="k">college students about 40% lower in empathy</b> than students 20–30 years earlier.','When few people really listen, the one who does stands out.']
 ];
 var tlArt=document.getElementById('tlArt'),tlBtns=document.getElementById('tlBtns'),tlBox=document.getElementById('tlBox');
 var tg='<path class="draw" d="M14 38 H346" stroke="#142B55" stroke-width="4" stroke-linecap="round"/>';
 TL.forEach(function(t,i){var x=30+i*60;tg+='<g class="pop"><circle cx="'+x+'" cy="38" r="'+(i===TL.length-1?13:10)+'" fill="'+(i===TL.length-1?'#EE6A2C':'#FFF4DE')+'" stroke="#142B55" stroke-width="3" data-tl="'+i+'" style="cursor:pointer"/></g>';});
 tg+='<g id="tlMark"><path d="M0 -6 l-6 -10 h12z" fill="#EE6A2C" transform="translate(30,22)"/></g>';
 tlArt.innerHTML=tg;
-tlBtns.innerHTML=TL.map(function(t,i){return '<button type="button" role="tab" data-tl="'+i+'" aria-selected="false">'+t[0]+'</button>';}).join('');
+tlBtns.innerHTML=TL.map(function(t,i){return '<button type="button" role="tab" data-tl="'+i+'" data-g="t'+i+'" aria-selected="false">'+t[0]+'</button>';}).join('');
 function showTL(i){var t=TL[i];tlBtns.querySelectorAll('button').forEach(function(b,k){b.setAttribute('aria-selected',String(k===i));});
   document.getElementById('tlMark').setAttribute('transform','translate('+(i*60)+',0)');
-  tlBox.innerHTML='<span class="yr">'+t[0]+'</span><b>'+t[1]+'</b><p>'+esc(t[2])+'</p><p class="lesson">'+esc(t[3])+'</p>';
-  if(tlBox.animate)tlBox.animate([{opacity:.2,transform:'translateY(6px)'},{opacity:1,transform:'none'}],{duration:300});}
+  tlBox.innerHTML='<span class="yr">'+t[0]+'</span><b>'+t[1]+'</b><p>'+t[2]+'</p><p class="lesson">'+esc(t[3])+'</p>';
+  hit(tlBtns.children[i],'t'+i);fadeIn(tlBox);}
 document.querySelector('.tl').addEventListener('click',function(e){var b=e.target.closest('[data-tl]');if(b)showTL(+b.dataset.tl);});
-showTL(1);
+
+/* ---------- studies ---------- */
+document.querySelectorAll('.study').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('.study').forEach(function(x){x.classList.toggle('open',x===b);});fadeIn(b.querySelector('.res'));checkOverflow();});});
 
 /* ---------- value equation ---------- */
-var VQ=[['Dream outcome','up','If this were fixed, what changes for you?',4],['Likelihood it works','up','What have you tried before? What happened?',3],['Time to results','down','How soon does this need to be fixed?',2],['Effort and hassle','down','What would make this a headache for your team?',2]];
-document.getElementById('veq').innerHTML='<div class="vrow">'+VQ.slice(0,2).map(vt).join('')+'</div><div class="vbar"></div><div class="vrow">'+VQ.slice(2).map(vt).join('')+'</div>';
-function vt(v,i){var k=VQ.indexOf(v);return '<label class="vt '+v[1]+'"><b>'+(v[1]==='up'?'▲ ':'▼ ')+v[0]+'</b><span class="q">'+esc(v[2])+'</span><input type="range" min="1" max="5" value="'+v[3]+'" id="vq'+k+'" aria-label="'+v[0]+'"></label>';}
-function vcalc(){var a=[0,1,2,3].map(function(k){return +document.getElementById('vq'+k).value;});var val=(a[0]*a[1])/(a[2]*a[3]);var pct=Math.max(4,Math.min(100,Math.log(val*25)/Math.log(625)*100));
+var VQ=[
+ {n:'Dream outcome',d:'up',plain:'What they really want. Not "software," but <b class="k">"my evenings back"</b> or "never miss a July call."',dir:'Bigger, more personal → more value',q:'If this were fixed, what would change for you?'},
+ {n:'Likelihood',d:'up',plain:'How much they believe it will <b class="k">actually work for them</b>. A past bad experience pulls this down.',dir:'More belief → more value',q:'What have you tried before? What happened?'},
+ {n:'Time delay',d:'down',plain:'How long until they <b class="k">see a result</b>. A long wait makes anything feel worth less.',dir:'Longer wait → less value',q:'How soon does this need to be fixed?'},
+ {n:'Effort',d:'down',plain:'How much hassle, learning or change it takes <b class="k">from them and their team</b>.',dir:'More hassle → less value',q:'Who on your team would have to change how they work?'}
+];
+(function(){var chip=function(i){var v=VQ[i];return '<button type="button" class="chip '+v.d+'" data-eq="'+i+'" data-g="e'+i+'" aria-pressed="false">'+(v.d==='up'?'▲ ':'▼ ')+v.n+'</button>';};
+  document.getElementById('eqn').innerHTML='<div class="eqrow">'+chip(0)+'<i>×</i>'+chip(1)+'</div><svg class="eqline" viewBox="0 0 300 10" preserveAspectRatio="none" aria-hidden="true"><path class="draw" d="M2 5 H298" stroke="#142B55" stroke-width="4"/></svg><div class="eqrow">'+chip(2)+'<i>×</i>'+chip(3)+'</div>';})();
+var eqPanel=document.getElementById('eqPanel');
+eqPanel.innerHTML='<p class="handnote">Tap a part of the equation.</p><p class="mute" style="font-size:13.5px">Top parts push value <b>up</b>. Bottom parts pull it <b>down</b>. Your questions measure all four, so you only suggest things that are big on top and small on the bottom.</p>';
+document.getElementById('eqn').addEventListener('click',function(e){var b=e.target.closest('[data-eq]');if(!b)return;var v=VQ[+b.dataset.eq];
+  document.querySelectorAll('[data-eq]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});
+  eqPanel.innerHTML='<p class="nm" style="color:'+(v.d==='up'?'var(--go)':'var(--stop)')+'">'+v.n+'</p><p>'+v.plain+'</p><p class="dir" style="color:'+(v.d==='up'?'var(--go)':'var(--stop)')+'">'+v.dir+'</p><p><span class="handnote" style="font-size:18px">Ask: </span><span class="say">"'+esc(v.q)+'"</span></p>';fadeIn(eqPanel);checkOverflow();});
+
+/* ---------- sliders with alerts ---------- */
+var SL=[
+ {n:'Dream outcome',d:'up',q:'"What would change for you?"',a:[['r','Small dream: they may not bother changing.'],['a','Some interest: ask what it means to them.'],['g','Big personal win: worth solving.']]},
+ {n:'Likelihood',d:'up',q:'"What have you tried before?"',a:[['r','Doubtful: prove it small first.'],['a','Unsure: share a similar example.'],['g','They believe it can work.']]},
+ {n:'Time delay',d:'down',q:'"How soon does this need fixing?"',a:[['g','Fast results: value goes up.'],['a','A few weeks: set milestones.'],['r','Months away: find a quicker first win.']]},
+ {n:'Effort',d:'down',q:'"Who would have to change how they work?"',a:[['g','Barely changes their day.'],['a','Some training: keep it simple.'],['r','Big hassle: shrink what they must change.']]}
+];
+document.getElementById('slgrid').innerHTML=SL.map(function(s,i){return '<label class="sl"><span class="slt"><b>'+(s.d==='up'?'▲ ':'▼ ')+s.n+'</b><small>'+esc(s.q)+'</small></span><input type="range" min="1" max="5" value="3" id="sl'+i+'" data-g="v'+i+'" aria-label="'+s.n+'"><span class="alert a" id="al'+i+'"></span></label>';}).join('');
+function band(v){return v<=2?0:v===3?1:2;}
+function vcalc(changed){var a=[0,1,2,3].map(function(k){return +document.getElementById('sl'+k).value;});
+  SL.forEach(function(s,k){var al=document.getElementById('al'+k),b=s.a[band(a[k])];al.className='alert '+b[0];al.textContent=b[1];if(changed===k){al.classList.add('bump');setTimeout(function(){al.classList.remove('bump');},360);}});
+  var val=(a[0]*a[1])/(a[2]*a[3]);var pct=Math.max(4,Math.min(100,Math.log(val*25)/Math.log(625)*100));
   document.getElementById('vMeter').style.width=pct+'%';document.getElementById('vWord').textContent=pct>70?'High':pct>40?'Medium':'Low';}
-document.getElementById('veq').addEventListener('input',vcalc);vcalc();
+document.getElementById('slgrid').addEventListener('input',function(e){vcalc(+e.target.id.slice(2));});vcalc();
 
-/* ---------- ladder ---------- */
-var LADDER=[
- {n:'Day',m:'10 min',goal:'See how work actually flows.',qs:['Walk me through yesterday, first call to last invoice.','Who answers when you\'re on a job? After 5pm?'],key:0,lf:'Hand-offs, software names, anything done by hand.'},
- {n:'Leak',m:'10 min',goal:'Find where money or time slips.',qs:['Where do things fall through the cracks?','What do you just put up with?'],key:1,lf:'"We just…", sighs, "part of the job."'},
- {n:'Cost',m:'8 min',goal:'Turn the leak into a number.',qs:['When did that last happen? What did it cost?','What causes that?'],key:0,lf:'Every number. Keep asking until you hit a process.'},
- {n:'Want',m:'5 min',goal:'Let them define success.',qs:['If this were fixed, what changes for you?','What would make you nervous about changing it?'],key:0,lf:'Their exact words. Use them in your recap.'}
+/* ---------- dig deeper ---------- */
+document.getElementById('digBtn').addEventListener('click',function(){var t=document.getElementById('talk');t.classList.add('open');this.hidden=true;if(!RM)t.querySelectorAll('.hide').forEach(function(p,k){p.animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:350,delay:k*500,fill:'backwards'});});checkOverflow();});
+
+/* ---------- visit blueprint ---------- */
+var PARTS=[
+ {n:'Open',m:5,cls:'p1',col:'#2E6CCB',title:'Get them <span>talking.</span>',goal:'Goal: <b class="k">they feel comfortable and respected.</b>',why:'People open up to people who are interested in them (Carnegie). Starting with their story builds trust before any problem comes up.'},
+ {n:'Map',m:10,cls:'p2',col:'#2F7D52',title:'See the <span>real day.</span>',goal:'Goal: <b class="k">understand how work really flows</b>, before judging any of it.',why:'You can\'t find a leak in pipes you haven\'t traced. Mapping first keeps you from guessing.'},
+ {n:'Dig',m:15,cls:'p3',col:'#EE6A2C',title:'Find what <span>really hurts.</span>',goal:'Goal: <b class="k">turn vague complaints into real, recent examples.</b> Most of your time goes here.',why:'The biggest problems come out here, with examples and numbers, so it gets the most time.'},
+ {n:'Future',m:10,cls:'p4',col:'#7A4FB0',title:'Let them <span>picture it.</span>',goal:'Goal: <b class="k">hear success and worries in their words</b>, then play back what you heard.',why:'After they\'ve told their story, they can picture the fix. Jumping here earlier feels like a sales pitch.'}
 ];
-var ladArt=document.getElementById('ladArt');
-(function(){var g='<path class="draw" d="M14 6 V296 M82 6 V296" stroke="#D7AA68" stroke-width="8" stroke-linecap="round"/>';
-  LADDER.forEach(function(r,i){var y=262-i*72;g+='<g class="rungBtn pop" data-rung="'+i+'" role="button" tabindex="0" aria-label="Rung '+(i+1)+': '+r.n+'"><rect x="8" y="'+(y-16)+'" width="80" height="32" rx="7" fill="#FFF4DE" stroke="#D7AA68" stroke-width="2.5"/><text x="48" y="'+(y+5)+'" text-anchor="middle" fill="#142B55">'+(i+1)+' '+r.n.toUpperCase()+'</text></g>';});
-  g+='<g id="climber"><circle cx="92" cy="0" r="9" fill="#EE6A2C" stroke="#FFF4DE" stroke-width="3"/></g>';ladArt.innerHTML=g;})();
-function showRung(i){var r=LADDER[i];ladArt.querySelectorAll('.rungBtn rect').forEach(function(rc,k){rc.setAttribute('fill',k===i?'#142B55':'#FFF4DE');rc.nextSibling.setAttribute('fill',k===i?'#FFF4DE':'#142B55');});
-  document.getElementById('climber').setAttribute('transform','translate(0,'+(262-i*72)+')');
-  document.getElementById('lpanel').innerHTML='<div class="nm"><b>'+r.n+'</b><span>Rung '+(i+1)+' · '+r.m+'</span></div><p class="goal">'+esc(r.goal)+'</p>'+r.qs.map(function(q,j){return '<span class="q'+(r.key===j?' key':'')+'">'+esc(q)+'</span>';}).join('')+'<p class="lf"><span class="handnote" style="font-size:18px">Listen for: </span>'+esc(r.lf)+'</p>'+(i<3?'<button class="btnA ghost" type="button" data-rung="'+(i+1)+'" style="min-height:38px;padding:6px 12px;font-size:15px">Climb to '+LADDER[i+1].n+' ↑</button>':'');}
-document.querySelector('.lad').addEventListener('click',function(e){var b=e.target.closest('[data-rung]');if(b)showRung(+b.dataset.rung);});
-ladArt.addEventListener('keydown',function(e){var b=e.target.closest('[data-rung]');if(b&&(e.key==='Enter'||e.key===' ')){e.preventDefault();showRung(+b.dataset.rung);}});
-showRung(0);
-
-/* ---------- silence timer ---------- */
-var silT=null;document.getElementById('silBtn').addEventListener('click',function(){var ring=document.getElementById('ring'),num=document.getElementById('silNum'),n=0;clearInterval(silT);ring.style.transition='none';ring.style.strokeDashoffset=289;void ring.getBoundingClientRect();ring.style.transition='';num.textContent='1';ring.style.strokeDashoffset=289-96;
-  silT=setInterval(function(){n++;if(n<3){num.textContent=String(n+1);ring.style.strokeDashoffset=289-96*(n+1);}else{clearInterval(silT);num.textContent='TALK';}},1000);});
-
-/* ---------- flips ---------- */
-var FLIPS=[
- ['Would you use an AI receptionist?','When did you last miss a call that mattered? What happened?','People say yes to the future to be polite. The past tells the truth. (The Mom Test)'],
- ['Don\'t you think AI could help?','What have you tried so far?','Leading questions get agreement, not information.'],
- ['Why do you still invoice on paper?','Walk me through how an invoice gets made.','"Why do you…" sounds like judgment. "Walk me through" sounds like interest.'],
- ['Is scheduling a problem?','What happens when a tech runs late?','Yes/no questions end conversations. Open ones start stories.'],
- ['What are your pain points?','What part of the week do you dread?','Owners don\'t talk in consultant words. Use theirs.'],
- ['What\'s your budget?','What is this costing you today?','Talk about their loss before your price.']
+var QS=[
+ {p:0,q:'How did you get into HVAC?',when:'In the first minutes, after hello and thanking them for their time.',why:'People enjoy telling their own story (the 2012 brain finding). It also shows you care about them, not just their problems.',lf:'What they\'re proud of and what they care about: family, reputation, their techs.',av:'Opening with what Starwell does. They haven\'t told you anything yet.'},
+ {p:1,q:'Walk me through yesterday, from the first call to the last invoice.',when:'Right after the opener. It turns small talk into how the business runs.',why:'A specific day gets real details. "How do things usually go?" gets a polished summary (The Mom Test).',lf:'Who does what, what\'s done by hand, where work waits.',av:'Interrupting to suggest fixes. Just map it.'},
+ {p:1,q:'Where do things slow down or slip through the cracks?',when:'Once they\'ve walked you through the day.',why:'It invites them to point at problems without feeling judged. "Slip through the cracks" blames the process, not them.',lf:'Sighs, "we just…", anything they mention twice.',av:'"What are your pain points?" Owners don\'t talk in consultant words.'},
+ {p:2,q:'When was the last time that happened? What happened next?',when:'Every time they name a problem.',why:'A real, recent example shows how often it happens and what it cost. People are polite about the future but honest about the past (The Mom Test).',lf:'Dates, counts, dollars, lost customers.',av:'"Would it help if…?" Everyone says yes to be nice.'},
+ {p:2,q:'What do you just put up with?',when:'After the obvious problems are out.',why:'People stop noticing problems they live with every day. This brings up the quiet, costly ones.',lf:'"That\'s just how it is." "Part of the job."',av:'Acting shocked. Stay curious, not judgmental.'},
+ {p:2,q:'What have you tried before? What happened?',when:'When a problem sounds important to them.',why:'It respects their experience and reveals past letdowns. In the value equation, it tells you their "likelihood."',lf:'Vendor names, "waste of money," "nobody used it."',av:'Bashing the old vendor. Just understand what went wrong.'},
+ {p:3,q:'If this were fixed, what would change for you, personally?',when:'Near the end, about the problem that matters most to them.',why:'People decide for personal reasons: evenings, family, stress. It\'s the "dream outcome" in their own words.',lf:'Their exact words. You\'ll use them in your play-back.',av:'Putting words in their mouth: "So you\'d make more money, right?"'},
+ {p:3,q:'What would make you nervous about changing this?',when:'Right after the last question.',why:'Naming a worry makes it smaller, and shows you aren\'t pushing. Chris Voss calls this labeling fears.',lf:'Data worries, staff pushback, cost, a partner or spouse who must agree.',av:'Arguing with the worry. Write it down; it matters.'}
 ];
-var fi=0,fOpen=false,flip=document.getElementById('flip'),flipBtn=document.getElementById('flipBtn');
-document.getElementById('flipDots').innerHTML=FLIPS.map(function(){return '<i></i>';}).join('');
-function drawFlip(){var f=FLIPS[fi];flip.innerHTML=fOpen?'<span class="lab" style="color:var(--go)">Ask this</span><span class="strong">'+esc(f[1])+'</span><span class="why">'+esc(f[2])+'</span>':'<span class="lab" style="color:var(--stop)">Instead of</span><span class="weak">'+esc(f[0])+'</span><span class="handnote" style="color:var(--mute);font-size:19px">Example '+(fi+1)+' of '+FLIPS.length+'</span>';
-  flipBtn.textContent=fOpen?'Show weak version':'Show better question';document.querySelectorAll('#flipDots i').forEach(function(d,k){d.classList.toggle('on',k===fi);});
-  if(flip.animate)flip.animate([{transform:'rotateY(80deg)',opacity:.3},{transform:'none',opacity:1}],{duration:320,easing:'ease-out'});}
-flipBtn.addEventListener('click',function(){fOpen=!fOpen;drawFlip();});
-document.getElementById('flipPrev').addEventListener('click',function(){fi=(fi+FLIPS.length-1)%FLIPS.length;fOpen=false;drawFlip();});
-document.getElementById('flipNext').addEventListener('click',function(){fi=(fi+1)%FLIPS.length;fOpen=false;drawFlip();});
-drawFlip();
-
-/* ---------- 8 ultimate questions ---------- */
-var UQ=[
- ['Walk me through yesterday, from the first call to the last invoice.','A real day beats opinions. Memory of yesterday is concrete.','The true workflow: who touches what, where paper takes over.','Hand-offs, "then I…", anything done twice.'],
- ['When did that last happen? What happened next?','Past behavior is truth. Future promises are politeness. (The Mom Test)','How often a problem really happens, and its cost.','Dates, counts, dollars.'],
- ['What do you just put up with?','People stop noticing problems they live with every day.','The silent must-fix they would never list.','"That\'s just how it is." A sigh.'],
- ['What causes that?','Curiosity without blame. Toyota\'s five whys, said kindly.','The root cause, not the symptom.','A process ("nobody\'s assigned"), not a person.'],
- ['If you had one extra office person for free, what would you hand them first?','Makes delegation painless and concrete. Reveals true priority.','The #1 repetitive task. Often AI-ready.','"Every day," "always," "I hate doing…"'],
- ['What have you tried before? What happened?','Respects their experience and surfaces old scars. (Likelihood, in the value equation.)','Objections before they say them.','Vendor names, "burned," "waste of money."'],
- ['If this were fixed, what would change for you personally?','People decide for personal reasons: evenings, family, stress.','The dream outcome and the number that proves success.','Their exact words. Reuse them in the recap.'],
- ['What would make you nervous about changing this?','Naming a fear shrinks it. (Voss: label the fear.)','The real risks: data, staff, cost, who else must agree.','A partner, spouse or office manager who decides.']
+var ICONS=[
+ '<circle class="pop" cx="22" cy="22" r="20" fill="#2E6CCB"/><path class="draw" d="M10 24 q6 -8 12 0 q6 8 12 0" stroke="#FFF4DE" stroke-width="3.5" fill="none" stroke-linecap="round"/>',
+ '<circle class="pop" cx="22" cy="22" r="20" fill="#2F7D52"/><path class="draw" d="M11 30 L18 14 L26 26 L33 12" stroke="#FFF4DE" stroke-width="3.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>',
+ '<circle class="pop" cx="22" cy="22" r="20" fill="#EE6A2C"/><circle class="draw" cx="20" cy="20" r="7" stroke="#FFF4DE" stroke-width="3.5" fill="none"/><path class="draw" d="M25 25 L32 32" stroke="#FFF4DE" stroke-width="4" stroke-linecap="round"/>',
+ '<circle class="pop" cx="22" cy="22" r="20" fill="#7A4FB0"/><path class="draw" d="M9 28 H35 M14 28 a8 8 0 0 1 16 0" stroke="#FFF4DE" stroke-width="3.5" fill="none" stroke-linecap="round"/><path class="draw" d="M22 12 v-3 M12 17 l-2 -2 M32 17 l2 -2" stroke="#F2B33D" stroke-width="3" stroke-linecap="round"/>'
 ];
-var ui=0,uq=document.getElementById('uq');
-document.getElementById('uqDots').innerHTML=UQ.map(function(){return '<i></i>';}).join('');
-function drawUQ(){var u=UQ[ui];uq.innerHTML='<div class="num"><b>'+(ui+1)+'</b><span>of 8 ultimate questions</span></div><p class="big">"'+esc(u[0])+'"</p><dl><div><dt>Why it works</dt><dd>'+esc(u[1])+'</dd></div><div><dt>You learn</dt><dd>'+esc(u[2])+'</dd></div><div><dt>Listen for</dt><dd>'+esc(u[3])+'</dd></div></dl>';
-  document.querySelectorAll('#uqDots i').forEach(function(d,k){d.classList.toggle('on',k===ui);});
-  if(uq.animate&&!RM){uq.querySelectorAll('.num,.big,dl div').forEach(function(el,k){el.animate([{opacity:0,transform:'translateX(18px)'},{opacity:1,transform:'none'}],{duration:340,delay:k*70,easing:'cubic-bezier(.2,.75,.25,1)',fill:'backwards'});});}checkOverflow();}
-document.getElementById('uqPrev').addEventListener('click',function(){ui=(ui+UQ.length-1)%UQ.length;drawUQ();});
-document.getElementById('uqNext').addEventListener('click',function(){ui=(ui+1)%UQ.length;drawUQ();});
-document.getElementById('pocket').innerHTML=UQ.map(function(u){return '<div><p>'+esc(u[0])+'</p></div>';}).join('');
+(function(){var start=0,svg='';PARTS.forEach(function(p,i){var w=p.m/40*352;svg+='<rect class="pop" x="'+(4+start)+'" y="8" width="'+(w-3)+'" height="18" rx="6" fill="'+p.col+'"/>';start+=w;});
+  svg+='<g id="walker"><circle cx="8" cy="17" r="7" fill="#FFF4DE" stroke="#142B55" stroke-width="3"/></g>';document.getElementById('vbarArt').innerHTML=svg;
+  document.getElementById('segBtns').innerHTML=PARTS.map(function(p,i){return '<button type="button" class="'+p.cls+'" data-part-go="'+i+'" data-g="p'+i+'" aria-pressed="false">'+(i+1)+' '+p.n+'<small>~'+p.m+' min</small></button>';}).join('');})();
+var partBox=document.getElementById('partBox');
+partBox.innerHTML='<p class="handnote">Tap each part, left to right.</p><p class="mute" style="font-size:13.5px">The order matters: <b>trust → understanding → the real problem → the future.</b> Skipping ahead feels like a sales pitch.</p>';
+document.getElementById('segBtns').addEventListener('click',function(e){var b=e.target.closest('[data-part-go]');if(!b)return;var i=+b.dataset.partGo,p=PARTS[i];
+  document.querySelectorAll('[data-part-go]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});
+  var x=4,k;for(k=0;k<i;k++)x+=PARTS[k].m/40*352;x+=PARTS[i].m/40*352/2-8;document.getElementById('walker').setAttribute('transform','translate('+x+',0)');
+  var qn=QS.map(function(q,j){return q.p===i?'Q'+(j+1):null;}).filter(Boolean).join(', ');
+  partBox.innerHTML='<p class="nm" style="color:'+p.col+'">'+(i+1)+' · '+p.n+' <span class="mute" style="font-size:15px">~'+p.m+' min</span></p><p>'+p.goal+'</p><p><b>Why here:</b> '+esc(p.why)+'</p><p class="mute" style="font-size:13px">Questions: '+qn+'</p>';fadeIn(partBox);checkOverflow();});
+document.querySelector('#walker circle').style.transition='none';
+document.getElementById('walker').style.transition='transform .5s cubic-bezier(.3,1.3,.5,1)';
+document.querySelectorAll('[data-part]').forEach(function(card){var i=+card.dataset.part,p=PARTS[i];
+  var qs=QS.map(function(q,j){q.n=j+1;return q;}).filter(function(q){return q.p===i;});
+  var html='<div class="phHead"><svg viewBox="0 0 44 44" aria-hidden="true">'+ICONS[i]+'</svg><div style="flex:1"><p class="eyebrow">Part '+(i+1)+' of 4 · '+p.n+' · ~'+p.m+' min</p><div class="minibar">'+PARTS.map(function(_,k){return '<i class="'+(k===i?'on':'')+'"></i>';}).join('')+'</div></div></div>';
+  html+='<h2 class="t2">'+p.title+'</h2><p class="goal">'+p.goal+'</p><div class="qa">';
+  html+=qs.map(function(q){return '<div class="qi"><button type="button" data-g="q'+q.n+'" data-qi><span class="qn">Question '+q.n+' of 8<span class="qtap">tap to open</span></span><span class="qq">"'+esc(q.q)+'"</span></button><dl class="qd"><div><dt>When</dt><dd>'+esc(q.when)+'</dd></div><div><dt>Why it works</dt><dd>'+esc(q.why)+'</dd></div><div><dt>Listen for</dt><dd>'+esc(q.lf)+'</dd></div><div class="av"><dt>Avoid</dt><dd>'+esc(q.av)+'</dd></div></dl></div>';}).join('');
+  html+='</div>';if(i===0)html+='<div class="box"><p class="handnote" style="font-size:19px">Say this first</p><p class="say">"Thanks for making time. I\'m here to learn how your business runs, not to sell you anything today." Then ask about the note taker (Stop 3).</p></div>';if(i===3)html+='<p class="mute" style="font-size:13.5px">Then <b class="k">play it back</b> (Stop 3) and ask: "Can I come back with what I found?"</p>';
+  card.querySelector('.wrap').innerHTML=html;});
+stage.addEventListener('click',function(e){var b=e.target.closest('[data-qi]');if(!b)return;var qi=b.parentNode,qa=qi.parentNode;qa.querySelectorAll('.qi').forEach(function(x){if(x!==qi)x.classList.remove('open');});qi.classList.toggle('open',true);fadeIn(qi.querySelector('.qd'));checkOverflow();});
+
+/* ---------- follow-up moves ---------- */
+var MOVES=[
+ {n:'"Tell me more."',when:'They mention something with feeling.',o:'The phones get crazy in summer.',y:'Tell me more about that.',o2:'June to August, we miss maybe ten calls a week after five.'},
+ {n:'"What happened next?"',when:'They start telling a story.',o:'Last week a customer called at seven.',y:'What happened next?',o2:'Voicemail. She booked someone else. That was a $9,000 system.'},
+ {n:'"What causes that?"',when:'You hear a problem. Ask a few times to reach the cause (Toyota).',o:'Quotes go out late.',y:'What causes that?',o2:'Only I can price them, and I\'m on jobs all day.'},
+ {n:'Mirror',when:'Repeat their last 1–3 words as a question, so they keep going without you steering (Chris Voss).',o:'…and then it all goes to voicemail.',y:'Goes to voicemail?',o2:'Yeah. My wife used to cover the phone, but she went back to work.'},
+ {n:'Pause 3 sec',when:'Right after they answer. Teachers who waited 3+ seconds instead of the usual ~1 got longer, more thoughtful answers (Mary Budd Rowe).',o:'It\'s fine, I guess.',y:null,o2:'…Actually, it\'s not fine. I\'m doing quotes at 10pm.'}
+];
+var demo=document.getElementById('demo');
+document.getElementById('moves').innerHTML=MOVES.map(function(m,i){return '<button type="button" data-mv="'+i+'" data-g="m'+i+'" aria-pressed="false">'+esc(m.n)+'</button>';}).join('');
+demo.innerHTML='<p class="handnote">Tap a move above.</p><p class="mute" style="font-size:13.5px">Harvard (2017): people who ask more follow-up questions are liked more. Use these in every part of the visit.</p>';
+document.getElementById('moves').addEventListener('click',function(e){var b=e.target.closest('[data-mv]');if(!b)return;var m=MOVES[+b.dataset.mv];
+  document.querySelectorAll('[data-mv]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});
+  var you=m.y?'<p class="bub you"><small>You</small>'+esc(m.y)+'</p>':'<div class="ring3"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="14" fill="none" stroke="#E7C690" stroke-width="4"/><circle class="r" cx="17" cy="17" r="14" fill="none" stroke="#EE6A2C" stroke-width="4" transform="rotate(-90 17 17)"/></svg>you wait… 1, 2, 3</div>';
+  demo.innerHTML='<p class="when"><b>Use it when:</b> '+esc(m.when)+'</p><div class="bubbles"><p class="bub they"><small>Owner</small>'+esc(m.o)+'</p>'+you+'<p class="bub they"><small>Owner</small>'+esc(m.o2)+'</p></div>';
+  if(!RM)demo.querySelectorAll('.bubbles>*').forEach(function(el,k){el.animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:320,delay:k*(m.y?550:1000)+(k===2&&!m.y?2200:0),fill:'backwards'});});checkOverflow();});
+
+/* ---------- recall ---------- */
+document.getElementById('recall').innerHTML=QS.map(function(q,j){var p=PARTS[q.p];return '<button type="button" data-g="r'+j+'" data-rc="'+j+'"><span class="pt" style="background:'+p.col+'">Q'+(j+1)+' '+p.n+'</span><span class="tx">tap after you say it</span></button>';}).join('');
+document.getElementById('recall').addEventListener('click',function(e){var b=e.target.closest('[data-rc]');if(!b||b.classList.contains('shown'))return;b.classList.add('shown');b.querySelector('.tx').textContent=QS[+b.dataset.rc].q;fadeIn(b);checkOverflow();});
 
 /* ---------- signals ---------- */
-var SIGS=[['s-rep','Repeats','Said 3 times = the real priority.','the phones… the phones… the phones'],['s-work','Workarounds','"We just…" = hidden manual work.','We just call people back in the morning.'],['s-emo','Energy shifts','A sigh, laugh or louder voice = it hurts.','(sighs) And the quotes…'],['s-num','Numbers','Calls, hours, dollars: the raw material for cost.','I send maybe fifteen quotes a week.'],['s-one','One person','"Only I know how" = a bottleneck and a risk.','Only Linda knows how to do the rebates.'],['s-alw','"Always"','Habit or pride? Ask gently which.','We\'ve always done it that way.']];
-document.getElementById('sigs').innerHTML=SIGS.map(function(s,i){return '<button type="button" class="sig '+s[0]+'" data-sig="'+i+'" aria-pressed="'+(i===0)+'"><i></i><b>'+s[1]+'</b></button>';}).join('');
-function showSig(i){var s=SIGS[i];document.querySelectorAll('[data-sig]').forEach(function(b,k){b.setAttribute('aria-pressed',String(k===i));});document.getElementById('sigEx').innerHTML='<p class="q">'+esc(s[3])+'</p><p class="mute">'+esc(s[2])+'</p>';}
-document.getElementById('sigs').addEventListener('click',function(e){var b=e.target.closest('[data-sig]');if(b)showSig(+b.dataset.sig);});showSig(0);
-(function(){var g='';for(var i=0;i<45;i++){var h=6+Math.abs(Math.sin(i*1.7))*28;g+='<rect x="'+(i*8)+'" y="'+(20-h/2)+'" width="5" height="'+h+'" rx="2.5" fill="'+(i%9===4?'#EE6A2C':'#2E6CCB')+'" style="animation-delay:-'+(i*.07).toFixed(2)+'s"/>';}document.getElementById('waveArt').innerHTML=g;})();
+var SIGS=[
+ ['s-rep','Repeats','signal-1-repeats.mp3','Honestly, it\'s the phones. The phones are killing us.','Anything said two or three times is <b class="k">top of mind</b>. It\'s their real priority.','"You\'ve mentioned the phones a few times. Tell me more."'],
+ ['s-work','Workarounds','signal-2-workarounds.mp3','We just call everybody back in the morning.','"We just…" means <b class="k">a hidden manual job</b> someone does every day.','"Who does that, and how long does it take?"'],
+ ['s-emo','Energy shifts','signal-3-energy.mp3','(sighs) …and then there\'s the quotes.','A sigh, laugh or louder voice means <b class="k">it hurts more than they\'re saying</b>.','Label it: "Sounds like the quotes really wear on you."'],
+ ['s-num','Numbers','signal-4-numbers.mp3','I\'m sending maybe fifteen quotes a week.','Numbers turn a complaint into <b class="k">a cost you can measure</b>.','"And how many of those turn into jobs?"'],
+ ['s-one','One person','signal-5-one-person.mp3','Only Linda knows how to do the rebates.','If one person holds the know-how, it\'s <b class="k">a bottleneck and a risk</b> when they\'re out.','"What happens when Linda\'s on vacation?"'],
+ ['s-alw','"Always"','signal-6-always.mp3','We\'ve always done it that way.','Either a habit or a point of pride. <b class="k">Ask gently; don\'t challenge it.</b>','"What\'s worked well about doing it that way?"']
+];
+var AUDIO_BASE='audio/',audioOK={},curAudio=null;
+SIGS.forEach(function(s){try{var a=new Audio();a.preload='metadata';a.addEventListener('loadedmetadata',function(){audioOK[s[2]]=true;document.querySelectorAll('[data-file="'+s[2]+'"]').forEach(function(b){b.classList.remove('noaudio');});});a.src=AUDIO_BASE+s[2];}catch(e){}});
+var spk='<span class="spk"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6h3l4-3v10l-4-3H2z" fill="currentColor"/><path d="M11 5q2 3 0 6" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>VOICE</span>';
+document.getElementById('sigs').innerHTML=SIGS.map(function(s,i){return '<button type="button" class="sig '+s[0]+' noaudio" data-sig="'+i+'" data-g="g'+i+'" data-file="'+s[2]+'" aria-pressed="false"><i></i><span><b>'+s[1]+'</b>'+spk+'</span></button>';}).join('');
+var sigEx=document.getElementById('sigEx');
+sigEx.innerHTML='<p class="handnote">Tap a signal to hear what it sounds like.</p>';
+function showSig(i){var s=SIGS[i];document.querySelectorAll('[data-sig]').forEach(function(b,k){b.setAttribute('aria-pressed',String(k===i));b.classList.remove('playing');});
+  sigEx.innerHTML='<p class="row"><b>Sounds like</b><span class="q">'+esc(s[3])+'</span></p><p class="row"><b>What it means</b>'+s[4]+'</p><p class="row"><b>Your move</b><span class="say">'+esc(s[5])+'</span></p>';fadeIn(sigEx);
+  if(curAudio){try{curAudio.pause();}catch(e){}}
+  if(audioOK[s[2]]){curAudio=new Audio(AUDIO_BASE+s[2]);var b=document.querySelector('[data-sig="'+i+'"]');b.classList.add('playing');curAudio.addEventListener('ended',function(){b.classList.remove('playing');});curAudio.play().catch(function(){b.classList.remove('playing');});}
+  checkOverflow();}
+document.getElementById('sigs').addEventListener('click',function(e){var b=e.target.closest('[data-sig]');if(b)showSig(+b.dataset.sig);});
+(function(){var g='';for(var i=0;i<45;i++){var h=5+Math.abs(Math.sin(i*1.7))*22;g+='<rect x="'+(i*8)+'" y="'+(15-h/2)+'" width="5" height="'+h+'" rx="2.5" fill="'+(i%9===4?'#EE6A2C':'#2E6CCB')+'" style="animation-delay:-'+(i*.07).toFixed(2)+'s"/>';}document.getElementById('waveArt').innerHTML=g;})();
 var sigBtn=document.getElementById('sigToggle'),quote=document.getElementById('quote');
 sigBtn.addEventListener('click',function(){var on=!quote.classList.contains('show');quote.classList.toggle('show',on);document.getElementById('found').hidden=!on;sigBtn.setAttribute('aria-pressed',String(on));sigBtn.textContent=on?'Hide the signals':'Show the signals';
   if(on&&!RM)document.querySelectorAll('#found>div').forEach(function(d,k){d.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:350,delay:k*120,fill:'backwards'});});checkOverflow();});
 
-/* ---------- note taker ---------- */
-function debriefText(){return 'You are my sales debrief assistant. Interviewer: '+(NAME||'[your name]')+', Starwell SI. Below is the transcript of my visit with an HVAC business owner.\n\nGive me:\n1. The owner\'s top 3 problems in their own words, with exact quotes.\n2. Every number they mentioned (calls, hours, dollars, techs).\n3. Signals: repeats, workarounds ("we just…"), emotional moments, one-person dependencies, "always done it this way."\n4. For each problem: how often, what it costs, who feels it, what happens if nothing changes. Label it pebble, real pain or must-fix.\n5. What they said success looks like, word for word.\n6. The questions I should have asked but didn\'t.\n7. A short recap email to the owner in their words, with no promises about AI.\n\nDo not invent numbers. If something wasn\'t said, write "not mentioned."\n\nTranscript:\n';}
+/* ---------- play-back builder ---------- */
+document.querySelectorAll('.slotB').forEach(function(b){b.addEventListener('click',function(){if(b.classList.contains('filled'))return;b.classList.add('filled');b.textContent=b.dataset.fill;if(!RM&&b.animate)b.animate([{transform:'scale(.85)'},{transform:'scale(1.06)'},{transform:'none'}],{duration:360});checkOverflow();});});
+
+/* ---------- copy helpers ---------- */
 function copyText(btn,txt,label,node){function done(){btn.textContent='Copied';setTimeout(function(){btn.textContent=label;},1800);}
   function sel(){if(!node)return;var r=document.createRange();r.selectNodeContents(node);var s=window.getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='Selected, press copy';}
   try{navigator.clipboard.writeText(txt).then(done,sel);}catch(e){sel();}}
-document.getElementById('copyDebrief').addEventListener('click',function(){copyText(this,debriefText(),'Copy the debrief prompt',document.getElementById('debrief'));});
-document.getElementById('copyPocket').addEventListener('click',function(){copyText(this,'The 8 ultimate questions (Starwell SI)\n'+UQ.map(function(u,i){return (i+1)+'. '+u[0];}).join('\n'),'Copy to my phone notes',document.getElementById('pocket'));});
+document.getElementById('copyPocket').addEventListener('click',function(){copyText(this,'The 8 questions (Starwell SI)\n'+QS.map(function(q,i){return (i+1)+'. ['+PARTS[q.p].n+'] '+q.q;}).join('\n'),'Copy to my phone notes',document.getElementById('recall'));});
+
+/* ---------- pebble cards, buckets ---------- */
+document.querySelectorAll('.vsrow button,.bucket').forEach(function(b){b.addEventListener('click',function(){b.classList.add('open');fadeIn(b);checkOverflow();});});
 
 /* ---------- pain test ---------- */
-var DIALS=[{id:'often',q:'How often?',o:['Rarely','Weekly','Daily']},{id:'cost',q:'Costs?',o:['Annoyance','Hours','Money or customers']},{id:'who',q:'Who feels it?',o:['One person','The team','Customers']},{id:'later',q:'If ignored?',o:['Same','Gets worse','Business or safety']}];
-var EX={calls:[2,2,2,2],font:[0,0,0,0],invoices:[1,1,1,1]};
-document.getElementById('dials').innerHTML=DIALS.map(function(d){return '<fieldset><legend>'+d.q+'</legend><div class="seg">'+d.o.map(function(o,i){return '<label><input type="radio" name="'+d.id+'" id="'+d.id+i+'" value="'+i+'"'+(i===2?' checked':'')+'>'+esc(o)+'</label>';}).join('')+'</div></fieldset>';}).join('');
-function score(){var s=0;DIALS.forEach(function(d){var c=document.querySelector('input[name="'+d.id+'"]:checked');s+=c?+c.value:0;});var n,t;
-  if(s<=2){n='Pebble';t='Note it. Don\'t build for it.';}else if(s<=5){n='Real pain';t='Worth fixing. Put a number on it.';}else{n='Must-fix';t='Lead with this one. Measure it now.';}
-  document.getElementById('vName').textContent=n;document.getElementById('vText').textContent=t+' Score '+s+' of 8.';document.getElementById('needle').style.transform='rotate('+(-80+160*s/8)+'deg)';}
-document.getElementById('dials').addEventListener('change',score);
-document.querySelectorAll('[data-ex]').forEach(function(b){b.addEventListener('click',function(){var v=EX[b.dataset.ex];DIALS.forEach(function(d,i){var el=document.getElementById(d.id+v[i]);if(el)el.checked=true;});score();});});
+var DIALS=[{q:'1. How often does it happen?',o:['Rarely','Weekly','Daily']},{q:'2. What does it cost?',o:['Annoyance','Hours','Money or customers']},{q:'3. Who feels it?',o:['One person','The team','Customers']},{q:'4. If nothing changes?',o:['Stays the same','Gets worse','Hurts the business']}];
+var pAns={};
+document.getElementById('pqs').innerHTML=DIALS.map(function(d,i){return '<div class="pq"><span class="lb">'+d.q+'</span><div class="bs">'+d.o.map(function(o,j){return '<button type="button" data-pq="'+i+'" data-pv="'+j+'" data-g="pq'+i+'" aria-pressed="false">'+esc(o)+'</button>';}).join('')+'</div></div>';}).join('');
+document.getElementById('pqs').addEventListener('click',function(e){var b=e.target.closest('[data-pq]');if(!b)return;var i=+b.dataset.pq;pAns[i]=+b.dataset.pv;
+  document.querySelectorAll('[data-pq="'+i+'"]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});score();});
+function score(){var n=Object.keys(pAns).length,s=0;Object.keys(pAns).forEach(function(k){s+=pAns[k];});
+  if(n<4){document.getElementById('vName').textContent=n+' of 4';document.getElementById('vText').textContent='Answer all 4 to see where it lands.';document.getElementById('needle').style.transform='rotate('+(-80+160*s/8)+'deg)';return;}
+  var nm,t;if(s<=2){nm='Pebble';t='Note it, then move on.';}else if(s<=5){nm='Real pain';t='Ask for a recent example and a number.';}else{nm='Must-fix';t='Spend your Dig time here.';}
+  document.getElementById('vName').textContent=nm;document.getElementById('vText').textContent=t+' (Score '+s+' of 8.)';document.getElementById('needle').style.transform='rotate('+(-80+160*s/8)+'deg)';}
 score();
 
 /* ---------- calculators ---------- */
@@ -1117,132 +1290,79 @@ var coins=document.getElementById('coins1');coins.innerHTML='<i></i><i></i><i></
 function calc(){var y=num('c1')*(Math.min(num('c2'),100)/100)*num('c3')*52;document.getElementById('o1').textContent=money(y);var h=num('c4')*Math.min(num('c6'),52);document.getElementById('o2').textContent=money(h*num('c5'));document.getElementById('o3').textContent=Math.round(h).toLocaleString('en-US')+' hours a year';
   var lvl=Math.min(1,Math.log10(Math.max(y,1))/5.5);coins.querySelectorAll('i').forEach(function(c,k){c.style.height=Math.max(4,Math.min(44,lvl*44*(0.45+k*.11)))+'px';});}
 ['c1','c2','c3','c4','c5','c6'].forEach(function(id){document.getElementById(id).addEventListener('input',calc);});calc();
-document.querySelectorAll('[data-calc]').forEach(function(b){b.addEventListener('click',function(){var j=b.dataset.calc==='jobs';document.querySelectorAll('[data-calc]').forEach(function(x){x.setAttribute('aria-selected',String(x===b));});document.getElementById('calcJobs').hidden=!j;document.getElementById('calcTime').hidden=j;});});
+document.querySelectorAll('[data-calc]').forEach(function(b){b.addEventListener('click',function(){var j=b.dataset.calc==='jobs';document.querySelectorAll('[data-calc]').forEach(function(x){x.setAttribute('aria-selected',String(x===b));});document.getElementById('calcJobs').hidden=!j;document.getElementById('calcTime').hidden=j;checkOverflow();});});
 
-/* ---------- bottleneck ---------- */
-var STAGES=[
- ['Call comes in','Voicemails pile up in heat waves.','Who answers at 6pm in July?','go','Answer, text back, collect booking requests.'],
- ['Book','Back-and-forth, double bookings.','How does a call become an appointment?','go','Book in directly if the software has an API.'],
- ['Dispatch','Owner moves techs by phone all morning.','What happens when a tech runs late?','maybe','Suggest routes and ETA texts. A person decides.'],
- ['Diagnose','Callbacks and repeat visits.','How often do you go back for the same issue?','stop','The tech diagnoses. AI helps with notes.'],
- ['Quote','Only the owner can price.','Who builds the quote, and when?','maybe','Draft from past quotes. Owner approves.'],
- ['Follow up','Half of quotes never hear back.','What happens after a quote is sent?','go','Reminders that stop when they reply.'],
- ['Do the work','Techs leave jobs for parts.','How often does a tech leave for parts?','maybe','Parts list from the quote. A person checks.'],
- ['Invoice','Vague invoices, done at night.','How do tech notes become an invoice?','go','Voice memos into clear invoice lines.'],
- ['Get paid','Fridays chasing payments.','How many invoices are past 30 days?','go','Reminders via accounting software.'],
- ['Review &amp; renew','Few reviews; plans lapse.','How do you remind members about tune-ups?','go','Review requests and renewal reminders.']
-];
-var LBL={go:'Good fit for AI',maybe:'Person checks',stop:'Keep it human'};
-var flow=document.getElementById('flow');
-flow.innerHTML=STAGES.map(function(s,i){return '<button class="stg" role="tab" type="button" aria-selected="'+(i===0)+'" data-i="'+i+'"><span>'+(i+1)+'</span><b>'+s[0]+'</b><i class="'+s[3]+'" aria-label="'+LBL[s[3]]+'"></i></button>';}).join('');
-function showStage(i){var s=STAGES[i];flow.querySelectorAll('.stg').forEach(function(b,j){b.setAttribute('aria-selected',String(j===i));});
-  document.getElementById('stgbox').innerHTML='<p><b class="k">Signs:</b> '+s[1]+'</p><p><b class="k">Ask:</b> <span class="say">“'+s[2]+'”</span></p><p><span class="pill '+s[3]+'">'+LBL[s[3]]+'</span> '+s[4]+'</p>';checkOverflow();}
-flow.addEventListener('click',function(e){var b=e.target.closest('.stg');if(b)showStage(+b.dataset.i);});showStage(0);
-
-/* ---------- fit tabs, field card tabs ---------- */
-function tabset(attr,panelAttr){document.querySelectorAll('['+attr+']').forEach(function(b){b.addEventListener('click',function(){var v=b.getAttribute(attr);document.querySelectorAll('['+attr+']').forEach(function(x){x.setAttribute('aria-selected',String(x===b));});document.querySelectorAll('['+panelAttr+']').forEach(function(l){l.hidden=l.getAttribute(panelAttr)!==v;if(!l.hidden&&l.animate&&!RM)l.animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:280});});checkOverflow();});});}
+/* ---------- tabs ---------- */
+function tabset(attr,panelAttr){document.querySelectorAll('['+attr+']').forEach(function(b){b.addEventListener('click',function(){var v=b.getAttribute(attr);document.querySelectorAll('['+attr+']').forEach(function(x){x.setAttribute('aria-selected',String(x===b));});document.querySelectorAll('['+panelAttr+']').forEach(function(l){l.hidden=l.getAttribute(panelAttr)!==v;if(!l.hidden)fadeIn(l);});checkOverflow();});});}
 tabset('data-fit','data-fitlist');tabset('data-fc','data-fcp');
+function paintLight(v){document.querySelectorAll('#light [data-l]').forEach(function(c){var on=c.dataset.l===v,col={go:'#3FAE6A',maybe:'#F2B33D',stop:'#E5482B'}[c.dataset.l];c.setAttribute('fill',on?col:'#2A3A60');c.setAttribute('stroke',on?'#FFF4DE':'none');c.setAttribute('stroke-width','3');});}
+paintLight('go');document.querySelectorAll('[data-fit]').forEach(function(b){b.addEventListener('click',function(){paintLight(b.dataset.fit);});});
 
-/* ---------- accordions ---------- */
-function accordion(id,items,render){var el=document.getElementById(id);el.innerHTML=items.map(render).join('');
-  el.addEventListener('toggle',function(e){if(e.target.open)el.querySelectorAll('details').forEach(function(d){if(d!==e.target)d.open=false;});checkOverflow();},true);}
-accordion('plug',[
- ['MCP connector','a universal adapter','Standard AI plug. Fastest when an official one exists.','Most HVAC tools don\'t have one yet.'],
- ['API','a service door with a key','The official way for programs to read and write data.','Does their plan include it? Who\'s the admin?'],
- ['Webhooks','a doorbell','Software rings when something happens; n8n or Zapier reacts.','Which events does it send?'],
- ['Email or export','the mail slot','A daily report or spreadsheet. Slow but reliable.','Can they schedule one each morning?'],
- ['Screen bot','a robot clicking','Clicks screens like a person. Breaks when screens change.','Last resort. Tell the owner it can break.'],
- ['Paper','no plug at all','Nothing for AI to read yet.','Fix the process first, then automate.']
-],function(p,i){return '<details'+(i===5?' class="paper"':'')+'><summary><span class="n">'+(i+1)+'</span><span><b>'+esc(p[0])+'</b><span class="handnote">'+esc(p[1])+'</span></span><span class="pm">+</span></summary><div class="body"><p>'+esc(p[2])+'</p><p class="ck"><b>Check:</b> '+esc(p[3])+'</p></div></details>';});
-accordion('soft',[
- ['ServiceTitan','Gated','maybe','An admin must allow API keys and approve the app. Selling to many shops needs paid certification.','https://help.servicetitan.com/commercial/docs/get-started-with-api-dev-portal-v2'],
- ['Housecall Pro','Yes','go','A review reports full API access on the top MAX plan. Check their plan.','https://supergood.ai/api-report-card/housecall-pro'],
- ['Jobber','Yes','go','GraphQL API with secure sign-in through its Developer Center.','https://developer.getjobber.com/docs/getting_started'],
- ['FieldEdge','Partners','stop','By request through its partner program.','https://docs.api.fieldedge.com/'],
- ['QuickBooks','Yes','go','Public, well-documented API. Good for invoices and reminders.','']
-],function(s){return '<details><summary><b>'+s[0]+'</b><span class="pill '+s[2]+'">API: '+s[1]+'</span><span class="pm">+</span></summary><div class="body"><p>'+esc(s[3])+(s[4]?' <a href="'+s[4]+'" target="_blank" rel="noopener">Source</a>':'')+'</p></div></details>';});
-accordion('blockers',[
- ['Access','Their plan may not include the API, or the admin won\'t approve it.','Who can turn on integrations?'],
- ['Data','Messy, on paper or in one head means nothing to work with.','Where would I find last month\'s quotes?'],
- ['Rules','CT phone calls need everyone\'s consent to record, so AI phone agents must announce recording. Not legal advice.',''],
- ['Trust','Owners worry most about data security. Say exactly what it can see and change.','What would you need to see to feel safe?'],
- ['Cost','API add-ons, phone minutes and fees add up. Compare to the cost you found.','What would this need to save to be worth it?'],
- ['People','If the office manager feels replaced, it won\'t get used.','Who would use this every day?']
-],function(b,i){return '<details><summary><span class="n"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">'+BICON[i]+'</svg></span><b>'+b[0]+'</b><span class="pm">+</span></summary><div class="body"><p>'+esc(b[1])+'</p>'+(b[2]?'<p class="q">'+esc(b[2])+'</p>':'')+'</div></details>';});
-
-/* ---------- checklist (per person) ---------- */
-var CHECKS=['Play back the top three things you heard','Confirm which one matters most','Ask about their software and admin','Agree on the number that proves it worked','Book the next conversation','Run the debrief prompt','Send the recap within 24 hours'];
-var cl=document.getElementById('checklist');
-cl.innerHTML=CHECKS.map(function(c,i){return '<label><input type="checkbox" id="k'+i+'"><span>'+c+'</span></label>';}).join('');
-cl.addEventListener('change',function(){if(!NAME)return;store('atrq-checks-'+NAME,JSON.stringify(CHECKS.map(function(_,i){return document.getElementById('k'+i).checked;})));});
-function loadChecks(){var v=[];try{v=JSON.parse(store('atrq-checks-'+NAME)||'[]');}catch(e){}CHECKS.forEach(function(_,i){document.getElementById('k'+i).checked=!!v[i];});}
+/* ---------- plug-in accordion ---------- */
+(function(){var el=document.getElementById('plug');var items=[
+ ['MCP connector','a universal adapter','A newer open standard (from Anthropic, 2024) that lets AI plug into software the same way every time.','Most HVAC software doesn\'t offer one yet. Don\'t assume.'],
+ ['API','a service door with a key','The official way for one program to read and write another\'s data, like booking a job.','Ask: "Which plan are you on, and who\'s the admin?" Some plans or vendors limit it.'],
+ ['Exports and emails','the mail slot','A daily report or spreadsheet the software sends out. Slower, but works almost anywhere.','Can they schedule a report each morning?'],
+ ['Paper or in someone\'s head','no plug at all','Nothing for AI to read yet.','Fix the process first (write it down), then automate.']
+];
+el.innerHTML=items.map(function(p,i){return '<details'+(i===3?' class="paper"':'')+' data-g="a'+i+'"><summary><span class="n">'+(i+1)+'</span><span><b>'+esc(p[0])+'</b><span class="handnote">'+esc(p[1])+'</span></span><span class="pm">+</span></summary><div class="body"><p>'+esc(p[2])+'</p><p class="ck"><b>Check:</b> '+esc(p[3])+'</p></div></details>';}).join('');
+el.addEventListener('toggle',function(e){if(e.target.open)el.querySelectorAll('details').forEach(function(d){if(d!==e.target)d.open=false;});checkOverflow();},true);})();
 
 /* ---------- practice ---------- */
 var CASES=[
- {s:'Our website font looks kind of dated.',a:0,ai:['stop','Not worth a project'],t:'A pebble. Ask: "Has it cost you any jobs?" If not, note it and move on.'},
- {s:'After five, calls go to voicemail. In July we lose people to whoever picks up first.',a:2,ai:['go','Good fit for AI'],t:'Must-fix. Daily in season, loses customers. Start with call forwarding to an AI agent. Measure missed calls first.'},
- {s:'My office manager spends every Friday chasing unpaid invoices.',a:1,ai:['go','Good fit for AI'],t:'Real pain: ~4 hours a week plus cash flow. Automatic reminders; she handles disputes.'},
- {s:'We send fifteen replacement quotes a week and never hear back on half.',a:2,ai:['go','Good fit for AI'],t:'Must-fix. Each lost replacement can be thousands. Follow-ups that stop when they reply.'},
- {s:'Sometimes a customer calls saying they smell gas.',a:2,ai:['stop','Keep it human'],t:'Must-fix, but not with AI. Safety calls go straight to a person or 911. Saying so builds trust.'},
- {s:'My techs hate notes. Invoices just say "fixed unit."',a:1,ai:['go','Good fit for AI'],t:'Real pain: disputes and denied rebate paperwork. Voice memo in, clear notes out.'},
- {s:'Only I know how to price a full system replacement.',a:1,ai:['maybe','Person checks'],t:'Real pain and a bottleneck. AI drafts from past quotes; he approves every price.'}
+ {sit:'Ten minutes in.',s:'Honestly, the phones are a nightmare in July.',o:['Our AI receptionist fixes that. Want a quick demo?','A nightmare how? Walk me through a day in July.','Yeah, every HVAC company says that.'],a:1,pr:'Follow up, don\'t pitch',t:'It asks for a real example and keeps them talking. Pitching now jumps to the Future part before you understand the problem. Saying "everyone says that" shrinks their problem, and people stop sharing when they feel dismissed.'},
+ {sit:'They\'re telling you about past vendors.',s:'We tried some software a few years ago. Total waste of money.',o:['Ours is different, I promise.','Which one? Those companies are terrible.','That sounds frustrating. What happened?'],a:2,pr:'Label, then learn',t:'Naming the feeling ("sounds frustrating") shows you heard them, and "What happened?" teaches you what to avoid. Defending yourself makes it about you. Bashing a vendor makes you look like you\'d talk about them too.'},
+ {sit:'You asked about missed calls.',s:'It\'s fine, I guess.',o:['Move on to your next question.','Wait 3 seconds, relaxed and attentive.','"So it\'s not really a problem, then?"'],a:1,pr:'Pause',t:'"I guess" usually means there\'s more. A short silence gives them room to say it (Rowe\'s 3-second wait time). A yes/no question closes the door.'},
+ {sit:'They ask you directly.',s:'Could AI just do all our scheduling?',o:['Maybe. Can you walk me through how scheduling works now?','Yes, AI can handle all of it.','No, AI isn\'t there yet.'],a:0,pr:'Diagnose before you prescribe',t:'You don\'t know yet, so you ask first. "Yes" is an overpromise you might not keep. "No" is a guess too. Answer honestly after you understand their setup and software.'},
+ {sit:'Mid-way through Dig.',s:'Only I know how to price replacements.',o:['You should train someone else to do it.','AI can price them for you.','What happens to quotes when you\'re out on jobs all day?'],a:2,pr:'Explore the effect',t:'It uncovers what the bottleneck costs. Unasked-for advice made people feel less understood than real listening in a 2010 study. And pricing is a "person checks" job, so promising AI will do it is an overpromise.'},
+ {sit:'Wrapping up.',s:'(Long pause after you\'ve heard everything.)',o:['So, are you ready to get started?','Let me make sure I got this right: calls go to voicemail after five, quotes go out late, and you want your evenings back. Did I miss anything?','Great. I\'ll email you a proposal.'],a:1,pr:'Play it back',t:'Summing up in their words earns a "That\'s right" and lets them correct you. Asking for the sale or sending a proposal now skips confirming you understood.'},
+ {sit:'Near the end, after Q8.',s:'My wife does the books. She\'d never go for this.',o:['We can convince her, don\'t worry.','What would she want to know before changing anything?','(Ignore it and keep going.)'],a:1,pr:'Respect the decision',t:'It treats her concern as real and tells you what really matters. "Convincing" her is pushy, and ignoring it leaves the biggest worry unanswered.'}
 ];
-var NAMES=['Pebble','Real pain','Must-fix'];
 var scoreCard=document.getElementById('scoreCard');
-CASES.forEach(function(c,i){var s=document.createElement('section');s.className='card';s.dataset.stop='practice';s.dataset.case=i;
-  s.innerHTML='<div class="wrap"><p class="eyebrow">'+(i===0?'Stop 8 · Practice · ':'')+'Case '+(i+1)+' of '+CASES.length+'</p>'+(i===0?'<p class="mute">Sort what the owner said, then read what a strong listener does next.</p>':'')+'<div class="ownerq">'+window.__OWNER_SVG+'<p class="said">'+esc(c.s)+'</p></div><div class="opts">'+NAMES.map(function(n,j){return '<button type="button" data-j="'+j+'">'+n+'</button>';}).join('')+'</div><div class="ans" hidden></div></div>';
+CASES.forEach(function(c,i){var s=document.createElement('section');s.className='card';s.dataset.stop='practice';s.dataset.case=i;s.dataset.gate='1';s.dataset.glabel='Pick a reply';
+  s.innerHTML='<div class="wrap"><p class="eyebrow">'+(i===0?'Stop 6 · Practice · ':'')+'Conversation '+(i+1)+' of '+CASES.length+'</p>'+(i===0?'<p class="mute" style="font-size:13.5px">Pick the best reply. You\'re there to <b class="k">understand and help</b>, not to sell or diagnose on the spot.</p>':'')+'<div class="ownerq">'+window.__OWNER_SVG+'<div><p class="situ">'+esc(c.sit)+'</p><p class="said">'+esc(c.s)+'</p></div></div><div class="optsV">'+c.o.map(function(o,j){return '<button type="button" data-j="'+j+'" data-g="x"><span class="l">'+'ABC'[j]+'</span><span>'+esc(o)+'</span></button>';}).join('')+'</div><div class="ans" hidden></div></div>';
   stage.insertBefore(s,scoreCard);});
 var answers={};
-stage.addEventListener('click',function(e){var b=e.target.closest('.opts button');if(!b)return;var card=b.closest('.card');var i=+card.dataset.case;if(answers[i]!=null)return;
-  var c=CASES[i],j=+b.dataset.j;answers[i]=j;card.querySelectorAll('.opts button').forEach(function(x){if(+x.dataset.j===c.a)x.classList.add('right');});if(j!==c.a)b.classList.add('wrong');
-  var ans=card.querySelector('.ans');ans.hidden=false;ans.innerHTML='<div class="hd"><b style="color:'+(j===c.a?'var(--go)':'var(--stop)')+'">'+(j===c.a?'Correct':'It\'s '+NAMES[c.a])+'</b><span class="pill '+c.ai[0]+'">'+c.ai[1]+'</span></div><p>'+esc(c.t)+'</p>';
-  if(!RM&&ans.animate)ans.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:350});
-  if(!RM&&b.animate)b.animate(j===c.a?[{transform:'scale(1)'},{transform:'scale(1.08)'},{transform:'scale(1)'}]:[{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:320});
+stage.addEventListener('click',function(e){var b=e.target.closest('.optsV button');if(!b)return;var card=b.closest('.card');var i=+card.dataset.case;if(answers[i]!=null)return;
+  var c=CASES[i],j=+b.dataset.j;answers[i]=j;card.querySelectorAll('.optsV button').forEach(function(x){var k=+x.dataset.j;if(k===c.a)x.classList.add('right');else if(x===b)x.classList.add('wrong');else x.classList.add('dim');});
+  var ans=card.querySelector('.ans');ans.hidden=false;ans.innerHTML='<div class="hd"><b style="color:'+(j===c.a?'var(--go)':'var(--stop)')+'">'+(j===c.a?'Best reply':'Better: '+'ABC'[c.a])+'</b><span class="prin">'+esc(c.pr)+'</span></div><p style="font-size:14px;line-height:1.4">'+esc(c.t)+'</p>';
+  fadeIn(ans);if(!RM&&b.animate)b.animate(j===c.a?[{transform:'scale(1)'},{transform:'scale(1.03)'},{transform:'scale(1)'}]:[{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:320});
   updScore();checkOverflow();});
-function updScore(){var sd=document.getElementById('scoreDots');if(sd)sd.innerHTML=CASES.map(function(c,i){var st=answers[i]==null?'#E7C690':answers[i]===c.a?'#2F7D52':'#B5361F';return '<g class="pop"><circle cx="'+(42+i*46)+'" cy="20" r="15" fill="'+st+'"/><text x="'+(42+i*46)+'" y="26" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="800" font-size="17" fill="#FFF4DE">'+(i+1)+'</text></g>';}).join('');var n=0;CASES.forEach(function(c,i){if(answers[i]===c.a)n++;});document.getElementById('bigScore').textContent=n+'/'+CASES.length;
-  var done=Object.keys(answers).length;var who=NAME?NAME+', ':'';
-  document.getElementById('scoreMsg').innerHTML=done<CASES.length?esc(who)+'sorted correctly <span>so far</span>':(n>=6?esc(who)+'sharp <span>listening.</span>':n>=4?esc(who)+'good <span>start.</span>':esc(who)+'worth <span>another pass.</span>');
-  if(NAME&&done===CASES.length)store('atrq-score-'+NAME,String(n));
-  wordify(document.getElementById('scoreMsg'));}
-document.getElementById('retry').addEventListener('click',function(){answers={};document.querySelectorAll('[data-case]').forEach(function(card){card.querySelectorAll('.opts button').forEach(function(x){x.classList.remove('right','wrong');});var a=card.querySelector('.ans');a.hidden=true;a.innerHTML='';});updScore();show(cards.findIndex(function(c){return c.dataset.case==='0';}),-1);});
+function updScore(){var sd=document.getElementById('scoreDots');sd.innerHTML=CASES.map(function(c,i){var st=answers[i]==null?'#E7C690':answers[i]===c.a?'#2F7D52':'#B5361F';return '<g class="pop"><circle cx="'+(42+i*46)+'" cy="20" r="15" fill="'+st+'"/><text x="'+(42+i*46)+'" y="26" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="800" font-size="17" fill="#FFF4DE">'+(i+1)+'</text></g>';}).join('');
+  var n=0;CASES.forEach(function(c,i){if(answers[i]===c.a)n++;});document.getElementById('bigScore').textContent=n+'/'+CASES.length;
+  var done=Object.keys(answers).length,who=NAME?NAME+', ':'';
+  document.getElementById('scoreMsg').innerHTML=done<CASES.length?esc(who)+'best replies <span>so far</span>':(n>=6?esc(who)+'strong <span>listening.</span>':n>=4?esc(who)+'good <span>start.</span>':esc(who)+'worth <span>another pass.</span>');
+  if(NAME&&done===CASES.length)store('atrq-score-'+NAME,String(n));wordify(document.getElementById('scoreMsg'));}
+document.getElementById('retry').addEventListener('click',function(){answers={};document.querySelectorAll('[data-case]').forEach(function(card){card.querySelectorAll('.optsV button').forEach(function(x){x.classList.remove('right','wrong','dim');});var a=card.querySelector('.ans');a.hidden=true;a.innerHTML='';});updScore();show(cards.findIndex(function(c){return c.dataset.case==='0';}),-1);});
 
-/* ---------- copy field card ---------- */
 document.getElementById('copyCard').addEventListener('click',function(){var txt=(NAME?NAME+'\'s ':'')+'field card: Asking the Right Questions (Starwell SI)\n';
   document.querySelectorAll('[data-fcp]').forEach(function(p,k){txt+='\n'+['BEFORE','DURING','AFTER'][k]+'\n';p.querySelectorAll('h4').forEach(function(h){txt+=h.textContent+':\n'+Array.prototype.map.call(h.nextElementSibling.querySelectorAll('li'),function(l){return '- '+l.textContent;}).join('\n')+'\n';});});
   copyText(this,txt,'Copy the whole field card',document.querySelector('[data-fcp]:not([hidden])'));});
 
 /* ---------- personalization ---------- */
 var MISSIONS={
- why:'Before your next visit, pick which part of the value equation you\'ll ask about first.',
- ladder:'On your next visit, don\'t skip a rung. Count your follow-ups. Aim for five or more.',
- ultimate:'Memorize three of the eight word for word tonight. Say them out loud once.',
- listen:'After your next visit, run the debrief prompt and send {team} the top three findings.',
- sort:'Score one real problem from your last conversation on the pain test.',
- ai:'Before you suggest anything, find out their software, plan and admin.',
- promise:'Send the recap within 24 hours, in the owner\'s words.'
+ why:'On your next visit, ask one question about the owner\'s own story before anything about their business. Notice how they open up.',
+ visit:'Say all 8 questions out loud from memory tonight, then again tomorrow. Spacing it out makes it stick.',
+ listen:'Next visit, catch two signals and use the matching follow-up. Tell {team} what you caught.',
+ sort:'Pick one problem from your last conversation and put a yearly number on it.',
+ ai:'The next time an owner asks "Can AI do X?", answer with a question first.'
 };
-var BOBBY_EXTRA={why:' You set the standard; walk {team} through your answer.',ladder:' On a joint visit, let {team} ask the Day rung while you only follow up.',listen:' Then review theirs with them.',promise:' Model it so {team} copy the format.'};
 function personalize(){var t=team();
   document.getElementById('hiName').textContent=NAME?'Welcome, '+NAME:'Welcome';
-  document.getElementById('coverPromise').textContent=(NAME?NAME+', here':'Here')+'\'s the deal. By the end, you\'ll know the 8 questions that make an HVAC owner tell you what\'s really broken, and how to prove AI can fix it.';
-  document.getElementById('pocketTitle').textContent=NAME?NAME+'\'s pocket list':'Your pocket list';
-  document.getElementById('checkTitle').textContent=NAME?'Before you leave, '+NAME:'Before you leave';
+  document.getElementById('pocketTitle').textContent=NAME?'Lock it in · '+NAME+'\'s 8 questions':'Lock it in';
   document.getElementById('fcTitle').textContent=NAME?NAME+'\'s field card':'Field card';
-  document.getElementById('permScript').textContent='"Mind if my AI note taker records? I\'m '+(NAME||'[name]')+' with Starwell, and it lets me listen to you instead of scribbling."';
-  document.getElementById('debrief').textContent=debriefText()+'[paste transcript]';
+  document.getElementById('permScript').textContent='"Mind if my AI note taker records? I\'m '+(NAME||'[name]')+' with Starwell. It lets me listen to you instead of scribbling."';
   var av=document.getElementById('avatar');if(NAME){av.hidden=false;av.textContent=NAME.charAt(0);av.style.background=PEOPLE[NAME].c;}else av.hidden=true;
   document.querySelectorAll('.mission').forEach(function(m){m.remove();});
-  if(NAME)Object.keys(MISSIONS).forEach(function(stop){var last=null;cards.forEach(function(c){if(c.dataset.stop===stop)last=c;});if(!last)return;
-    var txt=MISSIONS[stop]+(NAME==='Bobby'&&BOBBY_EXTRA[stop]?BOBBY_EXTRA[stop]:'');txt=txt.replace(/\{team\}/g,t);
-    var d=document.createElement('div');d.className='mission';d.innerHTML='<p><span class="handnote">Your move, '+esc(NAME)+':</span>'+esc(txt)+'</p>';last.querySelector(':scope>.wrap').appendChild(d);});
-  loadChecks();updScore();}
+  if(NAME)document.querySelectorAll('[data-mission]').forEach(function(card){var txt=MISSIONS[card.dataset.mission].replace(/\{team\}/g,t);
+    var d=document.createElement('div');d.className='mission';d.innerHTML='<p><span class="handnote">Your move, '+esc(NAME)+':</span>'+esc(txt)+'</p>';card.querySelector(':scope>.wrap').appendChild(d);});
+  loadDone();cards.forEach(function(c){c._got={};});updScore();}
 document.getElementById('who').addEventListener('click',function(e){var b=e.target.closest('[data-who]');if(!b)return;NAME=b.dataset.who;store('atrq-user',NAME);
   document.querySelectorAll('[data-who]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});personalize();updateNav();
   setTimeout(function(){var saved=parseInt(store('atrq-card-'+NAME),10);show(saved>1&&saved<cards.length?saved:1,1);},350);});
 
 /* ---------- entrance animations ---------- */
-var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-var LISTS='.rows,.sigs,.checks3,.loopList,.steps3,.pairs,.bubbles,.found,.flow,.chipset,.buckets,.checklist,.acc,.fc,.opts,.dials,.exs,.tabs,.who,.traps,.vsrow,.cmp,.vrow,.pocket';
+var LISTS='.sigs,.stepsC,.pairs,.bubbles,.found,.buckets,.acc,.fc,.optsV,.pqs,.tabs,.who,.vsrow,.cmp,.recall,.how,.qa,.segBtns,.moves,.slgrid,.eqn';
 function wordify(el){Array.prototype.slice.call(el.childNodes).forEach(function(n){if(n.nodeType===3){var parts=n.textContent.split(/(\s+)/);var f=document.createDocumentFragment();parts.forEach(function(t){if(!t)return;if(/^\s+$/.test(t))f.appendChild(document.createTextNode(t));else{var sp=document.createElement('span');sp.className='w';sp.textContent=t;f.appendChild(sp);}});n.parentNode.replaceChild(f,n);}else if(n.nodeType===1&&!n.classList.contains('w'))wordify(n);});}
 document.querySelectorAll('.t1,.t2').forEach(wordify);
 function countUp(el){var m=el.textContent.match(/^(\$?)([\d,]+)(.*)$/);if(!m)return;var end=parseInt(m[2].replace(/,/g,''),10);if(!(end>0))return;var t0=performance.now(),dur=900;
@@ -1256,30 +1376,31 @@ function animateCard(c){cards.forEach(function(x){x.classList.toggle('on-card',x
   c.querySelectorAll('svg .pop').forEach(function(g,k){g.style.transformBox='fill-box';g.style.transformOrigin='center';g.animate([{opacity:0,transform:'scale(.4)'},{opacity:1,transform:'none'}],{duration:450,delay:d*0.5+250+k*110,easing:'cubic-bezier(.3,1.6,.5,1)',fill:'backwards'});});
   var wrap=c.querySelector(':scope>.wrap');if(!wrap)return;
   Array.prototype.forEach.call(wrap.children,function(el){if(el.matches('.t1,.t2')||el.hidden)return;
-    if(el.matches(LISTS)){Array.prototype.forEach.call(el.children,function(ch){if(ch.tagName==='LEGEND'||ch.hidden)return;ch.animate([{opacity:0,transform:'translateY(16px)'},{opacity:1,transform:'none'}],{duration:420,delay:d,easing:E,fill:'backwards'});d+=65;});}
+    if(el.matches(LISTS)){Array.prototype.forEach.call(el.children,function(ch){if(ch.hidden)return;ch.animate([{opacity:0,transform:'translateY(16px)'},{opacity:1,transform:'none'}],{duration:420,delay:d,easing:E,fill:'backwards'});d+=65;});}
     else{el.animate([{opacity:0,transform:'translateY(14px)'},{opacity:1,transform:'none'}],{duration:460,delay:d,easing:E,fill:'backwards'});d+=85;}
     if(el.querySelectorAll)el.querySelectorAll(LISTS).forEach(function(l){Array.prototype.forEach.call(l.children,function(ch){if(ch.hidden)return;ch.animate([{opacity:0,transform:'translateX(-12px)'},{opacity:1,transform:'none'}],{duration:380,delay:d,easing:E,fill:'backwards'});d+=45;});});});
   c.querySelectorAll('#o1,.bigscore').forEach(function(n){if(n.offsetParent)setTimeout(function(){countUp(n);},Math.min(d,900));});
   var nd=c.querySelector('#needle');if(nd)nd.animate([{transform:'rotate(-80deg)'},{transform:getComputedStyle(nd).transform}],{duration:900,delay:Math.min(d,800),easing:'cubic-bezier(.3,1.4,.5,1)',fill:'backwards'});
   var vm=c.querySelector('#vMeter');if(vm)vm.animate([{width:'0%'},{width:vm.style.width}],{duration:900,delay:Math.min(d,800),easing:'cubic-bezier(.3,1.3,.5,1)',fill:'backwards'});
-  var cl=c.querySelector('#climber');if(cl&&cl.animate)cl.animate([{transform:'translate(0,300px)'},{transform:cl.getAttribute('transform').replace('translate(0,','translate(0px,').replace(')','px)')}],{duration:800,delay:400,easing:'cubic-bezier(.3,1.3,.5,1)',fill:'backwards'});
 }
 
 /* ---------- deck navigation ---------- */
-var STOPS=[{id:'hello',n:'',name:'Welcome',sub:'Pick your name'},{id:'start',n:'',name:'Asking the Right Questions',sub:'The methodology'},{id:'why',n:1,name:'Why questions win',sub:'History, human nature, value'},{id:'ladder',n:2,name:'The question ladder',sub:'Day, Leak, Cost, Want'},{id:'ultimate',n:3,name:'8 ultimate questions',sub:'The ones that matter most'},{id:'listen',n:4,name:'Listen and capture',sub:'Signals, play-back, AI note taker'},{id:'sort',n:5,name:'Sort',sub:'Pebble or must-fix'},{id:'ai',n:6,name:'Can AI fix it?',sub:'Checks, plug-ins, blockers'},{id:'promise',n:7,name:'Promise',sub:'Never overpromise'},{id:'practice',n:8,name:'Practice',sub:'Seven owner quotes'},{id:'card',n:'★',name:'Field card',sub:'Read it in the truck'}];
-var cards=Array.prototype.slice.call(stage.querySelectorAll('.card'));
-cards.forEach(function(c){c.hidden=true;c.setAttribute('role','group');});
-var cur=-1,seen={};
+var STOPS=[{id:'hello',n:'',name:'Welcome',sub:'Pick your name'},{id:'start',n:'',name:'Asking the Right Questions',sub:'How this guide works'},{id:'why',n:1,name:'Why questions win',sub:'History, human nature, value'},{id:'visit',n:2,name:'The visit blueprint',sub:'4 parts, 8 questions, follow-ups'},{id:'listen',n:3,name:'Listen and capture',sub:'Signals, play-back, note taker'},{id:'sort',n:4,name:'What matters most',sub:'Pebble or must-fix'},{id:'ai',n:5,name:'AI and promises',sub:'What fits, never overpromise'},{id:'practice',n:6,name:'Practice',sub:'Seven conversations'},{id:'card',n:'★',name:'Field card',sub:'Read it in the truck'}];
+cards=Array.prototype.slice.call(stage.querySelectorAll('.card'));
+cards.forEach(function(c,i){c.hidden=true;c.setAttribute('role','group');c.dataset.key='k'+i+'-'+c.dataset.stop;});
+var seen={};
 var segs=document.getElementById('segs'),count=document.getElementById('count'),nextBtn=document.getElementById('next'),prevBtn=document.getElementById('prev'),nextLabel=document.getElementById('nextLabel'),more=document.getElementById('morehint');
 function stopOf(i){return cards[i].dataset.stop;}
 function stopInfo(id){return STOPS.filter(function(s){return s.id===id;})[0];}
 function idxInStop(i){var id=stopOf(i),list=[];cards.forEach(function(c,k){if(c.dataset.stop===id)list.push(k);});return {list:list,pos:list.indexOf(i)};}
-function checkOverflow(){if(!cards||cur<0)return;var c=cards[cur];more.hidden=!(c.scrollHeight-c.clientHeight>6&&c.scrollTop+c.clientHeight<c.scrollHeight-6);}
-function updateNav(){if(cur<0)return;var i=cur,id=stopOf(i),nx=cards[i+1];
-  nextBtn.disabled=(id==='hello'&&!NAME);
-  if(id==='hello')nextLabel.textContent=NAME?'Continue as '+NAME:'Pick your name';
+checkOverflow=function(){if(!cards||cur<0)return;var c=cards[cur];more.hidden=!(c.scrollHeight-c.clientHeight>6&&c.scrollTop+c.clientHeight<c.scrollHeight-6);};
+function updateNav(){if(cur<0)return;var i=cur,c=cards[i],id=stopOf(i),nx=cards[i+1];
+  var locked=(id==='hello'&&!NAME)||!isOpen(c);nextBtn.classList.toggle('locked',locked);nextBtn.setAttribute('aria-disabled',String(locked));
+  if(id==='hello'&&!NAME){nextLabel.textContent='Pick your name';return;}
+  if(locked){var left=need(c)-got(c);nextLabel.textContent=c.dataset.glabel+(need(c)>1?' · '+left+' left':'');return;}
+  if(id==='hello')nextLabel.textContent='Continue as '+NAME;
   else if(!nx)nextLabel.textContent='Back to the start';
-  else if(id==='start')nextLabel.textContent=NAME?'Let\'s go, '+NAME:'Start';
+  else if(id==='start')nextLabel.textContent='Let\'s go, '+NAME;
   else if(stopOf(i+1)!==id)nextLabel.textContent='Next: '+stopInfo(stopOf(i+1)).name;
   else nextLabel.textContent='Next';}
 function show(i,dir){if(i<0||i>=cards.length)return;if(!NAME&&i>0)i=0;var prev=cards[cur];if(prev)prev.hidden=true;
@@ -1288,11 +1409,13 @@ function show(i,dir){if(i<0||i>=cards.length)return;if(!NAME&&i>0)i=0;var prev=c
   document.getElementById('whereName').textContent=(info.n&&info.n!=='★'?info.n+' · ':'')+info.name;document.getElementById('whereSub').textContent=info.sub;
   count.textContent=(id==='hello'||id==='start')?'':(p.pos+1)+'/'+p.list.length;
   segs.innerHTML=(id==='hello'||id==='start')?STOPS.slice(2).map(function(){return '<i></i>';}).join(''):p.list.map(function(_,k){return '<i class="'+(k<p.pos?'done':k===p.pos?'now':'')+'"></i>';}).join('');
-  prevBtn.disabled=i===0;updateNav();
+  prevBtn.disabled=i===0;nextBtn.classList.remove('unlock');updateNav();
   try{history.replaceState(null,'','#'+id);}catch(e){}
   if(NAME&&i>0)store('atrq-card-'+NAME,String(i));
-  animateCard(c);requestAnimationFrame(checkOverflow);}
-function step(d){var n=cur+d;if(n>=cards.length)n=1;if(n<0)return;if(stopOf(cur)==='hello'&&!NAME)return;show(n,d);}
+  animateCard(c);setTimeout(function(){if(cards[cur]===c)nudge(c);},RM?0:1100);requestAnimationFrame(checkOverflow);
+  if(c.querySelector('#tlBox')&&!tlBox.innerHTML)showTL(0);}
+function step(d){if(d>0&&cur>=0){var c=cards[cur];if((stopOf(cur)==='hello'&&!NAME)||!isOpen(c)){nextBtn.classList.remove('shake');void nextBtn.offsetWidth;nextBtn.classList.add('shake');nudge(c);var t=c.querySelector('.nudge');if(t&&t.scrollIntoView)t.scrollIntoView({block:'nearest',behavior:RM?'auto':'smooth'});return;}}
+  var n=cur+d;if(n>=cards.length)n=1;if(n<0)return;show(n,d);}
 nextBtn.addEventListener('click',function(){step(1);});prevBtn.addEventListener('click',function(){step(-1);});
 cards.forEach(function(c){c.addEventListener('scroll',checkOverflow,{passive:true});});
 window.addEventListener('resize',checkOverflow);
@@ -1300,7 +1423,7 @@ function firstOf(id){for(var k=0;k<cards.length;k++)if(cards[k].dataset.stop===i
 document.addEventListener('click',function(e){var b=e.target.closest('[data-jump]');if(b)show(firstOf(b.dataset.jump),-1);});
 document.addEventListener('keydown',function(e){if(!sheet.hidden){if(e.key==='Escape')closeSheet();return;}var t=e.target;if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'))return;if(e.key==='ArrowRight'){step(1);e.preventDefault();}if(e.key==='ArrowLeft'){step(-1);e.preventDefault();}});
 var sx=null,sy=0,st=0;
-stage.addEventListener('touchstart',function(e){if(e.touches.length!==1)return;if(e.target.closest('input,.seg,.flow,.tlBtns,.copyable'))return;sx=e.touches[0].clientX;sy=e.touches[0].clientY;st=Date.now();},{passive:true});
+stage.addEventListener('touchstart',function(e){if(e.touches.length!==1)return;if(e.target.closest('input,.tlBtns,.moves,.segBtns'))return;sx=e.touches[0].clientX;sy=e.touches[0].clientY;st=Date.now();},{passive:true});
 stage.addEventListener('touchend',function(e){if(sx==null)return;var t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;sx=null;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.6&&Date.now()-st<700)step(dx<0?1:-1);},{passive:true});
 var sheet=document.getElementById('sheet'),stopList=document.getElementById('stopList');
 function openSheet(){var curStop=stopOf(cur);document.getElementById('sheetTitle').textContent=NAME?NAME+'\'s route':'The route';
@@ -1312,17 +1435,19 @@ document.getElementById('sheetClose').addEventListener('click',closeSheet);
 document.getElementById('switchUser').addEventListener('click',function(){sheet.hidden=true;show(0,-1);});
 sheet.addEventListener('click',function(e){if(e.target===sheet)closeSheet();var b=e.target.closest('[data-stop-go]');if(b){sheet.hidden=true;show(firstOf(b.dataset.stopGo),1);}});
 window.addEventListener('hashchange',function(){var id=(location.hash||'').slice(1);if(id&&stopInfo(id)&&stopOf(cur)!==id)show(firstOf(id),1);});
+window.__show=function(i){show(i,0);};
 
 /* ---------- texture + start ---------- */
 (function(){var c=document.createElement('canvas');c.width=c.height=340;var x=c.getContext&&c.getContext('2d');if(!x)return;var dd=x.createImageData(340,340);
   for(var i=0;i<dd.data.length;i+=4){var a=Math.random()<.3?Math.random()*70:0;dd.data[i]=46;dd.data[i+1]=30;dd.data[i+2]=22;dd.data[i+3]=a;}
   x.putImageData(dd,0,0);for(var k=0;k<150;k++){x.strokeStyle='rgba(40,28,20,'+(Math.random()*.09+.03)+')';x.lineWidth=Math.random()*2+.5;var yy=Math.random()*340,xx=Math.random()*340,l=Math.random()*120+30;x.beginPath();x.moveTo(xx,yy);x.bezierCurveTo(xx+l*.3,yy+Math.random()*3-1.5,xx+l*.7,yy+Math.random()*3-1.5,xx+l,yy+Math.random()*4-2);x.stroke();}
   try{var u='url('+c.toDataURL()+')';document.querySelectorAll('.tex').forEach(function(e){e.style.backgroundImage=u;});}catch(e){}})();
-drawUQ();personalize();
+personalize();
 var h=(location.hash||'').slice(1),startAt=0;
 if(NAME){if(h&&stopInfo(h)&&h!=='hello')startAt=firstOf(h);else{var saved=parseInt(store('atrq-card-'+NAME),10);startAt=saved>0&&saved<cards.length?saved:1;}}
 show(startAt,0);
 try{document.fonts.ready.then(checkOverflow);}catch(e){}setTimeout(checkOverflow,800);
+
 })();
 </script>
 
