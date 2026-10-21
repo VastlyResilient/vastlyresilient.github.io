@@ -12,6 +12,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="claude:viewport-fit-sides" content="cover">
+<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Caveat:wght@600;700&family=Public+Sans:wght@400;500;600;700&display=swap">
 <style>
@@ -732,6 +733,17 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
 @keyframes spkp{to{opacity:.4}}
 .sigRow>*{flex:none;white-space:nowrap}
 .card .ra{min-height:150px}
+
+.howto{display:flex;align-items:center;gap:8px;background:#EEF3FB;border:1.5px solid #C9D7EE;border-radius:10px;padding:5px 10px;font-size:13.5px;line-height:1.3;color:var(--navy);transition:background .3s,border-color .3s}
+.howto .hi{flex:none;width:22px;height:22px;border-radius:50%;background:var(--ultra);color:var(--cream);display:grid;place-items:center}
+.howto .hi svg{width:15px;height:15px}
+.howto .ok{display:none}
+.howto .hc{white-space:nowrap;font-weight:700;color:var(--ultra);margin-left:2px}
+.howto.done{background:var(--go-bg);border-color:#A9CDB3;color:var(--go)}
+.howto.done .hi{background:var(--go)}
+.howto.done .hand{display:none}.howto.done .ok{display:inline}
+.howto.done .ht b{color:var(--go)}
+.sigEx{min-height:92px}
 </style>
 
 </head>
@@ -776,7 +788,7 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
     </section>
 
     <!-- STOP 1 -->
-    <section class="card" data-stop="why" data-gate="6" data-glabel="Tap all 6 moments">
+    <section class="card" data-stop="why" data-howto="Tap each of the <b>6 dates</b> under the timeline to read its story." data-gate="6" data-glabel="Tap all 6 moments">
       <div class="wrap">
         <p class="eyebrow">Stop 1 · Why questions win</p>
         <h2 class="t2">The one who asks <span>steers.</span></h2>
@@ -799,21 +811,20 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
         <div class="study open"><span class="sh"><b>Harvard, 2017 · real conversations</b><span class="more">what happened?</span></span><span class="res"><span>Across hundreds of chats and speed dates, people who asked <b class="k">more follow-up questions were liked more</b> and got more second dates.</span><span class="you">For you: follow-ups prove you were actually listening.</span></span></div>
       </div>
     </section>
-    <section class="card" data-stop="why" data-gate="4" data-glabel="Tap all 4 parts">
+    <section class="card" data-stop="why" data-howto="Tap each of the <b>4 boxes</b> in the equation to see what it means." data-gate="4" data-glabel="Tap all 4 parts">
       <div class="wrap">
         <p class="eyebrow">Business · Alex Hormozi's value equation</p>
         <h2 class="t2">Why people <span>say yes.</span></h2>
-        <p class="lead">In <i>$100M Offers</i>, Hormozi explains that people say yes when something <b class="k">feels worth more than it costs them</b>. That feeling comes from four parts. Tap each.</p>
+        <p class="lead">In <i>$100M Offers</i>, Hormozi explains that people say yes when something <b class="k">feels worth more than it costs them</b>. That feeling comes from four parts.</p>
         <div class="eqn" id="eqn"></div>
         <div class="box eqPanel" id="eqPanel" aria-live="polite"></div>
       </div>
     </section>
-    <section class="card" data-stop="why" data-gate="4" data-glabel="Try all 4 parts">
+    <section class="card" data-stop="why" data-howto="Pick each of the <b>4 parts</b>, then <b>slide its dial</b> left and right." data-gate="4" data-glabel="Try all 4 parts">
       <div class="wrap">
-        <p class="eyebrow">Try it · the value equation in real words</p>
+        <p class="eyebrow">Try it · what an owner might actually say</p>
         <h2 class="t2">Read the owner's <span>answers.</span></h2>
-        <p class="lead">Pick a part, slide the dial, see <b class="k">what an owner might say</b> at each level.</p>
-        <div class="vtabs" id="vtabs" role="tablist"></div>
+                <div class="vtabs" id="vtabs" role="tablist"></div>
         <div class="box dial" id="dial"></div>
         <div class="vout"><span>Value</span><div class="vmeter"><i id="vMeter"></i></div><span id="vWord">Medium</span></div>
         
@@ -829,25 +840,25 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
     </section>
 
     <!-- STOP 2 -->
-    <section class="card" data-stop="visit" data-gate="4" data-glabel="Tap all 4 parts">
+    <section class="card" data-stop="visit" data-howto="Tap each of the <b>4 colored parts</b> to hear how it sounds." data-gate="4" data-glabel="Tap all 4 parts">
       <div class="wrap">
         <p class="eyebrow">Stop 2 · The visit blueprint</p>
         <h2 class="t2">Four parts, <span>in order.</span></h2>
-        <p class="lead">A first visit runs about <b class="k">40 minutes</b>. The minutes are a guide, not a stopwatch. Tap each part to hear how it sounds.</p>
+        <p class="lead">A first visit runs about <b class="k">40 minutes</b>. The minutes are a guide, not a stopwatch.</p>
         <svg class="vbarArt" viewBox="0 0 360 34" aria-hidden="true" id="vbarArt"></svg>
         <div class="segBtns" id="segBtns"></div>
         <div class="box partBox" id="partBox" aria-live="polite"></div>
       </div>
     </section>
-    <section class="card" data-stop="visit" data-part="0" data-gate="1" data-glabel="Open the question"><div class="wrap phase"></div></section>
-    <section class="card" data-stop="visit" data-part="1" data-gate="2" data-glabel="Open both questions"><div class="wrap phase"></div></section>
-    <section class="card" data-stop="visit" data-part="2" data-gate="3" data-glabel="Open all 3 questions"><div class="wrap phase"></div></section>
-    <section class="card" data-stop="visit" data-part="3" data-gate="2" data-glabel="Open both questions"><div class="wrap phase"></div></section>
-    <section class="card" data-stop="visit" data-gate="5" data-glabel="Try all 5 moves">
+    <section class="card" data-stop="visit" data-part="0" data-howto="Tap <b>the question</b> to see when and why to ask it." data-gate="1" data-glabel="Open the question"><div class="wrap phase"></div></section>
+    <section class="card" data-stop="visit" data-part="1" data-howto="Tap <b>both questions</b> to open them." data-gate="2" data-glabel="Open both questions"><div class="wrap phase"></div></section>
+    <section class="card" data-stop="visit" data-part="2" data-howto="Tap <b>all 3 questions</b> to open them." data-gate="3" data-glabel="Open all 3 questions"><div class="wrap phase"></div></section>
+    <section class="card" data-stop="visit" data-part="3" data-howto="Tap <b>both questions</b> to open them." data-gate="2" data-glabel="Open both questions"><div class="wrap phase"></div></section>
+    <section class="card" data-stop="visit" data-howto="Tap each of the <b>5 moves</b> to watch it play out." data-gate="5" data-glabel="Try all 5 moves">
       <div class="wrap">
         <p class="eyebrow">Follow-ups · use them in every part</p>
         <h2 class="t2">The second answer <span>is the real one.</span></h2>
-        <p class="lead">The first answer is the polished version. <b class="k">A follow-up gets the real story.</b> Tap each move.</p>
+        <p class="lead">The first answer is the polished version. <b class="k">A follow-up gets the real story.</b></p>
         <div class="moves" id="moves"></div>
         <div class="box demo" id="demo" aria-live="polite"></div>
       </div>
@@ -864,21 +875,21 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
     </section>
 
     <!-- STOP 3 -->
-    <section class="card" data-stop="listen" data-gate="6" data-glabel="Tap all 6 signals">
+    <section class="card" data-stop="listen" data-howto="Tap each of the <b>6 signals</b> to hear Mike and read what it means." data-gate="6" data-glabel="Tap all 6 signals">
       <div class="wrap">
         <p class="eyebrow">Stop 3 · Listen and capture</p>
         <h2 class="t2">Listen for <span>six signals.</span></h2>
-        <p class="lead opt">Owners rarely say "this is my biggest problem." <b class="k">They signal it.</b> Tap each to hear it.</p>
+        <p class="lead opt">Owners rarely say "this is my biggest problem." <b class="k">They signal it.</b></p>
         <svg class="art wave" viewBox="0 0 360 30" aria-hidden="true" id="waveArt" style="max-height:30px"></svg>
         <div class="sigs" id="sigs"></div>
         <div class="box sigEx" id="sigEx" aria-live="polite"></div>
       </div>
     </section>
-    <section class="card" data-stop="listen" data-gate="1" data-glabel="Show the signals">
+    <section class="card" data-stop="listen" data-howto="Find the signals yourself first, then tap <b>Show the signals</b>." data-gate="1" data-glabel="Show the signals">
       <div class="wrap">
         <p class="eyebrow">Spot the signals</p>
         <svg class="art" viewBox="0 0 360 34" aria-hidden="true" style="max-height:34px"><path class="draw" d="M8 22 H250" stroke="#F2B33D" stroke-width="14" stroke-linecap="round" opacity=".55"/><g class="pop"><path d="M256 6 l22 22 -10 4 -18 -18z" fill="#142B55"/><path d="M262 2 l26 26 l8 -8 l-26 -26z" fill="#2E6CCB"/><path d="M248 30 l8 -8 4 4z" fill="#F2B33D"/></g><text x="300" y="26" font-family="Caveat,cursive" font-weight="700" font-size="20" fill="#C64A1C" class="pop">mark it</text></svg>
-        <p class="mute" style="font-size:13.5px">Listen to Mike (an example owner) or read along. Find the signals before you tap Show.</p>
+        <p class="mute" style="font-size:13.5px">Listen to Mike (an example owner) or read along.</p>
         <div class="box quote" id="quote">
           <p>July comes and <mark class="s-rep">the phones<sup>repeat</sup></mark> are nuts. After five it goes to voicemail. <mark class="s-work">We just call people back in the morning<sup>workaround</sup></mark>, but half already booked somebody else. <mark class="s-emo">(sighs)<sup>energy</sup></mark> I send <mark class="s-num">fifteen quotes a week<sup>number</sup></mark> and never chase them. <mark class="s-one">Only I know how to price those.<sup>one person</sup></mark> <mark class="s-alw">Always done it that way.<sup>always</sup></mark> Honestly, <mark class="s-rep">the phones<sup>repeat</sup></mark> are the biggest thing.</p>
         </div>
@@ -888,7 +899,7 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
         </div>
       </div>
     </section>
-    <section class="card" data-stop="listen" data-gate="3" data-glabel="Fill all 3 blanks">
+    <section class="card" data-stop="listen" data-howto="Tap each <b>orange blank</b> to fill in the play-back." data-gate="3" data-glabel="Fill all 3 blanks">
       <div class="wrap">
         <p class="eyebrow">Play it back</p>
         <h2 class="t2">Get them to say <span>"That's right."</span></h2>
@@ -923,7 +934,7 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
         <p class="rule">Loudest isn't costliest. Ask: "What do you just put up with?"</p>
       </div>
     </section>
-    <section class="card" data-stop="sort" data-gate="1" data-glabel="Finish one problem">
+    <section class="card" data-stop="sort" data-howto="Pick <b>one problem</b>, then answer its <b>4 questions</b>." data-gate="1" data-glabel="Finish one problem">
       <div class="wrap">
         <p class="eyebrow">The pain test</p>
         <h2 class="t2">Which problem <span>to dig into?</span></h2>
@@ -955,7 +966,7 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
     </section>
 
     <!-- STOP 5 -->
-    <section class="card" data-stop="ai" data-gate="3" data-glabel="Tap all 3 tabs">
+    <section class="card" data-stop="ai" data-howto="Tap all <b>3 tabs</b>: Good fit, Person checks, Keep human." data-gate="3" data-glabel="Tap all 3 tabs">
       <div class="wrap">
         <p class="eyebrow">Stop 5 · AI and promises</p>
         <svg class="art" viewBox="0 0 360 58" aria-hidden="true" style="max-height:52px" id="light"><rect class="pop" x="96" y="4" width="168" height="50" rx="25" fill="#142B55"/><circle class="pop" data-l="go" cx="130" cy="29" r="16"/><circle class="pop" data-l="maybe" cx="180" cy="29" r="16"/><circle class="pop" data-l="stop" cx="230" cy="29" r="16"/><path class="draw" d="M10 29 H90 M270 29 H350" stroke="#D7AA68" stroke-width="4" stroke-dasharray="4 8" fill="none"/></svg>
@@ -1216,7 +1227,7 @@ function nextTarget(c){return Array.prototype.filter.call(c.querySelectorAll('[d
 function clearGlow(c){(c||stage).querySelectorAll('.glow,.glow1').forEach(function(x){x.classList.remove('glow','glow1');});}
 function hit(el,id){var c=el&&el.closest&&el.closest('.card');if(!c)return;if(el.classList&&!el.classList.contains('nosee'))el.classList.add('hit');if(!need(c))return;c._got=c._got||{};if(c._got[id])return;c._got[id]=1;clearGlow(c);
   if(got(c)>=need(c)&&!DONE[c.dataset.key]){DONE[c.dataset.key]=1;if(NAME)store('atrq-done-'+NAME,JSON.stringify(DONE));if(cards[cur]===c){nextBtn.classList.remove('unlock');void nextBtn.offsetWidth;nextBtn.classList.add('unlock');}}
-  if(cards[cur]===c)updateNav();}
+  howtoSync(c);if(cards[cur]===c)updateNav();}
 stage.addEventListener('click',function(e){var g=e.target.closest('[data-g]');if(g&&g.type!=='range'&&!g.hasAttribute('data-manual'))hit(g,g.dataset.g);},true);
 stage.addEventListener('input',function(e){var g=e.target.closest('[data-g]');if(g&&!g.hasAttribute('data-manual'))hit(g,g.dataset.g);},true);
 /* calm guidance: nothing at first; a soft glow only after a long pause, or when they press Next too early */
@@ -1535,8 +1546,8 @@ var CASES=[
  {sit:'Near the end, after Q8.',s:'My wife does the books. She\'d never go for this.',o:['We can convince her, don\'t worry.','What would she want to know before changing anything?','(Ignore it and keep going.)'],a:1,pr:'Respect the decision',t:'It treats her concern as real and tells you what really matters. "Convincing" her is pushy, and ignoring it leaves the biggest worry unanswered.'}
 ];
 var scoreCard=document.getElementById('scoreCard');
-CASES.forEach(function(c,i){var s=document.createElement('section');s.className='card';s.dataset.stop='practice';s.dataset.case=i;s.dataset.gate='1';s.dataset.glabel='Pick a reply';s.dataset.noglow='1';
-  s.innerHTML='<div class="wrap"><p class="eyebrow">'+(i===0?'Stop 6 · Practice · ':'')+'Conversation '+(i+1)+' of '+CASES.length+'</p>'+(i===0?'<p class="mute" style="font-size:13.5px">Pick the best reply. You\'re there to <b class="k">understand and help</b>, not to sell or diagnose on the spot.</p>':'')+'<div class="ownerq">'+window.__OWNER_SVG+'<div><p class="situ">'+esc(c.sit)+'</p><p class="said">'+esc(c.s)+'</p></div></div><div class="optsV">'+c.o.map(function(o,j){return '<button type="button" class="nosee" data-j="'+j+'" data-g="x"><span class="l">'+'ABC'[j]+'</span><span>'+esc(o)+'</span></button>';}).join('')+'</div><div class="ans" hidden></div></div>';
+CASES.forEach(function(c,i){var s=document.createElement('section');s.className='card';s.dataset.stop='practice';s.dataset.case=i;s.dataset.gate='1';s.dataset.glabel='Pick a reply';s.dataset.howto='Tap the <b>reply you would give</b>. Then read why.';s.dataset.noglow='1';
+  s.innerHTML='<div class="wrap"><p class="eyebrow">'+(i===0?'Stop 6 · Practice · ':'')+'Conversation '+(i+1)+' of '+CASES.length+'</p>'+(i===0?'<p class="mute" style="font-size:13.5px">Remember: you\'re there to <b class="k">understand and help</b>, not to sell or diagnose on the spot.</p>':'')+'<div class="ownerq">'+window.__OWNER_SVG+'<div><p class="situ">'+esc(c.sit)+'</p><p class="said">'+esc(c.s)+'</p></div></div><div class="optsV">'+c.o.map(function(o,j){return '<button type="button" class="nosee" data-j="'+j+'" data-g="x"><span class="l">'+'ABC'[j]+'</span><span>'+esc(o)+'</span></button>';}).join('')+'</div><div class="ans" hidden></div></div>';
   stage.insertBefore(s,scoreCard);});
 var answers={};
 stage.addEventListener('click',function(e){var b=e.target.closest('.optsV button');if(!b)return;var card=b.closest('.card');var i=+card.dataset.case;if(answers[i]!=null)return;
@@ -1572,7 +1583,7 @@ function personalize(){var t=team();
   document.querySelectorAll('.mission').forEach(function(m){m.remove();});
   if(NAME)document.querySelectorAll('[data-mission]').forEach(function(card){var txt=MISSIONS[card.dataset.mission].replace(/\{team\}/g,t);
     var d=document.createElement('div');d.className='mission';d.innerHTML='<p><span class="handnote">Your move, '+esc(NAME)+':</span>'+esc(txt)+'</p>';card.querySelector(':scope>.wrap').appendChild(d);});
-  loadDone();cards.forEach(function(c){c._got={};});updScore();}
+  loadDone();cards.forEach(function(c){c._got={};howtoSync(c);});updScore();}
 document.getElementById('who').addEventListener('click',function(e){var b=e.target.closest('[data-who]');if(!b)return;NAME=b.dataset.who;store('atrq-user',NAME);
   document.querySelectorAll('[data-who]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});personalize();updateNav();
   setTimeout(function(){var saved=parseInt(store('atrq-card-'+NAME),10);show(saved>1&&saved<cards.length?saved:1,1);},350);});
@@ -1600,6 +1611,12 @@ function animateCard(c){cards.forEach(function(x){x.classList.toggle('on-card',x
   var vm=c.querySelector('#vMeter');if(vm)vm.animate([{width:'0%'},{width:vm.style.width}],{duration:900,delay:Math.min(d,800),easing:'cubic-bezier(.3,1.3,.5,1)',fill:'backwards'});
 }
 
+/* ---------- "to continue" lines ---------- */
+function howtoSync(c){var h=c.querySelector('.howto');if(!h)return;var open=isOpen(c),n=need(c),g=got(c);h.classList.toggle('done',open);
+  h.querySelector('.ht').innerHTML=open?'<b>Unlocked.</b> Tap Next when you\'re ready.':c.dataset.howto+(n>1?' <span class="hc">'+g+' of '+n+' done</span>':'');}
+document.querySelectorAll('.card[data-howto]').forEach(function(c){var p=document.createElement('p');p.className='howto';p.innerHTML='<span class="hi" aria-hidden="true"><svg viewBox="0 0 20 20"><path class="hand" d="M7.5 11V3.6a1.5 1.5 0 0 1 3 0V9l.7-.3c1.2-.4 1.6.7 1.6.7l.4.2c1.3-.4 1.6.8 1.6.8l.3.2c1.3-.2 1.4 1 1.4 1v3.2c0 2.6-2 4.2-4.2 4.2h-1.6c-1.6 0-2.7-.8-3.5-2.1L4.4 12.6c-.6-.9.4-1.8 1.3-1.2z" fill="currentColor"/><path class="ok" d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="ht"></span>';
+  var w=c.querySelector(':scope>.wrap');var anchor=w.querySelector(':scope>.phHead')||w.querySelector(':scope>.eyebrow')||w.querySelector(':scope>.pocketRow');
+  if(anchor&&anchor.nextSibling)w.insertBefore(p,anchor.nextSibling);else w.insertBefore(p,w.firstChild);});
 /* ---------- deck navigation ---------- */
 var STOPS=[{id:'hello',n:'',name:'Welcome',sub:'Pick your name'},{id:'start',n:'',name:'Asking the Right Questions',sub:'How this guide works'},{id:'why',n:1,name:'Why questions win',sub:'History, human nature, value'},{id:'visit',n:2,name:'The visit blueprint',sub:'4 parts, 8 questions, follow-ups'},{id:'listen',n:3,name:'Listen and capture',sub:'Signals, play-back, note taker'},{id:'sort',n:4,name:'What matters most',sub:'Pebble or must-fix'},{id:'ai',n:5,name:'AI and promises',sub:'What fits, never overpromise'},{id:'practice',n:6,name:'Practice',sub:'Seven conversations'},{id:'card',n:'★',name:'Field card',sub:'Read it in the truck'}];
 cards=Array.prototype.slice.call(stage.querySelectorAll('.card'));
@@ -1629,7 +1646,7 @@ function show(i,dir){if(i<0||i>=cards.length)return;if(!NAME&&i>0)i=0;var prev=c
   prevBtn.disabled=i===0;nextBtn.classList.remove('unlock');updateNav();
   try{history.replaceState(null,'','#'+id);}catch(e){}
   if(NAME&&i>0)store('atrq-card-'+NAME,String(i));
-  ghostStop();stopAudio();animateCard(c);armIdle();setTimeout(function(){if(cards[cur]===c)ghostDemo(c);},RM?0:1600);requestAnimationFrame(checkOverflow);if(c===raCard)raStart();else raClear();
+  ghostStop();stopAudio();howtoSync(c);animateCard(c);armIdle();setTimeout(function(){if(cards[cur]===c)ghostDemo(c);},RM?0:1600);requestAnimationFrame(checkOverflow);if(c===raCard)raStart();else raClear();
   if(c.querySelector('#tlBox')&&!tlBox.innerHTML)showTL(0);}
 function step(d){if(d>0&&cur>=0){var c=cards[cur];if((stopOf(cur)==='hello'&&!NAME)||!isOpen(c)){nextBtn.classList.remove('shake');void nextBtn.offsetWidth;nextBtn.classList.add('shake');pointOut(c);return;}}
   var n=cur+d;if(n>=cards.length)n=1;if(n<0)return;show(n,d);}
