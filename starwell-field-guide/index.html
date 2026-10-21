@@ -363,8 +363,7 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
         <div class="art" id="heroArt"><div class="tex dark"></div></div>
         <p class="eyebrow">Starwell SI · Field guide for HVAC visits</p>
         <h1 class="t1">Diagnose before you <span>prescribe.</span></h1>
-        <p class="idea">A good HVAC tech checks the pressures before quoting a compressor. Do the same with a business.</p>
-        <div class="meta"><span><b>7 stops</b> + a field card</span><span><b id="cardTotal">45 short cards</b></span><span>Swipe or tap <b>Next</b></span></div>
+        <p class="handnote" style="font-size:30px;color:var(--ultra)">The Methodology Of Asking The Right Questions</p>
       </div>
     </section>
 
@@ -1084,7 +1083,7 @@ document.getElementById('copyCard').addEventListener('click',function(){var btn=
 var STOPS=[{id:'start',n:'',name:'Start',sub:'Starwell SI field guide'},{id:'mindset',n:1,name:'Mindset',sub:'Be the tech'},{id:'ask',n:2,name:'Ask',sub:'Day, Leak, Cost, Want'},{id:'listen',n:3,name:'Listen',sub:'Signals and play-back'},{id:'sort',n:4,name:'Sort',sub:'Pebble or must-fix'},{id:'ai',n:5,name:'Can AI fix it?',sub:'Checks, plug-ins, blockers'},{id:'promise',n:6,name:'Promise',sub:'Never overpromise'},{id:'practice',n:7,name:'Practice',sub:'Seven owner quotes'},{id:'card',n:'★',name:'Field card',sub:'Read it in the truck'}];
 var cards=Array.prototype.slice.call(stage.querySelectorAll('.card'));
 cards.forEach(function(c){c.hidden=true;c.setAttribute('role','group');});
-document.getElementById('cardTotal').textContent=(cards.length-1)+' short cards';
+
 var cur=-1,seen={};
 var segs=document.getElementById('segs'),count=document.getElementById('count'),nextBtn=document.getElementById('next'),prevBtn=document.getElementById('prev'),nextLabel=document.getElementById('nextLabel'),more=document.getElementById('morehint');
 function stopOf(i){return cards[i].dataset.stop;}
