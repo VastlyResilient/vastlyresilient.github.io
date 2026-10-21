@@ -91,7 +91,7 @@ button{font:inherit;cursor:pointer;color:inherit}
 /* Card content */
 .eyebrow{font-family:var(--display);font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:14.5px;color:var(--ember)}
 .t1{font-size:clamp(38px,10.5vw,58px)}
-.t1 span,.t2 span{color:var(--verm)}
+.t1 span:not(.w),.t2 span:not(.w){color:var(--verm)}
 .t2{font-size:clamp(30px,8.2vw,42px)}
 .idea{font-size:17px;line-height:1.45}
 .handnote{font-family:var(--hand);font-weight:700;font-size:22px;line-height:1.1;color:var(--ultra)}
@@ -322,6 +322,13 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
   .t1{font-size:clamp(34px,9.5vw,52px)}
   .t2{font-size:clamp(27px,7.4vw,38px)}
 }
+
+/* Entrance motion (Hormozi-style punch) */
+.t1 span:not(.w),.t2 span:not(.w){background:linear-gradient(var(--gold),var(--gold)) no-repeat 0 88%/0% 30%;padding:0 .04em}
+.card.hl .t1 span:not(.w),.card.hl .t2 span:not(.w){animation:hlsweep .55s cubic-bezier(.3,.8,.3,1) var(--hd,.45s) forwards}
+@keyframes hlsweep{to{background-size:100% 30%}}
+.w{display:inline-block}
+@media (prefers-reduced-motion:reduce){.t1 span:not(.w),.t2 span:not(.w){background-size:100% 30%}}
 /* hero character motion */
 .on .breathe{animation:breathe 3.4s ease-in-out infinite;transform-origin:0 0}
 @keyframes breathe{50%{transform:scaleY(1.013)}}
@@ -1079,6 +1086,31 @@ document.getElementById('copyCard').addEventListener('click',function(){var btn=
   function sel(){var r=document.createRange();r.selectNodeContents(btn.previousElementSibling);var s=window.getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='Selected, press Ctrl/Cmd+C';}
   try{navigator.clipboard.writeText(txt).then(function(){btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy the whole field card';},1800);},sel);}catch(e){sel();}});
 
+
+/* ---------- entrance animations ---------- */
+var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+var LISTS='.rows,.sigs,.checks3,.loop,.steps,.pairs,.bubbles,.found,.chain,.flow,.ladder,.rules,.minutes,.chipset,.qs,.buckets,.checklist,.acc,.fc,.opts,.dials,.exs,.tabs';
+function wordify(el){Array.prototype.slice.call(el.childNodes).forEach(function(n){if(n.nodeType===3){var parts=n.textContent.split(/(\s+)/);var f=document.createDocumentFragment();parts.forEach(function(t){if(!t)return;if(/^\s+$/.test(t))f.appendChild(document.createTextNode(t));else{var sp=document.createElement('span');sp.className='w';sp.textContent=t;f.appendChild(sp);}});n.parentNode.replaceChild(f,n);}else if(n.nodeType===1&&!n.classList.contains('w'))wordify(n);});}
+document.querySelectorAll('.t1,.t2,.rungword').forEach(wordify);
+function ease(){return 'cubic-bezier(.2,.75,.25,1)';}
+function countUp(el){var m=el.textContent.match(/^(\$?)([\d,]+)(.*)$/);if(!m)return;var end=parseInt(m[2].replace(/,/g,''),10);if(!(end>0))return;var t0=performance.now(),dur=900;
+  function f(t){var k=Math.min(1,(t-t0)/dur);k=1-Math.pow(1-k,3);el.textContent=m[1]+Math.round(end*k).toLocaleString('en-US')+m[3];if(k<1)requestAnimationFrame(f);}requestAnimationFrame(f);}
+function animateCard(c){if(RM||!c.animate)return;var d=0,step=70;
+  var words=c.querySelectorAll('.w');
+  words.forEach(function(w,i){w.animate([{opacity:0,transform:'translateY(.45em) scale(.9)'},{opacity:1,transform:'none'}],{duration:420,delay:60+i*55,easing:'cubic-bezier(.3,1.5,.5,1)',fill:'backwards'});});
+  var hd=(60+words.length*55+150)/1000;c.style.setProperty('--hd',hd+'s');c.classList.remove('hl');void c.offsetWidth;c.classList.add('hl');
+  d=60+words.length*55;
+  var wrap=c.querySelector(':scope>.wrap');if(!wrap)return;
+  Array.prototype.forEach.call(wrap.children,function(el){if(el.matches('.t1,.t2,.rungword')||el.hidden)return;
+    if(el.matches(LISTS)){Array.prototype.forEach.call(el.children,function(ch){if(ch.tagName==='LEGEND')return;ch.animate([{opacity:0,transform:'translateY(16px)'},{opacity:1,transform:'none'}],{duration:420,delay:d,easing:ease(),fill:'backwards'});d+=step;});}
+    else{el.animate([{opacity:0,transform:'translateY(14px)'},{opacity:1,transform:'none'}],{duration:460,delay:d,easing:ease(),fill:'backwards'});d+=step+20;}
+    el.querySelectorAll&&el.querySelectorAll(LISTS).forEach(function(l){if(l===el)return;Array.prototype.forEach.call(l.children,function(ch){ch.animate([{opacity:0,transform:'translateX(-12px)'},{opacity:1,transform:'none'}],{duration:380,delay:d,easing:ease(),fill:'backwards'});d+=50;});});
+  });
+  c.querySelectorAll('.minutes i').forEach(function(b,i){b.animate([{transform:'scaleX(0)'},{transform:'scaleX(1)'}],{duration:700,delay:300+i*90,easing:ease(),fill:'backwards'});b.style.transformOrigin='left';});
+  c.querySelectorAll('.cover .art svg').forEach(function(a){a.animate([{opacity:0,transform:'scale(1.06)'},{opacity:1,transform:'none'}],{duration:800,easing:ease(),fill:'backwards'});});
+  c.querySelectorAll('#o1:not([hidden]),#o2,.bigscore').forEach(function(n){if(n.offsetParent)setTimeout(function(){countUp(n);},d);});
+  var nd=c.querySelector('#needle');if(nd){nd.animate([{transform:'rotate(-80deg)'},{transform:getComputedStyle(nd).transform}],{duration:900,delay:d,easing:'cubic-bezier(.3,1.4,.5,1)',fill:'backwards'});}
+}
 /* ---------- deck navigation ---------- */
 var STOPS=[{id:'start',n:'',name:'Start',sub:'Starwell SI field guide'},{id:'mindset',n:1,name:'Mindset',sub:'Be the tech'},{id:'ask',n:2,name:'Ask',sub:'Day, Leak, Cost, Want'},{id:'listen',n:3,name:'Listen',sub:'Signals and play-back'},{id:'sort',n:4,name:'Sort',sub:'Pebble or must-fix'},{id:'ai',n:5,name:'Can AI fix it?',sub:'Checks, plug-ins, blockers'},{id:'promise',n:6,name:'Promise',sub:'Never overpromise'},{id:'practice',n:7,name:'Practice',sub:'Seven owner quotes'},{id:'card',n:'★',name:'Field card',sub:'Read it in the truck'}];
 var cards=Array.prototype.slice.call(stage.querySelectorAll('.card'));
@@ -1100,7 +1132,7 @@ function show(i,dir){if(i<0||i>=cards.length)return;var prev=cards[cur];if(prev)
   var nx=cards[i+1];if(!nx){nextLabel.textContent='Back to the start';}else if(id==='start'){nextLabel.textContent='Start the guide';}else if(stopOf(i+1)!==id){nextLabel.textContent='Next: '+stopInfo(stopOf(i+1)).name;}else{nextLabel.textContent='Next';}
   try{history.replaceState(null,'','#'+id);}catch(e){}
   try{localStorage.setItem('dbyp-card',String(i));}catch(e){}
-  requestAnimationFrame(checkOverflow);}
+  animateCard(c);requestAnimationFrame(checkOverflow);}
 function step(d){var n=cur+d;if(n>=cards.length)n=0;if(n<0)return;show(n,d);}
 nextBtn.addEventListener('click',function(){step(1);});
 prevBtn.addEventListener('click',function(){step(-1);});
