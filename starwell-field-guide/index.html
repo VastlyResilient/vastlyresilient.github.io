@@ -10,6 +10,7 @@
 <meta name="robots" content="noindex">
 <title>Asking the Right Questions</title>
 <meta name="claude:viewport-fit-sides" content="cover">
+<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Caveat:wght@600;700&family=Public+Sans:wght@400;500;600;700&display=swap">
 <style>
@@ -409,16 +410,6 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
 @media (max-height:640px){.lead{font-size:14.5px;line-height:1.4}}
 /* gate: nudge + locked next */
 [data-g]{position:relative}
-.nudge{animation:nudge 1.5s ease-in-out infinite}
-@keyframes nudge{0%,100%{box-shadow:0 0 0 0 rgba(238,106,44,.6)}55%{box-shadow:0 0 0 8px rgba(238,106,44,0)}}
-.nudge::after{content:"TAP";position:absolute;top:-9px;right:-6px;background:var(--verm);color:var(--cream);font-family:var(--display);font-weight:800;font-size:11px;letter-spacing:.08em;border-radius:6px;padding:1px 5px;line-height:1.3;animation:tapb 1.5s ease-in-out infinite;pointer-events:none;z-index:2}
-@keyframes tapb{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
-.hit:not(.nosee)::before{content:"";position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:50%;background:var(--go);z-index:1}
-.next.locked{background:var(--sand2);color:var(--navy)}
-.next.locked:hover{background:var(--sand2)}
-.next .lk{display:none;width:18px;height:18px;flex:none}
-.next.locked .lk{display:block}
-.next.locked .arr{display:none}
 .next span{font-size:clamp(15px,4.6vw,20px)}
 .next.locked span{font-size:clamp(14px,4.1vw,17px)}
 .next.unlock{animation:unl .7s cubic-bezier(.3,1.6,.5,1)}
@@ -426,8 +417,6 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
 .next{position:relative;overflow:hidden}
 .next.unlock::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,244,222,.7) 50%,transparent 70%);animation:shine .8s ease-out forwards}
 @keyframes shine{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
-.shake{animation:shake .4s}
-@keyframes shake{25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-3px)}}
 /* how-it-works rows */
 .how{display:grid;gap:6px}
 .how div{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:center;font-size:14.5px;line-height:1.35}
@@ -603,6 +592,129 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
 .cover-art svg{max-height:140px}
 #noteArt svg{max-height:70px}
 .calc{gap:5px}.calc input{min-height:40px;padding:6px 10px}.calc .out b{font-size:36px}
+
+/* ===== calm guidance ===== */
+.glow{animation:glow 2.8s ease-in-out infinite}
+.glow1{animation:glow 1.4s ease-in-out 1}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(242,179,61,0)}50%{box-shadow:0 0 0 6px rgba(242,179,61,.5)}}
+.hit:not(.nosee)::before{content:"";position:absolute;top:5px;right:5px;width:14px;height:14px;border-radius:50%;z-index:1;background:var(--go) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M3.5 7.2l2.2 2.2 4.6-4.8' stroke='%23fff' stroke-width='1.9' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat;animation:chk .35s cubic-bezier(.3,1.6,.5,1)}
+@keyframes chk{from{transform:scale(0)}to{transform:none}}
+.next::before{content:"";position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(238,106,44,.38);transition:width .5s cubic-bezier(.3,1,.4,1)}
+.next.locked{background:var(--sand2);color:var(--navy)}
+.next.locked::before{width:var(--pg,0%)}
+.next.locked .arr{opacity:.35}
+.next span,.next svg{position:relative;z-index:1}
+.next.locked span{font-size:clamp(14px,4.1vw,17px);letter-spacing:.04em}
+.shake{animation:wob .45s ease-in-out}
+@keyframes wob{30%{transform:rotate(-1.2deg)}60%{transform:rotate(1.2deg)}}
+.ghost{position:absolute;z-index:8;width:38px;height:44px;margin:-4px 0 0 -12px;pointer-events:none;display:none}
+.ghost.on{display:block}
+.ghost svg{width:38px;height:44px;filter:drop-shadow(0 3px 4px rgba(14,31,63,.25))}
+.ghost i{position:absolute;left:-2px;top:-14px;width:28px;height:28px;border-radius:50%;border:3px solid var(--verm);opacity:0}
+/* read the owner's answers */
+.vtabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+.vtabs button{border-radius:10px;border:1.5px solid var(--sand3);background:var(--cream);min-height:38px;font-family:var(--display);font-weight:800;font-size:14.5px;text-transform:uppercase;color:var(--navy);padding:3px 6px}
+.vtabs button.up{border-color:#9CC7AE}.vtabs button.down{border-color:#E6B3A6}
+.vtabs button[aria-selected="true"]{background:var(--navy);color:var(--cream);border-color:var(--navy)}
+.dial{display:grid;gap:4px}
+.dial .dn{font-family:var(--display);font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+.dial .dw{font-size:14px;font-weight:600;color:var(--navy);line-height:1.3}
+.dial input{width:100%;accent-color:var(--verm);height:28px;margin:2px 0 0}
+.dial .ends{display:flex;justify-content:space-between;font-size:11.5px;color:var(--mute);margin-top:-4px}
+.ownerSays{background:var(--sand);border-radius:12px;border-bottom-left-radius:4px;padding:6px 12px;min-height:52px}
+.ownerSays .whoS{font-family:var(--display);font-weight:600;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+.ownerSays p{font-size:15.5px;font-weight:600;color:var(--navy);line-height:1.3}
+.dial .alert{font-size:13.5px;padding:5px 10px}
+.vnote{font-size:13px}
+/* visit parts examples */
+.partBox{min-height:0;display:grid;gap:5px}
+.exl{font-family:var(--display);font-weight:800;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ember)}
+.exb{gap:4px}.exb .bub{font-size:13.5px;padding:5px 11px;font-weight:600}
+.qi>button{grid-template-columns:24px minmax(0,1fr) 18px!important;align-items:center;gap:9px!important;padding:8px 12px!important}
+.qnum{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:14px;color:var(--cream)}
+.qplus{font-family:var(--display);font-weight:800;font-size:22px;color:var(--sand3);text-align:center;transition:transform .25s}
+.qi.open .qplus{transform:rotate(45deg);color:var(--verm)}
+/* read-along */
+.ra{display:grid;gap:8px;min-height:170px;align-content:start}
+.raTop{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px}
+.raPart{font-family:var(--display);font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--cream);border-radius:6px;padding:2px 8px}
+.raQ{font-family:var(--display);font-weight:800;font-size:clamp(24px,7vw,30px);line-height:1.08;text-transform:uppercase;color:var(--sand3)}
+.raQ .rw{transition:color .25s}
+.raQ .rw.lit{color:var(--navy)}
+.raWhy{font-size:14px;line-height:1.4;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s}
+.raWhy.in{opacity:1;transform:none}
+.raCtl{display:flex;align-items:center;gap:8px}
+.raCtl .btnA{min-height:44px;padding:6px 14px;font-size:16px;justify-self:auto}
+.raDots{flex:1;display:flex;gap:5px;justify-content:center}
+.raDots i{width:8px;height:8px;border-radius:50%;background:var(--sand3)}
+.raDots i.done{background:var(--navy)}.raDots i.on{background:var(--verm);transform:scale(1.3)}
+/* pain test walkthrough */
+.ptPick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+.ptPick button{border-radius:10px;border:1.5px solid var(--sand3);background:var(--cream);min-height:42px;font-size:13.5px;font-weight:600;color:var(--navy);line-height:1.15;padding:3px 5px}
+.ptPick button[aria-pressed="true"]{background:var(--navy);color:var(--cream);border-color:var(--navy)}
+.pt{display:grid;gap:6px;min-height:200px;align-content:start}
+.ptList{display:grid;gap:2px;font-size:13.5px;font-weight:600;color:var(--navy)}
+.ptProg{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.ptProg i{height:5px;border-radius:3px;background:var(--sand2)}
+.ptProg i.done{background:var(--navy)}.ptProg i.on{background:var(--verm)}
+.ptSaid{max-width:100%;font-size:14.5px}
+.ptQ{font-family:var(--display);font-weight:800;font-size:20px;text-transform:uppercase;color:var(--navy);line-height:1.05;display:grid}
+.ptQ span{font-size:12px;letter-spacing:.1em;color:var(--ember)}
+.ptEv{font-size:14px;color:var(--ink)}
+.ptOpts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+.ptOpts button{border-radius:10px;border:1.5px solid var(--sand3);background:#fff;min-height:48px;font-size:13.5px;line-height:1.15;padding:3px 4px;display:grid;gap:1px;align-content:center;color:var(--ink)}
+.ptOpts button small{font-family:var(--display);font-weight:800;font-size:11.5px;color:var(--mute)}
+.ptOpts button.pick{background:var(--navy);color:var(--cream);border-color:var(--navy)}
+.ptOpts button.pick small{color:var(--gold)}
+.ptFb{font-size:13.5px;font-weight:600;min-height:20px}
+.ptFb.ok{color:var(--go)}.ptFb.hm{color:var(--maybe)}
+.ptV{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;align-items:center}
+.ptV svg{width:110px}
+.ptV .v{font-family:var(--display);font-weight:800;font-size:30px;text-transform:uppercase;color:var(--navy);line-height:1}
+/* plug list */
+.plugs{display:grid;gap:5px}
+.plg{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;padding:7px 11px;border-radius:11px;background:var(--cream);border:1px solid var(--line);font-size:13.5px;line-height:1.35}
+.plg .n{font-family:var(--display);font-weight:800;font-size:20px;color:var(--verm);line-height:1}
+.plg b{font-family:var(--display);font-weight:800;font-size:16px;text-transform:uppercase;color:var(--navy)}
+.plg .handnote{font-size:16px}
+.plg .ck{color:var(--mute)}
+.plg.paper{background:var(--stop-bg)}
+/* promise */
+.bucket{cursor:default}
+.bucket .q{font-size:14px;line-height:1.35}
+.swaps{display:grid;gap:5px}
+.swaps div{display:grid;padding:6px 12px;border-radius:10px;background:var(--cream);border:1px solid var(--line)}
+.swaps s{color:var(--stop);font-size:13px}
+.swaps b{color:var(--navy);font-size:14.5px;line-height:1.3}
+/* mindset dialogue plays itself */
+.talk.play>p{opacity:1}
+.on-card .talk.play>p{animation:tp .45s ease-out both}
+.on-card .talk.play>p:nth-child(1){animation-delay:.6s}
+.on-card .talk.play>p:nth-child(2){animation-delay:1.6s}
+.on-card .talk.play>p:nth-child(3){animation-delay:2.6s}
+.on-card .talk.play>p:nth-child(4){animation-delay:3.7s}
+@keyframes tp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.vsrow>div{display:grid;justify-items:center;text-align:center;gap:3px;padding:7px;border-radius:12px;background:var(--cream);border:1.5px solid var(--line)}
+.vsrow>div.bad{border-color:var(--stop)}
+.vsrow>div .bk{display:block;font-size:13px;line-height:1.35;text-align:left}
+.vsrow>div .fr{display:none}
+.stepsC>div{display:grid;grid-template-columns:auto minmax(0,1fr);gap:9px;align-items:start;text-align:left;padding:6px 11px;border-radius:11px;background:var(--cream);border:1.5px solid var(--line);font-size:13.8px;line-height:1.36}
+.study{cursor:default}
+@media (max-height:640px){.ra{min-height:0}.raQ{font-size:22px}.pt{min-height:0}.dial .dw{font-size:13px}.ownerSays p{font-size:14.5px}}
+
+.card[data-stop="why"] .art.sm{max-height:62px}
+.cmp svg{max-height:88px}
+.study{padding:7px 11px;gap:2px}
+.talk{gap:2px}
+.plg{padding:5px 10px;font-size:13px}
+.swaps div{padding:5px 11px}
+.card[data-mission="ai"] .art{display:none}
+
+.vout span:last-child{white-space:nowrap;font-size:13px}
+.card[data-stop="why"] .art.sm{max-height:70px}
+
+.exb .bub{padding:4px 10px;font-size:13px}.exb .bub small{font-size:10.5px}
+.hit:not(.nosee)::before{top:-6px;right:-6px;box-shadow:0 0 0 2px var(--paper)}
 </style>
 
 </head>
@@ -655,7 +767,7 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
         <div class="box tlBox" id="tlBox" aria-live="polite"></div>
       </div>
     </section>
-    <section class="card" data-stop="why" data-gate="2" data-glabel="Open both studies">
+    <section class="card" data-stop="why">
       <div class="wrap">
         <p class="eyebrow">Human nature</p>
         <h2 class="t2">People love talking <span>about themselves.</span></h2>
@@ -666,8 +778,8 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
           <g class="pop"><rect x="262" y="18" width="88" height="40" rx="18" fill="#FFF4DE" stroke="#D7AA68" stroke-width="2"/><text x="306" y="44" text-anchor="middle" font-family="Caveat,cursive" font-weight="700" font-size="20" fill="#C64A1C">reward!</text></g>
           <g class="pop"><rect x="6" y="20" width="96" height="40" rx="18" fill="#142B55"/><text x="54" y="46" text-anchor="middle" font-family="Caveat,cursive" font-weight="700" font-size="19" fill="#FFF4DE">"So I..."</text></g>
         </svg>
-        <button class="study" type="button" data-g="s1"><span class="sh"><b>Harvard, 2012 · brain scans</b><span class="more">what happened?</span></span><span>People chose between answering a question <b>about themselves</b> or <b>about someone else</b>. Each choice paid a few cents.</span><span class="res"><span>They kept picking questions about themselves, even when it paid less. They gave up <b class="k">about 17% of what they could have earned</b>, and the brain's reward areas lit up when they did.</span><span class="you">For you: letting an owner talk about their business genuinely feels good to them.</span></span></button>
-        <button class="study" type="button" data-g="s2"><span class="sh"><b>Harvard, 2017 · real conversations</b><span class="more">what happened?</span></span><span>Researchers studied hundreds of chats and speed dates, counting the questions people asked.</span><span class="res"><span>People who asked <b class="k">more follow-up questions were liked more</b>, and those speed daters got more second dates.</span><span class="you">For you: follow-ups prove you were actually listening.</span></span></button>
+        <div class="study open"><span class="sh"><b>Harvard, 2012 · brain scans</b><span class="more">what happened?</span></span><span class="res"><span>Paid a few cents per answer, people chose questions <b>about themselves</b> over questions about others, even when it paid less. They gave up <b class="k">about 17% of their earnings</b> to do it, and the brain's reward areas lit up.</span><span class="you">For you: letting an owner talk about their business genuinely feels good to them.</span></span></div>
+        <div class="study open"><span class="sh"><b>Harvard, 2017 · real conversations</b><span class="more">what happened?</span></span><span class="res"><span>Across hundreds of chats and speed dates, people who asked <b class="k">more follow-up questions were liked more</b> and got more second dates.</span><span class="you">For you: follow-ups prove you were actually listening.</span></span></div>
       </div>
     </section>
     <section class="card" data-stop="why" data-gate="4" data-glabel="Tap all 4 parts">
@@ -679,21 +791,23 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
         <div class="box eqPanel" id="eqPanel" aria-live="polite"></div>
       </div>
     </section>
-    <section class="card" data-stop="why" data-gate="4" data-glabel="Move all 4 dials">
+    <section class="card" data-stop="why" data-gate="4" data-glabel="Try all 4 parts">
       <div class="wrap">
-        <p class="eyebrow">Try it · slide each dial, read the alert</p>
+        <p class="eyebrow">Try it · the value equation in real words</p>
         <h2 class="t2">Read the owner's <span>answers.</span></h2>
-                <div class="slgrid" id="slgrid"></div>
+        <p class="lead">Pick a part, slide the dial, see <b class="k">what an owner might say</b> at each level.</p>
+        <div class="vtabs" id="vtabs" role="tablist"></div>
+        <div class="box dial" id="dial"></div>
         <div class="vout"><span>Value</span><div class="vmeter"><i id="vMeter"></i></div><span id="vWord">Medium</span></div>
+        
       </div>
     </section>
-    <section class="card" data-stop="why" data-gate="1" data-glabel="Tap to dig deeper" data-mission="why">
+    <section class="card" data-stop="why" data-mission="why">
       <div class="wrap">
         <p class="eyebrow">Mindset</p>
         <h2 class="t2">Be the tech, <span>not the salesperson.</span></h2>
         <div class="cmp" id="cmpArt"></div>
-        <p class="lead"><b class="k">Owners often describe a fix. Your job is to find the problem under it.</b></p>
-        <div class="box talk" id="talk"><p><b>Owner:</b> "We need a chatbot."</p><p class="you hide"><b>You:</b> "What would that fix for you?"</p><p class="hide"><b>Owner:</b> "Honestly? We miss calls at night."</p><button class="btnA ghost" type="button" data-g="dig" id="digBtn" style="min-height:38px;padding:5px 12px;font-size:15px">Ask what's underneath</button></div>
+                <div class="box talk play" id="talk"><p><b>Owner:</b> "We need a chatbot."</p><p class="you"><b>You:</b> "What would that fix for you?"</p><p><b>Owner:</b> "Honestly? We miss calls at night."</p><p class="handnote" style="font-size:18px">The real problem: missed calls. A chatbot was just their guess.</p></div>
       </div>
     </section>
 
@@ -702,7 +816,7 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
       <div class="wrap">
         <p class="eyebrow">Stop 2 · The visit blueprint</p>
         <h2 class="t2">Four parts, <span>in order.</span></h2>
-        <p class="lead">A first visit runs about <b class="k">40 minutes</b>. The minutes show roughly how long to spend on each part. They're a guide, not a stopwatch.</p>
+        <p class="lead">A first visit runs about <b class="k">40 minutes</b>. The minutes are a guide, not a stopwatch. Tap each part to hear how it sounds.</p>
         <svg class="vbarArt" viewBox="0 0 360 34" aria-hidden="true" id="vbarArt"></svg>
         <div class="segBtns" id="segBtns"></div>
         <div class="box partBox" id="partBox" aria-live="polite"></div>
@@ -721,11 +835,13 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
         <div class="box demo" id="demo" aria-live="polite"></div>
       </div>
     </section>
-    <section class="card" data-stop="visit" data-gate="8" data-glabel="Recall all 8" data-mission="visit">
+    <section class="card" data-stop="visit" data-mission="visit">
       <div class="wrap">
-        <div class="pocketRow"><svg viewBox="0 0 40 52" aria-hidden="true" style="width:26px;height:34px"><g class="pop"><rect x="4" y="2" width="32" height="48" rx="6" fill="#142B55"/><rect x="8" y="8" width="24" height="34" rx="2" fill="#FFF4DE"/></g><path class="draw" d="M12 16 h16 M12 23 h16 M12 30 h10" stroke="#EE6A2C" stroke-width="2.5"/></svg><p class="eyebrow" id="pocketTitle">Lock it in</p></div>
-                <p class="mute" style="font-size:13px">Say each question <b class="k">before</b> you tap. Recalling beats rereading.</p>
-        <div class="recall" id="recall"></div>
+        <div class="pocketRow"><svg viewBox="0 0 40 52" aria-hidden="true" style="width:26px;height:34px"><g class="pop"><rect x="4" y="2" width="32" height="48" rx="6" fill="#142B55"/><rect x="8" y="8" width="24" height="34" rx="2" fill="#FFF4DE"/></g><path class="draw" d="M12 16 h16 M12 23 h16 M12 30 h10" stroke="#EE6A2C" stroke-width="2.5"/></svg><p class="eyebrow" id="pocketTitle">Read along</p></div>
+        <h2 class="t2">The 8 questions, <span>out loud.</span></h2>
+        <p class="lead">A read-along of all 8 questions, in visit order. <b class="k">Say each one out loud as it lights up.</b> Saying it, not just reading it, is what makes it stick.</p>
+        <div class="box ra" id="ra" aria-live="polite"></div>
+        <div class="raCtl"><button class="sq" id="raPrev" type="button" aria-label="Previous question"><svg viewBox="0 0 20 20"><path d="M12 4 6 10l6 6" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="btnA" id="raPlay" type="button">Pause</button><div class="raDots" id="raDots"></div><button class="sq" id="raNext" type="button" aria-label="Next question"><svg viewBox="0 0 20 20"><path d="m8 4 6 6-6 6" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
         <button class="btnA ghost" id="copyPocket" type="button" style="min-height:38px;padding:5px 12px;font-size:15px">Copy all 8 to my phone</button>
       </div>
     </section>
@@ -764,49 +880,47 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
         <p class="mute" style="font-size:13.5px">Negotiator Chris Voss: <b class="k">"That's right"</b> means they feel understood. "You're right" often means "please stop." If you hear it, try again in their words.</p>
       </div>
     </section>
-    <section class="card" data-stop="listen" data-gate="3" data-glabel="Check all 3 steps" data-mission="listen">
+    <section class="card" data-stop="listen" data-mission="listen">
       <div class="wrap">
         <p class="eyebrow">Your AI note taker</p>
         <h2 class="t2">Let the phone write. <span>You listen.</span></h2>
         <div id="noteArt"></div>
         <div class="stepsC">
-          <button type="button" data-g="n1"><span class="tag">1 · Ask</span><span class="say" id="permScript">"Mind if my AI note taker records? It lets me listen to you instead of scribbling."</span></button>
-          <button type="button" data-g="n2"><span class="tag">2 · Hide it</span><span>Face-down, off to the side. In a 2013 study, <b class="k">a phone in view lowered trust and closeness</b>.</span></button>
-          <button type="button" data-g="n3"><span class="tag">3 · The law</span><span>CT phone calls need everyone's consent to record. In person, ask anyway. (Not legal advice.)</span></button>
+          <div><span class="tag">1 · Ask</span><span class="say" id="permScript">"Mind if my AI note taker records? It lets me listen to you instead of scribbling."</span></div>
+          <div><span class="tag">2 · Hide it</span><span>Face-down, off to the side. In a 2013 study, <b class="k">a phone in view lowered trust and closeness</b>.</span></div>
+          <div><span class="tag">3 · The law</span><span>CT phone calls need everyone's consent to record. In person, ask anyway. (Not legal advice.)</span></div>
         </div>
       </div>
     </section>
 
     <!-- STOP 4 -->
-    <section class="card" data-stop="sort" data-gate="2" data-glabel="Tap both">
+    <section class="card" data-stop="sort">
       <div class="wrap">
         <p class="eyebrow">Stop 4 · What matters most</p>
         <h2 class="t2">Pebble or cracked <span>heat exchanger?</span></h2>
         <p class="lead">A <b>pebble</b> in a condenser rattles loudly but is harmless. A <b>cracked heat exchanger</b> is quiet but <b class="k">can leak carbon monoxide into the home</b>, so a tech shuts the furnace down. Owners' problems work the same way.</p>
         <div class="vsrow">
-          <button type="button" data-g="pb"><svg viewBox="0 0 110 110" aria-hidden="true"><ellipse cx="55" cy="92" rx="40" ry="7" fill="rgba(14,31,63,.18)"/><path class="pop" d="M22 74 Q18 46 44 40 Q70 32 86 52 Q96 70 80 84 Q52 96 30 88 Q22 84 22 74Z" fill="#9AA3B5"/></svg><b>Pebble</b><span class="fr mute">Loud. Harmless.</span><span class="bk"><b>In a business:</b> "Our website font looks dated." Annoying, costs nothing real. Note it, move on.</span></button>
-          <button type="button" class="bad" data-g="hx"><svg viewBox="0 0 110 110" aria-hidden="true"><rect x="20" y="14" width="70" height="86" rx="6" fill="#142B55"/><rect x="30" y="26" width="50" height="40" rx="4" fill="#1F4C9C"/><path class="draw" d="M48 26 L54 40 L46 48 L56 66" stroke="#F2B33D" stroke-width="4" fill="none" stroke-linejoin="round"/><circle class="pop" cx="55" cy="82" r="8" fill="#B5361F"/></svg><b>Must-fix</b><span class="fr mute">Quiet. Dangerous.</span><span class="bk"><b>In a business:</b> calls go to voicemail after 5pm and customers book someone else. Quiet, but it <b class="k">costs jobs every week</b>.</span></button>
+          <div class="open"><svg viewBox="0 0 110 110" aria-hidden="true"><ellipse cx="55" cy="92" rx="40" ry="7" fill="rgba(14,31,63,.18)"/><path class="pop" d="M22 74 Q18 46 44 40 Q70 32 86 52 Q96 70 80 84 Q52 96 30 88 Q22 84 22 74Z" fill="#9AA3B5"/></svg><b>Pebble</b><span class="fr mute">Loud. Harmless.</span><span class="bk"><b>In a business:</b> "Our website font looks dated." Annoying, costs nothing real. Note it, move on.</span></div>
+          <div class="bad open"><svg viewBox="0 0 110 110" aria-hidden="true"><rect x="20" y="14" width="70" height="86" rx="6" fill="#142B55"/><rect x="30" y="26" width="50" height="40" rx="4" fill="#1F4C9C"/><path class="draw" d="M48 26 L54 40 L46 48 L56 66" stroke="#F2B33D" stroke-width="4" fill="none" stroke-linejoin="round"/><circle class="pop" cx="55" cy="82" r="8" fill="#B5361F"/></svg><b>Must-fix</b><span class="fr mute">Quiet. Dangerous.</span><span class="bk"><b>In a business:</b> calls go to voicemail after 5pm and customers book someone else. Quiet, but it <b class="k">costs jobs every week</b>.</span></div>
         </div>
         <p class="rule">Loudest isn't costliest. Ask: "What do you just put up with?"</p>
       </div>
     </section>
-    <section class="card" data-stop="sort" data-gate="4" data-glabel="Answer all 4">
+    <section class="card" data-stop="sort" data-gate="1" data-glabel="Finish one problem">
       <div class="wrap">
         <p class="eyebrow">The pain test</p>
-        <p class="lead">Not a diagnosis (the transcript helps later). It tells you <b class="k">which problem deserves your follow-ups</b>.</p>
-        <div class="pqs" id="pqs"></div>
-        <div class="verdict" aria-live="polite">
-          <svg viewBox="0 0 300 168" aria-hidden="true"><path d="M30 150 A120 120 0 0 1 90 46" stroke="#9AA3B5" stroke-width="24" fill="none"/><path d="M96 42 A120 120 0 0 1 204 42" stroke="#F2B33D" stroke-width="24" fill="none"/><path d="M210 46 A120 120 0 0 1 270 150" stroke="#EE6A2C" stroke-width="24" fill="none"/><g id="needle"><path d="M142 150 L150 50 L158 150Z" fill="#FFF4DE"/></g><circle cx="150" cy="150" r="15" fill="#EE6A2C"/></svg>
-          <div><div class="v" id="vName">?</div><p id="vText">Answer all 4 to see where it lands.</p></div>
-        </div>
+        <h2 class="t2">Which problem <span>to dig into?</span></h2>
+        <p class="lead"><b>What it is:</b> 4 questions you ask yourself, <b class="k">in your head</b>, when an owner mentions a problem. <b>What it does:</b> tells you whether to dig in or note it and move on.</p>
+        <div class="ptPick" id="ptPick" role="tablist"></div>
+        <div class="box pt" id="pt" aria-live="polite"></div>
       </div>
     </section>
-    <section class="card" data-stop="sort" data-gate="2" data-glabel="Try both tabs" data-mission="sort">
+    <section class="card" data-stop="sort" data-mission="sort">
       <div class="wrap">
         <p class="eyebrow">Put a number on it</p>
         <h2 class="t2">Owners act on <span>dollars.</span></h2>
         <p class="lead">Ask gently: <b class="k">"Roughly how many a week? A ballpark is fine."</b></p>
-        <div class="tabs" role="tablist" style="--n:2"><button type="button" role="tab" aria-selected="true" data-calc="jobs" data-g="cj">Lost jobs</button><button type="button" role="tab" aria-selected="false" data-calc="time" data-g="ct">Lost time</button></div>
+        <div class="tabs" role="tablist" style="--n:2"><button type="button" role="tab" aria-selected="true" data-calc="jobs">Lost jobs</button><button type="button" role="tab" aria-selected="false" data-calc="time">Lost time</button></div>
         <div class="calc" id="calcJobs">
           <div class="r"><label for="c1">Missed calls a week</label><input id="c1" type="number" min="0" value="10" inputmode="decimal"></div>
           <div class="r"><label for="c2">Share that would book (%)</label><input id="c2" type="number" min="0" max="100" value="30" inputmode="decimal"></div>
@@ -835,25 +949,37 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
         <div data-fitlist="stop" hidden><p class="mute" style="font-size:13.5px"><b class="k">Why:</b> safety, judgment or emotions. A mistake could hurt someone.</p><ul class="fitlist stop"><li>Gas smell or CO calls: straight to a person or 911</li><li>Diagnosing equipment remotely</li><li>Final pricing decisions</li><li>Upset customers in a dispute</li></ul></div>
       </div>
     </section>
-    <section class="card" data-stop="ai" data-gate="4" data-glabel="Open all 4">
+    <section class="card" data-stop="ai">
       <div class="wrap">
         <p class="eyebrow">How AI connects</p>
         <h2 class="t2">It can only use what <span>it can reach.</span></h2>
-        <svg class="art" viewBox="0 0 360 40" aria-hidden="true" style="max-height:32px"><g class="pop"><rect x="6" y="10" width="44" height="22" rx="6" fill="#142B55"/><path d="M50 15 h12 M50 27 h12" stroke="#D7AA68" stroke-width="5" stroke-linecap="round"/></g><path class="draw" d="M68 21 C120 21 140 6 190 6 S260 34 300 21" stroke="#EE6A2C" stroke-width="4" fill="none" stroke-linecap="round"/><g class="pop"><rect x="300" y="6" width="50" height="30" rx="8" fill="#FFF4DE" stroke="#D7AA68" stroke-width="2.5"/><circle cx="317" cy="21" r="3.5" fill="#142B55"/><circle cx="333" cy="21" r="3.5" fill="#142B55"/></g></svg>
-        <p class="lead">Think of it like wiring: some software has an outlet ready, some needs an adapter, some has no power at all. <b class="k">Ask what software they use before promising anything.</b></p>
-        <div class="acc" id="plug"></div>
+                <p class="lead">Like wiring: some software has an outlet, some needs an adapter, some has no power. <b class="k">Ask what they use before promising anything.</b></p>
+        <div class="plugs" id="plug"></div>
       </div>
     </section>
-    <section class="card" data-stop="ai" data-gate="3" data-glabel="Tap all 3 buckets" data-mission="ai">
+    <section class="card" data-stop="ai">
       <div class="wrap">
         <p class="eyebrow">Never overpromise</p>
         <h2 class="t2">Quote after <span>the diagnosis.</span></h2>
-                <div class="buckets">
-          <button type="button" class="bucket kn" data-g="bk"><svg class="bi" viewBox="0 0 40 40" aria-hidden="true"><g class="pop"><path d="M11 21 l6 6 12 -14" stroke="#FFF4DE" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></svg><b>We know we can</b><p class="q">This works today. We've seen it work.</p><span class="tp">tap for an example</span><small>After-hours answering with a text summary.</small></button>
-          <button type="button" class="bucket t" data-g="bt"><svg class="bi" viewBox="0 0 40 40" aria-hidden="true"><g class="pop"><path d="M15 6 h10 M17 6 v10 l-8 15 q-2 4 3 4 h16 q5 0 3 -4 l-8 -15 v-10" stroke="#FFF4DE" stroke-width="3" fill="none" stroke-linejoin="round"/><path d="M12 28 h16 l2 4 q1 2 -2 2 h-16 q-3 0 -2 -2z" fill="#F2B33D"/></g></svg><b>We think we can</b><p class="q">This should work. Here's how we'll test it.</p><span class="tp">tap for an example</span><small>Booking into their schedule, once we confirm their software allows it.</small></button>
-          <button type="button" class="bucket w" data-g="bw"><svg class="bi" viewBox="0 0 40 40" aria-hidden="true"><g class="pop"><path d="M13 22 v-11 q0 -3 3 -3 t3 3 v8 v-12 q0 -3 3 -3 t3 3 v12 v-9 q0 -3 3 -3 t3 3 v14 q0 10 -10 10 h-2 q-6 0 -9 -6 l-4 -7 q-1 -3 2 -4 q2 0 3 2z" fill="#EE6A2C"/></g></svg><b>We wouldn't</b><p class="q">I'd keep this human, and here's why.</p><span class="tp">tap for an example</span><small>Gas calls, final pricing, disputes.</small></button>
+        <p class="lead">Trust is lost faster by one broken promise than by ten honest "let me check" answers. Put every idea into one of three buckets, and <b class="k">say which bucket it's in</b>.</p>
+        <div class="buckets">
+          <div class="bucket kn open"><svg class="bi" viewBox="0 0 40 40" aria-hidden="true"><g class="pop"><path d="M11 21 l6 6 12 -14" stroke="#FFF4DE" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></svg><b>We know we can</b><p class="q">"Calls after 5pm get answered, and you get a text summary each morning. We've set this up before."</p></div>
+          <div class="bucket t open"><svg class="bi" viewBox="0 0 40 40" aria-hidden="true"><g class="pop"><path d="M15 6 h10 M17 6 v10 l-8 15 q-2 4 3 4 h16 q5 0 3 -4 l-8 -15 v-10" stroke="#FFF4DE" stroke-width="3" fill="none" stroke-linejoin="round"/><path d="M12 28 h16 l2 4 q1 2 -2 2 h-16 q-3 0 -2 -2z" fill="#F2B33D"/></g></svg><b>We think we can</b><p class="q">"Booking straight into your schedule should work with your software. We'll confirm it on a test before you rely on it."</p></div>
+          <div class="bucket w open"><svg class="bi" viewBox="0 0 40 40" aria-hidden="true"><g class="pop"><path d="M13 22 v-11 q0 -3 3 -3 t3 3 v8 v-12 q0 -3 3 -3 t3 3 v12 v-9 q0 -3 3 -3 t3 3 v14 q0 10 -10 10 h-2 q-6 0 -9 -6 l-4 -7 q-1 -3 2 -4 q2 0 3 2z" fill="#EE6A2C"/></g></svg><b>We wouldn't</b><p class="q">"A gas-smell call should always reach a person. I wouldn't hand that to AI."</p></div>
         </div>
-        <p class="mute" style="font-size:13.5px">Never say "100% accurate." Say: <b class="k">"It will make mistakes. Here's how we'll catch them."</b></p>
+      </div>
+    </section>
+    <section class="card" data-stop="ai" data-mission="ai">
+      <div class="wrap">
+        <p class="eyebrow">What to say on a first visit</p>
+        <h2 class="t2">Promise the next step, <span>not the result.</span></h2>
+        <svg class="art" viewBox="0 0 360 40" aria-hidden="true" style="max-height:36px"><path class="draw" d="M14 30 H110 V18 H206 V6 H330" stroke="#2F7D52" stroke-width="5" fill="none" stroke-linejoin="round" stroke-linecap="round"/><g class="pop"><circle cx="14" cy="30" r="7" fill="#EE6A2C"/></g><text x="300" y="30" font-family="Caveat,cursive" font-weight="700" font-size="17" fill="#2F7D52" class="pop">step by step</text></svg>
+        <div class="box"><p class="handnote" style="font-size:19px">The only promise on visit one</p><p class="say">"Let me go through what you told me. I'll come back with what's possible, what isn't, and what I'd try first."</p></div>
+        <div class="swaps">
+          <div><s>"AI will handle everything."</s><b>"AI can take the first reply. Your team handles the rest."</b></div>
+          <div><s>"It's 100% accurate."</s><b>"We'll review the results with you each week and adjust as we go."</b></div>
+                    <div><s>"This will double your revenue."</s><b>"Let's measure missed calls now, so we can both see if it helps."</b></div>
+        </div>
       </div>
     </section>
 
@@ -870,10 +996,10 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
     </section>
 
     <!-- FIELD CARD -->
-    <section class="card" data-stop="card" data-gate="3" data-glabel="Tap all 3 tabs">
+    <section class="card" data-stop="card">
       <div class="wrap">
         <p class="eyebrow" id="fcTitle">Field card</p>
-        <div class="tabs" role="tablist" style="--n:3"><button type="button" role="tab" aria-selected="true" data-fc="0" data-g="f0">Before</button><button type="button" role="tab" aria-selected="false" data-fc="1" data-g="f1">During</button><button type="button" role="tab" aria-selected="false" data-fc="2" data-g="f2">After</button></div>
+        <div class="tabs" role="tablist" style="--n:3"><button type="button" role="tab" aria-selected="true" data-fc="0">Before</button><button type="button" role="tab" aria-selected="false" data-fc="1">During</button><button type="button" role="tab" aria-selected="false" data-fc="2">After</button></div>
         <div class="fc" data-fcp="0"><div><h4>Mindset</h4><ul><li>Look to their interests, not just yours (Phil. 2:4)</li><li>Be the tech: diagnose before you prescribe</li><li>Goal: they say "That's right"</li></ul></div><div><h4>Set up</h4><ul><li>Ask before the note taker records</li><li>Phone face-down, out of view</li><li>Plan ~40 min: Open, Map, Dig, Future</li></ul></div></div>
         <div class="fc" data-fcp="1" hidden><div><h4>The 8 questions</h4><ol><li>How did you get into HVAC?</li><li>Walk me through yesterday.</li><li>Where do things slow down or slip?</li><li>When did that last happen? Then what?</li><li>What do you just put up with?</li><li>What have you tried before?</li><li>If fixed, what changes for you?</li><li>What would make you nervous?</li></ol></div><div><h4>Follow up</h4><ul><li>Tell me more · What happened next? · What causes that? · Mirror · Pause 3 sec</li></ul></div></div>
         <div class="fc" data-fcp="2" hidden><div><h4>Before you leave</h4><ul><li>Play it back in their words</li><li>Ask: "Did I get that right?"</li><li>Know / Think / Wouldn't, never overpromise</li></ul></div><div><h4>After</h4><ul><li>Let the AI turn the transcript into notes</li><li>Recap to the owner within 24 hours, in their words</li></ul></div></div>
@@ -896,13 +1022,14 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
       </div>
     </section>
 
+    <div class="ghost" id="ghost" aria-hidden="true"><svg viewBox="0 0 48 56"><path d="M18 30 V8 q0 -5 5 -5 t5 5 v16 l2 -1 q4 -1 5 3 l1 1 q4 -1 5 3 l1 1 q4 -1 4 4 v10 q0 12 -12 12 h-6 q-7 0 -11 -6 l-9 -13 q-2 -4 2 -6 q3 -1 5 2z" fill="#FFF4DE" stroke="#142B55" stroke-width="2.6" stroke-linejoin="round"/></svg><i></i></div>
     <div class="morehint" id="morehint" hidden><span>scroll a little ↓</span></div>
   </main>
 
   <footer class="bottom">
     <div class="wrap">
       <button class="back" id="prev" type="button" aria-label="Previous card"><svg viewBox="0 0 20 20"><path d="M12 4 6 10l6 6" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-      <button class="next" id="next" type="button"><svg class="lk" viewBox="0 0 20 20" aria-hidden="true"><rect x="4" y="9" width="12" height="9" rx="2" fill="currentColor"/><path d="M7 9 V6 a3 3 0 0 1 6 0 V9" stroke="currentColor" stroke-width="2" fill="none"/></svg><span id="nextLabel">Next</span><svg class="arr" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="m8 4 6 6-6 6" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button class="next" id="next" type="button"><span id="nextLabel">Next</span><svg class="arr" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="m8 4 6 6-6 6" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
   </footer>
 </div>
@@ -1068,13 +1195,27 @@ function loadDone(){DONE={};try{DONE=JSON.parse(store('atrq-done-'+NAME)||'{}')|
 function need(c){return +(c.dataset.gate||0);}
 function got(c){return Object.keys(c._got||{}).length;}
 function isOpen(c){var n=need(c);return !n||!!DONE[c.dataset.key]||got(c)>=n;}
-function hit(el,id){var c=el&&el.closest&&el.closest('.card');if(!c)return;el.classList&&el.classList.add('hit');if(!need(c))return;c._got=c._got||{};if(c._got[id])return;c._got[id]=1;
+function nextTarget(c){return Array.prototype.filter.call(c.querySelectorAll('[data-g]'),function(e){return !(c._got||{})[e.dataset.g]&&e.getClientRects().length;})[0];}
+function clearGlow(c){(c||stage).querySelectorAll('.glow,.glow1').forEach(function(x){x.classList.remove('glow','glow1');});}
+function hit(el,id){var c=el&&el.closest&&el.closest('.card');if(!c)return;if(el.classList&&!el.classList.contains('nosee'))el.classList.add('hit');if(!need(c))return;c._got=c._got||{};if(c._got[id])return;c._got[id]=1;clearGlow(c);
   if(got(c)>=need(c)&&!DONE[c.dataset.key]){DONE[c.dataset.key]=1;if(NAME)store('atrq-done-'+NAME,JSON.stringify(DONE));if(cards[cur]===c){nextBtn.classList.remove('unlock');void nextBtn.offsetWidth;nextBtn.classList.add('unlock');}}
-  nudge(c);if(cards[cur]===c)updateNav();}
-function nudge(c){c.querySelectorAll('.nudge').forEach(function(x){x.classList.remove('nudge');});if(isOpen(c))return;
-  var t=Array.prototype.filter.call(c.querySelectorAll('[data-g]'),function(e){return !(c._got||{})[e.dataset.g]&&e.getClientRects().length;})[0];if(t)t.classList.add('nudge');}
-stage.addEventListener('click',function(e){var g=e.target.closest('[data-g]');if(g&&g.type!=='range')hit(g,g.dataset.g);},true);
-stage.addEventListener('input',function(e){var g=e.target.closest('[data-g]');if(g)hit(g,g.dataset.g);},true);
+  if(cards[cur]===c)updateNav();}
+stage.addEventListener('click',function(e){var g=e.target.closest('[data-g]');if(g&&g.type!=='range'&&!g.hasAttribute('data-manual'))hit(g,g.dataset.g);},true);
+stage.addEventListener('input',function(e){var g=e.target.closest('[data-g]');if(g&&!g.hasAttribute('data-manual'))hit(g,g.dataset.g);},true);
+/* calm guidance: nothing at first; a soft glow only after a long pause, or when they press Next too early */
+var idleT=null;
+function armIdle(){clearTimeout(idleT);if(cur<0)return;var c=cards[cur];clearGlow(c);if(isOpen(c)||c.dataset.noglow)return;
+  idleT=setTimeout(function(){if(cards[cur]!==c||isOpen(c))return;var t=nextTarget(c);if(t)t.classList.add('glow');},7000);}
+['pointerdown','keydown','input'].forEach(function(ev){document.addEventListener(ev,armIdle,true);});
+function pointOut(c){if(c.dataset.noglow)return;var t=nextTarget(c);if(!t)return;t.classList.remove('glow','glow1');void t.offsetWidth;t.classList.add('glow1');setTimeout(function(){t.classList.remove('glow1');},1500);if(t.scrollIntoView)t.scrollIntoView({block:'nearest',behavior:RM?'auto':'smooth'});}
+/* ghost hand: shows the tap gesture once per person, then never again */
+var ghost=document.getElementById('ghost');
+function ghostStop(){ghost.classList.remove('on');if(ghost.getAnimations)ghost.getAnimations({subtree:true}).forEach(function(a){a.cancel();});}
+function ghostDemo(c){if(RM||!NAME||store('atrq-hand-'+NAME)||isOpen(c)||c.dataset.noglow||!ghost.animate)return;var t=nextTarget(c);if(!t)return;store('atrq-hand-'+NAME,'1');
+  var r=t.getBoundingClientRect(),sr=stage.getBoundingClientRect();ghost.style.left=(r.left-sr.left+Math.min(r.width/2,56))+'px';ghost.style.top=(r.top-sr.top+r.height/2)+'px';ghost.classList.add('on');
+  var a=ghost.animate([{opacity:0,transform:'translate(70px,90px)'},{opacity:1,transform:'translate(0,0)',offset:.42},{opacity:1,transform:'translate(0,0) scale(.84)',offset:.55},{opacity:1,transform:'translate(0,0)',offset:.68},{opacity:0,transform:'translate(18px,26px)'}],{duration:2400,easing:'ease-in-out'});
+  ghost.querySelector('i').animate([{opacity:0,transform:'scale(.3)'},{opacity:0,transform:'scale(.3)',offset:.53},{opacity:.9,transform:'scale(.6)',offset:.57},{opacity:0,transform:'scale(1.8)',offset:.8},{opacity:0,transform:'scale(1.8)'}],{duration:2400});
+  a.onfinish=function(){ghost.classList.remove('on');};}
 
 /* ---------- hero ---------- */
 (function(){var g='';
@@ -1132,8 +1273,7 @@ function showTL(i){var t=TL[i];tlBtns.querySelectorAll('button').forEach(functio
   hit(tlBtns.children[i],'t'+i);fadeIn(tlBox);}
 document.querySelector('.tl').addEventListener('click',function(e){var b=e.target.closest('[data-tl]');if(b)showTL(+b.dataset.tl);});
 
-/* ---------- studies ---------- */
-document.querySelectorAll('.study').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('.study').forEach(function(x){x.classList.toggle('open',x===b);});fadeIn(b.querySelector('.res'));checkOverflow();});});
+
 
 /* ---------- value equation ---------- */
 var VQ=[
@@ -1150,30 +1290,54 @@ document.getElementById('eqn').addEventListener('click',function(e){var b=e.targ
   document.querySelectorAll('[data-eq]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});
   eqPanel.innerHTML='<p class="nm" style="color:'+(v.d==='up'?'var(--go)':'var(--stop)')+'">'+v.n+'</p><p>'+v.plain+'</p><p class="dir" style="color:'+(v.d==='up'?'var(--go)':'var(--stop)')+'">'+v.dir+'</p><p><span class="handnote" style="font-size:18px">Ask: </span><span class="say">"'+esc(v.q)+'"</span></p>';fadeIn(eqPanel);checkOverflow();});
 
-/* ---------- sliders with alerts ---------- */
-var SL=[
- {n:'Dream outcome',d:'up',q:'"What would change for you?"',a:[['r','Small dream: they may not bother changing.'],['a','Some interest: ask what it means to them.'],['g','Big personal win: worth solving.']]},
- {n:'Likelihood',d:'up',q:'"What have you tried before?"',a:[['r','Doubtful: prove it small first.'],['a','Unsure: share a similar example.'],['g','They believe it can work.']]},
- {n:'Time delay',d:'down',q:'"How soon does this need fixing?"',a:[['g','Fast results: value goes up.'],['a','A few weeks: set milestones.'],['r','Months away: find a quicker first win.']]},
- {n:'Effort',d:'down',q:'"Who would have to change how they work?"',a:[['g','Barely changes their day.'],['a','Some training: keep it simple.'],['r','Big hassle: shrink what they must change.']]}
+/* ---------- read the owner's answers ---------- */
+var VD=[
+ {n:'Dream outcome',d:'up',what:'How big and personal the win is to them.',ends:['Barely wants it','Life-changing'],L:[
+   ['Eh. It\'d be nice, I guess.','r','Barely wants it. Don\'t push; find what they do care about.'],
+   ['Might save us a little time.','r','A small want. Ask what it would mean to them personally.'],
+   ['It\'d take some pressure off the office.','a','Real, but not personal yet. Ask: "What would that free you up to do?"'],
+   ['We\'d stop losing jobs every summer.','g','A clear business win. Put a number on it.'],
+   ['I\'d finally be home for dinner with my kids.','g','A big, personal win. This is what people say yes to.']]},
+ {n:'Likelihood',d:'up',what:'How much they believe it will work for them.',ends:['Doubts it','Believes it'],L:[
+   ['We tried that. Total waste of money.','r','Burned before. Prove it small before suggesting anything.'],
+   ['These things never work for us.','r','Doubtful. Ask what went wrong last time.'],
+   ['Maybe. Depends how it works.','a','Open but unsure. Share a similar example that worked.'],
+   ['A buddy of mine uses something like that.','g','Belief is building. Ask what his buddy likes about it.'],
+   ['If it works like you said, that\'s a no-brainer.','g','They believe it. Keep promises small so it stays that way.']]},
+ {n:'Time to results',d:'down',what:'How long until they\'d see it working.',ends:['Days','Next year'],L:[
+   ['Wait, it could be running next week?','g','Days. A fast win pushes value up.'],
+   ['A couple of weeks is fine.','g','Weeks. Still quick.'],
+   ['A month… okay, if it\'s ready before summer.','a','A month. Set clear check-in dates.'],
+   ['Three months? Summer will be over.','r','Months. Find a quicker first win.'],
+   ['Next year? I can\'t wait that long.','r','Too slow. Start with something small and fast.']]},
+ {n:'Effort',d:'down',what:'How much they and their team would have to change.',ends:['Nothing changes','Everything changes'],L:[
+   ['So I don\'t have to change anything?','g','Almost no effort. The easiest yes.'],
+   ['Linda can handle a quick setup.','g','Light effort. Fine.'],
+   ['We\'d need a training day.','a','Some effort. Offer to train the team yourself.'],
+   ['My techs would have to learn a new app?','r','Heavy. Shrink what they have to change.'],
+   ['I\'d have to redo how the whole office runs.','r','Too much change. Start smaller.']]}
 ];
-document.getElementById('slgrid').innerHTML=SL.map(function(s,i){return '<label class="sl"><span class="slt"><b>'+(s.d==='up'?'▲ ':'▼ ')+s.n+'</b><small>'+esc(s.q)+'</small></span><input type="range" min="1" max="5" value="3" id="sl'+i+'" data-g="v'+i+'" aria-label="'+s.n+'"><span class="alert a" id="al'+i+'"></span></label>';}).join('');
-function band(v){return v<=2?0:v===3?1:2;}
-function vcalc(changed){var a=[0,1,2,3].map(function(k){return +document.getElementById('sl'+k).value;});
-  SL.forEach(function(s,k){var al=document.getElementById('al'+k),b=s.a[band(a[k])];al.className='alert '+b[0];al.textContent=b[1];if(changed===k){al.classList.add('bump');setTimeout(function(){al.classList.remove('bump');},360);}});
-  var val=(a[0]*a[1])/(a[2]*a[3]);var pct=Math.max(4,Math.min(100,Math.log(val*25)/Math.log(625)*100));
-  document.getElementById('vMeter').style.width=pct+'%';document.getElementById('vWord').textContent=pct>70?'High':pct>40?'Medium':'Low';}
-document.getElementById('slgrid').addEventListener('input',function(e){vcalc(+e.target.id.slice(2));});vcalc();
+var VV=[3,3,3,3],vcur=0,dial=document.getElementById('dial'),vtabs=document.getElementById('vtabs');
+vtabs.innerHTML=VD.map(function(v,i){return '<button type="button" role="tab" class="'+v.d+'" data-vt="'+i+'" data-g="v'+i+'" data-manual aria-selected="'+(i===0)+'">'+(v.d==='up'?'▲ ':'▼ ')+v.n+'</button>';}).join('');
+function dialLine(){var v=VD[vcur],l=v.L[VV[vcur]-1];var q=document.getElementById('dq'),al=document.getElementById('dal');q.textContent='"'+l[0]+'"';al.className='alert '+l[1];al.textContent=l[2];fadeIn(q);}
+function drawDial(){var v=VD[vcur];
+  dial.innerHTML='<p class="dw"><span style="color:'+(v.d==='up'?'var(--go)':'var(--stop)')+'">'+(v.d==='up'?'▲ Raises value.':'▼ Lowers value.')+'</span> '+esc(v.what)+'</p><input type="range" min="1" max="5" step="1" id="vdial" value="'+VV[vcur]+'" aria-label="'+v.n+'"><div class="ends"><span>'+v.ends[0]+'</span><span>'+v.ends[1]+'</span></div><div class="ownerSays"><span class="whoS">Owner says</span><p id="dq"></p></div><p class="alert" id="dal"></p>';
+  dialLine();}
+vtabs.addEventListener('click',function(e){var b=e.target.closest('[data-vt]');if(!b)return;vcur=+b.dataset.vt;vtabs.querySelectorAll('[data-vt]').forEach(function(x){x.setAttribute('aria-selected',String(x===b));});drawDial();fadeIn(dial);});
+dial.addEventListener('input',function(e){if(e.target.id!=='vdial')return;VV[vcur]=+e.target.value;dialLine();vcalc();hit(vtabs.children[vcur],'v'+vcur);});
+function vcalc(){var a=VV;var val=(a[0]*a[1])/(a[2]*a[3]);var pct=Math.max(4,Math.min(100,Math.log(val*25)/Math.log(625)*100));
+  document.getElementById('vMeter').style.width=pct+'%';document.getElementById('vWord').textContent=pct>70?'High':pct>40?'Medium':'Low';
+  document.getElementById('vWord').textContent=pct>70?'High: solve first':pct>40?'Medium':'Low: don\'t push';}
+drawDial();vcalc();
 
-/* ---------- dig deeper ---------- */
-document.getElementById('digBtn').addEventListener('click',function(){var t=document.getElementById('talk');t.classList.add('open');this.hidden=true;if(!RM)t.querySelectorAll('.hide').forEach(function(p,k){p.animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:350,delay:k*500,fill:'backwards'});});checkOverflow();});
+
 
 /* ---------- visit blueprint ---------- */
 var PARTS=[
- {n:'Open',m:5,cls:'p1',col:'#2E6CCB',title:'Get them <span>talking.</span>',goal:'Goal: <b class="k">they feel comfortable and respected.</b>',why:'People open up to people who are interested in them (Carnegie). Starting with their story builds trust before any problem comes up.'},
- {n:'Map',m:10,cls:'p2',col:'#2F7D52',title:'See the <span>real day.</span>',goal:'Goal: <b class="k">understand how work really flows</b>, before judging any of it.',why:'You can\'t find a leak in pipes you haven\'t traced. Mapping first keeps you from guessing.'},
- {n:'Dig',m:15,cls:'p3',col:'#EE6A2C',title:'Find what <span>really hurts.</span>',goal:'Goal: <b class="k">turn vague complaints into real, recent examples.</b> Most of your time goes here.',why:'The biggest problems come out here, with examples and numbers, so it gets the most time.'},
- {n:'Future',m:10,cls:'p4',col:'#7A4FB0',title:'Let them <span>picture it.</span>',goal:'Goal: <b class="k">hear success and worries in their words</b>, then play back what you heard.',why:'After they\'ve told their story, they can picture the fix. Jumping here earlier feels like a sales pitch.'}
+ {n:'Open',m:5,cls:'p1',col:'#2E6CCB',title:'Get them <span>talking.</span>',goal:'Goal: <b class="k">they feel comfortable and respected.</b>',why:'People open up to people who are interested in them (Carnegie). Their story builds trust before any problem comes up.',ex:[['you','Thanks for making time. How did you get into HVAC?'],['they','My dad started it in \'89. I took over in 2010.'],['you','What\'s changed most since you took over?']]},
+ {n:'Map',m:10,cls:'p2',col:'#2F7D52',title:'See the <span>real day.</span>',goal:'Goal: <b class="k">understand how work really flows</b>, before judging any of it.',why:'You can\'t find a leak in pipes you haven\'t traced. Mapping first keeps you from guessing.',ex:[['you','Walk me through yesterday, first call to last invoice.'],['they','Linda opens at 7:30, the phones start, and I\'m on a no-heat call by eight.'],['you','And while you\'re out, what happens to the calls?']]},
+ {n:'Dig',m:15,cls:'p3',col:'#EE6A2C',title:'Find what <span>really hurts.</span>',goal:'Goal: <b class="k">turn vague complaints into real, recent examples.</b> Most of your time goes here.',why:'The biggest problems come out here, with examples and numbers, so it gets the most time.',ex:[['they','Calls after five go to voicemail.'],['you','When was the last time that happened?'],['they','Tuesday. Lady with no heat. She called someone else.']]},
+ {n:'Future',m:10,cls:'p4',col:'#7A4FB0',title:'Let them <span>picture it.</span>',goal:'Goal: <b class="k">hear success and worries in their words</b>, then play back what you heard.',why:'After they\'ve told their story, they can picture the fix. Jumping here earlier feels like a sales pitch.',ex:[['you','If that were fixed, what would change for you?'],['they','Honestly? I\'d stop answering phones at dinner.'],['you','So what I\'m hearing is… did I get that right?']]}
 ];
 var QS=[
  {p:0,q:'How did you get into HVAC?',when:'In the first minutes, after hello and thanking them for their time.',why:'People enjoy telling their own story (the 2012 brain finding). It also shows you care about them, not just their problems.',lf:'What they\'re proud of and what they care about: family, reputation, their techs.',av:'Opening with what Starwell does. They haven\'t told you anything yet.'},
@@ -1195,19 +1359,18 @@ var ICONS=[
   svg+='<g id="walker"><circle cx="8" cy="17" r="7" fill="#FFF4DE" stroke="#142B55" stroke-width="3"/></g>';document.getElementById('vbarArt').innerHTML=svg;
   document.getElementById('segBtns').innerHTML=PARTS.map(function(p,i){return '<button type="button" class="'+p.cls+'" data-part-go="'+i+'" data-g="p'+i+'" aria-pressed="false">'+(i+1)+' '+p.n+'<small>~'+p.m+' min</small></button>';}).join('');})();
 var partBox=document.getElementById('partBox');
-partBox.innerHTML='<p class="handnote">Tap each part, left to right.</p><p class="mute" style="font-size:13.5px">The order matters: <b>trust → understanding → the real problem → the future.</b> Skipping ahead feels like a sales pitch.</p>';
+partBox.innerHTML='<p class="handnote">Start with part 1.</p><p class="mute" style="font-size:13.5px">The order matters: <b>trust → understanding → the real problem → the future.</b> Skipping ahead feels like a sales pitch.</p>';
 document.getElementById('segBtns').addEventListener('click',function(e){var b=e.target.closest('[data-part-go]');if(!b)return;var i=+b.dataset.partGo,p=PARTS[i];
   document.querySelectorAll('[data-part-go]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});
   var x=4,k;for(k=0;k<i;k++)x+=PARTS[k].m/40*352;x+=PARTS[i].m/40*352/2-8;document.getElementById('walker').setAttribute('transform','translate('+x+',0)');
-  var qn=QS.map(function(q,j){return q.p===i?'Q'+(j+1):null;}).filter(Boolean).join(', ');
-  partBox.innerHTML='<p class="nm" style="color:'+p.col+'">'+(i+1)+' · '+p.n+' <span class="mute" style="font-size:15px">~'+p.m+' min</span></p><p>'+p.goal+'</p><p><b>Why here:</b> '+esc(p.why)+'</p><p class="mute" style="font-size:13px">Questions: '+qn+'</p>';fadeIn(partBox);checkOverflow();});
+  partBox.innerHTML='<p class="nm" style="color:'+p.col+'">'+(i+1)+' · '+p.n+' <span class="mute" style="font-size:15px">~'+p.m+' min</span></p><p>'+p.goal+'</p><p class="exl">What it sounds like</p><div class="bubbles exb">'+p.ex.map(function(x){return '<p class="bub '+x[0]+'"><small>'+(x[0]==='you'?'You':'Owner')+'</small>'+esc(x[1])+'</p>';}).join('')+'</div>';if(!RM)partBox.querySelectorAll('.exb .bub').forEach(function(el,k){el.animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:320,delay:250+k*650,fill:'backwards'});});fadeIn(partBox);checkOverflow();});
 document.querySelector('#walker circle').style.transition='none';
 document.getElementById('walker').style.transition='transform .5s cubic-bezier(.3,1.3,.5,1)';
 document.querySelectorAll('[data-part]').forEach(function(card){var i=+card.dataset.part,p=PARTS[i];
   var qs=QS.map(function(q,j){q.n=j+1;return q;}).filter(function(q){return q.p===i;});
   var html='<div class="phHead"><svg viewBox="0 0 44 44" aria-hidden="true">'+ICONS[i]+'</svg><div style="flex:1"><p class="eyebrow">Part '+(i+1)+' of 4 · '+p.n+' · ~'+p.m+' min</p><div class="minibar">'+PARTS.map(function(_,k){return '<i class="'+(k===i?'on':'')+'"></i>';}).join('')+'</div></div></div>';
   html+='<h2 class="t2">'+p.title+'</h2><p class="goal">'+p.goal+'</p><div class="qa">';
-  html+=qs.map(function(q){return '<div class="qi"><button type="button" data-g="q'+q.n+'" data-qi><span class="qn">Question '+q.n+' of 8<span class="qtap">tap to open</span></span><span class="qq">"'+esc(q.q)+'"</span></button><dl class="qd"><div><dt>When</dt><dd>'+esc(q.when)+'</dd></div><div><dt>Why it works</dt><dd>'+esc(q.why)+'</dd></div><div><dt>Listen for</dt><dd>'+esc(q.lf)+'</dd></div><div class="av"><dt>Avoid</dt><dd>'+esc(q.av)+'</dd></div></dl></div>';}).join('');
+  html+=qs.map(function(q){return '<div class="qi"><button type="button" data-g="q'+q.n+'" data-qi><span class="qnum" style="background:'+p.col+'">'+q.n+'</span><span class="qq">"'+esc(q.q)+'"</span><span class="qplus" aria-hidden="true">+</span></button><dl class="qd"><div><dt>When</dt><dd>'+esc(q.when)+'</dd></div><div><dt>Why it works</dt><dd>'+esc(q.why)+'</dd></div><div><dt>Listen for</dt><dd>'+esc(q.lf)+'</dd></div><div class="av"><dt>Avoid</dt><dd>'+esc(q.av)+'</dd></div></dl></div>';}).join('');
   html+='</div>';if(i===0)html+='<div class="box"><p class="handnote" style="font-size:19px">Say this first</p><p class="say">"Thanks for making time. I\'m here to learn how your business runs, not to sell you anything today." Then ask about the note taker (Stop 3).</p></div>';if(i===3)html+='<p class="mute" style="font-size:13.5px">Then <b class="k">play it back</b> (Stop 3) and ask: "Can I come back with what I found?"</p>';
   card.querySelector('.wrap').innerHTML=html;});
 stage.addEventListener('click',function(e){var b=e.target.closest('[data-qi]');if(!b)return;var qi=b.parentNode,qa=qi.parentNode;qa.querySelectorAll('.qi').forEach(function(x){if(x!==qi)x.classList.remove('open');});qi.classList.toggle('open',true);fadeIn(qi.querySelector('.qd'));checkOverflow();});
@@ -1229,9 +1392,23 @@ document.getElementById('moves').addEventListener('click',function(e){var b=e.ta
   demo.innerHTML='<p class="when"><b>Use it when:</b> '+esc(m.when)+'</p><div class="bubbles"><p class="bub they"><small>Owner</small>'+esc(m.o)+'</p>'+you+'<p class="bub they"><small>Owner</small>'+esc(m.o2)+'</p></div>';
   if(!RM)demo.querySelectorAll('.bubbles>*').forEach(function(el,k){el.animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:320,delay:k*(m.y?550:1000)+(k===2&&!m.y?2200:0),fill:'backwards'});});checkOverflow();});
 
-/* ---------- recall ---------- */
-document.getElementById('recall').innerHTML=QS.map(function(q,j){var p=PARTS[q.p];return '<button type="button" data-g="r'+j+'" data-rc="'+j+'"><span class="pt" style="background:'+p.col+'">Q'+(j+1)+' '+p.n+'</span><span class="tx">tap after you say it</span></button>';}).join('');
-document.getElementById('recall').addEventListener('click',function(e){var b=e.target.closest('[data-rc]');if(!b||b.classList.contains('shown'))return;b.classList.add('shown');b.querySelector('.tx').textContent=QS[+b.dataset.rc].q;fadeIn(b);checkOverflow();});
+/* ---------- read-along ---------- */
+var RA_WHY=['Shows you care about them before their problems.','A real day gives real details, not a polished summary.','Lets them point at problems without feeling judged.','A real example shows how often it happens and what it costs.','Brings up the quiet problems they\'ve stopped noticing.','Respects their experience and shows what to avoid.','Gets the personal reason they\'d say yes, in their words.','Names the worry so it gets smaller, and shows you\'re not pushing.'];
+var ra=document.getElementById('ra'),raCard=ra.closest('.card'),raI=0,raPlay=true,raTimers=[],raBtn=document.getElementById('raPlay');
+document.getElementById('raDots').innerHTML=QS.map(function(){return '<i></i>';}).join('');
+function raClear(){raTimers.forEach(clearTimeout);raTimers=[];}
+function raShow(i){raClear();raI=Math.max(0,Math.min(7,i));var q=QS[raI],p=PARTS[q.p];
+  ra.innerHTML='<p class="raTop"><span class="raPart" style="background:'+p.col+'">Part '+(q.p+1)+' · '+p.n+'</span><span class="mute">'+(raI+1)+' of 8</span></p><p class="raQ">'+q.q.split(' ').map(function(w){return '<span class="rw">'+esc(w)+'</span>';}).join(' ')+'</p><p class="raWhy"><b>Why:</b> '+esc(RA_WHY[raI])+'</p>';
+  document.querySelectorAll('#raDots i').forEach(function(d,k){d.className=k<raI?'done':k===raI?'on':'';});fadeIn(ra);
+  var ws=ra.querySelectorAll('.rw'),why=ra.querySelector('.raWhy');
+  if(!raPlay||RM){ws.forEach(function(w){w.classList.add('lit');});why.classList.add('in');return;}
+  ws.forEach(function(w,k){raTimers.push(setTimeout(function(){w.classList.add('lit');},500+k*380));});
+  var end=500+ws.length*380;raTimers.push(setTimeout(function(){why.classList.add('in');},end+200));
+  raTimers.push(setTimeout(function(){if(cards[cur]!==raCard)return;if(raI<7)raShow(raI+1);else{raPlay=false;raBtn.textContent='Play again';}},end+2600));}
+raBtn.addEventListener('click',function(){if(raBtn.textContent==='Play again'){raPlay=true;raBtn.textContent='Pause';raShow(0);return;}raPlay=!raPlay;raBtn.textContent=raPlay?'Pause':'Play';raShow(raI);});
+document.getElementById('raPrev').addEventListener('click',function(){raShow(raI-1);});
+document.getElementById('raNext').addEventListener('click',function(){raShow(raI+1);});
+function raStart(){raPlay=true;raBtn.textContent='Pause';raShow(0);}
 
 /* ---------- signals ---------- */
 var SIGS=[
@@ -1268,20 +1445,34 @@ function copyText(btn,txt,label,node){function done(){btn.textContent='Copied';s
   try{navigator.clipboard.writeText(txt).then(done,sel);}catch(e){sel();}}
 document.getElementById('copyPocket').addEventListener('click',function(){copyText(this,'The 8 questions (Starwell SI)\n'+QS.map(function(q,i){return (i+1)+'. ['+PARTS[q.p].n+'] '+q.q;}).join('\n'),'Copy to my phone notes',document.getElementById('recall'));});
 
-/* ---------- pebble cards, buckets ---------- */
-document.querySelectorAll('.vsrow button,.bucket').forEach(function(b){b.addEventListener('click',function(){b.classList.add('open');fadeIn(b);checkOverflow();});});
 
-/* ---------- pain test ---------- */
-var DIALS=[{q:'1. How often does it happen?',o:['Rarely','Weekly','Daily']},{q:'2. What does it cost?',o:['Annoyance','Hours','Money or customers']},{q:'3. Who feels it?',o:['One person','The team','Customers']},{q:'4. If nothing changes?',o:['Stays the same','Gets worse','Hurts the business']}];
-var pAns={};
-document.getElementById('pqs').innerHTML=DIALS.map(function(d,i){return '<div class="pq"><span class="lb">'+d.q+'</span><div class="bs">'+d.o.map(function(o,j){return '<button type="button" data-pq="'+i+'" data-pv="'+j+'" data-g="pq'+i+'" aria-pressed="false">'+esc(o)+'</button>';}).join('')+'</div></div>';}).join('');
-document.getElementById('pqs').addEventListener('click',function(e){var b=e.target.closest('[data-pq]');if(!b)return;var i=+b.dataset.pq;pAns[i]=+b.dataset.pv;
-  document.querySelectorAll('[data-pq="'+i+'"]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});score();});
-function score(){var n=Object.keys(pAns).length,s=0;Object.keys(pAns).forEach(function(k){s+=pAns[k];});
-  if(n<4){document.getElementById('vName').textContent=n+' of 4';document.getElementById('vText').textContent='Answer all 4 to see where it lands.';document.getElementById('needle').style.transform='rotate('+(-80+160*s/8)+'deg)';return;}
-  var nm,t;if(s<=2){nm='Pebble';t='Note it, then move on.';}else if(s<=5){nm='Real pain';t='Ask for a recent example and a number.';}else{nm='Must-fix';t='Spend your Dig time here.';}
-  document.getElementById('vName').textContent=nm;document.getElementById('vText').textContent=t+' (Score '+s+' of 8.)';document.getElementById('needle').style.transform='rotate('+(-80+160*s/8)+'deg)';}
-score();
+
+/* ---------- pain test walkthrough ---------- */
+var PQ=[{q:'How often does it happen?',o:['Rarely','Weekly','Daily']},{q:'What does it cost?',o:['Annoyance','Hours','Money or customers']},{q:'Who feels it?',o:['One person','The team','Customers']},{q:'If nothing changes?',o:['Stays the same','Gets worse','Hurts the business']}];
+var PT=[
+ {n:'After-hours calls',s:'After five, our calls go to voicemail.',ev:['It happens pretty much every night in July.','Half of them book someone else.','The customers stuck in a hot house.','It gets a little worse every summer.'],ans:[2,2,2,1]},
+ {n:'Website font',s:'Our website font looks kind of dated.',ev:['I noticed it last year, I guess.','It just bugs me.','Just me, really.','Nobody\'s ever mentioned it.'],ans:[0,0,0,0]},
+ {n:'Chasing invoices',s:'Linda spends Fridays chasing unpaid invoices.',ev:['Every Friday afternoon.','She loses about half a day.','Linda, and our cash flow.','It\'s getting worse as we grow.'],ans:[1,1,1,1]}
+];
+var VERD=[['Pebble','Note it, then move on. Don\'t spend your Dig time here.'],['Real pain','Worth a follow-up: ask for a recent example and a number.'],['Must-fix','Spend your Dig time here. Ask: "When was the last time that happened?"']];
+var pt=document.getElementById('pt'),ptPick=document.getElementById('ptPick'),ptP=null,ptK=0,ptA=[];
+ptPick.innerHTML=PT.map(function(p,i){return '<button type="button" data-ptp="'+i+'" data-g="pk" data-manual aria-pressed="false">'+esc(p.n)+'</button>';}).join('');
+function ptGauge(sc){return '<svg viewBox="0 0 300 168" aria-hidden="true"><path d="M30 150 A120 120 0 0 1 90 46" stroke="#9AA3B5" stroke-width="24" fill="none"/><path d="M96 42 A120 120 0 0 1 204 42" stroke="#F2B33D" stroke-width="24" fill="none"/><path d="M210 46 A120 120 0 0 1 270 150" stroke="#EE6A2C" stroke-width="24" fill="none"/><g id="ptNeedle" style="transform-origin:150px 150px;transform:rotate('+(-80+160*sc/8)+'deg)"><path d="M142 150 L150 50 L158 150Z" fill="#142B55"/></g><circle cx="150" cy="150" r="15" fill="#EE6A2C"/></svg>';}
+function ptDraw(){if(ptP===null){pt.innerHTML='<p class="handnote">Pick a problem above.</p><p class="mute" style="font-size:13.5px">You\'ll hear what the owner said, then answer 4 questions about it. Each answer scores 0, 1 or 2. The total tells you whether to dig in.</p><div class="ptList">'+PQ.map(function(q,i){return '<span>'+(i+1)+'. '+q.q+'</span>';}).join('')+'</div>';return;}
+  var P0=PT[ptP],prog='<div class="ptProg">'+PQ.map(function(_,k){return '<i class="'+(k<ptK?'done':k===ptK?'on':'')+'"></i>';}).join('')+'</div>';
+  if(ptK<4){var q=PQ[ptK];
+    pt.innerHTML=prog+'<p class="bub they ptSaid"><small>Owner</small>'+esc(P0.s)+'</p><p class="ptQ"><span>Question '+(ptK+1)+' of 4</span>'+q.q+'</p><p class="ptEv">He also said: <i>"'+esc(P0.ev[ptK])+'"</i></p><div class="ptOpts">'+q.o.map(function(o,j){return '<button type="button" data-po="'+j+'">'+esc(o)+'<small>+'+j+'</small></button>';}).join('')+'</div><p class="ptFb" id="ptFb"></p>';
+  }else{var sc=ptA.reduce(function(a,b){return a+b;},0),v=VERD[sc<=2?0:sc<=5?1:2];
+    pt.innerHTML=prog+'<div class="ptV">'+ptGauge(sc)+'<div><p class="v">'+v[0]+'</p><p class="mute" style="font-size:12.5px">Score '+sc+' of 8</p></div></div><p style="font-size:14px"><b>What to do:</b> '+esc(v[1])+'</p><button class="btnA ghost" type="button" id="ptAgain" style="min-height:36px;padding:4px 12px;font-size:14.5px">Try another problem</button>';
+    hit(pt,'pk');}
+  fadeIn(pt);checkOverflow();}
+ptPick.addEventListener('click',function(e){var b=e.target.closest('[data-ptp]');if(!b)return;ptP=+b.dataset.ptp;ptK=0;ptA=[];ptPick.querySelectorAll('[data-ptp]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});ptDraw();});
+pt.addEventListener('click',function(e){if(e.target.closest('#ptAgain')){ptP=null;ptPick.querySelectorAll('[data-ptp]').forEach(function(x){x.setAttribute('aria-pressed','false');});ptDraw();return;}
+  var b=e.target.closest('[data-po]');if(!b||pt.dataset.busy)return;var j=+b.dataset.po,right=PT[ptP].ans[ptK];ptA[ptK]=j;pt.dataset.busy='1';
+  pt.querySelectorAll('[data-po]').forEach(function(x){x.classList.toggle('pick',x===b);});
+  var fb=document.getElementById('ptFb');fb.className='ptFb '+(j===right?'ok':'hm');fb.textContent=j===right?'✓ That fits what he said.':'Fair, though "'+PT[ptP].ev[ptK]+'" sounds more like "'+PQ[ptK].o[right]+'".';
+  setTimeout(function(){delete pt.dataset.busy;ptK++;ptDraw();},j===right?1100:2300);});
+pt.classList.add('nosee');ptDraw();
 
 /* ---------- calculators ---------- */
 function num(id){var v=parseFloat(document.getElementById(id).value);return isFinite(v)&&v>0?v:0;}
@@ -1298,15 +1489,14 @@ tabset('data-fit','data-fitlist');tabset('data-fc','data-fcp');
 function paintLight(v){document.querySelectorAll('#light [data-l]').forEach(function(c){var on=c.dataset.l===v,col={go:'#3FAE6A',maybe:'#F2B33D',stop:'#E5482B'}[c.dataset.l];c.setAttribute('fill',on?col:'#2A3A60');c.setAttribute('stroke',on?'#FFF4DE':'none');c.setAttribute('stroke-width','3');});}
 paintLight('go');document.querySelectorAll('[data-fit]').forEach(function(b){b.addEventListener('click',function(){paintLight(b.dataset.fit);});});
 
-/* ---------- plug-in accordion ---------- */
-(function(){var el=document.getElementById('plug');var items=[
- ['MCP connector','a universal adapter','A newer open standard (from Anthropic, 2024) that lets AI plug into software the same way every time.','Most HVAC software doesn\'t offer one yet. Don\'t assume.'],
- ['API','a service door with a key','The official way for one program to read and write another\'s data, like booking a job.','Ask: "Which plan are you on, and who\'s the admin?" Some plans or vendors limit it.'],
- ['Exports and emails','the mail slot','A daily report or spreadsheet the software sends out. Slower, but works almost anywhere.','Can they schedule a report each morning?'],
- ['Paper or in someone\'s head','no plug at all','Nothing for AI to read yet.','Fix the process first (write it down), then automate.']
+/* ---------- plug-in list ---------- */
+(function(){var items=[
+ ['MCP connector','a universal adapter','An open standard (Anthropic, 2024) that lets AI plug into software the same way every time.','Most HVAC software doesn\'t offer one yet.'],
+ ['API','a service door with a key','The official way for programs to read and write each other\'s data, like booking a job.','Ask which plan they\'re on and who the admin is.'],
+ ['Exports and emails','the mail slot','A daily report or spreadsheet. Slower, but works almost anywhere.','Can they schedule one each morning?'],
+ ['Paper or in someone\'s head','no plug at all','Nothing for AI to read yet.','Write the process down first, then automate.']
 ];
-el.innerHTML=items.map(function(p,i){return '<details'+(i===3?' class="paper"':'')+' data-g="a'+i+'"><summary><span class="n">'+(i+1)+'</span><span><b>'+esc(p[0])+'</b><span class="handnote">'+esc(p[1])+'</span></span><span class="pm">+</span></summary><div class="body"><p>'+esc(p[2])+'</p><p class="ck"><b>Check:</b> '+esc(p[3])+'</p></div></details>';}).join('');
-el.addEventListener('toggle',function(e){if(e.target.open)el.querySelectorAll('details').forEach(function(d){if(d!==e.target)d.open=false;});checkOverflow();},true);})();
+document.getElementById('plug').innerHTML=items.map(function(p,i){return '<div class="plg'+(i===3?' paper':'')+'"><span class="n">'+(i+1)+'</span><div><p><b>'+esc(p[0])+'</b> <span class="handnote">'+esc(p[1])+'</span></p><p>'+esc(p[2])+' <span class="ck">'+esc(p[3])+'</span></p></div></div>';}).join('');})();
 
 /* ---------- practice ---------- */
 var CASES=[
@@ -1319,8 +1509,8 @@ var CASES=[
  {sit:'Near the end, after Q8.',s:'My wife does the books. She\'d never go for this.',o:['We can convince her, don\'t worry.','What would she want to know before changing anything?','(Ignore it and keep going.)'],a:1,pr:'Respect the decision',t:'It treats her concern as real and tells you what really matters. "Convincing" her is pushy, and ignoring it leaves the biggest worry unanswered.'}
 ];
 var scoreCard=document.getElementById('scoreCard');
-CASES.forEach(function(c,i){var s=document.createElement('section');s.className='card';s.dataset.stop='practice';s.dataset.case=i;s.dataset.gate='1';s.dataset.glabel='Pick a reply';
-  s.innerHTML='<div class="wrap"><p class="eyebrow">'+(i===0?'Stop 6 · Practice · ':'')+'Conversation '+(i+1)+' of '+CASES.length+'</p>'+(i===0?'<p class="mute" style="font-size:13.5px">Pick the best reply. You\'re there to <b class="k">understand and help</b>, not to sell or diagnose on the spot.</p>':'')+'<div class="ownerq">'+window.__OWNER_SVG+'<div><p class="situ">'+esc(c.sit)+'</p><p class="said">'+esc(c.s)+'</p></div></div><div class="optsV">'+c.o.map(function(o,j){return '<button type="button" data-j="'+j+'" data-g="x"><span class="l">'+'ABC'[j]+'</span><span>'+esc(o)+'</span></button>';}).join('')+'</div><div class="ans" hidden></div></div>';
+CASES.forEach(function(c,i){var s=document.createElement('section');s.className='card';s.dataset.stop='practice';s.dataset.case=i;s.dataset.gate='1';s.dataset.glabel='Pick a reply';s.dataset.noglow='1';
+  s.innerHTML='<div class="wrap"><p class="eyebrow">'+(i===0?'Stop 6 · Practice · ':'')+'Conversation '+(i+1)+' of '+CASES.length+'</p>'+(i===0?'<p class="mute" style="font-size:13.5px">Pick the best reply. You\'re there to <b class="k">understand and help</b>, not to sell or diagnose on the spot.</p>':'')+'<div class="ownerq">'+window.__OWNER_SVG+'<div><p class="situ">'+esc(c.sit)+'</p><p class="said">'+esc(c.s)+'</p></div></div><div class="optsV">'+c.o.map(function(o,j){return '<button type="button" class="nosee" data-j="'+j+'" data-g="x"><span class="l">'+'ABC'[j]+'</span><span>'+esc(o)+'</span></button>';}).join('')+'</div><div class="ans" hidden></div></div>';
   stage.insertBefore(s,scoreCard);});
 var answers={};
 stage.addEventListener('click',function(e){var b=e.target.closest('.optsV button');if(!b)return;var card=b.closest('.card');var i=+card.dataset.case;if(answers[i]!=null)return;
@@ -1349,7 +1539,7 @@ var MISSIONS={
 };
 function personalize(){var t=team();
   document.getElementById('hiName').textContent=NAME?'Welcome, '+NAME:'Welcome';
-  document.getElementById('pocketTitle').textContent=NAME?'Lock it in · '+NAME+'\'s 8 questions':'Lock it in';
+  document.getElementById('pocketTitle').textContent=NAME?'Read along · '+NAME:'Read along';
   document.getElementById('fcTitle').textContent=NAME?NAME+'\'s field card':'Field card';
   document.getElementById('permScript').textContent='"Mind if my AI note taker records? I\'m '+(NAME||'[name]')+' with Starwell. It lets me listen to you instead of scribbling."';
   var av=document.getElementById('avatar');if(NAME){av.hidden=false;av.textContent=NAME.charAt(0);av.style.background=PEOPLE[NAME].c;}else av.hidden=true;
@@ -1362,7 +1552,7 @@ document.getElementById('who').addEventListener('click',function(e){var b=e.targ
   setTimeout(function(){var saved=parseInt(store('atrq-card-'+NAME),10);show(saved>1&&saved<cards.length?saved:1,1);},350);});
 
 /* ---------- entrance animations ---------- */
-var LISTS='.sigs,.stepsC,.pairs,.bubbles,.found,.buckets,.acc,.fc,.optsV,.pqs,.tabs,.who,.vsrow,.cmp,.recall,.how,.qa,.segBtns,.moves,.slgrid,.eqn';
+var LISTS='.swaps,.ptPick,.vtabs,.plugs,.sigs,.stepsC,.pairs,.bubbles,.found,.buckets,.acc,.fc,.optsV,.pqs,.tabs,.who,.vsrow,.cmp,.recall,.how,.qa,.segBtns,.moves,.slgrid,.eqn';
 function wordify(el){Array.prototype.slice.call(el.childNodes).forEach(function(n){if(n.nodeType===3){var parts=n.textContent.split(/(\s+)/);var f=document.createDocumentFragment();parts.forEach(function(t){if(!t)return;if(/^\s+$/.test(t))f.appendChild(document.createTextNode(t));else{var sp=document.createElement('span');sp.className='w';sp.textContent=t;f.appendChild(sp);}});n.parentNode.replaceChild(f,n);}else if(n.nodeType===1&&!n.classList.contains('w'))wordify(n);});}
 document.querySelectorAll('.t1,.t2').forEach(wordify);
 function countUp(el){var m=el.textContent.match(/^(\$?)([\d,]+)(.*)$/);if(!m)return;var end=parseInt(m[2].replace(/,/g,''),10);if(!(end>0))return;var t0=performance.now(),dur=900;
@@ -1397,7 +1587,8 @@ checkOverflow=function(){if(!cards||cur<0)return;var c=cards[cur];more.hidden=!(
 function updateNav(){if(cur<0)return;var i=cur,c=cards[i],id=stopOf(i),nx=cards[i+1];
   var locked=(id==='hello'&&!NAME)||!isOpen(c);nextBtn.classList.toggle('locked',locked);nextBtn.setAttribute('aria-disabled',String(locked));
   if(id==='hello'&&!NAME){nextLabel.textContent='Pick your name';return;}
-  if(locked){var left=need(c)-got(c);nextLabel.textContent=c.dataset.glabel+(need(c)>1?' · '+left+' left':'');return;}
+  nextBtn.style.setProperty('--pg',locked&&need(c)?(got(c)/need(c)*100)+'%':'0%');
+  if(locked){nextLabel.textContent=c.dataset.glabel+(need(c)>1?'  '+got(c)+'/'+need(c):'');return;}
   if(id==='hello')nextLabel.textContent='Continue as '+NAME;
   else if(!nx)nextLabel.textContent='Back to the start';
   else if(id==='start')nextLabel.textContent='Let\'s go, '+NAME;
@@ -1412,9 +1603,9 @@ function show(i,dir){if(i<0||i>=cards.length)return;if(!NAME&&i>0)i=0;var prev=c
   prevBtn.disabled=i===0;nextBtn.classList.remove('unlock');updateNav();
   try{history.replaceState(null,'','#'+id);}catch(e){}
   if(NAME&&i>0)store('atrq-card-'+NAME,String(i));
-  animateCard(c);setTimeout(function(){if(cards[cur]===c)nudge(c);},RM?0:1100);requestAnimationFrame(checkOverflow);
+  ghostStop();animateCard(c);armIdle();setTimeout(function(){if(cards[cur]===c)ghostDemo(c);},RM?0:1600);requestAnimationFrame(checkOverflow);if(c===raCard)raStart();else raClear();
   if(c.querySelector('#tlBox')&&!tlBox.innerHTML)showTL(0);}
-function step(d){if(d>0&&cur>=0){var c=cards[cur];if((stopOf(cur)==='hello'&&!NAME)||!isOpen(c)){nextBtn.classList.remove('shake');void nextBtn.offsetWidth;nextBtn.classList.add('shake');nudge(c);var t=c.querySelector('.nudge');if(t&&t.scrollIntoView)t.scrollIntoView({block:'nearest',behavior:RM?'auto':'smooth'});return;}}
+function step(d){if(d>0&&cur>=0){var c=cards[cur];if((stopOf(cur)==='hello'&&!NAME)||!isOpen(c)){nextBtn.classList.remove('shake');void nextBtn.offsetWidth;nextBtn.classList.add('shake');pointOut(c);return;}}
   var n=cur+d;if(n>=cards.length)n=1;if(n<0)return;show(n,d);}
 nextBtn.addEventListener('click',function(){step(1);});prevBtn.addEventListener('click',function(){step(-1);});
 cards.forEach(function(c){c.addEventListener('scroll',checkOverflow,{passive:true});});
