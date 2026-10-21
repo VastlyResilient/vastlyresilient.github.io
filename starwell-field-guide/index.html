@@ -14,6 +14,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="claude:viewport-fit-sides" content="cover">
+<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Caveat:wght@600;700&family=Public+Sans:wght@400;500;600;700&display=swap">
 <style>
@@ -1193,7 +1194,7 @@ function checkOverflow(){}
 function fadeIn(el){if(el&&el.animate&&!RM)el.animate([{opacity:.15,transform:'translateY(6px)'},{opacity:1,transform:'none'}],{duration:300,easing:'ease-out'});}
 
 /* ---------- people ---------- */
-var PEOPLE={Bobby:{c:'#EE6A2C'},RJ:{c:'#2E6CCB'},Dan:{c:'#2F7D52'}};
+var PEOPLE={RJ:{c:'#2E6CCB'},Dan:{c:'#2F7D52'},Bobby:{c:'#EE6A2C'}};
 var NAME=store('atrq-user');if(!PEOPLE[NAME])NAME=null;
 function team(){return Object.keys(PEOPLE).filter(function(n){return n!==NAME;}).join(' and ');}
 document.getElementById('who').innerHTML=Object.keys(PEOPLE).map(function(n){return '<button type="button" data-who="'+n+'" aria-pressed="'+(n===NAME)+'"><span class="av" style="background:'+PEOPLE[n].c+'">'+n.charAt(0)+'</span><span><b>'+n+'</b><small>Starwell team</small></span><span class="ck">✓</span></button>';}).join('');
