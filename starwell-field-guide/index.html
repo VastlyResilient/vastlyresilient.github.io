@@ -13,6 +13,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="claude:viewport-fit-sides" content="cover">
+<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Caveat:wght@600;700&family=Public+Sans:wght@400;500;600;700&display=swap">
 <style>
@@ -934,15 +935,6 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
         <p class="rule">Loudest isn't costliest. Ask: "What do you just put up with?"</p>
       </div>
     </section>
-    <section class="card" data-stop="sort" data-howto="Pick <b>one problem</b>, then answer its <b>4 questions</b>." data-gate="1" data-glabel="Finish one problem">
-      <div class="wrap">
-        <p class="eyebrow">The pain test</p>
-        <h2 class="t2">Which problem <span>to dig into?</span></h2>
-        <p class="lead"><b>What it is:</b> 4 questions you ask yourself, <b class="k">in your head</b>, when an owner mentions a problem. <b>What it does:</b> tells you whether to dig in or note it and move on.</p>
-        <div class="ptPick" id="ptPick" role="tablist"></div>
-        <div class="box pt" id="pt" aria-live="polite"></div>
-      </div>
-    </section>
     <section class="card" data-stop="sort" data-mission="sort">
       <div class="wrap">
         <p class="eyebrow">Put a number on it</p>
@@ -966,20 +958,9 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
     </section>
 
     <!-- STOP 5 -->
-    <section class="card" data-stop="ai" data-howto="Tap all <b>3 tabs</b>: Good fit, Person checks, Keep human." data-gate="3" data-glabel="Tap all 3 tabs">
-      <div class="wrap">
-        <p class="eyebrow">Stop 5 · AI and promises</p>
-        <svg class="art" viewBox="0 0 360 58" aria-hidden="true" style="max-height:52px" id="light"><rect class="pop" x="96" y="4" width="168" height="50" rx="25" fill="#142B55"/><circle class="pop" data-l="go" cx="130" cy="29" r="16"/><circle class="pop" data-l="maybe" cx="180" cy="29" r="16"/><circle class="pop" data-l="stop" cx="230" cy="29" r="16"/><path class="draw" d="M10 29 H90 M270 29 H350" stroke="#D7AA68" stroke-width="4" stroke-dasharray="4 8" fill="none"/></svg>
-        <h2 class="t2">What AI <span>should touch.</span></h2>
-        <div class="tabs" role="tablist" style="--n:3"><button type="button" role="tab" aria-selected="true" data-fit="go" data-g="fg">Good fit</button><button type="button" role="tab" aria-selected="false" data-fit="maybe" data-g="fm">Person checks</button><button type="button" role="tab" aria-selected="false" data-fit="stop" data-g="fs">Keep human</button></div>
-        <div data-fitlist="go"><p class="mute" style="font-size:13.5px"><b class="k">Why:</b> words or data on a screen, repeated daily, and a mistake is cheap to catch.</p><ul class="fitlist go"><li>Answer after-hours calls and text back</li><li>Follow up on sent quotes</li><li>Review requests and tune-up reminders</li><li>Turn tech notes into clean invoices</li></ul></div>
-        <div data-fitlist="maybe" hidden><p class="mute" style="font-size:13.5px"><b class="k">Why:</b> AI drafts, a person approves, because a mistake costs money or trust.</p><ul class="fitlist maybe"><li>Dispatch suggestions and ETA texts</li><li>Quote drafts from past jobs</li><li>Payment reminders (a person handles disputes)</li><li>Rebate paperwork drafts</li></ul></div>
-        <div data-fitlist="stop" hidden><p class="mute" style="font-size:13.5px"><b class="k">Why:</b> safety, judgment or emotions. A mistake could hurt someone.</p><ul class="fitlist stop"><li>Gas smell or CO calls: straight to a person or 911</li><li>Diagnosing equipment remotely</li><li>Final pricing decisions</li><li>Upset customers in a dispute</li></ul></div>
-      </div>
-    </section>
     <section class="card" data-stop="ai">
       <div class="wrap">
-        <p class="eyebrow">How AI connects</p>
+        <p class="eyebrow">Stop 5 · AI and promises · How AI connects</p>
         <h2 class="t2">It can only use what <span>it can reach.</span></h2>
                 <p class="lead">Like wiring: some software has an outlet, some needs an adapter, some has no power. <b class="k">Ask what they use before promising anything.</b></p>
         <div class="plugs" id="plug"></div>
@@ -1484,33 +1465,6 @@ document.getElementById('copyPocket').addEventListener('click',function(){copyTe
 
 
 
-/* ---------- pain test walkthrough ---------- */
-var PQ=[{q:'How often does it happen?',o:['Rarely','Weekly','Daily']},{q:'What does it cost?',o:['Annoyance','Hours','Money or customers']},{q:'Who feels it?',o:['One person','The team','Customers']},{q:'If nothing changes?',o:['Stays the same','Gets worse','Hurts the business']}];
-var PT=[
- {n:'After-hours calls',s:'After five, our calls go to voicemail.',ev:['It happens pretty much every night in July.','Half of them book someone else.','The customers stuck in a hot house.','It gets a little worse every summer.'],ans:[2,2,2,1]},
- {n:'Website font',s:'Our website font looks kind of dated.',ev:['I noticed it last year, I guess.','It just bugs me.','Just me, really.','Nobody\'s ever mentioned it.'],ans:[0,0,0,0]},
- {n:'Chasing invoices',s:'Linda spends Fridays chasing unpaid invoices.',ev:['Every Friday afternoon.','She loses about half a day.','Linda, and our cash flow.','It\'s getting worse as we grow.'],ans:[1,1,1,1]}
-];
-var VERD=[['Pebble','Note it, then move on. Don\'t spend your Dig time here.'],['Real pain','Worth a follow-up: ask for a recent example and a number.'],['Must-fix','Spend your Dig time here. Ask: "When was the last time that happened?"']];
-var pt=document.getElementById('pt'),ptPick=document.getElementById('ptPick'),ptP=null,ptK=0,ptA=[];
-ptPick.innerHTML=PT.map(function(p,i){return '<button type="button" data-ptp="'+i+'" data-g="pk" data-manual aria-pressed="false">'+esc(p.n)+'</button>';}).join('');
-function ptGauge(sc){return '<svg viewBox="0 0 300 168" aria-hidden="true"><path d="M30 150 A120 120 0 0 1 90 46" stroke="#9AA3B5" stroke-width="24" fill="none"/><path d="M96 42 A120 120 0 0 1 204 42" stroke="#F2B33D" stroke-width="24" fill="none"/><path d="M210 46 A120 120 0 0 1 270 150" stroke="#EE6A2C" stroke-width="24" fill="none"/><g id="ptNeedle" style="transform-origin:150px 150px;transform:rotate('+(-80+160*sc/8)+'deg)"><path d="M142 150 L150 50 L158 150Z" fill="#142B55"/></g><circle cx="150" cy="150" r="15" fill="#EE6A2C"/></svg>';}
-function ptDraw(){if(ptP===null){pt.innerHTML='<p class="handnote">Pick a problem above.</p><p class="mute" style="font-size:13.5px">You\'ll hear what the owner said, then answer 4 questions about it. Each answer scores 0, 1 or 2. The total tells you whether to dig in.</p><div class="ptList">'+PQ.map(function(q,i){return '<span>'+(i+1)+'. '+q.q+'</span>';}).join('')+'</div>';return;}
-  var P0=PT[ptP],prog='<div class="ptProg">'+PQ.map(function(_,k){return '<i class="'+(k<ptK?'done':k===ptK?'on':'')+'"></i>';}).join('')+'</div>';
-  if(ptK<4){var q=PQ[ptK];
-    pt.innerHTML=prog+'<p class="bub they ptSaid"><small>Owner</small>'+esc(P0.s)+'</p><p class="ptQ"><span>Question '+(ptK+1)+' of 4</span>'+q.q+'</p><p class="ptEv">He also said: <i>"'+esc(P0.ev[ptK])+'"</i></p><div class="ptOpts">'+q.o.map(function(o,j){return '<button type="button" data-po="'+j+'">'+esc(o)+'<small>+'+j+'</small></button>';}).join('')+'</div><p class="ptFb" id="ptFb"></p>';
-  }else{var sc=ptA.reduce(function(a,b){return a+b;},0),v=VERD[sc<=2?0:sc<=5?1:2];
-    pt.innerHTML=prog+'<div class="ptV">'+ptGauge(sc)+'<div><p class="v">'+v[0]+'</p><p class="mute" style="font-size:12.5px">Score '+sc+' of 8</p></div></div><p style="font-size:14px"><b>What to do:</b> '+esc(v[1])+'</p><button class="btnA ghost" type="button" id="ptAgain" style="min-height:36px;padding:4px 12px;font-size:14.5px">Try another problem</button>';
-    hit(pt,'pk');}
-  fadeIn(pt);checkOverflow();}
-ptPick.addEventListener('click',function(e){var b=e.target.closest('[data-ptp]');if(!b)return;ptP=+b.dataset.ptp;ptK=0;ptA=[];ptPick.querySelectorAll('[data-ptp]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});ptDraw();});
-pt.addEventListener('click',function(e){if(e.target.closest('#ptAgain')){ptP=null;ptPick.querySelectorAll('[data-ptp]').forEach(function(x){x.setAttribute('aria-pressed','false');});ptDraw();return;}
-  var b=e.target.closest('[data-po]');if(!b||pt.dataset.busy)return;var j=+b.dataset.po,right=PT[ptP].ans[ptK];ptA[ptK]=j;pt.dataset.busy='1';
-  pt.querySelectorAll('[data-po]').forEach(function(x){x.classList.toggle('pick',x===b);});
-  var fb=document.getElementById('ptFb');fb.className='ptFb '+(j===right?'ok':'hm');fb.textContent=j===right?'✓ That fits what he said.':'Fair, though "'+PT[ptP].ev[ptK]+'" sounds more like "'+PQ[ptK].o[right]+'".';
-  setTimeout(function(){delete pt.dataset.busy;ptK++;ptDraw();},j===right?1100:2300);});
-pt.classList.add('nosee');ptDraw();
-
 /* ---------- calculators ---------- */
 function num(id){var v=parseFloat(document.getElementById(id).value);return isFinite(v)&&v>0?v:0;}
 function money(n){return '$'+Math.round(n).toLocaleString('en-US');}
@@ -1541,7 +1495,7 @@ var CASES=[
  {sit:'They\'re telling you about past vendors.',s:'We tried some software a few years ago. Total waste of money.',o:['Ours is different, I promise.','Which one? Those companies are terrible.','That sounds frustrating. What happened?'],a:2,pr:'Label, then learn',t:'Naming the feeling ("sounds frustrating") shows you heard them, and "What happened?" teaches you what to avoid. Defending yourself makes it about you. Bashing a vendor makes you look like you\'d talk about them too.'},
  {sit:'You asked about missed calls.',s:'It\'s fine, I guess.',o:['Move on to your next question.','Wait 3 seconds, relaxed and attentive.','"So it\'s not really a problem, then?"'],a:1,pr:'Pause',t:'"I guess" usually means there\'s more. A short silence gives them room to say it (Rowe\'s 3-second wait time). A yes/no question closes the door.'},
  {sit:'They ask you directly.',s:'Could AI just do all our scheduling?',o:['Maybe. Can you walk me through how scheduling works now?','Yes, AI can handle all of it.','No, AI isn\'t there yet.'],a:0,pr:'Diagnose before you prescribe',t:'You don\'t know yet, so you ask first. "Yes" is an overpromise you might not keep. "No" is a guess too. Answer honestly after you understand their setup and software.'},
- {sit:'Mid-way through Dig.',s:'Only I know how to price replacements.',o:['You should train someone else to do it.','AI can price them for you.','What happens to quotes when you\'re out on jobs all day?'],a:2,pr:'Explore the effect',t:'It uncovers what the bottleneck costs. Unasked-for advice made people feel less understood than real listening in a 2010 study. And pricing is a "person checks" job, so promising AI will do it is an overpromise.'},
+ {sit:'Mid-way through Dig.',s:'Only I know how to price replacements.',o:['You should train someone else to do it.','AI can price them for you.','What happens to quotes when you\'re out on jobs all day?'],a:2,pr:'Explore the effect',t:'It uncovers what the bottleneck costs. Unasked-for advice made people feel less understood than real listening in a 2010 study. And pricing needs a person\'s judgment, so promising AI will do it is an overpromise.'},
  {sit:'Wrapping up.',s:'(Long pause after you\'ve heard everything.)',o:['So, are you ready to get started?','Let me make sure I got this right: calls go to voicemail after five, quotes go out late, and you want your evenings back. Did I miss anything?','Great. I\'ll email you a proposal.'],a:1,pr:'Play it back',t:'Summing up in their words earns a "That\'s right" and lets them correct you. Asking for the sale or sending a proposal now skips confirming you understood.'},
  {sit:'Near the end, after Q8.',s:'My wife does the books. She\'d never go for this.',o:['We can convince her, don\'t worry.','What would she want to know before changing anything?','(Ignore it and keep going.)'],a:1,pr:'Respect the decision',t:'It treats her concern as real and tells you what really matters. "Convincing" her is pushy, and ignoring it leaves the biggest worry unanswered.'}
 ];
@@ -1618,7 +1572,7 @@ document.querySelectorAll('.card[data-howto]').forEach(function(c){var p=documen
   var w=c.querySelector(':scope>.wrap');var anchor=w.querySelector(':scope>.phHead')||w.querySelector(':scope>.eyebrow')||w.querySelector(':scope>.pocketRow');
   if(anchor&&anchor.nextSibling)w.insertBefore(p,anchor.nextSibling);else w.insertBefore(p,w.firstChild);});
 /* ---------- deck navigation ---------- */
-var STOPS=[{id:'hello',n:'',name:'Welcome',sub:'Pick your name'},{id:'start',n:'',name:'Asking the Right Questions',sub:'How this guide works'},{id:'why',n:1,name:'Why questions win',sub:'History, human nature, value'},{id:'visit',n:2,name:'The visit blueprint',sub:'4 parts, 8 questions, follow-ups'},{id:'listen',n:3,name:'Listen and capture',sub:'Signals, play-back, note taker'},{id:'sort',n:4,name:'What matters most',sub:'Pebble or must-fix'},{id:'ai',n:5,name:'AI and promises',sub:'What fits, never overpromise'},{id:'practice',n:6,name:'Practice',sub:'Seven conversations'},{id:'card',n:'★',name:'Field card',sub:'Read it in the truck'}];
+var STOPS=[{id:'hello',n:'',name:'Welcome',sub:'Pick your name'},{id:'start',n:'',name:'Asking the Right Questions',sub:'How this guide works'},{id:'why',n:1,name:'Why questions win',sub:'History, human nature, value'},{id:'visit',n:2,name:'The visit blueprint',sub:'4 parts, 8 questions, follow-ups'},{id:'listen',n:3,name:'Listen and capture',sub:'Signals, play-back, note taker'},{id:'sort',n:4,name:'What matters most',sub:'Pebble or must-fix'},{id:'ai',n:5,name:'AI and promises',sub:'Connections, never overpromise'},{id:'practice',n:6,name:'Practice',sub:'Seven conversations'},{id:'card',n:'★',name:'Field card',sub:'Read it in the truck'}];
 cards=Array.prototype.slice.call(stage.querySelectorAll('.card'));
 cards.forEach(function(c,i){c.hidden=true;c.setAttribute('role','group');c.dataset.key='k'+i+'-'+c.dataset.stop;});
 var seen={};
