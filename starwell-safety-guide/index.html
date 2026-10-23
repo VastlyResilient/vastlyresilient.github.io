@@ -10,6 +10,7 @@
 <meta name="robots" content="noindex">
 <title>Safety First</title>
 <meta name="claude:viewport-fit-sides" content="cover">
+<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Caveat:wght@600;700&family=Public+Sans:wght@400;500;600;700&display=swap">
 <style>
@@ -941,6 +942,40 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
 .hearN i{font-style:normal;width:34px;height:34px;border-radius:9px;background:var(--teal);color:var(--cream);display:grid;place-items:center;font-size:24px}
 .hearN em{font-style:normal;line-height:1}
 .ef{font-size:13.2px;padding:5px 9px}.eraBox{min-height:170px}.habits div{padding:5px 10px}
+
+/* key game v2: hints from both sides, reader moves on */
+.kStage{min-height:0!important;align-content:start;gap:7px;justify-items:stretch}
+.kCur{grid-template-columns:34px minmax(0,1fr);grid-template-rows:auto auto;column-gap:10px;justify-items:start;align-items:center;background:var(--cream);border:1.5px solid var(--sand3);border-radius:12px;padding:6px 12px}
+.kCur svg{grid-row:1/3;width:30px!important;height:62px!important}
+.kNo{font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+.kLbl{font-size:20px!important;text-align:left!important;max-width:none!important}
+.kHint,.kWhy{display:grid;gap:5px;border-radius:12px;padding:8px 11px;font-size:13.6px;line-height:1.35}
+.kHint{background:#EEF3FB;border:1.5px solid #C9D7EE}
+.kH1{font-family:var(--hand);font-weight:700;font-size:18px;color:var(--ultra);line-height:1}
+.kRow{display:grid;gap:1px}
+.kTag{display:inline-flex;align-items:center;gap:5px;font-family:var(--display);font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.kTag svg{width:13px;height:13px}
+.kRow.o .kTag{color:var(--ember)}.kRow.s .kTag{color:var(--teal)}
+.kWhy.ok{background:#EEF8F1;border:1.5px solid #A9CDB3}.kWhy.hm{background:#FFF4E0;border:1.5px solid #E9C98A}
+.kVerdict{font-family:var(--display);font-weight:800;font-size:17px;text-transform:uppercase}
+.kWhy.ok .kVerdict{color:var(--go)}.kWhy.hm .kVerdict{color:var(--maybe)}
+.kBtns .kNext{grid-column:1/-1;background:var(--navy)!important;border-color:var(--navy)!important}
+/* read-along v2 */
+.raCtl .raGo{flex:1;justify-content:center;background:var(--teal);border-color:var(--teal)}
+.raCtl .raGo:disabled{background:var(--sand2);border-color:var(--sand2);color:var(--navy);opacity:.75;cursor:default}
+.raCtl .raGo.ready{animation:unl .6s cubic-bezier(.3,1.6,.5,1)}
+.raCtl #raPlay{padding:6px 10px;font-size:14px}
+.raDots{flex:none!important}
+.raHint{font-size:12.5px;color:var(--mute);font-style:italic}
+.raTop{flex-wrap:wrap}
+/* closing */
+.verse{margin:0;background:var(--navy);color:var(--cream);border-radius:14px;padding:14px 16px;display:grid;gap:6px;position:relative}
+.verse p{font-family:Georgia,'Times New Roman',serif;font-size:19px;line-height:1.4;font-style:italic}
+.verse cite{font-style:normal;font-family:var(--display);font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+.endnote{font-size:26px!important;color:var(--teal)!important;text-align:center}
+#fcArt{display:none!important}
+.on-card .swaps2.still .strike{animation-delay:1.2s}
+.kZ{padding:3px 10px}.kZ svg{width:36px;height:27px}.kHint,.kWhy{padding:7px 11px}
 </style>
 
 </head>
@@ -1019,8 +1054,7 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
     </section>
     <section class="card" data-stop="real" data-mission="real" data-howto="For each of the &lt;b&gt;8 keys&lt;/b&gt;, decide: give it to the AI, or keep it with a person." data-gate="8" data-glabel="Sort all 8 keys">
       <div class="wrap">
-        <p class="eyebrow">Game · Pack the AI's key ring</p>
-        <h2 class="t2">Only the keys <span>it needs.</span></h2>
+        <p class="eyebrow">Game · Only the keys it needs</p>
         <div class="kg" id="kg"></div>
       </div>
     </section>
@@ -1091,9 +1125,9 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
       <div class="wrap">
         <div class="pocketRow"><svg viewBox="0 0 40 52" aria-hidden="true" style="width:28px;height:36px"><path class="shk2" d="M12 22 V14 a8 8 0 0 1 16 0 V22" stroke="#142B55" stroke-width="4" fill="none" stroke-linecap="round"/><rect class="pop" x="6" y="20" width="28" height="24" rx="5" fill="#1E8C7E"/><circle cx="20" cy="31" r="3.5" fill="#FFF4DE"/></svg><p class="eyebrow" id="promiseTitle">Read along</p></div>
         <h2 class="t2">Our safety promise, <span>out loud.</span></h2>
-        <p class="lead">This is what you say when an owner is worried. <b class="k">Say each line out loud as it lights up.</b></p>
+        <p class="lead">This is what you say when an owner is worried. <b class="k">Say each line out loud, then tap Next line</b> when you're ready.</p>
         <div class="box ra" id="ra" aria-live="polite"></div>
-        <div class="raCtl"><button class="sq" id="raPrev" type="button" aria-label="Previous line"><svg viewBox="0 0 20 20"><path d="M12 4 6 10l6 6" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="btnA" id="raPlay" type="button">Pause</button><div class="raDots" id="raDots"></div><button class="sq" id="raNext" type="button" aria-label="Next line"><svg viewBox="0 0 20 20"><path d="m8 4 6 6-6 6" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+        <div class="raCtl"><button class="sq" id="raPrev" type="button" aria-label="Previous line"><svg viewBox="0 0 20 20"><path d="M12 4 6 10l6 6" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="btnA ghost" id="raPlay" type="button">Say it again</button><div class="raDots" id="raDots"></div><button class="btnA raGo" id="raNext" type="button" disabled><span>Next line</span> →</button></div>
       </div>
     </section>
 
@@ -1109,12 +1143,46 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
       </div>
     </section>
 
+    <!-- STOP 6 · OUR COMMITMENT -->
+    <section class="card" data-stop="commit">
+      <div class="wrap">
+        <p class="eyebrow">Stop 6 · Our commitment</p>
+        <h2 class="t2">Their data stays <span>close to home.</span></h2>
+        <div id="localArt"></div>
+        <p class="lead">Here's how we act on the lessons from these AI hacks and data breaches, and do everything we can to keep our clients' data fully protected. <b class="k">It's the main reason we run local machines.</b></p>
+        <div class="habits">
+          <div><span class="hn">1</span><p><b>The AI runs on machines we control,</b> so customer info isn't sent to outside AI companies.</p></div>
+          <div><span class="hn">2</span><p><b>Fewer places data lives,</b> fewer places it can leak.</p></div>
+          <div><span class="hn">3</span><p><b>Local still gets the 5 locks:</b> encryption, updates, backups and logs.</p></div>
+        </div>
+      </div>
+    </section>
+    <section class="card" data-stop="commit" data-mission="commit">
+      <div class="wrap">
+        <p class="eyebrow">How to say it</p>
+        <h2 class="t2">Plain words. <span>No promises we can't keep.</span></h2>
+        <div class="box"><p class="handnote" style="font-size:19px">Say it to owners</p><p class="say">"Wherever we can, your customer info stays on machines we control, not inside someone else's AI. When a service has to run in the cloud, like your phone line, we'll tell you which one and what it can see."</p></div>
+        <div class="swaps2 still">
+          <div><s><span>"Your data is 100% safe with us."</span><i class="strike"></i></s><b>"We keep it on machines we control, behind the same 5 locks, and we'll show you how."</b><small>Local makes data much harder to leak. It doesn't make it impossible, so never promise that.</small></div>
+        </div>
+      </div>
+    </section>
+    <section class="card" data-stop="commit">
+      <div class="wrap">
+        <p class="eyebrow">One last thing</p>
+        <div id="endArt"></div>
+        <blockquote class="verse"><p>"The way of a fool is right in his own eyes, but a wise man is he who listens to counsel."</p><cite>Proverbs 12:15 (NASB 1995)</cite></blockquote>
+        <p class="lead">An owner's fear is counsel. <b class="k">Listen to it, and let it make our locks better.</b> We don't win by being right. We win by being the people owners trust with what matters most.</p>
+        <p class="handnote endnote">Safety first. Always.</p>
+      </div>
+    </section>
+
     <!-- FIELD CARD -->
     <section class="card" data-stop="card">
       <div class="wrap">
         <p class="eyebrow" id="fcTitle">Field card</p>
         <div class="tabs" role="tablist" style="--n:3"><button type="button" role="tab" aria-selected="true" data-fc="0">Before</button><button type="button" role="tab" aria-selected="false" data-fc="1">During</button><button type="button" role="tab" aria-selected="false" data-fc="2">After</button></div>
-        <div class="fc" data-fcp="0"><div><h4>Know it cold</h4><ul><li>The 5 locks, in one breath</li><li>The safety promise, out loud</li><li>Fear eased with better locks, not by avoiding the tool</li></ul></div><div><h4>Practice what we preach</h4><ul><li>Never paste customer data into a free chatbot</li><li>Call back on a known number before any money moves</li></ul></div></div>
+        <div class="fc" data-fcp="0"><div><h4>Know it cold</h4><ul><li>The 5 locks, in one breath</li><li>The safety promise, out loud</li><li>Fear eased with better locks, not by avoiding the tool</li><li>Where their data lives: on machines we control, wherever we can</li></ul></div><div><h4>Practice what we preach</h4><ul><li>Never paste customer data into a free chatbot</li><li>Call back on a known number before any money moves</li></ul></div></div>
         <div class="fc" data-fcp="1" hidden><div><h4>HEAR it</h4><ol><li>Hear it all, without interrupting</li><li>Empathize: name the feeling</li><li>Answer with the lock</li><li>Return control to them</li></ol></div><div><h4>Never</h4><ul><li>Dismiss, overpromise, rush, or hide behind jargon</li></ul></div></div>
         <div class="fc" data-fcp="2" hidden><div><h4>Follow through</h4><ul><li>Put what it can and can't do in writing</li><li>Start with one small thing, like after-hours calls</li><li>Review the call log together</li><li>If it isn't helping, tell them</li></ul></div></div>
         <button class="btnA" id="copyCard" type="button">Copy the whole field card</button>
@@ -1129,6 +1197,7 @@ i.go{background:var(--go)}i.maybe{background:var(--maybe)}i.stop{background:var(
           <li><a href="https://mentalfloss.com/article/88761/publicity-stunt-convinced-people-elevators-were-safe" target="_blank" rel="noopener">Otis, 1854</a> · Red Flag Act, 1865 · <a href="https://ul.org/about/our-history/" target="_blank" rel="noopener">UL history, 1894</a> · <a href="https://www.ipsos.com/en-us/node/121736" target="_blank" rel="noopener">Ipsos-Reid, 2001</a> · <a href="https://www.federalreserve.gov/econresdata/mobile-devices/2012-executive-summary.htm" target="_blank" rel="noopener">Federal Reserve, 2012</a></li>
           <li><a href="https://infosecurity-magazine.com/news/attackers-hide-ai-prompt" target="_blank" rel="noopener">Barracuda AI-targeted phishing, Oct 2026</a> · <a href="https://manatt.com/insights/newsletters/advertising-law/ai-gone-wild-airline-has-to-honor-a-refund-policy" target="_blank" rel="noopener">Air Canada chatbot ruling, 2024</a> · <a href="https://edition.cnn.com/2024/05/16/tech/arup-deepfake-scam-loss-hong-kong-intl-hnk" target="_blank" rel="noopener">Arup deepfake, CNN 2024</a></li>
           <li><a href="https://www.bleepingcomputer.com/news/security/google-says-gmail-now-blocks-99-9-percent-of-spam-and-phishing-emails/" target="_blank" rel="noopener">Gmail 99.9%, 2017</a> · <a href="https://www.pymnts.com/artificial-intelligence-2/2024/visa-ai-helped-block-80-million-fraudulent-transactions-in-2023/" target="_blank" rel="noopener">Visa $40B, 2024</a> · <a href="https://blog.knowbe4.com/the-new-face-of-fraud-ftc-sheds-light-on-ai-enhanced-family-emergency-scams" target="_blank" rel="noopener">FTC voice-clone advice</a></li>
+          <li>Proverbs 12:15, <a href="https://biblia.com/bible/nasb95/proverbs/12/15" target="_blank" rel="noopener">NASB 1995</a>.</li>
           <li>Starwell research docs: <i>AI Fears, Hacks, and How to Adopt AI Safely</i> (Oct 2026) and <i>Pattern Recognition: Technology, Psychology &amp; the Future</i> (Sep 2026).</li>
         </ul></div>
         <button class="btnA ghost" data-jump="start" type="button">Back to the start</button>
@@ -1375,6 +1444,20 @@ function tag(x,y,t,col,d){var w=t.length*11+26;return '<g class="rain" style="an
   [[-30,P.verm],[0,TEAL],[30,P.gold]].forEach(function(a){r+='<g transform="translate(300,136) rotate('+a[0]+')"><g class="sway"><g transform="translate(0,30)">'+keyG(a[1])+'</g></g></g>';});
   r+='<text x="440" y="120" font-family="'+HF+'" font-weight="700" font-size="46" fill="'+P.ultra+'" class="pop">only the keys it needs, always watched</text>';
   document.getElementById('fcArt').innerHTML='<svg class="art" viewBox="0 0 1200 230" aria-hidden="true" style="max-height:52px">'+r+'</svg>';
+  /* local machines: data stays home */
+  var m='<rect x="0" y="118" width="360" height="12" fill="'+P.sand3+'"/>';
+  m+='<g class="pop"><path d="M40 62 L110 18 L180 62 V118 H40Z" fill="'+P.cream+'" stroke="'+P.navy+'" stroke-width="4" stroke-linejoin="round"/></g>';
+  m+='<g class="pop"><rect x="78" y="58" width="34" height="58" rx="5" fill="'+P.navy+'"/><rect x="84" y="66" width="22" height="5" rx="2" fill="'+TEAL+'"/><rect x="84" y="76" width="22" height="5" rx="2" fill="'+TEAL+'"/><circle class="recdot" cx="95" cy="104" r="3.5" fill="'+P.gold+'"/></g>';
+  m+=padlock(144,104,.5,TEAL,'shutMe');
+  m+='<g transform="translate(250,28) scale(.42)"><ellipse cx="0" cy="0" rx="70" ry="34" fill="#9AA3B5"/><ellipse cx="52" cy="-18" rx="52" ry="38" fill="#AEB5C3"/><ellipse cx="110" cy="2" rx="60" ry="30" fill="#9AA3B5"/></g>';
+  m+='<path class="draw" d="M186 74 C214 66 230 56 252 46" stroke="'+P.sand3+'" stroke-width="4" fill="none" stroke-dasharray="6 6"/>';
+  m+='<g class="pop" transform="translate(220,62)"><circle r="13" fill="#B5361F"/><path d="M-6 -6 L6 6 M6 -6 L-6 6" stroke="'+P.cream+'" stroke-width="3.5" stroke-linecap="round"/></g>';
+  m+='<text x="270" y="100" text-anchor="middle" font-family="'+HF+'" font-weight="700" font-size="19" fill="'+TEAL+'" class="pop">stays home</text>';
+  document.getElementById('localArt').innerHTML='<svg class="art on" viewBox="0 0 360 130" aria-hidden="true" style="max-height:88px">'+m+'</svg>';
+  /* closing: sunrise over a closed lock */
+  var e='<rect x="0" y="112" width="360" height="18" fill="'+P.sand3+'"/>'+sunG(180,104,30)+'<g class="pop">'+padlock(180,108,.62,TEAL,'shutMe')+'</g>';
+  e+='<path class="draw" d="M40 112 Q110 84 150 104 M210 104 Q250 84 320 112" stroke="'+P.ember+'" stroke-width="3" fill="none"/>';
+  document.getElementById('endArt').innerHTML='<svg class="art on" viewBox="0 0 360 130" aria-hidden="true" style="max-height:96px">'+e+'</svg>';
   window.__OWNER_SVG='<svg viewBox="0 0 300 420" aria-hidden="true" class="on">'+shadow(150,410,.95)+person(mix(OWNER,{x:150,y:410,s:.95,talk:true,aR:30,eR:66,clsR:'talkArm',aL:40,eL:110,holdL:HOLD.phone}))+'</svg>';
 })();
 
@@ -1416,28 +1499,37 @@ document.getElementById('news').addEventListener('click',function(e){var b=e.tar
 
 /* ---------- key ring game ---------- */
 var KEYS=[
- {k:'Answer after-hours calls',a:'ai',why:'Words on a phone, and every call is recorded so a person can check it.'},
- {k:'Quote prices',a:'p',why:'A wrong price costs money and trust. The AI says "a tech will call you with exact pricing."'},
- {k:'Book appointments in open slots',a:'ai',why:'Only into time slots the owner approved, and the customer hears the details read back.'},
- {k:'Issue refunds or move money',a:'p',why:'Money always needs a person. One AI agent capped at $50 per credit still gave a customer $160.'},
- {k:'Read details back to the caller',a:'ai',why:'It catches mistakes before they happen. Easy, safe, helpful.'},
- {k:'Change a vendor\'s bank details',a:'p',why:'The #1 target of AI-aimed phishing. A person checks by calling a known number.'},
- {k:'Send a text: "Your tech is on the way"',a:'ai',why:'A simple, approved message. Low risk, high value.'},
- {k:'Diagnose the equipment',a:'p',why:'That\'s the tech\'s job and the owner\'s paid visit. Never undercut the trade.'}
+ {k:'Answer after-hours calls',a:'ai',ho:'"Who picks up when we\'re all on jobs, or asleep?"',hs:'"Is it just talking, and can we review every call later?"',vo:'A missed call at 9pm is a lost job. An answered one is a booked one.',vs:'Low risk: it only talks, never touches money, and every call is recorded for the owner to check.'},
+ {k:'Quote prices',a:'p',ho:'"What happens if a customer hears the wrong number?"',hs:'"Does the right answer depend on what the tech sees on site?"',vo:'A wrong quote costs money or a customer, and pricing is the owner\'s call.',vs:'Prices depend on the job, so the AI says "a tech will call you with exact pricing." Honest, and it protects the owner.'},
+ {k:'Book appointments in open slots',a:'ai',ho:'"Do I still decide which times are open?"',hs:'"Can we limit it to approved slots and read the details back?"',vo:'The calendar fills while I\'m on a job, on my terms.',vs:'It only sees the open slots the owner sets and confirms with the customer, so mistakes are easy to catch.'},
+ {k:'Issue refunds or move money',a:'p',ho:'"Would I hand a new hire my bank card on day one?"',hs:'"If this goes wrong, can we undo it?"',vo:'A money mistake comes straight out of my pocket.',vs:'Money always needs a person. We also cap totals, not just single actions, because small amounts add up.'},
+ {k:'Read details back to the caller',a:'ai',ho:'"How do I know it got the address right?"',hs:'"Does this make mistakes easier to catch?"',vo:'Fewer wrong addresses, fewer wasted truck rolls.',vs:'Reading back is a safety feature in itself. It catches errors before they cost anything.'},
+ {k:'Change a vendor\'s bank details',a:'p',ho:'"Has anyone ever emailed me pretending to be a supplier?"',hs:'"Is this what attackers try to trick AI into doing?"',vo:'One fake "new bank account" email can send a supplier payment to a scammer.',vs:'It\'s exactly what AI-aimed phishing targets. A person verifies by calling a known number.'},
+ {k:'Text "Your tech is on the way"',a:'ai',ho:'"Do my customers like knowing when we\'ll show up?"',hs:'"Is it a pre-approved message with nothing to lose?"',vo:'Fewer "where\'s my tech?" calls to the office.',vs:'A fixed, approved message with no money or private data in it. Easy key to give.'},
+ {k:'Diagnose the equipment',a:'p',ho:'"Isn\'t diagnosis something I charge for?"',hs:'"Would this cut into the owner\'s paid visit?"',vo:'My diagnostic visit is real income and real expertise.',vs:'Never cost the trade money. AI can prep the tech with details, but the tech diagnoses.'}
 ];
-var kg=document.getElementById('kg'),kI=0,kScore=0,kOn={ai:0,p:0};
-function kgDraw(){if(kI>=KEYS.length){kg.querySelector('.kStage').innerHTML='<p class="kDone">'+kScore+' of '+KEYS.length+' right.</p><p class="mute" style="font-size:13.5px;text-align:center">The AI got <b>'+kOn.ai+' keys</b>. A person kept <b>'+kOn.p+'</b>. That\'s what "only the keys it needs" means.</p>';kg.querySelector('.kBtns').hidden=true;return;}
-  var K=KEYS[kI];kg.querySelector('.kStage').innerHTML='<div class="kCur" id="kCur"><svg viewBox="-24 -24 48 100" aria-hidden="true">'+keyG(P.gold)+'</svg><span class="kLbl">'+esc(K.k)+'</span></div><p class="kFb" id="kFb">Key '+(kI+1)+' of '+KEYS.length+'</p>';
-  var c=document.getElementById('kCur');if(c.animate&&!RM)c.animate([{opacity:0,transform:'scale(.7) rotate(-10deg)'},{opacity:1,transform:'none'}],{duration:380,easing:'cubic-bezier(.3,1.5,.5,1)'});}
-kg.innerHTML='<div class="kZones"><div class="kZ ai"><svg viewBox="0 0 80 60" aria-hidden="true"><circle cx="40" cy="22" r="16" fill="none" stroke="'+P.navy+'" stroke-width="5"/></svg><b>AI\'s key ring</b><span class="kc" id="kcAi">0</span></div><div class="kZ p"><svg viewBox="0 0 80 60" aria-hidden="true"><path d="M20 44 V20 q0 -6 6 -6 h28 q6 0 6 6 V44" stroke="'+P.navy+'" stroke-width="5" fill="none"/><circle cx="40" cy="30" r="7" fill="'+P.navy+'"/></svg><b>Kept by a person</b><span class="kc" id="kcP">0</span></div></div><div class="kStage"></div><div class="kBtns"><button type="button" class="btnA kb" data-kb="ai" data-g="kx" data-manual>Give to AI</button><button type="button" class="btnA kb p" data-kb="p" data-g="kx2" data-manual>Keep with a person</button></div>';
-kg.addEventListener('click',function(e){var b=e.target.closest('[data-kb]');if(!b||kg.dataset.busy||kI>=KEYS.length)return;var K=KEYS[kI],pick=b.dataset.kb,ok=pick===K.a;kg.dataset.busy='1';
+var kg=document.getElementById('kg'),kI=0,kScore=0,kOn={ai:0,p:0},kAnswered=false;
+var OWN_IC='<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10 L10 3 L17 10 V17 H3Z" fill="currentColor"/><rect x="8" y="12" width="4" height="5" fill="#FFF4DE"/></svg>';
+var SW_IC='<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1 L12 7 L19 7 L13.5 11 L15.5 18 L10 14 L4.5 18 L6.5 11 L1 7 L8 7Z" fill="currentColor"/></svg>';
+function kgDraw(){var st=kg.querySelector('.kStage'),bt=kg.querySelector('.kBtns');
+  if(kI>=KEYS.length){st.innerHTML='<p class="kDone">'+kScore+' of '+KEYS.length+' right</p><p class="mute" style="font-size:13.5px;text-align:center">The AI got <b>'+kOn.ai+' keys</b>. A person kept <b>'+kOn.p+'</b>. That\'s what "only the keys it needs" means: it helps the owner without ever risking their money, customers or trade.</p>';bt.innerHTML='';return;}
+  var K=KEYS[kI];kAnswered=false;
+  st.innerHTML='<div class="kCur" id="kCur"><svg viewBox="-24 -24 48 100" aria-hidden="true">'+keyG(P.gold)+'</svg><span class="kNo">Key '+(kI+1)+' of '+KEYS.length+'</span><span class="kLbl">'+esc(K.k)+'</span></div><div class="kHint" id="kHint"><p class="kH1">Think it through</p><p class="kRow o"><span class="kTag">'+OWN_IC+'Owner asks</span>'+esc(K.ho)+'</p><p class="kRow s"><span class="kTag">'+SW_IC+'Starwell asks</span>'+esc(K.hs)+'</p></div>';
+  bt.innerHTML='<button type="button" class="btnA kb" data-kb="ai">Give to AI</button><button type="button" class="btnA kb p" data-kb="p">Keep with a person</button>';
+  var c=document.getElementById('kCur');if(c.animate&&!RM)c.animate([{opacity:0,transform:'scale(.7) rotate(-10deg)'},{opacity:1,transform:'none'}],{duration:380,easing:'cubic-bezier(.3,1.5,.5,1)'});checkOverflow();}
+kg.innerHTML='<div class="kZones"><div class="kZ ai"><svg viewBox="0 0 80 60" aria-hidden="true"><circle cx="40" cy="22" r="16" fill="none" stroke="'+P.navy+'" stroke-width="5"/></svg><b>AI\'s key ring</b><span class="kc" id="kcAi">0</span></div><div class="kZ p"><svg viewBox="0 0 80 60" aria-hidden="true"><path d="M20 44 V20 q0 -6 6 -6 h28 q6 0 6 6 V44" stroke="'+P.navy+'" stroke-width="5" fill="none"/><circle cx="40" cy="30" r="7" fill="'+P.navy+'"/></svg><b>Kept by a person</b><span class="kc" id="kcP">0</span></div></div><div class="kStage"></div><div class="kBtns"></div>';
+kg.addEventListener('click',function(e){
+  if(e.target.closest('[data-knext]')){kI++;kgDraw();return;}
+  var b=e.target.closest('[data-kb]');if(!b||kAnswered||kI>=KEYS.length)return;kAnswered=true;var K=KEYS[kI],pick=b.dataset.kb,ok=pick===K.a;
   if(ok)kScore++;kOn[K.a]++;document.getElementById('kcAi').textContent=kOn.ai;document.getElementById('kcP').textContent=kOn.p;
-  var fb=document.getElementById('kFb');fb.className='kFb '+(ok?'ok':'hm');fb.innerHTML=(ok?'✓ Right. ':'Better kept '+(K.a==='ai'?'with the AI':'with a person')+'. ')+esc(K.why);
-  var c=document.getElementById('kCur'),z=kg.querySelector('.kZ.'+K.a);if(!ok&&b.animate&&!RM)b.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'none'}],{duration:300});
-  if(c.animate&&!RM){var cr=c.getBoundingClientRect(),zr=z.getBoundingClientRect();setTimeout(function(){c.animate([{transform:'none',opacity:1},{transform:'translate('+(zr.left+zr.width/2-cr.left-cr.width/2)+'px,'+(zr.top+zr.height/2-cr.top-cr.height/2)+'px) scale(.25)',opacity:.2}],{duration:520,easing:'cubic-bezier(.5,0,.7,1)',fill:'forwards'});},ok?700:1500);}
-  z.classList.remove('bump');void z.offsetWidth;setTimeout(function(){z.classList.add('bump');},ok?1150:1950);
-  hit(kg,'k'+kI);
-  setTimeout(function(){delete kg.dataset.busy;kI++;kgDraw();checkOverflow();},ok?1700:2900);});
+  var where=K.a==='ai'?'Give it to the AI':'Keep it with a person';
+  document.getElementById('kHint').outerHTML='<div class="kWhy '+(ok?'ok':'hm')+'"><p class="kVerdict">'+(ok?'✓ Right. ':'Not quite. ')+where+'.</p><p class="kRow o"><span class="kTag">'+OWN_IC+'Owner\'s view</span>'+esc(K.vo)+'</p><p class="kRow s"><span class="kTag">'+SW_IC+'Starwell\'s view</span>'+esc(K.vs)+'</p></div>';
+  if(!ok&&b.animate&&!RM)b.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'none'}],{duration:300});
+  var c=document.getElementById('kCur'),z=kg.querySelector('.kZ.'+K.a);
+  if(c&&c.animate&&!RM){var sv=c.querySelector('svg'),cr=sv.getBoundingClientRect(),zr=z.getBoundingClientRect();sv.animate([{transform:'none',opacity:1},{transform:'translate('+(zr.left+zr.width/2-cr.left-cr.width/2)+'px,'+(zr.top+zr.height/2-cr.top-cr.height/2)+'px) scale(.25)',opacity:0}],{duration:620,delay:350,easing:'cubic-bezier(.5,0,.7,1)',fill:'forwards'});}
+  z.classList.remove('bump');void z.offsetWidth;setTimeout(function(){z.classList.add('bump');},950);
+  kg.querySelector('.kBtns').innerHTML='<button type="button" class="btnA kNext" data-knext>'+(kI===KEYS.length-1?'See my results':'Next key')+' →</button>';
+  hit(kg,'k'+kI);checkOverflow();});
 kg.classList.add('nosee');kgDraw();
 
 /* ---------- the five locks ---------- */
@@ -1491,7 +1583,7 @@ qa6.classList.add('nosee');
 document.getElementById('qaPrev').addEventListener('click',function(){qi=(qi+FEARS.length-1)%FEARS.length;drawQA();});
 document.getElementById('qaNext').addEventListener('click',function(){qi=(qi+1)%FEARS.length;drawQA();});
 
-/* ---------- the safety promise, read along ---------- */
+/* ---------- the safety promise, read along (reader controls the pace) ---------- */
 var PROMISE=[
  'If the AI headlines make you uneasy, that\'s a healthy instinct.',
  'Almost every scary story has one thing in common: someone gave an AI too many keys, and nobody was watching.',
@@ -1499,20 +1591,21 @@ var PROMISE=[
  'It never quotes prices or moves money without a person. It always offers a human, and every call is recorded so you can check it.',
  'We\'ll start with one small thing and show you what happens. If it isn\'t helping, we\'ll tell you.'
 ];
-var ra=document.getElementById('ra'),raCard=ra.closest('.card'),raI=0,raPlay=true,raTimers=[],raBtn=document.getElementById('raPlay');
+var ra=document.getElementById('ra'),raCard=ra.closest('.card'),raI=0,raTimers=[],raNext=document.getElementById('raNext'),raAgain=document.getElementById('raPlay');
 document.getElementById('raDots').innerHTML=PROMISE.map(function(){return '<i></i>';}).join('');
 function raClear(){raTimers.forEach(clearTimeout);raTimers=[];}
+function raReady(on){raNext.disabled=!on;raNext.classList.toggle('ready',on);raNext.querySelector('span').textContent=raI<PROMISE.length-1?'Next line':'Start over';}
 function raShow(i){raClear();raI=Math.max(0,Math.min(PROMISE.length-1,i));
-  ra.innerHTML='<p class="raTop"><span class="raPart" style="background:'+TEAL+'">Line '+(raI+1)+' of '+PROMISE.length+'</span></p><p class="raQ raP">'+PROMISE[raI].split(' ').map(function(w){return '<span class="rw">'+esc(w)+'</span>';}).join(' ')+'</p>';
-  document.querySelectorAll('#raDots i').forEach(function(d,k){d.className=k<raI?'done':k===raI?'on':'';});fadeIn(ra);
-  var ws=ra.querySelectorAll('.rw');
-  if(!raPlay||RM){ws.forEach(function(w){w.classList.add('lit');});return;}
+  ra.innerHTML='<p class="raTop"><span class="raPart" style="background:'+TEAL+'">Line '+(raI+1)+' of '+PROMISE.length+'</span><span class="raHint" id="raHint">Say it out loud with the highlight…</span></p><p class="raQ raP">'+PROMISE[raI].split(' ').map(function(w){return '<span class="rw">'+esc(w)+'</span>';}).join(' ')+'</p>';
+  document.querySelectorAll('#raDots i').forEach(function(d,k){d.className=k<raI?'done':k===raI?'on':'';});fadeIn(ra);raReady(false);
+  var ws=ra.querySelectorAll('.rw'),done=function(){raReady(true);var h=document.getElementById('raHint');if(h)h.textContent='Got it? Tap Next line.';};
+  if(RM){ws.forEach(function(w){w.classList.add('lit');});done();return;}
   ws.forEach(function(w,k){raTimers.push(setTimeout(function(){w.classList.add('lit');},400+k*330));});
-  var end=400+ws.length*330;raTimers.push(setTimeout(function(){if(cards[cur]!==raCard)return;if(raI<PROMISE.length-1)raShow(raI+1);else{raPlay=false;raBtn.textContent='Play again';}},end+2000));}
-raBtn.addEventListener('click',function(){if(raBtn.textContent==='Play again'){raPlay=true;raBtn.textContent='Pause';raShow(0);return;}raPlay=!raPlay;raBtn.textContent=raPlay?'Pause':'Play';raShow(raI);});
+  raTimers.push(setTimeout(done,400+ws.length*330+250));}
+raAgain.addEventListener('click',function(){raShow(raI);});
+raNext.addEventListener('click',function(){if(raNext.disabled)return;raShow(raI<PROMISE.length-1?raI+1:0);});
 document.getElementById('raPrev').addEventListener('click',function(){raShow(raI-1);});
-document.getElementById('raNext').addEventListener('click',function(){raShow(raI+1);});
-function raStart(){raPlay=true;raBtn.textContent='Pause';raShow(0);}
+function raStart(){raShow(0);}
 
 /* ---------- practice ---------- */
 var CASES=[
@@ -1557,7 +1650,8 @@ var MISSIONS={
  fear:'Next time an owner mentions an AI headline, thank them for raising it before you say anything else.',
  real:'Before your next visit, list the keys you\'d give their AI and the ones a person keeps.',
  safe:'Say the 5 locks in one breath to {team}.',
- talk:'Say the safety promise out loud twice today: once alone, once to {team}.'
+ talk:'Say the safety promise out loud twice today: once alone, once to {team}.',
+ commit:'On your next visit, explain in one sentence where the owner\'s data will live.'
 };
 function personalize(){var t=team();
   document.getElementById('hiName').textContent=NAME?'Welcome, '+NAME:'Welcome';
@@ -1630,7 +1724,7 @@ document.querySelectorAll('.card[data-howto]').forEach(function(c){var p=documen
   var w=c.querySelector(':scope>.wrap');var anchor=w.querySelector(':scope>.phHead')||w.querySelector(':scope>.eyebrow')||w.querySelector(':scope>.pocketRow');
   if(anchor&&anchor.nextSibling)w.insertBefore(p,anchor.nextSibling);else w.insertBefore(p,w.firstChild);});
 /* ---------- deck navigation ---------- */
-var STOPS=[{id:'hello',n:'',name:'Welcome',sub:'Pick your name'},{id:'start',n:'',name:'Safety First',sub:'Calming AI fear, honestly'},{id:'fear',n:1,name:'Fear is normal',sub:'Psychology and history'},{id:'real',n:2,name:'What\'s really happening',sub:'Headlines and keys'},{id:'safe',n:3,name:'How we keep it safe',sub:'5 locks, AI on defense'},{id:'talk',n:4,name:'Talking about fear',sub:'HEAR, 6 fears, the promise'},{id:'practice',n:5,name:'Practice',sub:'Six conversations'},{id:'card',n:'★',name:'Field card',sub:'Read it in the truck'}];
+var STOPS=[{id:'hello',n:'',name:'Welcome',sub:'Pick your name'},{id:'start',n:'',name:'Safety First',sub:'Calming AI fear, honestly'},{id:'fear',n:1,name:'Fear is normal',sub:'Psychology and history'},{id:'real',n:2,name:'What\'s really happening',sub:'Headlines and keys'},{id:'safe',n:3,name:'How we keep it safe',sub:'5 locks, AI on defense'},{id:'talk',n:4,name:'Talking about fear',sub:'HEAR, 6 fears, the promise'},{id:'practice',n:5,name:'Practice',sub:'Six conversations'},{id:'commit',n:6,name:'Our commitment',sub:'Client data, protected'},{id:'card',n:'★',name:'Field card',sub:'Read it in the truck'}];
 cards=Array.prototype.slice.call(stage.querySelectorAll('.card'));
 cards.forEach(function(c,i){c.hidden=true;c.setAttribute('role','group');c.dataset.key='k'+i+'-'+c.dataset.stop;});
 var seen={};
