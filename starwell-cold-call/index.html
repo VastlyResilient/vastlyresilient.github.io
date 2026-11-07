@@ -1102,9 +1102,10 @@ body.driving .more{display:none}
   <div id="driveUnsupported" class="box" style="display:none">This browser can't read aloud. Try Safari on iPhone or Chrome on Android or desktop.</div>
   <p id="voiceNote" class="small"></p>
   <div id="driveSetup">
-    <div class="fld"><label for="dVoice">Voice</label><select id="dVoice"></select></div>
+    <div id="voiceFixed" class="box" style="display:none"><div class="tag">Voices</div><b>Brian</b> reads the coaching, and <b>Bill</b> plays the HVAC owners. Both recorded with ElevenLabs.</div>
+    <div class="fld" id="voiceField"><label for="dVoice">Voice</label><select id="dVoice"></select></div>
     <div class="fld"><label>Speed</label><div class="speedrow" id="dSpeedRow"><button data-r="0.9">0.9×</button><button data-r="1">1×</button><button data-r="1.15">1.15×</button><button data-r="1.3">1.3×</button></div></div>
-    <p class="small" style="margin-top:8px">The voice picker above is only used where no recording exists. Device voices sound different on each phone. On iPhone, extra "Enhanced" voices can be downloaded in Settings → Accessibility → Spoken Content → Voices. Keep this tab open; the screen stays on while it plays where the phone allows it.</p>
+    <p class="small" id="voiceTip" style="margin-top:8px">The voice picker above is only used where no recording exists. Device voices sound different on each phone. On iPhone, extra "Enhanced" voices can be downloaded in Settings → Accessibility → Spoken Content → Voices. Keep this tab open; the screen stays on while it plays where the phone allows it.</p>
     <div class="grid2" style="margin-top:10px">
       <button class="btn" id="dTest">Test voice</button>
       <button class="btn" id="dHere">Start from this card</button>
@@ -1710,6 +1711,8 @@ try{
 }catch(e){}
 function paintVoiceNote(){
   const n = document.getElementById('voiceNote'); if(!n) return;
+  const show = (id,on)=>{ const el=document.getElementById(id); if(el) el.style.display = on ? '' : 'none'; };
+  show('voiceFixed', haveClips); show('voiceField', !haveClips); show('voiceTip', !haveClips);
   n.innerHTML = haveClips ? '<span class="pill go">ElevenLabs voice ready</span> Recorded narration plays; your phone\u2019s voice only fills any gaps.' : '<span class="pill maybe">Device voice</span> Recorded ElevenLabs narration isn\u2019t loaded here, so your phone\u2019s built-in voice reads it.';
 }
 const synth = ('speechSynthesis' in window) ? window.speechSynthesis : null;
@@ -1733,11 +1736,14 @@ function loadVoices(){
   if(!synth) return;
   const all = synth.getVoices().filter(v=>/^en/i.test(v.lang));
   all.sort((a,b)=>voiceScore(b)-voiceScore(a));
-  D.voices = all;
+  // Only the few best natural voices, no duplicates or novelty voices.
+  const seen = new Set(), top = [];
+  for(const v of all){ const nm=(v.name||'').split(' - ')[0]; if(seen.has(nm) || voiceScore(v)<0) continue; seen.add(nm); top.push(v); if(top.length===3) break; }
+  D.voices = top.length ? top : all.slice(0,1);
   const sel = document.getElementById('dVoice');
   const saved = store.get('sw_cc_voice');
-  sel.innerHTML = all.length ? all.map((v,k)=>`<option value="${k}">${v.name} (${v.lang})</option>`).join('') : '<option>Default voice</option>';
-  let pick = all.findIndex(v=>v.name===saved); if(pick<0) pick=0;
+  sel.innerHTML = D.voices.length ? D.voices.map((v,k)=>`<option value="${k}">${(v.name||'Voice').split(' - ')[0].replace(/^(Microsoft|Google)\s+/,'').replace(/\s*\(.*?\)\s*/g,' ').trim()}</option>`).join('') : '<option>Default voice</option>';
+  let pick = D.voices.findIndex(v=>v.name===saved); if(pick<0) pick=0;
   sel.value = String(pick);
   setVoice(pick);
 }
