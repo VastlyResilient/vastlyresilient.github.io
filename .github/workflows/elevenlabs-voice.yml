@@ -1,0 +1,50 @@
+name: Record guide voice (ElevenLabs)
+
+# Run from the Actions tab: "Record guide voice (ElevenLabs)" -> Run workflow.
+# Needs a repository secret named ELEVENLABS_API_KEY.
+on:
+  workflow_dispatch:
+    inputs:
+      guide:
+        description: Guide folder to narrate
+        default: starwell-cold-call
+      coach_voice:
+        description: ElevenLabs voice ID for the coach (default Brian)
+        default: nPczCjzI2devNBz1zQrb
+      owner_voice:
+        description: ElevenLabs voice ID for the HVAC owner (default Bill)
+        default: pqHfZKP75CvOlQylNhV4
+      force:
+        description: Re-record every clip (true/false)
+        default: 'false'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: elevenlabs-voice
+  cancel-in-progress: false
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Record narration
+        env:
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          COACH_VOICE: ${{ inputs.coach_voice }}
+          OWNER_VOICE: ${{ inputs.owner_voice }}
+          FORCE: ${{ inputs.force }}
+        run: node tools/elevenlabs-voice.mjs "${{ inputs.guide }}"
+      - name: Commit audio
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add "${{ inputs.guide }}/audio"
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "Record ElevenLabs narration for ${{ inputs.guide }}"
+          git push

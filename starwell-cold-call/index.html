@@ -957,10 +957,11 @@ body.driving .more{display:none}
   <p class="lead">A voice reads every card and turns the pages on its own, start to finish (about 25 minutes at normal speed).</p>
   <div class="rule">Set it up <b>before you drive.</b> Tap Start, put the phone in its mount, and don't touch the screen. The quizzes and tools are for when you're parked.</div>
   <div id="driveUnsupported" class="box" style="display:none">This browser can't read aloud. Try Safari on iPhone or Chrome on Android or desktop.</div>
+  <p id="voiceNote" class="small"></p>
   <div id="driveSetup">
     <div class="fld"><label for="dVoice">Voice</label><select id="dVoice"></select></div>
     <div class="fld"><label>Speed</label><div class="speedrow" id="dSpeedRow"><button data-r="0.9">0.9×</button><button data-r="1">1×</button><button data-r="1.15">1.15×</button><button data-r="1.3">1.3×</button></div></div>
-    <p class="small" style="margin-top:8px">It uses your phone's built-in voices, so it sounds different on each device. On iPhone, extra "Enhanced" voices can be downloaded in Settings → Accessibility → Spoken Content → Voices. Keep this tab open; the screen stays on while it plays where the phone allows it.</p>
+    <p class="small" style="margin-top:8px">The voice picker above is only used where no recording exists. Device voices sound different on each phone. On iPhone, extra "Enhanced" voices can be downloaded in Settings → Accessibility → Spoken Content → Voices. Keep this tab open; the screen stays on while it plays where the phone allows it.</p>
     <div class="grid2" style="margin-top:10px">
       <button class="btn" id="dTest">Test voice</button>
       <button class="btn" id="dHere">Start from this card</button>
@@ -1439,6 +1440,22 @@ const NARR = [
 ];
 
 /* ---------- DRIVE MODE: ENGINE ---------- */
+/* Recorded ElevenLabs clips (made by tools/elevenlabs-voice.mjs). Missing clips fall back to the device voice. */
+const AUDIO_DIR = 'audio/';
+const CLIPS = new Set();
+function fnv(s){ let h=0x811c9dc5; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,0x01000193)>>>0; } return h.toString(16).padStart(8,'0'); }
+function keyFor(role,t){ return fnv(role+'|'+t)+t.length.toString(36); }
+const player = new Audio(); player.preload='auto';
+let haveClips = false;
+try{
+  fetch(AUDIO_DIR+'manifest.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(m=>{
+    if(m && Array.isArray(m.files)){ m.files.forEach(k=>CLIPS.add(k)); haveClips = CLIPS.size>0; paintVoiceNote(); }
+  }).catch(()=>{});
+}catch(e){}
+function paintVoiceNote(){
+  const n = document.getElementById('voiceNote'); if(!n) return;
+  n.innerHTML = haveClips ? '<span class="pill go">ElevenLabs voice ready</span> Recorded narration plays; your phone\u2019s voice only fills any gaps.' : '<span class="pill maybe">Device voice</span> Recorded ElevenLabs narration isn\u2019t loaded here, so your phone\u2019s built-in voice reads it.';
+}
 const synth = ('speechSynthesis' in window) ? window.speechSynthesis : null;
 const D = {on:false, playing:false, segs:[], si:0, token:0, timer:null, rate:1, voice:null, ovoice:null, wake:null, voices:[], segStart:0, ended:true};
 const RATES=[0.9,1,1.15,1.3];
@@ -1474,7 +1491,7 @@ function setVoice(k){
   D.ovoice = D.voices.find(v=>D.voice && v.name!==D.voice.name && /en/i.test(v.lang)) || null;
 }
 if(synth){ loadVoices(); if('onvoiceschanged' in synth) synth.onvoiceschanged = loadVoices; }
-else { document.getElementById('driveUnsupported').style.display='block'; document.getElementById('driveSetup').style.display='none'; }
+else { setTimeout(()=>{ if(!haveClips){ document.getElementById('driveUnsupported').style.display='block'; document.getElementById('driveSetup').style.display='none'; } }, 1500); }
 document.getElementById('dVoice').addEventListener('change',e=>{ setVoice(+e.target.value); if(D.voice) store.set('sw_cc_voice', D.voice.name); });
 function paintSpeed(){
   document.querySelectorAll('#dSpeedRow button').forEach(b=>b.classList.toggle('sel', +b.dataset.r===D.rate));
@@ -1490,6 +1507,8 @@ function buildSegs(text){
     part = part.trim(); if(!part) return;
     if(part==='~'){ out.push({wait:2500}); return; }
     let owner=false; if(part.startsWith('O>')){ owner=true; part=part.slice(2).trim(); }
+    const key = keyFor(owner?'owner':'coach', part);
+    if(CLIPS.has(key)){ out.push({t:part, owner, audio:AUDIO_DIR+key+'.mp3', pause:600}); return; }
     const sents = part.match(/[^.!?]+[.!?]+["'”)]*|[^.!?]+$/g) || [part];
     sents.forEach((s,k)=>{ s=s.trim(); if(s) out.push({t:s, owner, pause: k===sents.length-1 ? 700 : 120}); });
   });
@@ -1500,7 +1519,7 @@ function setCap(seg){
   capEl.innerHTML = `<span class="spk">${seg.owner?'Owner':'Coach'}</span>`+seg.t.replace(/</g,'&lt;');
 }
 function setPlayIcon(){ playIco.innerHTML = D.playing ? ICO_PAUSE : ICO_PLAY; document.getElementById('dPlay').setAttribute('aria-label', D.playing?'Pause':'Play'); }
-function stopSpeech(){ D.token++; clearTimeout(D.timer); if(synth) synth.cancel(); }
+function stopSpeech(){ D.token++; clearTimeout(D.timer); if(synth) synth.cancel(); try{ player.pause(); }catch(e){} }
 function speakSeg(){
   const tok = D.token;
   if(!D.on || !D.playing) return;
@@ -1514,6 +1533,20 @@ function speakSeg(){
   }
   const s = D.segs[D.si];
   if(s.wait){ setCap({t:'(Your turn. Answer out loud.)'}); D.timer=setTimeout(()=>{ if(tok!==D.token) return; D.si++; speakSeg(); }, s.wait/Math.max(.8,D.rate)); return; }
+  if(s.audio){
+    let done=false;
+    const nextA = ()=>{ if(done || tok!==D.token) return; done=true; D.ended=true; D.si++; D.timer=setTimeout(speakSeg, s.pause); };
+    D.ended=true; D.curNext=null; setCap(s);
+    player.onended = nextA;
+    player.onerror = ()=>{ if(tok!==D.token) return; s.audio=null; speakSeg(); };   // fall back to device voice for this part
+    player.src = s.audio; player.playbackRate = D.rate; try{ player.preservesPitch = true; }catch(e){}
+    const pr = player.play(); if(pr && pr.catch) pr.catch(()=>{ if(tok!==D.token) return; s.audio=null; speakSeg(); });
+    // warm the next clip
+    const nx = D.segs[D.si+1]; if(nx && nx.audio){ const w=new Audio(); w.preload='auto'; w.src=nx.audio; }
+    updateMedia();
+    return;
+  }
+  if(!synth){ D.si++; D.timer=setTimeout(speakSeg,50); return; }
   const u = new SpeechSynthesisUtterance(s.t);
   u.rate = D.rate; u.pitch = s.owner ? (D.ovoice ? 0.95 : 0.75) : 1;
   const v = (s.owner && D.ovoice) ? D.ovoice : D.voice;
@@ -1544,10 +1577,11 @@ async function grabWake(){ try{ if('wakeLock' in navigator && !D.wake){ D.wake =
 function releaseWake(){ try{ if(D.wake){ D.wake.release(); D.wake=null; } }catch(e){} }
 document.addEventListener('visibilitychange',()=>{
   if(!D.on) return;
-  if(document.visibilityState==='visible'){ grabWake(); if(D.playing){ stopSpeech(); speakSeg(); } }
+  if(document.visibilityState==='visible'){ grabWake(); const cur=D.segs[D.si]; if(D.playing && !(cur && cur.audio && !player.paused)){ stopSpeech(); speakSeg(); } }
 });
 function startDrive(fromTop){
-  if(!synth) return;
+  if(!synth && !haveClips) return;
+  try{ player.muted=true; const pr=player.play(); if(pr&&pr.catch) pr.catch(()=>{}); player.pause(); player.muted=false; }catch(e){}
   driveSheet.classList.remove('open');
   D.on = true; D.playing = true;
   document.body.classList.add('driving');
@@ -1568,6 +1602,10 @@ driveSheet.addEventListener('click',e=>{ if(e.target===driveSheet) driveSheet.cl
 document.getElementById('dTop').addEventListener('click',()=>startDrive(true));
 document.getElementById('dHere').addEventListener('click',()=>startDrive(false));
 document.getElementById('dTest').addEventListener('click',()=>{
+  if(haveClips){
+    const first = buildSegs(NARR[1]).find(x=>x.audio);
+    if(first){ if(synth) synth.cancel(); player.src=first.audio; player.playbackRate=D.rate; const pr=player.play(); if(pr&&pr.catch) pr.catch(()=>{}); return; }
+  }
   if(!synth) return; synth.cancel();
   const u = new SpeechSynthesisUtterance('Hi '+(me||'there')+'. This is how the guide will sound in the car.');
   u.rate=D.rate; if(D.voice){u.voice=D.voice;u.lang=D.voice.lang;} synth.speak(u);
@@ -1575,13 +1613,30 @@ document.getElementById('dTest').addEventListener('click',()=>{
 document.getElementById('dPlay').addEventListener('click',()=>{
   if(D.playing){ D.playing=false; stopSpeech(); }
   else { D.playing=true; grabWake(); stopSpeech(); if(D.si>=D.segs.length) D.si=0; speakSeg(); }
-  setPlayIcon();
+  setPlayIcon(); updateMedia();
 });
 document.getElementById('dPrev').addEventListener('click',()=>{ if(D.si>2) startCard(); else go(Math.max(1,idx-1)); });
 document.getElementById('dNext').addEventListener('click',()=>{ if(idx<cards.length-1) go(idx+1); });
 
+function updateMedia(){
+  if(!('mediaSession' in navigator)) return;
+  try{
+    navigator.mediaSession.metadata = new MediaMetadata({title: cards[idx].dataset.t, artist:'Starwell Cold Call Field Guide', album:'Card '+(idx+1)+' of '+cards.length});
+    navigator.mediaSession.playbackState = D.playing ? 'playing' : 'paused';
+  }catch(e){}
+}
+if('mediaSession' in navigator){
+  const ms = navigator.mediaSession;
+  const h = (a,f)=>{ try{ ms.setActionHandler(a,f); }catch(e){} };
+  h('play', ()=>{ if(D.on && !D.playing) document.getElementById('dPlay').click(); });
+  h('pause', ()=>{ if(D.on && D.playing) document.getElementById('dPlay').click(); });
+  h('nexttrack', ()=>{ if(D.on) document.getElementById('dNext').click(); });
+  h('previoustrack', ()=>{ if(D.on) document.getElementById('dPrev').click(); });
+}
+
 /* ---------- INIT ---------- */
 applyMe();
+paintVoiceNote();
 go(idx);
 })();
 </script>
