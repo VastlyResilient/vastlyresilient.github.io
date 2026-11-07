@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Starwell Cold Call Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Caveat:wght@700&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--paper:#FBF1DD;--sand:#F3DDB2;--sand2:#E7C690;--sand3:#D7AA68;--line:rgba(14,31,63,.14);
+--cobalt:#2E6CCB;--ultra:#1F4C9C;--navy:#142B55;--ink:#0E1F3F;--mute:#566078;
+--verm:#EE6A2C;--ember:#C64A1C;--gold:#F2B33D;--cream:#FFF4DE;
+--go:#2F7D52;--go-bg:#DCEBD8;--maybe:#9A5C00;--maybe-bg:#F7E2B5;--stop:#B5361F;--stop-bg:#F6D3C7;
+--sl:env(safe-area-inset-left,0px);--sr:env(safe-area-inset-right,0px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--paper);color:var(--ink);font:16px/1.5 "Public Sans",system-ui,sans-serif;-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit;cursor:pointer}
+#app{position:fixed;inset:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto}
+/* top bar */
+.top{background:var(--navy);color:var(--cream);padding:calc(8px + env(safe-area-inset-top,0px)) calc(12px + var(--sr)) 8px calc(12px + var(--sl))}
+.top-row{display:flex;align-items:center;gap:10px;max-width:720px;margin:0 auto}
+#menuBtn{background:rgba(255,244,222,.12);border:0;border-radius:10px;min-height:44px;padding:0 12px;color:var(--cream);font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px}
+.tt{flex:1;min-width:0}
+#tTitle{font:800 19px/1 "Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#tSub{font-size:12px;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#count{font:600 15px "Barlow Condensed";opacity:.85;font-variant-numeric:tabular-nums}
+#ava{width:36px;height:36px;border-radius:50%;background:var(--verm);display:grid;place-items:center;font:800 18px "Barlow Condensed";color:#fff;flex:none}
+.prog{display:flex;gap:3px;max-width:720px;margin:8px auto 0}
+.prog i{flex:1;height:5px;border-radius:3px;background:rgba(255,244,222,.2)}
+.prog i.done{background:var(--cream)}
+.prog i.cur{background:var(--verm)}
+/* stage */
+#stage{position:relative;overflow:hidden}
+#stage::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;opacity:.35;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/><feColorMatrix values='0 0 0 0 .55  0 0 0 0 .45  0 0 0 0 .3  0 0 0 .35 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.card{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;display:none;padding:18px calc(16px + var(--sr)) 40px calc(16px + var(--sl))}
+.card.on{display:block;animation:cardIn .45s ease both}
+@keyframes cardIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.inner{max-width:720px;margin:0 auto}
+.more{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);font:700 20px "Caveat";color:var(--ember);background:var(--cream);padding:0 12px;border-radius:12px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:3;box-shadow:0 2px 8px rgba(14,31,63,.12)}
+.more.show{opacity:1}
+/* bottom bar */
+.bot{background:var(--sand);border-top:1px solid var(--line);padding:10px calc(12px + var(--sr)) calc(10px + env(safe-area-inset-bottom,0px)) calc(12px + var(--sl))}
+.bot-row{display:flex;gap:10px;max-width:720px;margin:0 auto}
+#back{width:56px;min-height:52px;border-radius:12px;border:2px solid var(--navy);background:var(--cream);font:800 24px "Barlow Condensed";color:var(--navy)}
+#back:disabled{opacity:.35}
+#next{flex:1;min-height:52px;border-radius:12px;border:0;background:var(--verm);color:#fff;font:800 20px/1 "Barlow Condensed";text-transform:uppercase;letter-spacing:.03em;box-shadow:0 3px 0 var(--ember)}
+#next:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ember)}
+#next.wait{background:var(--mute);box-shadow:none}
+.shake{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+/* sheet */
+.sheet{position:fixed;inset:0;background:rgba(14,31,63,.45);display:none;z-index:20;align-items:flex-end;justify-content:center}
+.sheet.open{display:flex}
+.sheet-in{background:var(--paper);width:100%;max-width:720px;max-height:80vh;overflow-y:auto;border-radius:20px 20px 0 0;padding:16px 16px calc(20px + env(safe-area-inset-bottom,0px))}
+.sheet-in h3{font:800 24px "Barlow Condensed";text-transform:uppercase;margin:4px 4px 10px;color:var(--navy);display:flex;justify-content:space-between;align-items:center}
+.sheet-in h3 button{border:0;background:var(--sand);border-radius:10px;min-height:40px;padding:0 14px;font-size:14px;font-weight:700}
+#stops{list-style:none;margin:0;padding:0}
+#stops button{width:100%;text-align:left;border:0;background:transparent;border-radius:10px;min-height:44px;padding:8px 10px;display:flex;gap:10px;align-items:center;color:var(--mute)}
+#stops button b{font:800 15px "Barlow Condensed";width:26px;color:inherit}
+#stops button.seen{color:var(--navy)}
+#stops button.cur{background:var(--verm);color:#fff}
+/* type */
+.eyebrow{font:800 13px "Barlow Condensed";letter-spacing:.12em;text-transform:uppercase;color:var(--ember);margin:6px 0 4px}
+h1,h2{font-family:"Barlow Condensed",sans-serif;text-transform:uppercase;color:var(--navy);line-height:.98;margin:0 0 12px}
+h1{font-weight:800;font-size:clamp(38px,10.5vw,58px)}
+h2{font-weight:800;font-size:clamp(29px,8vw,42px)}
+h3{font:800 22px/1.05 "Barlow Condensed";text-transform:uppercase;color:var(--navy);margin:18px 0 8px}
+.hl{color:var(--verm);background:linear-gradient(var(--gold),var(--gold)) no-repeat 0 88%/0% 30%}
+.on .hl{animation:sweep .9s .35s ease forwards}
+@keyframes sweep{to{background-size:100% 30%}}
+.k{font-weight:700;text-decoration:underline 2px var(--verm);text-underline-offset:3px}
+.hand{font:700 22px/1.15 "Caveat",cursive;color:var(--ultra)}
+.hand.em{color:var(--ember)}
+p{margin:0 0 12px}
+.lead{font-size:17px}
+small,.small{font-size:13px;color:var(--mute)}
+a{color:var(--ultra)}
+/* components */
+.box{background:var(--cream);border:1.5px solid var(--sand2);border-radius:14px;padding:14px 16px;margin:12px 0}
+.rule{background:var(--navy);color:var(--cream);border-radius:14px;padding:14px 16px 14px 16px;margin:14px 0;position:relative}
+.rule::before{content:"RULE";position:absolute;top:-10px;left:14px;background:var(--gold);color:var(--ink);font:800 12px "Barlow Condensed";letter-spacing:.12em;padding:2px 8px;border-radius:6px}
+.rule b{color:var(--gold)}
+.mission{border:2px dashed var(--verm);border-radius:14px;padding:12px 16px;margin:14px 0;background:rgba(238,106,44,.05)}
+.mission::before{content:"Your mission:";display:block;font:700 24px "Caveat";color:var(--ember);margin-bottom:2px}
+.q{font-weight:600;color:var(--ink)}
+.q::before{content:"\201C"}.q::after{content:"\201D"}
+.say{background:var(--navy);color:var(--cream);border-radius:16px 16px 4px 16px;padding:10px 14px;margin:8px 0 8px 28px;font-weight:600}
+.say .me,.say .town{color:var(--gold)}
+.hear{background:var(--sand);border-radius:16px 16px 16px 4px;padding:10px 14px;margin:8px 28px 8px 0}
+.why{font:700 19px/1.15 "Caveat";color:var(--ember);margin:-2px 0 12px 30px}
+.pill{display:inline-block;font:700 12px/1 "Public Sans";padding:5px 9px;border-radius:999px;margin:0 4px 4px 0;vertical-align:middle}
+.go{background:var(--go-bg);color:var(--go)}.maybe{background:var(--maybe-bg);color:var(--maybe)}.stop{background:var(--stop-bg);color:var(--stop)}
+.ev{display:inline-block;font:800 12px/1 "Barlow Condensed";letter-spacing:.08em;text-transform:uppercase;padding:5px 8px;border-radius:6px;margin:0 4px 4px 0;vertical-align:middle}
+.ev.d{background:var(--go-bg);color:var(--go)}.ev.t{background:#DCE6F6;color:var(--ultra)}.ev.p{background:var(--maybe-bg);color:var(--maybe)}.ev.h{background:var(--stop-bg);color:var(--stop)}
+.src{font-size:12px;color:var(--mute);margin-top:-4px}
+.minds{display:grid;grid-template-columns:1fr;gap:10px;margin:14px 0}
+.mind{border-radius:14px;padding:12px 14px;border:1.5px solid var(--sand2)}
+.mind.o{background:var(--sand)}
+.mind.y{background:#E4ECF8;border-color:#BCD0EE}
+.mind h4{margin:0 0 4px;font:800 15px "Barlow Condensed";letter-spacing:.08em;text-transform:uppercase;color:var(--ember)}
+.mind.y h4{color:var(--ultra)}
+.mind p{margin:0;font-size:15px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:800 13px "Barlow Condensed";letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+td.n{font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+.tabs{display:flex;gap:4px;background:var(--sand);padding:4px;border-radius:12px;margin:10px 0;overflow-x:auto}
+.tabs button{flex:1;border:0;background:transparent;border-radius:9px;min-height:40px;padding:0 10px;font-weight:700;font-size:14px;white-space:nowrap;color:var(--navy)}
+.tabs button.sel{background:var(--navy);color:var(--cream)}
+[data-pane]{display:none}[data-pane].sel{display:block}
+details{background:var(--cream);border:1.5px solid var(--sand2);border-radius:12px;margin:8px 0}
+summary{list-style:none;cursor:pointer;padding:12px 44px 12px 14px;font-weight:700;position:relative;min-height:44px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";position:absolute;right:14px;top:6px;font:800 26px "Barlow Condensed";color:var(--verm);transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details .det{padding:0 14px 12px}
+.opt{display:block;width:100%;text-align:left;border:1.5px solid var(--sand2);background:var(--cream);border-radius:12px;padding:12px 14px;margin:8px 0;min-height:44px}
+.opt.right{background:var(--go-bg);border-color:var(--go)}
+.opt.wrong{background:var(--stop-bg);border-color:var(--stop)}
+.fb{display:none;border-left:4px solid var(--verm);padding:6px 12px;margin:6px 0 10px;background:var(--cream);border-radius:0 10px 10px 0;font-size:15px}
+.fb.show{display:block}
+.check{list-style:none;padding:0;margin:8px 0}
+.check li{margin:6px 0}
+.check label{display:flex;gap:12px;align-items:flex-start;background:var(--cream);border:1.5px solid var(--sand2);border-radius:12px;padding:10px 12px;min-height:44px;cursor:pointer}
+.check input{width:22px;height:22px;accent-color:var(--go);flex:none;margin-top:1px}
+.check input:checked+span{text-decoration:line-through;color:var(--mute)}
+.big{font:800 54px/1 "Barlow Condensed";color:var(--verm);font-variant-numeric:tabular-nums}
+.stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:10px 0}
+.stat>div{background:var(--cream);border:1.5px solid var(--sand2);border-radius:12px;padding:10px 12px}
+.stat .lbl{font-size:12px;color:var(--mute);line-height:1.3}
+.stat .num{font:800 34px/1.05 "Barlow Condensed";color:var(--verm);font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--verm);height:32px}
+input[type=number],input[type=text],select,textarea{font:inherit;border:1.5px solid var(--sand3);border-radius:10px;background:#fff;padding:8px 10px;min-height:44px;width:100%;color:var(--ink)}
+textarea{min-height:120px;resize:vertical}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fld label{display:block;font-size:12px;font-weight:700;color:var(--mute);margin:6px 0 3px}
+.btn{border:0;background:var(--navy);color:var(--cream);border-radius:10px;min-height:44px;padding:0 16px;font-weight:700}
+.btn.v{background:var(--verm)}
+.who{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--cream);border:2px solid var(--sand2);border-radius:16px;padding:14px;margin:10px 0;min-height:72px}
+.who .av{width:48px;height:48px;border-radius:50%;background:var(--cobalt);color:#fff;display:grid;place-items:center;font:800 24px "Barlow Condensed";flex:none}
+.who .nm{font:800 26px/1 "Barlow Condensed";text-transform:uppercase;color:var(--navy)}
+.who .rl{font-size:13px;color:var(--mute)}
+.who .ck{margin-left:auto;width:28px;height:28px;border-radius:50%;border:2px solid var(--sand3);display:grid;place-items:center;color:transparent;font-weight:800}
+.who.sel{border-color:var(--verm);background:#FFE9D9}
+.who.sel .av{background:var(--verm)}
+.who.sel .ck{background:var(--verm);border-color:var(--verm);color:#fff}
+.steps{counter-reset:s;list-style:none;padding:0;margin:10px 0}
+.steps>li{counter-increment:s;position:relative;padding:10px 12px 10px 52px;background:var(--cream);border:1.5px solid var(--sand2);border-radius:12px;margin:8px 0}
+.steps>li::before{content:counter(s);position:absolute;left:10px;top:10px;width:30px;height:30px;border-radius:50%;background:var(--navy);color:var(--cream);display:grid;place-items:center;font:800 17px "Barlow Condensed"}
+.map button{display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:center;width:100%;text-align:left;border:1.5px solid var(--sand2);background:var(--cream);border-radius:12px;padding:10px 12px;margin:8px 0;min-height:56px}
+.map .no{width:36px;height:36px;border-radius:50%;background:var(--verm);color:#fff;display:grid;place-items:center;font:800 18px "Barlow Condensed"}
+.map .sec{font:800 18px "Barlow Condensed";color:var(--ultra)}
+.bar{height:8px;border-radius:4px;background:var(--sand2);margin-top:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--cobalt);width:0;transition:width 1s .3s}
+.on .bar i{width:var(--w)}
+.sortrow{background:var(--cream);border:1.5px solid var(--sand2);border-radius:12px;padding:10px 12px;margin:8px 0}
+.sortrow .btns{display:flex;gap:8px;margin-top:8px}
+.sortrow .btns button{flex:1;min-height:44px;border-radius:10px;border:1.5px solid var(--sand3);background:#fff;font-weight:700;font-size:14px}
+.sortrow.right{background:var(--go-bg);border-color:var(--go)}
+.sortrow.wrong{background:var(--stop-bg);border-color:var(--stop)}
+.sortrow .res{display:none;font-size:14px;margin-top:6px}
+.sortrow.right .res,.sortrow.wrong .res{display:block}
+.flip{display:block;width:100%;text-align:left;border:0;padding:0;background:transparent;margin:10px 0}
+.flip .f{background:var(--sand);border-radius:14px;padding:14px 16px;border:1.5px solid var(--sand3)}
+.flip .f b{font:800 22px/1.05 "Barlow Condensed";text-transform:uppercase;color:var(--navy);display:block}
+.flip .f .hint{font:700 18px "Caveat";color:var(--ember)}
+.flip .bk{display:none;background:var(--navy);color:var(--cream);border-radius:14px;padding:14px 16px;margin-top:6px}
+.flip .bk .principle{font:700 19px/1.15 "Caveat";color:var(--gold);display:block;margin-top:6px}
+.flip.open .bk{display:block}
+.field{background:var(--navy);color:var(--cream);border-radius:18px;padding:18px;margin:12px 0}
+.field h2{color:var(--cream)}
+.field ol{margin:0;padding-left:20px}
+.field li{margin:6px 0}
+.field .g{color:var(--gold);font-weight:700}
+.sources li{font-size:13px;margin:5px 0;color:var(--mute)}
+.score{text-align:center;padding:14px;background:var(--cream);border-radius:14px;border:1.5px solid var(--sand2)}
+.score .big{font-size:84px}
+.simline{min-height:60px}
+.cmp{font-size:13px}
+.cmp b{font-variant-numeric:tabular-nums}
+.tag{font:800 12px "Barlow Condensed";letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+/* art */
+.art{margin:0 -4px 6px;display:flex;justify-content:center}
+.art svg{width:100%;max-width:420px;height:auto;max-height:200px}
+.on .breathe{animation:breathe 3.2s ease-in-out infinite}
+.on .blink{animation:blink 4s infinite;transform-box:fill-box;transform-origin:center}
+.on .talk{animation:talk .35s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
+.on .spin{animation:spin 1.4s linear infinite;transform-box:fill-box;transform-origin:center}
+.on .spinslow{animation:spin 8s linear infinite;transform-box:view-box}
+.on .drive{animation:drive 1.2s cubic-bezier(.2,.8,.3,1) both}
+.on .wave{animation:wave 1.6s ease-out infinite}
+.on .wave.w2{animation-delay:.5s}
+.on .pop{animation:pop .5s .6s both;transform-box:fill-box;transform-origin:bottom left}
+.on .swing{animation:swing 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:top center}
+.on .twinkle{animation:twinkle 1.8s ease-in-out infinite}
+.on .twinkle.t2{animation-delay:.6s}.on .twinkle.t3{animation-delay:1.2s}
+.on .grow{animation:grow 1s cubic-bezier(.2,.8,.3,1) both;transform-box:fill-box;transform-origin:bottom}
+.on .g2{animation-delay:.15s}.on .g3{animation-delay:.3s}.on .g4{animation-delay:.45s}
+.on .scan{animation:scan 3.5s ease-in-out infinite}
+.on .nod{animation:nod 2.6s ease-in-out infinite;transform-box:fill-box;transform-origin:bottom center}
+.on .pulse{animation:pulse 2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.on .draw{stroke-dasharray:300;stroke-dashoffset:300;animation:draw 1.2s .5s forwards}
+@keyframes breathe{50%{transform:translateY(-2.5px)}}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes talk{from{transform:scaleY(.4)}to{transform:scaleY(1.3)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes drive{from{transform:translateX(-340px)}to{transform:none}}
+@keyframes wave{0%{opacity:.9;transform:scale(.6)}100%{opacity:0;transform:scale(1.4)}}
+@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes swing{50%{transform:rotate(9deg)}}
+@keyframes twinkle{50%{opacity:.15}}
+@keyframes grow{from{transform:scaleY(0)}}
+@keyframes scan{50%{transform:translateX(120px)}}
+@keyframes nod{50%{transform:rotate(-4deg)}}
+@keyframes pulse{50%{transform:scale(1.06)}}
+@keyframes draw{to{stroke-dashoffset:0}}
+.wave{transform-box:fill-box;transform-origin:left center}
+@media (min-width:760px){
+  .card{padding-top:28px}
+  .minds{grid-template-columns:1fr 1fr}
+  .lead{font-size:18px}
+}
+@media (max-height:640px){
+  .card{padding-top:10px}
+  .art svg{max-height:130px}
+  h1{font-size:clamp(32px,9vw,46px)}
+  h2{font-size:clamp(26px,7vw,36px)}
+  .opt-hide{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .hl{background-size:100% 30%}
+  .bar i{width:var(--w)}
+  .draw{stroke-dashoffset:0}
+}
+</style>
+</head>
+<body>
+<div id="app">
+<header class="top">
+  <div class="top-row">
+    <button id="menuBtn" aria-label="Open list of all stops">&#9776; Menu</button>
+    <div class="tt"><div id="tTitle"></div><div id="tSub"></div></div>
+    <div id="count"></div>
+    <div id="ava">?</div>
+  </div>
+  <div class="prog" id="prog"></div>
+</header>
+
+<main id="stage">
+
+<!-- 0 SIGN IN -->
+<section class="card" data-t="Sign in" data-s="Who's prepping today?" data-short="Sign in">
+<div class="inner">
+  <div class="art" data-art="caller" data-say="Who's up?"></div>
+  <div class="eyebrow">Starwell SI · Cold Call Field Guide</div>
+  <h1>Who's <span class="hl">calling</span> today?</h1>
+  <p class="lead">Pick your name. The guide puts it into the scripts, the role-play and your confirmation texts.</p>
+  <div id="whoList"></div>
+  <p class="hand">One card at a time. Use Next at the bottom, or Menu to jump anywhere.</p>
+</div>
+</section>
+
+<!-- 1 WELCOME -->
+<section class="card" data-t="Proof, not vibes" data-s="How this guide was built" data-short="Proof first">
+<div class="inner">
+  <div class="art" data-art="shield"></div>
+  <div class="eyebrow">Start here</div>
+  <h1>Every line has a <span class="hl">receipt</span></h1>
+  <p class="lead">Hey <span class="me"></span>. This guide turns our two research files into a call you can make today. Everything you'll say traces back to a study, a dataset, or an idea we've labeled as untested.</p>
+  <div class="rule">If we can't point to where a claim came from, <b>we don't say it on a call.</b></div>
+  <h3>The honest headline</h3>
+  <p>Almost no peer-reviewed research studies cold calling directly. Only <span class="k">two of our twenty</span> approaches rest on direct sales evidence, and that evidence comes from field sales, not cold calls. About eight more rest on solid research from other settings. The rest are practitioner data or our own hypotheses.</p>
+  <h3>Read the labels</h3>
+  <details><summary><span class="ev d">Direct</span> B2B sales research</summary><div class="det">The strongest we have. Example: a meta-analysis of 155 samples and 31,000+ salespeople on adaptive selling. Lean on it.</div></details>
+  <details><summary><span class="ev t">Transferred</span> Research from another setting</summary><div class="det">Solid studies (advertising, health goals, conversations) applied to calls. It probably carries over, but nobody has tested it on an HVAC owner.</div></details>
+  <details><summary><span class="ev p">Practitioner</span> Sales industry data</summary><div class="det">Big datasets from companies like Gong and Cognism. Useful for targets, but they don't publish their methods or define "success" the same way.</div></details>
+  <details><summary><span class="ev h">Hypothesis</span> Our own idea</summary><div class="det">Makes sense, has no study behind it. We test it in our own tracker before we trust it.</div></details>
+  <div class="mission">Open all four labels. When a teammate says "studies show…", ask which label it is.</div>
+</div>
+</section>
+
+<!-- 2 REAL MATH -->
+<section class="card" data-t="The real math" data-s="Benchmarks before bravado" data-short="The real math">
+<div class="inner">
+  <div class="art" data-art="funnel"></div>
+  <div class="eyebrow">Set expectations</div>
+  <h1>Most dials <span class="hl">don't book</span>. That's the job.</h1>
+  <p>Nobody publishes an audited success rate. These are the closest real numbers we have: large studies of reps.</p>
+  <table>
+    <tr><th>Metric</th><th>Average</th><th>Top</th></tr>
+    <tr><td>Connect rate (right person answers)</td><td class="n">5.4%</td><td class="n">13.3%</td></tr>
+    <tr><td>Meetings booked per conversation</td><td class="n">4.6%</td><td class="n">16.7%</td></tr>
+    <tr><td>Dials for one conversation</td><td class="n">19</td><td class="n">8</td></tr>
+    <tr><td>Cold call success, 2024 → 2025 → 2026</td><td class="n">4.82 → 2.3 → 2.7%</td><td class="n">11.3%*</td></tr>
+    <tr><td>Avg call length, fail vs success</td><td class="n">3:14</td><td class="n">5:50</td></tr>
+  </table>
+  <p class="src"><span class="ev p">Practitioner</span> Gong Labs (300M+ calls); Cognism/WHAM. *Cognism's own SDR team, 2026.</p>
+
+  <h3>Your week, in numbers</h3>
+  <div class="box">
+    <div class="fld"><label for="dials">Dials this week: <b id="dialsOut">100</b></label>
+    <input type="range" id="dials" min="20" max="400" step="10" value="100"></div>
+    <div class="tabs" data-tabs="calc"><button data-tab="cog" class="sel">Cognism rate</button><button data-tab="gong">Gong chain</button></div>
+    <div data-pane="cog" class="sel">
+      <div class="stat">
+        <div><div class="lbl">Meetings at 2026 average (2.7% per dial)</div><div class="num" id="cogAvg">2.7</div></div>
+        <div><div class="lbl">At a top team's rate (11.3%)</div><div class="num" id="cogTop">11.3</div></div>
+      </div>
+      <p class="small">This is where the "about 40–45 dials per meeting at first" planning rule comes from.</p>
+    </div>
+    <div data-pane="gong">
+      <div class="stat">
+        <div><div class="lbl">Conversations (1 in 19 dials)</div><div class="num" id="gConv">5.3</div></div>
+        <div><div class="lbl">Meetings (4.6% of those)</div><div class="num" id="gMeet">0.2</div></div>
+        <div><div class="lbl">Top rep: conversations (1 in 8)</div><div class="num" id="gConvT">12.5</div></div>
+        <div><div class="lbl">Top rep: meetings (16.7%)</div><div class="num" id="gMeetT">2.1</div></div>
+      </div>
+    </div>
+    <p class="small"><b>Why the two disagree:</b> the sources define "success" differently, and Gong doesn't publish its method. Treat them as a range, not a promise. Our own tracker settles it.</p>
+  </div>
+
+  <h3>What the data says to do</h3>
+  <ul>
+    <li><span class="k">Say the reason for your call.</span> It's linked to <b>2.1×</b> more meetings (Gong).</li>
+    <li><span class="k">Successful calls run longer</span> (5:50 vs 3:14). If they engage, don't rush them off.</li>
+    <li><span class="k">Low connect rates usually mean bad phone data</span>, not bad reps.</li>
+  </ul>
+  <div class="minds">
+    <div class="mind o"><h4>Owner lens (Starwell)</h4><p>Plan capacity around ~40–45 dials per meeting, and judge every expert claim against this table.</p></div>
+    <div class="mind y"><h4>Caller lens</h4><p>At the 2026 average, about 97 of 100 dials end without a meeting. A "no" is the base rate, not a verdict on you.</p></div>
+  </div>
+</div>
+</section>
+
+<!-- 3 OWNER'S HEAD -->
+<section class="card" data-t="Inside the owner's head" data-s="Psychology: the person who picks up" data-short="Owner's head">
+<div class="inner">
+  <div class="art" data-art="truck"></div>
+  <div class="eyebrow">Psychology · the HVAC owner</div>
+  <h1>Five things are <span class="hl">stacked</span> against you</h1>
+  <p class="lead">Our default buyer: the owner of an established, family-run shop in Fairfield or New Haven County, roughly 10 to 45 employees, often the one who answers or returns the call.</p>
+  <ol class="steps">
+    <li><b>They didn't ask for the call.</b> You're interrupting a working day, often in the truck or on a job.</li>
+    <li><b>They decide in seconds</b> whether you're credible and relevant. Most sales calls fail before the second sentence.</li>
+    <li><b>Free cuts both ways.</b> It sparks interest and triggers "what's the catch?"</li>
+    <li><b>Saying yes can cost them.</b> Logins, staff time, data, or someone else's approval.</li>
+    <li><b>The person who answers may not decide.</b> Often it's the office manager or dispatcher.</li>
+  </ol>
+  <p><span class="ev p">Practitioner</span> Gartner's survey of 632 B2B buyers: <b>73%</b> actively avoid suppliers who send irrelevant outreach. (Skews to larger companies.)</p>
+  <h3>Tap a worry. Hear the thought.</h3>
+  <div class="tabs" data-tabs="worry">
+    <button data-tab="w1" class="sel">Strings</button><button data-tab="w2">Time</button><button data-tab="w3">Who fixes</button><button data-tab="w4">Privacy</button><button data-tab="w5">Switching</button><button data-tab="w6">Quality</button>
+  </div>
+  <div data-pane="w1" class="sel"><div class="hear">"If I say yes, I'll get chased forever."</div><div class="say">It's yours to keep, and a no ends follow-up.</div></div>
+  <div data-pane="w2"><div class="hear">"I don't have time for a meeting."</div><div class="say">Name the exact time: 15 minutes, or a text with the file.</div></div>
+  <div data-pane="w3"><div class="hear">"Who's going to do the fixes?"</div><div class="say">A fix list they can hand to their current person.</div></div>
+  <div data-pane="w4"><div class="hear">"What are you doing with my data?"</div><div class="say">The first step uses only public information. No logins.</div></div>
+  <div data-pane="w5"><div class="hear">"I already have a web person."</div><div class="say">It's a second opinion, not a replacement.</div></div>
+  <div data-pane="w6"><div class="hear">"Free means junk."</div><div class="say">Show the method and the date. Show the work.</div></div>
+  <div class="mission">Before your first dial, say each answer out loud once, in your own words.</div>
+</div>
+</section>
+
+<!-- 4 YOUR HEAD -->
+<section class="card" data-t="Inside your head" data-s="Psychology: the person dialing" data-short="Your head">
+<div class="inner">
+  <div class="art" data-art="caller" data-say="Next dial."></div>
+  <div class="eyebrow">Psychology · you, the caller</div>
+  <h1>Calm comes from <span class="hl">knowing the odds</span></h1>
+  <p class="lead"><span class="me"></span>, here's what the research means for how you carry yourself on the phone.</p>
+  <details open><summary>1. A "no" is the base rate</summary><div class="det">Even top teams book on about 11% of dials (Cognism). At the 2026 average of 2.7%, almost every dial ends without a meeting. You're not failing; you're sampling. <span class="ev p">Practitioner</span></div></details>
+  <details><summary>2. Silence usually isn't about you</summary><div class="det">Low connect rates usually mean bad phone data, not bad reps. If nobody's picking up, fix the list before you fix yourself.</div></details>
+  <details><summary>3. Your voice is the first demo</summary><div class="det">People form fast impressions of warmth and competence from very short slices of behavior (Ambady et al., thin-slice judgments of sales managers). On the phone, your voice is the only signal. <b>Slow down, smile while speaking, pause after the reason for calling.</b> A calm delivery makes the free offer sound generous instead of desperate. <span class="ev d">Direct, partly</span><br><small>Forced cheerfulness sounds fake. We couldn't read the full paper, so don't quote its numbers.</small></div></details>
+  <details><summary>4. You're bringing a finished thing</summary><div class="det">You aren't asking for a favor. You're offering a specific, bounded piece of work the owner keeps either way. That changes your posture from asking to giving.</div></details>
+  <details><summary>5. One clarify, then let go</summary><div class="det">Each objection gets one clarifying answer. If the second answer is still no, accept it and end politely. That protects the owner's trust and your energy.</div></details>
+  <details><summary>6. Daily block, no exceptions</summary><div class="det">Jeb Blount's rule: prospect every day. Block the time, track dials → conversations → meetings, and log every call within the hour.</div></details>
+  <div class="box"><div class="tag">Before every dial</div>
+    <ul class="check">
+      <li><label><input type="checkbox"><span>Slow down</span></label></li>
+      <li><label><input type="checkbox"><span>Smile while you speak</span></label></li>
+      <li><label><input type="checkbox"><span>Pause after the reason</span></label></li>
+    </ul>
+  </div>
+  <div class="minds">
+    <div class="mind o"><h4>What the owner hears</h4><p>A neighbor with a reason, or a script. They can tell within seconds.</p></div>
+    <div class="mind y"><h4>What you feel</h4><p>An urge to rush or soften. The fix is the same both times: slow down, give the reason, pause.</p></div>
+  </div>
+</div>
+</section>
+
+<!-- 5 MAP -->
+<section class="card" data-t="The 2-minute map" data-s="Five steps, every call" data-short="The call map">
+<div class="inner">
+  <div class="art" data-art="clock"></div>
+  <div class="eyebrow">Call structure</div>
+  <h1>Five steps. About <span class="hl">two minutes</span>.</h1>
+  <p class="lead">If it goes well, this is the whole call. Tap a step to train it.</p>
+  <div class="map">
+    <button data-go="6"><span class="no">1</span><span><b>Opener</b><br><small>Name, company, cold call, one reason</small><div class="bar"><i style="--w:13%"></i></div></span><span class="sec">10s</span></button>
+    <button data-go="7"><span class="no">2</span><span><b>Relevance</b><br><small>One verified observation about them</small><div class="bar"><i style="--w:19%"></i></div></span><span class="sec">15s</span></button>
+    <button data-go="8"><span class="no">3</span><span><b>One question</b><br><small>A recent real event. Listen, one follow-up</small><div class="bar"><i style="--w:75%"></i></div></span><span class="sec">30–60s</span></button>
+    <button data-go="9"><span class="no">4</span><span><b>Value</b><br><small>The bounded deliverable, why it's free, one limit</small><div class="bar"><i style="--w:19%"></i></div></span><span class="sec">15s</span></button>
+    <button data-go="10"><span class="no">5</span><span><b>Next step</b><br><small>Date, length, format, or a clean no</small><div class="bar"><i style="--w:19%"></i></div></span><span class="sec">15s</span></button>
+  </div>
+  <div class="rule">The longest step is the one where <b>they</b> talk.</div>
+  <p class="small">Following our Promise Chain method, every script leads with the owner's problem, not with AI.</p>
+</div>
+</section>
+
+<!-- 6 OPENER -->
+<section class="card" data-t="Step 1 · Opener" data-s="Name the reason" data-short="Step 1: Opener">
+<div class="inner">
+  <div class="art" data-art="phone"></div>
+  <div class="eyebrow">Step 1 · 10 seconds</div>
+  <h1>Name the <span class="hl">reason</span> first</h1>
+  <p><span class="ev p">Practitioner</span> <span class="pill go">Test first</span></p>
+  <p class="lead">In the first ten seconds: your name, Starwell, that this is a cold call, and the <span class="k">one specific reason</span> you're calling them.</p>
+  <div class="say">Hi Craig, this is <span class="me"></span> with Starwell in <span class="town"></span>. This is a cold call, so I'll be quick. I'm calling about one thing I noticed on your website.</div>
+  <div class="why">Removes "who is this and what do they want?" so they can judge relevance.</div>
+  <h3>The numbers</h3>
+  <ul>
+    <li>Gong: a permission-based opener at <b>11.18%</b> success vs <b>2.15%</b> for "Did I catch you at a bad time?" <small>(Gong doesn't define success or publish its method.)</small></li>
+    <li>Stating the reason for the call: <b>2.1×</b> meetings (Gong).</li>
+    <li>73% of B2B buyers avoid irrelevant outreach (Gartner, 632 buyers).</li>
+  </ul>
+  <h3>Quick check: best opener?</h3>
+  <div class="quiz">
+    <button class="opt" data-why="Gong's worst opener in the dataset (2.15%). It hands them an easy exit and says nothing about why you called.">"Hi Craig, did I catch you at a bad time?"</button>
+    <button class="opt" data-ok="1" data-why="Name, company, honest about the cold call, one specific reason. That's the full formula.">"Hi Craig, <span class="me"></span> with Starwell in <span class="town"></span>. Cold call, I'll be quick. I'm calling about your after-hours calls."</button>
+    <button class="opt" data-why="A generic reason confirms suspicion, and leading with AI breaks the Promise Chain rule: problem first.">"Hi Craig! We help HVAC businesses grow with AI. Got a minute?"</button>
+    <div class="fb"></div>
+  </div>
+  <h3>When it backfires</h3>
+  <p>The stated reason is generic ("helping businesses grow"). Or "this is a cold call" comes out like a memorized gimmick. Say it like a neighbor.</p>
+  <div class="minds">
+    <div class="mind o"><h4>Owner hears</h4><p>"Unknown number. Sales? Scam? What do they want?" Uncertainty is the enemy. Remove it.</p></div>
+    <div class="mind y"><h4>You feel</h4><p>The pull to soften with "bad time?" Don't. Honesty about the cold call is the softener.</p></div>
+  </div>
+  <div class="mission">Record yourself saying the opener three times. Keep the version that sounds least like a script.</div>
+</div>
+</section>
+
+<!-- 7 OBSERVATION -->
+<section class="card" data-t="Step 2 · Relevance" data-s="One true thing" data-short="Step 2: Relevance">
+<div class="inner">
+  <div class="art" data-art="magnify"></div>
+  <div class="eyebrow">Step 2 · 15 seconds</div>
+  <h1>Lead with <span class="hl">one true thing</span></h1>
+  <p><span class="ev t">Transferred</span> <span class="pill go">Test first</span></p>
+  <p class="lead">One specific, checkable fact about their shop, found before you dial. It proves relevance and homework in a single sentence.</p>
+  <div class="say">Your site says the office closes at [VERIFY: time], and I didn't see a way to book after that. I'm curious how evening calls get handled.</div>
+  <p class="src">Evidence: field experiments found adding a name to email subject lines raised opens and later outcomes (Sahni et al., 2018). Gartner's buyers punish irrelevance. No peer-reviewed cold call study exists.</p>
+  <h3>Where to find it</h3>
+  <table>
+    <tr><th>Look at</th><th>What you might find</th><th>Service</th></tr>
+    <tr><td>Website hours & booking</td><td>No way to book after close</td><td>Voice agents</td></tr>
+    <tr><td>ChatGPT / Google AI</td><td>"Furnace repair in [town]" lists other shops</td><td>Website / AEO</td></tr>
+    <tr><td>Facebook / Instagram</td><td>Last post date; review replies</td><td>Social</td></tr>
+    <tr><td>Careers page</td><td>Hiring a dispatcher or techs</td><td>Apps</td></tr>
+  </table>
+  <h3>Use it or skip it?</h3>
+  <div class="sort">
+    <div class="sortrow" data-ans="use" data-why="Factual, checkable, links to money. Verify the month first.">"Your last Facebook post was in March." <div class="btns"><button data-pick="use">Use it</button><button data-pick="skip">Skip it</button></div><div class="res"></div></div>
+    <div class="sortrow" data-ans="skip" data-why="Sounds like criticism. Triggers defensiveness.">"Honestly your website looks pretty outdated." <div class="btns"><button data-pick="use">Use it</button><button data-pick="skip">Skip it</button></div><div class="res"></div></div>
+    <div class="sortrow" data-ans="use" data-why="Public, specific, and a natural opener for the handoff question.">"I noticed you're hiring a dispatcher." <div class="btns"><button data-pick="use">Use it</button><button data-pick="skip">Skip it</button></div><div class="res"></div></div>
+    <div class="sortrow" data-ans="skip" data-why="Too much detail feels like surveillance.">"I saw your house on Street View, nice truck in the driveway." <div class="btns"><button data-pick="use">Use it</button><button data-pick="skip">Skip it</button></div><div class="res"></div></div>
+    <div class="sortrow" data-ans="use" data-why="Strong, but only if you ran the search yourself and screenshotted it with the date.">"I asked ChatGPT who does furnace repair in Ansonia, and three other shops came up." <div class="btns"><button data-pick="use">Use it</button><button data-pick="skip">Skip it</button></div><div class="res"></div></div>
+    <div class="sortrow" data-ans="skip" data-why="Generic. Not about them at all.">"We help local businesses like yours grow." <div class="btns"><button data-pick="use">Use it</button><button data-pick="skip">Skip it</button></div><div class="res"></div></div>
+  </div>
+  <div class="rule">A wrong or stale fact <b>destroys credibility instantly.</b> Verify every [VERIFY] before the call.</div>
+  <div class="minds">
+    <div class="mind o"><h4>Owner hears</h4><p>"They actually looked at my shop." Homework reads as competence and respect for their time.</p></div>
+    <div class="mind y"><h4>You feel</h4><p>Confident, because you're stating a fact you checked, not a pitch you memorized.</p></div>
+  </div>
+</div>
+</section>
+
+<!-- 8 QUESTION -->
+<section class="card" data-t="Step 3 · One question" data-s="Last week, not someday" data-short="Step 3: Question">
+<div class="inner">
+  <div class="art" data-art="talk"></div>
+  <div class="eyebrow">Step 3 · 30–60 seconds</div>
+  <h1>Ask about <span class="hl">last week</span>, then adapt</h1>
+  <p><span class="ev d">Direct · High</span> <span class="pill go">Strongest evidence we have</span></p>
+  <p class="lead">Ask one question about something that actually happened recently. Listen. Shape the rest of the call around the answer instead of running the full pitch.</p>
+  <div class="say">Quick question before I say anything else: when a call came in after hours last week, what happened to it?</div>
+  <p class="src">Franke & Park (2006): meta-analysis of 155 samples, 31,000+ salespeople. Adaptive selling improved self-rated, manager-rated and objective performance. Customer orientation alone improved only self-rated performance, and it has an optimum (Homburg et al., 2011). Field sales, not cold calls.</p>
+  <h3>Three moves after they answer</h3>
+  <ol class="steps">
+    <li><b>One follow-up.</b> "You said Sarah handles the callbacks. What happens on her day off?" Follow-up questions increase liking (Huang et al., 2017). <span class="ev t">Transferred</span></li>
+    <li><b>Ask for their expertise.</b> "You've run this shop for 30 years. What's the one thing new homeowners get wrong when they call you?" Advice seekers are seen as more competent (Brooks et al., 2015). <span class="ev t">Transferred</span></li>
+    <li><b>Let them do the math.</b> "You said about five calls go to voicemail on a busy night. What's a typical repair worth to you?" Never invent the figure. <span class="ev t">Transferred · weak</span></li>
+  </ol>
+  <h3>Last week or someday?</h3>
+  <p class="small">Future questions get polite guesses. Recent-event questions get facts.</p>
+  <div class="sort">
+    <div class="sortrow" data-ans="use" data-why="A real event. You'll get a fact.">"What happened to the calls that came in Saturday?" <div class="btns"><button data-pick="use">Last week</button><button data-pick="skip">Someday</button></div><div class="res"></div></div>
+    <div class="sortrow" data-ans="skip" data-why="Hypothetical. You'll get a polite guess.">"Would you ever consider an AI receptionist?" <div class="btns"><button data-pick="use">Last week</button><button data-pick="skip">Someday</button></div><div class="res"></div></div>
+    <div class="sortrow" data-ans="use" data-why="Recent and concrete.">"Who posted the last job photo on your page?" <div class="btns"><button data-pick="use">Last week</button><button data-pick="skip">Someday</button></div><div class="res"></div></div>
+    <div class="sortrow" data-ans="skip" data-why="Future-facing, and it pitches before listening.">"If we could double your leads, would you be interested?" <div class="btns"><button data-pick="use">Last week</button><button data-pick="skip">Someday</button></div><div class="res"></div></div>
+  </div>
+  <div class="rule">Three or more questions before you give anything back <b>turns into an interrogation.</b></div>
+  <div class="minds">
+    <div class="mind o"><h4>Owner hears</h4><p>Someone responding to <i>their</i> shop. The free offer is chosen after their answer, so it fits the leak they described.</p></div>
+    <div class="mind y"><h4>You feel</h4><p>Relief. You don't have to guess which service to pitch. They'll tell you.</p></div>
+  </div>
+</div>
+</section>
+
+<!-- 9 VALUE -->
+<section class="card" data-t="Step 4 · Value" data-s="A thing, not a meeting" data-short="Step 4: Value">
+<div class="inner">
+  <div class="art" data-art="gift"></div>
+  <div class="eyebrow">Step 4 · 15 seconds</div>
+  <h1>Offer a <span class="hl">thing</span>, not a meeting</h1>
+  <p class="lead">Four parts, said in about 15 seconds.</p>
+  <ol class="steps">
+    <li><b>A bounded deliverable.</b> A named thing with a clear size. Never "a free consultation." <span class="ev t">Transferred</span><br><small>Concrete offers are processed more fluently, and fluent information is judged as truer and more likable (Alter & Oppenheimer, 2009).</small></li>
+    <li><b>Why it's free, in one sentence.</b> Same words every time, then stop talking. <span class="ev t">Transferred</span><br><small>When people spot a persuasion attempt, they hunt for the hidden motive (Friestad & Wright, 1994). Name it yourself.</small></li>
+    <li><b>One limit.</b> What it won't do. <span class="ev t">Transferred</span><br><small>Admitting a drawback can raise credibility (Eisend, 2006, two-sided advertising meta-analysis).</small></li>
+    <li><b>No access, no work.</b> Built from public info only. <span class="ev h">Hypothesis</span></li>
+  </ol>
+  <div class="rule">The why-free sentence: <b>"It's free because we're building our HVAC client base, and showing real work is the fastest way to earn a second conversation."</b></div>
+  <div class="say">I made a one-page snapshot. It takes 15 minutes to walk through, and you keep it either way. I can't promise you'll show up in ChatGPT; nobody controls that. What I can show you is what it says today.</div>
+  <p class="hand">Give one finding on the call, free, right away. Never hold the snapshot hostage for a meeting.</p>
+
+  <h3>Pick the offer that fits their answer</h3>
+  <div class="tabs" data-tabs="offers"><button data-tab="o1" class="sel">Website</button><button data-tab="o2">Social</button><button data-tab="o3">Voice</button><button data-tab="o4">App</button></div>
+  <div data-pane="o1" class="sel">
+    <div class="box"><b>A. AI answer snapshot</b><br>One page: ten local questions asked to ChatGPT, Gemini, Perplexity and Google, with screenshots and the date. A sample only; no ranking promise.<br><small>Them: nothing · Us: ~2 hrs · Paid next: site + SEO/AEO/GEO project</small></div>
+    <div class="box"><b>B. Five-fix list</b><br>The five changes most likely to matter on their site and Google Business Profile, written so their current person can do them.<br><small>Them: nothing · Us: ~1.5 hrs · Paid next: we make the fixes</small></div>
+  </div>
+  <div data-pane="o2">
+    <div class="box"><b>A. Profile check</b><br>Their pages next to three local competitors: posting frequency, review replies, booking link. Public data only.<br><small>Them: nothing · Us: ~1.5 hrs · Paid next: social system setup</small></div>
+    <div class="box"><b>B. First-month calendar</b><br>30-day post calendar with captions, built from 10 photos the owner sends. They post it. One month only.<br><small>Them: send 10 photos · Us: ~3 hrs · Paid next: managed posting</small></div>
+  </div>
+  <div data-pane="o3">
+    <div class="box"><b>A. After-hours call map</b><br>With the owner's permission, three test calls at agreed times, then a report of what a caller hears. Never a secret shopper.<br><small>Them: a yes + call times · Us: ~1 hr · Paid next: missed-call recovery pilot</small></div>
+    <div class="box"><b>B. Demo number</b><br>A test voice agent trained only on public info, on a separate number, not connected to their line, deleted after 14 days. It says it's an AI.<br><small>Them: call it a few times · Us: ~3 hrs + usage · Paid next: voice agent pilot</small></div>
+  </div>
+  <div data-pane="o4">
+    <div class="box"><b>A. Handoff sketch</b><br>30-minute talk about one handoff, then a clickable mockup of up to three screens. A picture, not working software.<br><small>Them: 30 min · Us: ~4 hrs · Paid next: scoped build</small></div>
+    <div class="box"><b>B. Build-or-buy check</b><br>One page: can tools they already pay for do it? Often the honest answer is "don't build."<br><small>Them: a list of tools · Us: ~2 hrs · Paid next: setup help or scoped build</small></div>
+  </div>
+  <p class="small">All eight are proposals. Effort times are our estimates, not measured. No free subscriptions, no promised results.</p>
+  <div class="minds">
+    <div class="mind o"><h4>Owner hears</h4><p>"I can picture it, I know how long it takes, and I don't owe anything." Three worries answered at once.</p></div>
+    <div class="mind y"><h4>You feel</h4><p>Steady. One sentence of why, then silence. Long explanations sound like hiding something.</p></div>
+  </div>
+</div>
+</section>
+
+<!-- 10 NEXT STEP -->
+<section class="card" data-t="Step 5 · Next step" data-s="Pin the date" data-short="Step 5: Next step">
+<div class="inner">
+  <div class="art" data-art="calendar"></div>
+  <div class="eyebrow">Step 5 · 15 seconds</div>
+  <h1>Pin a <span class="hl">date</span>, or take a clean no</h1>
+  <div class="say">Tuesday at 7:30 before the trucks go out? I'll text you the snapshot link the night before, and it's 15 minutes. If it's not useful, just say so and I won't follow up.</div>
+  <h3>Why each piece is there</h3>
+  <details open><summary><span class="ev t">Transferred · High</span> Date + agenda</summary><div class="det">Implementation intentions ("if X, then I do Y") make follow-through far more likely: meta-analysis of 94 tests, d = .65 (Gollwitzer & Sheeran, 2006). Health and study goals, not sales meetings. Agree on day, time, place or link, who attends, what they'll see, then send it in writing.</div></details>
+  <details><summary><span class="ev t">Transferred · Mixed</span> Freedom to say no</summary><div class="det">Reactance: people push back when their freedom feels threatened. A 2023 meta-analysis of 52 experiments found g = 0.44, but the seven low-bias studies showed a near-zero effect (g = 0.11). Say it <b>once</b>, mean it, and never follow up after a no.</div></details>
+  <details><summary><span class="ev t">Transferred · Low</span> Start small</summary><div class="det">Foot-in-the-door is real but small and conditional (Burger, 1999). Ask for 15 minutes, not an hour. No hidden escalation ("while I have you…").</div></details>
+
+  <h3>Build the confirmation text</h3>
+  <div class="box">
+    <div class="grid2">
+      <div class="fld"><label for="cName">Owner's first name</label><input type="text" id="cName" value="Craig"></div>
+      <div class="fld"><label for="cDay">Day</label><select id="cDay"><option>Monday</option><option selected>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option></select></div>
+      <div class="fld"><label for="cTime">Time</label><select id="cTime"><option>7:00am</option><option selected>7:30am</option><option>8:00am</option><option>4:30pm</option><option>5:30pm</option><option>6:30pm</option></select></div>
+      <div class="fld"><label for="cFmt">Format</label><select id="cFmt"><option value="call">15-min phone walkthrough</option><option value="visit">15 min at the shop</option><option value="text">Text the file, then a quick call</option></select></div>
+    </div>
+    <div class="fld"><label for="cOffer">What they'll see</label><select id="cOffer">
+      <option>the one-page AI answer snapshot for your shop</option><option>the five-fix list for your site and Google profile</option><option>your social pages next to three local shops</option><option>your first-month post calendar</option><option>what a caller hears after hours (from the three test calls)</option><option>the demo voice agent number</option><option>a quick sketch of that handoff as a few screens</option><option>the one-page build-or-buy answer</option>
+    </select></div>
+    <div class="fld"><label for="cOut">Your text</label><textarea id="cOut" readonly></textarea></div>
+    <button class="btn v" id="cCopy">Copy text</button> <span class="small" id="cMsg"></span>
+  </div>
+  <p class="small">Early morning or evening, outside busy hours, is our guess for owner-led shops. It's untested; the tracker will tell us.</p>
+  <div class="minds">
+    <div class="mind o"><h4>Owner hears</h4><p>A small, finished event with an end time, not an open-ended meeting that eats the morning.</p></div>
+    <div class="mind y"><h4>You feel</h4><p>Tempted to push after a soft no. Don't. Pushing for a date after a soft no reads as pressure.</p></div>
+  </div>
+</div>
+</section>
+
+<!-- 11 FREE -->
+<section class="card" data-t="Free without the hook" data-s="The psychology of free" data-short="Psychology of free">
+<div class="inner">
+  <div class="art" data-art="gift"></div>
+  <div class="eyebrow">Psychology · free</div>
+  <h1>Free helps. Free <span class="hl">also hurts</span>.</h1>
+  <ul>
+    <li><b>It pulls.</b> Making a cheap chocolate free instead of one cent shifted choices sharply (Shampanier, Mazar & Ariely, 2007). But that was cheap, low-stakes items. Who touches your website or phones is not low-stakes.</li>
+    <li><b>It can cheapen.</b> Offering an item free can make people value it less (Raghubir, 2004).</li>
+    <li><b>It raises suspicion.</b> Sensing a tactic, people look for the hidden motive (Friestad & Wright, 1994).</li>
+  </ul>
+  <div class="rule">Free works when it's <b>specific, small, clearly ours, and clearly explained.</b> It hurts when it's vague, unexplained, or looks like a hook.</div>
+  <h3>Protect the paid work</h3>
+  <ul class="check">
+    <li><label><input type="checkbox"><span>The free piece is the diagnosis, never the fix.</span></label></li>
+    <li><label><input type="checkbox"><span>Show the full method so the work looks like work.</span></label></li>
+    <li><label><input type="checkbox"><span>Never discount the paid service to close.</span></label></li>
+    <li><label><input type="checkbox"><span>Cap free effort per prospect (proposal: 3 hours) and log it.</span></label></li>
+  </ul>
+  <p class="small">Showing the work behind a result raised perceived value in online experiments (Buell & Norton, 2011, "labor illusion"). <span class="ev t">Transferred</span></p>
+  <h3>Buyer or freebie hunter?</h3>
+  <div class="sort">
+    <div class="sortrow" data-ans="use" data-why="A named problem with a cost.">"We lose calls every Saturday." <div class="btns"><button data-pick="use">Buyer</button><button data-pick="skip">Freebie</button></div><div class="res"></div></div>
+    <div class="sortrow" data-ans="skip" data-why="No discussion, no problem named.">"Just send everything over." <div class="btns"><button data-pick="use">Buyer</button><button data-pick="skip">Freebie</button></div><div class="res"></div></div>
+    <div class="sortrow" data-ans="use" data-why="Asking how paid works is a buying signal.">"How does it work if we actually hired you?" <div class="btns"><button data-pick="use">Buyer</button><button data-pick="skip">Freebie</button></div><div class="res"></div></div>
+    <div class="sortrow" data-ans="skip" data-why="Asking for more free items after the first.">"Could you also do our Instagram and the website for free?" <div class="btns"><button data-pick="use">Buyer</button><button data-pick="skip">Freebie</button></div><div class="res"></div></div>
+    <div class="sortrow" data-ans="use" data-why="Bringing in the person who runs the process.">"Let me get my office manager on the walkthrough." <div class="btns"><button data-pick="use">Buyer</button><button data-pick="skip">Freebie</button></div><div class="res"></div></div>
+    <div class="sortrow" data-ans="skip" data-why="Won't set a date for the walkthrough.">"Sounds great, call me sometime." <div class="btns"><button data-pick="use">Buyer</button><button data-pick="skip">Freebie</button></div><div class="res"></div></div>
+  </div>
+  <div class="mission">At every walkthrough, ask: <span class="q">If this turned out to be a real problem, is it something you'd fix this season, or is it a later thing?</span></div>
+</div>
+</section>
+
+<!-- 12 WHO PICKS UP -->
+<section class="card" data-t="Who picks up" data-s="Gatekeepers and company size" data-short="Who picks up">
+<div class="inner">
+  <div class="art" data-art="truck"></div>
+  <div class="eyebrow">Know your buyer</div>
+  <h1>The gatekeeper is an <span class="hl">ally</span></h1>
+  <p class="lead">At an owner-led shop, the office manager or spouse knows the shop better than anyone. Treat them that way.</p>
+  <div class="tabs" data-tabs="size"><button data-tab="s1" class="sel">Owner-led shop</button><button data-tab="s2">Larger company</button></div>
+  <div data-pane="s1" class="sel"><table>
+    <tr><th>Who decides</th><td>The owner, usually alone, often fast</td></tr>
+    <tr><th>Gatekeeper</th><td>Office manager or spouse: an ally who knows the shop</td></tr>
+    <tr><th>Earns trust</th><td>Local, personal, specific, respects their time</td></tr>
+    <tr><th>Free offer</th><td>A snapshot they can look at in 15 minutes</td></tr>
+    <tr><th>Access</th><td>Possible after trust; owner can approve on the spot</td></tr>
+    <tr><th>Next step</th><td>Early morning or evening walkthrough</td></tr>
+  </table></div>
+  <div data-pane="s2"><table>
+    <tr><th>Who decides</th><td>A group; they prefer to research on their own</td></tr>
+    <tr><th>Gatekeeper</th><td>Reception or a formal procurement path</td></tr>
+    <tr><th>Earns trust</th><td>Documented process, security, references, written terms</td></tr>
+    <tr><th>Free offer</th><td>A written summary that can be forwarded</td></tr>
+    <tr><th>Access</th><td>Avoid entirely at first; IT approval takes weeks</td></tr>
+    <tr><th>Next step</th><td>Scheduled meeting with the right people invited</td></tr>
+  </table>
+  <div class="box"><b>Aaron Ross's referral ask</b> (built for mid-market, customer lifetime value over $10,000): email the CEO or COO asking who owns website, marketing or phones, then call that person and mention the referral. <small>Credited with $100M in recurring revenue at Salesforce.</small></div></div>
+  <h3>When they say "I'm not the decision maker"</h3>
+  <div class="say">Thanks for telling me. Who handles the website (or phones) at the shop? And would you mind if I mentioned you suggested I reach out?</div>
+  <div class="why">Only use their name if they say yes.</div>
+  <div class="minds">
+    <div class="mind o"><h4>The office manager thinks</h4><p>"My job is to protect the owner's time." Help them do that job: be short, be specific, ask their advice.</p></div>
+    <div class="mind y"><h4>You feel</h4><p>Blocked. Reframe: this person often knows exactly where calls get dropped.</p></div>
+  </div>
+</div>
+</section>
+
+<!-- 13 SCRIPTS -->
+<section class="card" data-t="Four scripts" data-s="Annotated, per service" data-short="Four scripts">
+<div class="inner">
+  <div class="art" data-art="caller" data-say="30–45 sec."></div>
+  <div class="eyebrow">Say it out loud</div>
+  <h1>Four <span class="hl">scripts</span>, every line explained</h1>
+  <p>Each opening pitch runs about 30 to 45 seconds. Fill every [VERIFY] before you dial.</p>
+  <div class="tabs" data-tabs="scripts"><button data-tab="sc1" class="sel">Website</button><button data-tab="sc2">Social</button><button data-tab="sc3">Voice</button><button data-tab="sc4">App</button></div>
+  <div data-pane="sc1" class="sel">
+    <div class="say">Hi [Owner], this is <span class="me"></span> with Starwell, here in <span class="town"></span>. This is a cold call, so I'll keep it under a minute.</div><div class="why">Reason-first opener (#2). Local, honest.</div>
+    <div class="say">I asked ChatGPT and Google's AI who does furnace repair in [town], and [VERIFY: what came up].</div><div class="why">Verified observation (#3). One finding given away now.</div>
+    <div class="say">I put it on one page with screenshots and the three things on your site most likely behind it. Nobody can promise where AI sends people, so I won't.</div><div class="why">Bounded deliverable (#4) + one limit (#7).</div>
+    <div class="say">It's free; we're building our HVAC client base and want to show real work first. Want me to walk you through it in 15 minutes, or just text it to you? Either is fine.</div><div class="why">Why free (#6) + freedom to decline (#5).</div>
+  </div>
+  <div data-pane="sc2">
+    <div class="say">Hi [Owner], <span class="me"></span> with Starwell in <span class="town"></span>. Cold call, I'll be quick. I'm calling about your Facebook page.</div><div class="why">Reason-first opener (#2).</div>
+    <div class="say">Your last post was [VERIFY: month], and you've got great reviews on Google. Quick question: who handles posting at the shop right now?</div><div class="why">Observation + one question (#3, #1). The compliment is factual.</div>
+    <div class="hear">(Listen to the answer.)</div>
+    <div class="say">If you send me ten job photos you're proud of, I'll turn them into a month of posts with captions. You post them, you keep them.</div><div class="why">Owner input (#16) filters for real interest.</div>
+    <div class="say">It's one month, free, no contract after. If it's not for you, no problem at all.</div><div class="why">Boundary + freedom to decline.</div>
+  </div>
+  <div data-pane="sc3">
+    <div class="say">Hi [Owner], <span class="me"></span> with Starwell in <span class="town"></span>. This is a cold call about one thing: calls that come in after hours.</div><div class="why">Reason-first opener (#2). No mention of AI yet.</div>
+    <div class="say">Your site says the office closes at [VERIFY: time]. When a call came in last night after that, what happened to it?</div><div class="why">Observation + recent-event question (#3, #1). Listen.</div>
+    <div class="hear">(If it's a real leak.)</div>
+    <div class="say">With your OK, we'd place three test calls at times you pick and show you exactly what a caller hears. Takes you nothing but a yes.</div><div class="why">Permission-based, zero access (#12).</div>
+    <div class="say">It's free, and if your calls are covered, I'll tell you that and we're done.</div><div class="why">Two-sided (#7) + freedom to decline (#5).</div>
+  </div>
+  <div data-pane="sc4">
+    <div class="say">Hi [Owner], <span class="me"></span> with Starwell in <span class="town"></span>. Cold call, under a minute. I noticed you're hiring [VERIFY: role from careers page].</div><div class="why">Opener + observation (#2, #3).</div>
+    <div class="say">Growing shops usually hit one handoff that still runs on paper or texts. Which one drives you nuts?</div><div class="why">Advice-seeking framing (#14). They're the expert.</div>
+    <div class="say">I can sketch what that would look like as a few simple screens, free, in about a week. Sometimes the honest answer is that a tool you already pay for does it, and I'll tell you if so.</div><div class="why">Bounded deliverable (#4) + build-or-buy honesty (#7).</div>
+    <div class="say">Would a 30-minute chat next week work, say Tuesday at 7:30 before the trucks go out?</div><div class="why">Dated next step (#8).</div>
+  </div>
+  <div class="mission">Read your service's script aloud twice, then say it once without looking.</div>
+</div>
+</section>
+
+<!-- 14 OBJECTIONS -->
+<section class="card" data-t="Objection gym" data-s="Eight reps" data-short="Objection gym">
+<div class="inner">
+  <div class="art" data-art="talk"></div>
+  <div class="eyebrow">Practice</div>
+  <h1>Clarify <span class="hl">once</span>. Then let go.</h1>
+  <p class="lead">Say your answer out loud first. Then tap to flip and compare.</p>
+  <div class="rule">Each answer clarifies once. If the second answer is still no, <b>accept it and end the call politely.</b></div>
+  <div id="objList"></div>
+</div>
+</section>
+
+<!-- 15 SIM -->
+<section class="card" data-t="Live role-play" data-s="Pick your line, see the evidence" data-short="Live role-play">
+<div class="inner">
+  <div class="art" data-art="truck"></div>
+  <div class="eyebrow">Simulator</div>
+  <h1>Call <span class="hl">Craig</span></h1>
+  <p class="lead">Craig owns a 20-person HVAC shop. He picks up in his truck. Choose what you'd actually say.</p>
+  <div id="sim"></div>
+</div>
+</section>
+
+<!-- 16 FOLLOW UP -->
+<section class="card" data-t="Voicemail & follow-up" data-s="Calls make emails work" data-short="Follow-up web">
+<div class="inner">
+  <div class="art" data-art="phone"></div>
+  <div class="eyebrow">After the dial</div>
+  <h1>Leave a voicemail. <span class="hl">Every time.</span></h1>
+  <div class="stat">
+    <div><div class="lbl">Email reply rate, no prior call</div><div class="num">1.81%</div></div>
+    <div><div class="lbl">With a call first</div><div class="num">3.44%</div></div>
+    <div><div class="lbl">Email reply, no voicemail</div><div class="num">2.73%</div></div>
+    <div><div class="lbl">With a voicemail left</div><div class="num">5.87%</div></div>
+  </div>
+  <p class="src"><span class="ev p">Practitioner</span> Gong / Gong Labs. Calls make emails work better, so run call, email and LinkedIn together.</p>
+  <h3>A voicemail built on the same rules</h3>
+  <div class="say">Hi [Owner], <span class="me"></span> with Starwell in <span class="town"></span>. Cold call about one thing: [VERIFY: your observation]. I put together a one-page snapshot on it; it's yours either way. I'll text it over. My number is [your number].</div>
+  <div class="why">Our wording, built from the reason-first opener (#2), one verified observation (#3) and no-strings value (#18).</div>
+  <h3>The three-week web (Jason Bay)</h3>
+  <ol class="steps">
+    <li><b>Same day:</b> call with the reason first, leave a voicemail, then send the free asset by email (and LinkedIn video where it fits).</li>
+    <li><b>Weeks 1–3:</b> follow up across call, email and LinkedIn. The goal of every touch is a meeting, not a close.</li>
+    <li><b>After 3 weeks:</b> cycle the account back into the target list (Chet Holmes's Dream 100 runs 12–18 months).</li>
+  </ol>
+  <div class="rule">The sequence is for people <b>we haven't reached</b>. A "no" ends follow-up the same day.</div>
+  <p class="small">Free audits fail when they feel like homework (Nick Saraev). Send something finished that takes under 2 minutes to watch.</p>
+</div>
+</section>
+
+<!-- 17 PREP -->
+<section class="card" data-t="Pre-call prep" data-s="Ten minutes per account" data-short="Pre-call prep">
+<div class="inner">
+  <div class="art" data-art="magnify"></div>
+  <div class="eyebrow">Before you dial</div>
+  <h1>Prep like it's <span class="hl">real</span></h1>
+  <p class="lead">About 10 minutes of research per account (Eric Nowoslawski). One researched "why now" premise, used in every touch (Becc Holland).</p>
+  <ul class="check" id="prepList">
+    <li><label><input type="checkbox"><span>Prospect is on our CT list; owner-led or larger is noted</span></label></li>
+    <li><label><input type="checkbox"><span>Do-not-call list checked</span></label></li>
+    <li><label><input type="checkbox"><span>One verified observation, with the link saved and the date checked</span></label></li>
+    <li><label><input type="checkbox"><span>Every [VERIFY] placeholder in my script is filled</span></label></li>
+    <li><label><input type="checkbox"><span>One free offer picked for this account</span></label></li>
+    <li><label><input type="checkbox"><span>Why-free sentence memorized word for word</span></label></li>
+    <li><label><input type="checkbox"><span>One limit chosen ("I can't promise…")</span></label></li>
+    <li><label><input type="checkbox"><span>Two time options ready (e.g. before the trucks go out)</span></label></li>
+    <li><label><input type="checkbox"><span>Objections drilled out loud today</span></label></li>
+    <li><label><input type="checkbox"><span>Tracker open; I'll log this call within the hour</span></label></li>
+    <li><label><input type="checkbox"><span>A person is dialing, not our AI voice agent</span></label></li>
+  </ul>
+  <div class="score"><div class="tag">Ready check</div><div class="big" id="prepScore">0/11</div></div>
+  <div class="mission">Don't dial until it reads 11/11. Unchecking is free; a wrong fact on the call isn't.</div>
+</div>
+</section>
+
+<!-- 18 SCORECARD -->
+<section class="card" data-t="The scorecard" data-s="Owner's view: what we measure" data-short="Scorecard">
+<div class="inner">
+  <div class="art" data-art="funnel"></div>
+  <div class="eyebrow">Owner's lens</div>
+  <h1>Bookings alone <span class="hl">aren't success</span></h1>
+  <p class="lead">What we measure, in order:</p>
+  <ol class="steps">
+    <li><b>Qualified conversations:</b> reached the decision maker and they answered the discovery question.</li>
+    <li><b>Accepted next steps:</b> a dated walkthrough, or an agreed text plus a follow-up date.</li>
+    <li><b>Meetings actually held.</b></li>
+    <li><b>Qualified opportunities:</b> a named problem, a cost the owner states, and agreement to discuss a paid pilot.</li>
+    <li><b>Paid conversions.</b></li>
+  </ol>
+  <p>Also every week: negative reactions (hangups, "remove me", complaints) and hours spent on free work.</p>
+  <h3>Plug in your week</h3>
+  <div class="box">
+    <div class="grid2">
+      <div class="fld"><label for="s_d">Dials</label><input type="number" id="s_d" min="0" value="100"></div>
+      <div class="fld"><label for="s_c">Connects (right person)</label><input type="number" id="s_c" min="0" value="6"></div>
+      <div class="fld"><label for="s_q">Qualified conversations</label><input type="number" id="s_q" min="0" value="4"></div>
+      <div class="fld"><label for="s_n">Accepted next steps</label><input type="number" id="s_n" min="0" value="2"></div>
+      <div class="fld"><label for="s_h">Meetings held</label><input type="number" id="s_h" min="0" value="1"></div>
+      <div class="fld"><label for="s_neg">Negative reactions</label><input type="number" id="s_neg" min="0" value="1"></div>
+      <div class="fld"><label for="s_f">Free-work hours</label><input type="number" id="s_f" min="0" step=".5" value="4"></div>
+    </div>
+    <div class="stat" id="scoreOut"></div>
+    <p class="small">Benchmarks: Gong (connect, next steps per conversation), our planning rule (40–45 dials per meeting), our 3-hour free cap proposal.</p>
+  </div>
+  <h3>Six tests, one change at a time</h3>
+  <table>
+    <tr><th>#</th><th>Change</th><th>Measure</th></tr>
+    <tr><td>1</td><td>Observation vs generic opener</td><td>Calls over 30 sec</td></tr>
+    <tr><td>2</td><td>Named deliverable vs "free consultation"</td><td>Accepted next steps</td></tr>
+    <tr><td>3</td><td>With vs without freedom-to-decline line</td><td>Negative reactions</td></tr>
+    <tr><td>4</td><td>Why-free up front vs only when asked</td><td>"What's the catch?"</td></tr>
+    <tr><td>5</td><td>Snapshot by text vs walkthrough only</td><td>Qualified opportunities</td></tr>
+    <tr><td>6</td><td>Written agenda + reminder vs plain booking</td><td>Held ÷ booked</td></tr>
+  </table>
+  <div class="rule">Run each version for at least <b>30 real conversations</b>. At our volume, small gaps are noise. Look for large, consistent gaps and treat them as direction, not proof.</div>
+  <p class="small">Reality check: at Gong's average of 19 dials per conversation, 30 conversations is roughly 570 dials. Plan tests in weeks, not days.</p>
+</div>
+</section>
+
+<!-- 19 GUARDRAILS -->
+<section class="card" data-t="Lines we never cross" data-s="Guardrails" data-short="Guardrails">
+<div class="inner">
+  <div class="art" data-art="shield"></div>
+  <div class="eyebrow">Non-negotiable</div>
+  <h1>Lines we <span class="hl">never</span> cross</h1>
+  <ul class="check">
+    <li><label><input type="checkbox"><span>Every claim true and checkable. Every placeholder verified before a call.</span></label></li>
+    <li><label><input type="checkbox"><span>No fabricated proof, borrowed logos or invented client results.</span></label></li>
+    <li><label><input type="checkbox"><span>No false scarcity ("only two spots left").</span></label></li>
+    <li><label><input type="checkbox"><span>No fake familiarity ("following up on our conversation" when there wasn't one).</span></label></li>
+    <li><label><input type="checkbox"><span>No pressure based on what they "owe" us for free work.</span></label></li>
+    <li><label><input type="checkbox"><span>No promises about revenue, rankings or showing up in AI answers.</span></label></li>
+    <li><label><input type="checkbox"><span>A no ends follow-up. Do-not-call list honored the same day.</span></label></li>
+    <li><label><input type="checkbox"><span>Cap free work per prospect and log it.</span></label></li>
+  </ul>
+  <div class="rule"><b>Never cold call with our own AI voice agent.</b> In February 2024 the FCC ruled AI-generated voices count as artificial voices under the TCPA, so robocall consent rules apply. A person makes every cold call.</div>
+  <p class="small">Not yet researched: Connecticut's own telemarketing rules and rules for calling mobile numbers. Check before scaling.</p>
+  <h3>Proof, for now</h3>
+  <p>Mention other customers only when the result is real, similar and permitted. Until we have HVAC results, <span class="k">the free deliverable is the proof.</span> (Social-proof research is fragile: the famous hotel towel study failed to replicate.)</p>
+</div>
+</section>
+
+<!-- 20 FIRST WEEK -->
+<section class="card" data-t="Your first week" data-s="Day by day" data-short="First week">
+<div class="inner">
+  <div class="art" data-art="calendar"></div>
+  <div class="eyebrow">Go time</div>
+  <h1>The <span class="hl">first week</span></h1>
+  <div class="tabs" data-tabs="week"><button data-tab="d1" class="sel">Day 1</button><button data-tab="d2">Day 2</button><button data-tab="d3">Day 3</button><button data-tab="d4">Day 4</button><button data-tab="d5">Day 5</button></div>
+  <div data-pane="d1" class="sel"><div class="box">Agree who calls and when (a team decision). Pick 20 prospects from the CT list. Set up the tracker with the five measures plus negative reactions. Pick one free offer for the week: <b>the AI answer snapshot</b>.</div></div>
+  <div data-pane="d2"><div class="box">Build the snapshot template. Research and verify one observation for each of the 20, with links. Role-play the website script and all eight objections, twice each.</div></div>
+  <div data-pane="d3"><div class="box">First calling block, early morning before trucks leave (our untested guess). Log every call within the hour.</div></div>
+  <div data-pane="d4"><div class="box">Second calling block, late afternoon. Build and send every snapshot promised so far, within 48 hours of each call.</div></div>
+  <div data-pane="d5"><div class="box">Hold any walkthroughs. Review the tracker together: what got hangups, what got answers, hours spent. Pick test 1 for week two.</div></div>
+  <h3>Still open for the team</h3>
+  <ul>
+    <li>Who makes the calls, and who builds the deliverables?</li>
+    <li>Do the voice-agent free offers fit Bobby's view on voice agents?</li>
+    <li>A hard cap on free hours per prospect: what number?</li>
+  </ul>
+</div>
+</section>
+
+<!-- 21 FIELD CARD -->
+<section class="card" data-t="Field card" data-s="Keep this one" data-short="Field card">
+<div class="inner">
+  <div class="field">
+    <div class="eyebrow" style="color:var(--gold)">Field card · <span class="me"></span></div>
+    <h2>The call on one card</h2>
+    <ol>
+      <li><span class="g">Opener (10s):</span> name, Starwell, "this is a cold call," one reason.</li>
+      <li><span class="g">Relevance (15s):</span> one verified, checkable fact about their shop.</li>
+      <li><span class="g">One question (30–60s):</span> about last week. Listen. One follow-up.</li>
+      <li><span class="g">Value (15s):</span> a named deliverable, the why-free sentence, one limit, no access.</li>
+      <li><span class="g">Next step (15s):</span> day, time, 15 minutes, in writing. Or a clean no.</li>
+    </ol>
+    <p style="margin-top:12px"><span class="g">Why free:</span> "We're building our HVAC client base, and showing real work is the fastest way to earn a second conversation."</p>
+    <p><span class="g">Expect:</span> ~40–45 dials per meeting at first. A no is the base rate.</p>
+    <p style="margin:0"><span class="g">Never:</span> fake proof, invented numbers, AI-voice cold calls, or a follow-up after a no.</p>
+  </div>
+  <h3>Sources</h3>
+  <ol class="sources">
+    <li><a href="https://doi.org/10.1509/jmkr.43.4.693">Franke & Park (2006), adaptive selling meta-analysis</a></li>
+    <li><a href="https://www.econbiz.de/Record/when-should-the-customer-really-be-king-on-the-optimum-level-of-salesperson-customer-orientation-in-sales-encounters/10008885839">Homburg, Müller, Klarmann (2011), optimum customer orientation</a></li>
+    <li><a href="https://www.gong.io/resources/labs/the-best-and-worst-cold-call-openers-backed-by-data-from-300m-calls/">Gong Labs, best and worst cold call openers</a></li>
+    <li><a href="https://saleshive.com/blog/b2b-sales-cold-calling-benchmarks-teams-2025">SalesHive, B2B cold calling benchmarks (Gong data)</a></li>
+    <li><a href="https://prospeo.io/s/cold-calling-success-rate">Prospeo, cold calling success rate 2026 (Cognism data)</a></li>
+    <li><a href="https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-sales-survey-finds-61-percent-of-b2b-buyers-prefer-a-rep-free-buying-experience">Gartner (2025), survey of 632 B2B buyers</a></li>
+    <li><a href="https://econpapers.repec.org/RePEc:inm:ormksc:v:37:y:2018:i:2:p:236-258">Sahni, Wheeler, Chintagunta (2018), personalization in email</a></li>
+    <li><a href="https://dash.harvard.edu/handle/1/35647952">Huang et al. (2017), question asking increases liking</a></li>
+    <li><a href="https://econpapers.repec.org/RePEc:inm:ormnsc:v:61:y:2015:i:6:p:1421-1435">Brooks, Gino, Schweitzer (2015), asking for advice</a></li>
+    <li><a href="https://pages.stern.nyu.edu/~aalter/publication.html">Alter & Oppenheimer (2009), processing fluency</a></li>
+    <li><a href="https://people.duke.edu/~dandan/webfiles/PapersPI/Zero%20as%20a%20Special%20Price.pdf">Shampanier, Mazar, Ariely (2007), zero as a special price</a></li>
+    <li><a href="https://katalog.lib.cas.cz/KNAV/EdsRecord/bsu,12795626">Raghubir (2004), free gift with purchase</a></li>
+    <li><a href="https://ideas.repec.org/a/oup/jconrs/v21y1994i1p1-31.html">Friestad & Wright (1994), persuasion knowledge model</a></li>
+    <li><a href="https://doi.org/10.1002/mar.20176">Eisend (2006), two-sided advertising meta-analysis</a></li>
+    <li><a href="https://open.lnu.se/index.php/metapsychology/article/view/2640">Fillon et al. (2023), "but you are free" meta-analysis</a></li>
+    <li><a href="https://kops.uni-konstanz.de/entities/publication/2e749bfb-8533-437c-8203-7e788c910c5f">Gollwitzer & Sheeran (2006), implementation intentions</a></li>
+    <li><a href="https://cbsm.com/articles/32623-the-foot-in-the-door-compliance-procedure-a-multiple-process-analysis-and-review">Burger (1999), foot-in-the-door review</a></li>
+    <li><a href="https://www.econbiz.de/Record/the-labor-illusion-how-operational-transparency-increases-perceived-value-buell-ryan/10009312560">Buell & Norton (2011), the labor illusion</a></li>
+    <li><a href="https://doi.org/10.1207/s15327663jcp1601_2">Ambady et al. (2006), thin-slice judgments and sales</a></li>
+    <li><a href="https://econpapers.repec.org/article/plopone00/0104086.htm">Bohner & Schlüter (2014), failed towel-study replication</a></li>
+    <li><a href="https://www.cbsm.com/articles/33455-the-relative-persuasiveness-of-gain-framed-and-loss-framed-messages-for-encouraging-disease-detectio">O'Keefe & Jensen (2009), gain vs loss framing</a></li>
+    <li><a href="https://sellingpower.com/blog/how-cold-calling-2-0-added-100-million-to-salesforce-coms-revenues">Selling Power, Cold Calling 2.0 at Salesforce (Aaron Ross)</a></li>
+    <li><a href="https://gtmnow.com/cold-calling-jason-bay/">GTMnow, Jason Bay cold calling framework</a></li>
+    <li><a href="https://www.oreilly.com/library/view/fanatical-prospecting-the/9781119144755/34_author.html">Jeb Blount, Fanatical Prospecting</a></li>
+    <li><a href="https://www.antoinebuteau.com/lessons-from-becc-holland/">Lessons from Becc Holland</a></li>
+    <li><a href="https://www.antoinebuteau.com/lessons-from-eric-nowoslawski/">Lessons from Eric Nowoslawski</a></li>
+    <li><a href="https://rosetta.to/u/nicksaraevunfiltered">Nick Saraev on free AI audits</a></li>
+    <li><a href="https://cooley.com/news/insight/2024/2024-02-15-fcc-ai-generated-robocalls-illegal-under-the-tcpa">Cooley, FCC Feb 2024 ruling on AI voices under the TCPA</a></li>
+  </ol>
+  <p class="hand">Built from Starwell's Cold Call Playbook (Nov 7, 2026) and Top 20 B2B Outbound Experts (Nov 6, 2026).</p>
+</div>
+</section>
+
+<div class="more" id="more">more below ↓</div>
+</main>
+
+<footer class="bot"><div class="bot-row">
+  <button id="back" aria-label="Back">‹</button>
+  <button id="next">Next</button>
+</div></footer>
+
+<div class="sheet" id="sheet"><div class="sheet-in">
+  <h3>All stops <button id="closeSheet">Close</button></h3>
+  <ol id="stops"></ol>
+</div></div>
+</div>
+
+<script>
+(function(){
+const TOWN = 'Shelton'; // Starwell's home base as written in the Cold Call Playbook. Change here if needed.
+const TEAM = [
+  {n:'Bobby', r:'Founder · owner'},
+  {n:'Dan', r:'Partner · caller'},
+  {n:'RJ', r:'Partner · caller'}
+];
+const store = {
+  get(k){try{return localStorage.getItem(k)}catch(e){return null}},
+  set(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+};
+
+/* ---------- ART ---------- */
+const skin='#E9B98A';
+const ART = {
+  caller(say){
+    return `<svg viewBox="0 0 320 170" aria-hidden="true">
+    <ellipse cx="160" cy="160" rx="150" ry="12" fill="#E7C690"/>
+    <rect x="30" y="122" width="260" height="10" rx="4" fill="#142B55"/>
+    <g class="breathe">
+      <path d="M108 124 Q110 80 160 78 Q210 80 212 124Z" fill="#2E6CCB"/>
+      <path d="M150 80 L160 96 L170 80" fill="none" stroke="#FFF4DE" stroke-width="3"/>
+      <circle cx="160" cy="54" r="26" fill="${skin}"/>
+      <path d="M134 50 Q134 24 160 25 Q187 24 186 50 Q178 36 160 38 Q142 36 134 50Z" fill="#0E1F3F"/>
+      <g class="blink"><circle cx="150" cy="56" r="2.8" fill="#0E1F3F"/><circle cx="170" cy="56" r="2.8" fill="#0E1F3F"/></g>
+      <ellipse class="talk" cx="160" cy="68" rx="5" ry="2.6" fill="#B5361F"/>
+      <path d="M130 54 Q130 18 160 18 Q190 18 190 54" fill="none" stroke="#0E1F3F" stroke-width="4"/>
+      <rect x="125" y="47" width="10" height="15" rx="4" fill="#EE6A2C"/>
+      <path d="M130 62 Q133 74 148 72" stroke="#0E1F3F" stroke-width="3" fill="none"/>
+      <circle cx="149" cy="72" r="3.2" fill="#EE6A2C"/>
+    </g>
+    <path d="M206 100 h62 l-7 22 h-62z" fill="#566078"/><rect x="200" y="120" width="72" height="4" rx="2" fill="#0E1F3F"/>
+    <rect x="52" y="104" width="44" height="18" rx="2" fill="#FFF4DE" transform="rotate(-6 74 113)"/>
+    <path d="M58 108 h30 M58 113 h24 M58 118 h28" stroke="#D7AA68" stroke-width="2" transform="rotate(-6 74 113)"/>
+    <g class="pop"><rect x="200" y="14" width="108" height="42" rx="14" fill="#FFF4DE" stroke="#0E1F3F" stroke-width="2"/>
+    <path d="M210 54 l-8 14 l20 -12" fill="#FFF4DE" stroke="#0E1F3F" stroke-width="2" stroke-linejoin="round"/>
+    <text x="254" y="42" text-anchor="middle" font-family="Caveat" font-weight="700" font-size="22" fill="#C64A1C">${say||'Hi there!'}</text></g>
+    </svg>`;
+  },
+  truck(){
+    return `<svg viewBox="0 0 320 170" aria-hidden="true">
+    <ellipse cx="160" cy="158" rx="150" ry="10" fill="#E7C690"/>
+    <path d="M0 150 h320" stroke="#D7AA68" stroke-width="3" stroke-dasharray="14 10"/>
+    <g class="drive">
+      <rect x="34" y="62" width="156" height="72" rx="8" fill="#FFF4DE" stroke="#142B55" stroke-width="3"/>
+      <rect x="34" y="92" width="156" height="12" fill="#EE6A2C"/>
+      <text x="112" y="86" text-anchor="middle" font-family="Barlow Condensed" font-weight="800" font-size="17" fill="#142B55" letter-spacing="2">HEAT · COOL</text>
+      <path d="M190 80 h44 l30 30 v24 h-74z" fill="#2E6CCB" stroke="#142B55" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M198 88 h32 l22 22 h-54z" fill="#F3DDB2"/>
+      <g class="nod"><circle cx="218" cy="104" r="9" fill="${skin}"/><path d="M208 100 q10 -12 20 0 h4 v3 h-24z" fill="#142B55"/>
+      <rect x="226" y="98" width="5" height="11" rx="2" fill="#EE6A2C"/></g>
+      <g class="spin"><circle cx="76" cy="136" r="15" fill="#0E1F3F"/><circle cx="76" cy="136" r="6" fill="#E7C690"/><rect x="74" y="122" width="4" height="28" fill="#566078"/></g>
+      <g class="spin"><circle cx="230" cy="136" r="15" fill="#0E1F3F"/><circle cx="230" cy="136" r="6" fill="#E7C690"/><rect x="228" y="122" width="4" height="28" fill="#566078"/></g>
+    </g>
+    <path class="wave" d="M262 70 q8 10 0 20" fill="none" stroke="#EE6A2C" stroke-width="3" stroke-linecap="round"/>
+    <path class="wave w2" d="M272 62 q14 18 0 36" fill="none" stroke="#EE6A2C" stroke-width="3" stroke-linecap="round"/>
+    <circle class="twinkle" cx="290" cy="30" r="3" fill="#F2B33D"/><circle class="twinkle t2" cx="40" cy="30" r="3" fill="#F2B33D"/>
+    </svg>`;
+  },
+  phone(){
+    return `<svg viewBox="0 0 320 170" aria-hidden="true">
+    <ellipse cx="160" cy="158" rx="120" ry="10" fill="#E7C690"/>
+    <g class="swing"><rect x="126" y="22" width="68" height="128" rx="14" fill="#142B55"/>
+    <rect x="133" y="36" width="54" height="94" rx="6" fill="#FFF4DE"/>
+    <circle cx="160" cy="62" r="13" fill="#2E6CCB"/><text x="160" y="67" text-anchor="middle" font-family="Barlow Condensed" font-weight="800" font-size="15" fill="#fff">S</text>
+    <rect x="142" y="84" width="36" height="5" rx="2" fill="#566078"/><rect x="146" y="94" width="28" height="4" rx="2" fill="#D7AA68"/>
+    <circle cx="148" cy="116" r="7" fill="#B5361F"/><circle cx="172" cy="116" r="7" fill="#2F7D52"/></g>
+    <path class="wave" d="M206 60 q12 25 0 50" fill="none" stroke="#EE6A2C" stroke-width="4" stroke-linecap="round"/>
+    <path class="wave w2" d="M222 46 q22 39 0 78" fill="none" stroke="#EE6A2C" stroke-width="4" stroke-linecap="round"/>
+    <path class="wave" d="M114 60 q-12 25 0 50" fill="none" stroke="#EE6A2C" stroke-width="4" stroke-linecap="round" style="transform-origin:right center"/>
+    <path class="wave w2" d="M98 46 q-22 39 0 78" fill="none" stroke="#EE6A2C" stroke-width="4" stroke-linecap="round" style="transform-origin:right center"/>
+    </svg>`;
+  },
+  clock(){
+    return `<svg viewBox="0 0 320 170" aria-hidden="true">
+    <ellipse cx="160" cy="160" rx="110" ry="8" fill="#E7C690"/>
+    <rect x="150" y="10" width="20" height="12" rx="3" fill="#142B55"/>
+    <g class="pulse"><circle cx="160" cy="90" r="64" fill="#FFF4DE" stroke="#142B55" stroke-width="6"/></g>
+    <path d="M160 90 L160 34 A56 56 0 0 1 208 62 Z" fill="#EE6A2C" opacity=".85"/>
+    <path d="M160 90 L208 62 A56 56 0 0 1 216 90 Z" fill="#F2B33D"/>
+    <path d="M160 90 L216 90 A56 56 0 0 1 116 130 Z" fill="#2E6CCB" opacity=".75"/>
+    <path d="M160 90 L116 130 A56 56 0 0 1 106 74 Z" fill="#E7C690"/>
+    <path d="M160 90 L106 74 A56 56 0 0 1 160 34 Z" fill="#D7AA68"/>
+    <g class="spinslow" style="transform-origin:160px 90px"><rect x="157" y="40" width="6" height="52" rx="3" fill="#0E1F3F"/></g>
+    <circle cx="160" cy="90" r="7" fill="#0E1F3F"/>
+    </svg>`;
+  },
+  funnel(){
+    return `<svg viewBox="0 0 320 170" aria-hidden="true">
+    <path d="M30 150 h270" stroke="#142B55" stroke-width="3"/>
+    <rect class="grow" x="44" y="22" width="44" height="128" rx="4" fill="#2E6CCB"/>
+    <rect class="grow g2" x="104" y="104" width="44" height="46" rx="4" fill="#1F4C9C"/>
+    <rect class="grow g3" x="164" y="128" width="44" height="22" rx="4" fill="#EE6A2C"/>
+    <rect class="grow g4" x="224" y="140" width="44" height="10" rx="3" fill="#C64A1C"/>
+    <text x="66" y="166" text-anchor="middle" font-family="Barlow Condensed" font-weight="800" font-size="13" fill="#566078">DIALS</text>
+    <text x="126" y="166" text-anchor="middle" font-family="Barlow Condensed" font-weight="800" font-size="13" fill="#566078">CONNECTS</text>
+    <text x="186" y="166" text-anchor="middle" font-family="Barlow Condensed" font-weight="800" font-size="13" fill="#566078">TALKS</text>
+    <text x="246" y="166" text-anchor="middle" font-family="Barlow Condensed" font-weight="800" font-size="13" fill="#566078">MEETINGS</text>
+    <path class="draw" d="M70 18 C130 30 170 90 250 132" fill="none" stroke="#F2B33D" stroke-width="4" stroke-linecap="round"/>
+    <circle class="twinkle" cx="252" cy="126" r="5" fill="#F2B33D"/>
+    </svg>`;
+  },
+  gift(){
+    return `<svg viewBox="0 0 320 170" aria-hidden="true">
+    <ellipse cx="160" cy="158" rx="110" ry="9" fill="#E7C690"/>
+    <g class="breathe"><rect x="104" y="70" width="112" height="84" rx="6" fill="#2E6CCB" stroke="#142B55" stroke-width="3"/>
+    <rect x="96" y="56" width="128" height="22" rx="5" fill="#1F4C9C" stroke="#142B55" stroke-width="3"/>
+    <rect x="152" y="56" width="16" height="98" fill="#EE6A2C"/>
+    <path d="M160 56 q-30 -34 -38 -6 q4 10 38 6 q30 -34 38 -6 q-4 10 -38 6" fill="#F2B33D" stroke="#C64A1C" stroke-width="2"/></g>
+    <g class="swing" style="transform-origin:224px 60px"><path d="M224 60 L248 92" stroke="#0E1F3F" stroke-width="2"/>
+    <rect x="236" y="90" width="34" height="40" rx="5" fill="#FFF4DE" stroke="#0E1F3F" stroke-width="2"/>
+    <text x="253" y="119" text-anchor="middle" font-family="Caveat" font-weight="700" font-size="28" fill="#C64A1C">?</text></g>
+    <path class="twinkle" d="M70 50 l4 10 l10 4 l-10 4 l-4 10 l-4 -10 l-10 -4 l10 -4z" fill="#F2B33D"/>
+    <path class="twinkle t2" d="M270 30 l3 7 l7 3 l-7 3 l-3 7 l-3 -7 l-7 -3 l7 -3z" fill="#EE6A2C"/>
+    <path class="twinkle t3" d="M60 120 l3 7 l7 3 l-7 3 l-3 7 l-3 -7 l-7 -3 l7 -3z" fill="#2E6CCB"/>
+    </svg>`;
+  },
+  shield(){
+    return `<svg viewBox="0 0 320 170" aria-hidden="true">
+    <ellipse cx="160" cy="160" rx="100" ry="8" fill="#E7C690"/>
+    <g class="pulse"><path d="M160 14 L222 36 V82 C222 120 194 144 160 154 C126 144 98 120 98 82 V36 Z" fill="#142B55"/>
+    <path d="M160 26 L210 44 V82 C210 112 188 132 160 141 C132 132 110 112 110 82 V44 Z" fill="#2E6CCB"/></g>
+    <path class="draw" d="M134 84 L154 104 L190 64" fill="none" stroke="#F2B33D" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path class="twinkle" d="M60 50 l4 10 l10 4 l-10 4 l-4 10 l-4 -10 l-10 -4 l10 -4z" fill="#EE6A2C"/>
+    <path class="twinkle t2" d="M262 90 l4 10 l10 4 l-10 4 l-4 10 l-4 -10 l-10 -4 l10 -4z" fill="#F2B33D"/>
+    </svg>`;
+  },
+  calendar(){
+    return `<svg viewBox="0 0 320 170" aria-hidden="true">
+    <ellipse cx="160" cy="160" rx="110" ry="8" fill="#E7C690"/>
+    <rect x="86" y="22" width="148" height="130" rx="10" fill="#FFF4DE" stroke="#142B55" stroke-width="3"/>
+    <rect x="86" y="22" width="148" height="30" rx="10" fill="#142B55"/><rect x="86" y="40" width="148" height="12" fill="#142B55"/>
+    <text x="160" y="43" text-anchor="middle" font-family="Barlow Condensed" font-weight="800" font-size="17" fill="#FFF4DE" letter-spacing="2">TUESDAY</text>
+    <rect x="114" y="14" width="8" height="18" rx="3" fill="#EE6A2C"/><rect x="198" y="14" width="8" height="18" rx="3" fill="#EE6A2C"/>
+    <text x="160" y="112" text-anchor="middle" font-family="Barlow Condensed" font-weight="800" font-size="46" fill="#142B55">7:30</text>
+    <text x="160" y="134" text-anchor="middle" font-family="Caveat" font-weight="700" font-size="19" fill="#1F4C9C">before the trucks go out</text>
+    <ellipse class="draw" cx="160" cy="98" rx="52" ry="30" fill="none" stroke="#EE6A2C" stroke-width="4"/>
+    <g class="nod" style="transform-origin:262px 140px"><path d="M250 60 L274 132 L266 136 L244 64 Z" fill="#F2B33D" stroke="#0E1F3F" stroke-width="2"/><path d="M266 136 L272 148 L274 132" fill="#0E1F3F"/></g>
+    </svg>`;
+  },
+  magnify(){
+    return `<svg viewBox="0 0 320 170" aria-hidden="true">
+    <ellipse cx="160" cy="160" rx="140" ry="8" fill="#E7C690"/>
+    <rect x="40" y="56" width="240" height="96" fill="#FFF4DE" stroke="#142B55" stroke-width="3"/>
+    <path d="M30 58 L60 26 H260 L290 58 Z" fill="#EE6A2C" stroke="#142B55" stroke-width="3" stroke-linejoin="round"/>
+    <rect x="70" y="66" width="180" height="22" rx="3" fill="#142B55"/>
+    <text x="160" y="83" text-anchor="middle" font-family="Barlow Condensed" font-weight="800" font-size="15" fill="#FFF4DE" letter-spacing="2">HEATING &amp; COOLING</text>
+    <rect x="62" y="98" width="60" height="54" fill="#E7C690" stroke="#142B55" stroke-width="2"/>
+    <rect x="140" y="98" width="40" height="54" fill="#2E6CCB" stroke="#142B55" stroke-width="2"/>
+    <rect x="198" y="98" width="60" height="30" fill="#F3DDB2" stroke="#142B55" stroke-width="2"/>
+    <text x="228" y="118" text-anchor="middle" font-family="Barlow Condensed" font-weight="800" font-size="12" fill="#B5361F">CLOSED 5PM</text>
+    <g class="scan"><circle cx="90" cy="112" r="24" fill="rgba(255,244,222,.35)" stroke="#0E1F3F" stroke-width="6"/>
+    <path d="M107 129 L130 152" stroke="#0E1F3F" stroke-width="9" stroke-linecap="round"/></g>
+    </svg>`;
+  },
+  talk(){
+    return `<svg viewBox="0 0 320 170" aria-hidden="true">
+    <ellipse cx="160" cy="160" rx="150" ry="10" fill="#E7C690"/>
+    <g class="breathe"><path d="M30 150 Q34 108 72 106 Q110 108 114 150Z" fill="#2E6CCB"/>
+    <circle cx="72" cy="82" r="22" fill="${skin}"/><path d="M50 78 Q52 56 72 58 Q94 56 94 78 Q84 66 72 68 Q60 66 50 78Z" fill="#0E1F3F"/>
+    <g class="blink"><circle cx="64" cy="84" r="2.4" fill="#0E1F3F"/><circle cx="80" cy="84" r="2.4" fill="#0E1F3F"/></g>
+    <ellipse class="talk" cx="72" cy="95" rx="4" ry="2" fill="#B5361F"/></g>
+    <g class="nod"><path d="M206 150 Q210 108 248 106 Q286 108 290 150Z" fill="#C64A1C"/>
+    <circle cx="248" cy="82" r="22" fill="#D9A273"/><path d="M224 76 q24 -26 48 0 h6 v5 h-60z" fill="#142B55"/>
+    <g class="blink"><circle cx="240" cy="86" r="2.4" fill="#0E1F3F"/><circle cx="256" cy="86" r="2.4" fill="#0E1F3F"/></g>
+    <path d="M241 96 q7 4 14 0" stroke="#0E1F3F" stroke-width="2" fill="none"/></g>
+    <g class="pop"><rect x="104" y="18" width="92" height="40" rx="14" fill="#FFF4DE" stroke="#0E1F3F" stroke-width="2"/>
+    <path d="M114 56 l-12 14 l24 -12" fill="#FFF4DE" stroke="#0E1F3F" stroke-width="2" stroke-linejoin="round"/>
+    <text x="150" y="45" text-anchor="middle" font-family="Caveat" font-weight="700" font-size="22" fill="#C64A1C">last week…?</text></g>
+    </svg>`;
+  }
+};
+document.querySelectorAll('[data-art]').forEach(el=>{
+  const f = ART[el.dataset.art]; if(f) el.innerHTML = f(el.dataset.say);
+});
+
+/* ---------- PERSONALIZE ---------- */
+document.querySelectorAll('.town').forEach(e=>e.textContent=TOWN);
+let me = store.get('sw_cc_me');
+const whoList = document.getElementById('whoList');
+whoList.innerHTML = TEAM.map(t=>`<button class="who" data-n="${t.n}"><span class="av">${t.n[0]}</span><span><span class="nm">${t.n}</span><br><span class="rl">${t.r}</span></span><span class="ck">✓</span></button>`).join('');
+function applyMe(){
+  document.querySelectorAll('.me').forEach(e=>e.textContent = me || 'teammate');
+  document.getElementById('ava').textContent = me ? me[0] : '?';
+  whoList.querySelectorAll('.who').forEach(b=>b.classList.toggle('sel', b.dataset.n===me));
+  renderSim();
+  buildConfirm();
+}
+whoList.addEventListener('click',e=>{
+  const b = e.target.closest('.who'); if(!b) return;
+  me = b.dataset.n; store.set('sw_cc_me', me); applyMe(); update();
+});
+
+/* ---------- NAV ---------- */
+const cards = [...document.querySelectorAll('.card')];
+const prog = document.getElementById('prog');
+prog.innerHTML = cards.map(()=>'<i></i>').join('');
+const stops = document.getElementById('stops');
+const seen = new Set();
+let idx = 0;
+const saved = parseInt(store.get('sw_cc_idx'),10);
+if(!isNaN(saved) && saved>0 && saved<cards.length && me) idx = saved;
+const moreEl = document.getElementById('more');
+function checkMore(){
+  const c = cards[idx];
+  moreEl.classList.toggle('show', c.scrollHeight - c.scrollTop - c.clientHeight > 40);
+}
+cards.forEach(c=>c.addEventListener('scroll',checkMore,{passive:true}));
+function update(){
+  const c = cards[idx];
+  document.getElementById('tTitle').textContent = c.dataset.t;
+  document.getElementById('tSub').textContent = c.dataset.s;
+  document.getElementById('count').textContent = (idx+1)+'/'+cards.length;
+  [...prog.children].forEach((b,k)=>{b.className = k<idx?'done':(k===idx?'cur':'')});
+  const nx = document.getElementById('next');
+  if(idx===0 && !me){ nx.textContent='Pick your name'; nx.classList.add('wait'); }
+  else { nx.classList.remove('wait'); nx.textContent = idx<cards.length-1 ? 'Next: '+cards[idx+1].dataset.short : 'Start over'; }
+  document.getElementById('back').disabled = idx===0;
+  stops.innerHTML = cards.map((k,j)=>`<li><button data-j="${j}" class="${j===idx?'cur':(seen.has(j)?'seen':'')}"><b>${j+1}</b>${k.dataset.t}</button></li>`).join('');
+}
+function go(n){
+  idx = Math.max(0, Math.min(cards.length-1, n));
+  seen.add(idx);
+  cards.forEach((c,k)=>c.classList.toggle('on', k===idx));
+  cards[idx].scrollTop = 0;
+  store.set('sw_cc_idx', idx);
+  update();
+  setTimeout(checkMore, 60);
+}
+document.getElementById('next').addEventListener('click',()=>{
+  if(idx===0 && !me){ const w=document.getElementById('whoList'); w.classList.remove('shake'); void w.offsetWidth; w.classList.add('shake'); return; }
+  go(idx<cards.length-1 ? idx+1 : 0);
+});
+document.getElementById('back').addEventListener('click',()=>go(idx-1));
+const sheet = document.getElementById('sheet');
+document.getElementById('menuBtn').addEventListener('click',()=>sheet.classList.add('open'));
+document.getElementById('closeSheet').addEventListener('click',()=>sheet.classList.remove('open'));
+sheet.addEventListener('click',e=>{
+  if(e.target===sheet){sheet.classList.remove('open');return}
+  const b = e.target.closest('[data-j]'); if(b){ sheet.classList.remove('open'); go(+b.dataset.j); }
+});
+document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(+b.dataset.go)));
+window.addEventListener('resize',checkMore);
+document.addEventListener('keydown',e=>{
+  if(e.target.matches('input,textarea,select')) return;
+  if(e.key==='ArrowRight') document.getElementById('next').click();
+  if(e.key==='ArrowLeft') go(idx-1);
+});
+
+/* ---------- GENERIC WIDGETS ---------- */
+document.querySelectorAll('[data-tabs]').forEach(t=>{
+  t.addEventListener('click',e=>{
+    const b = e.target.closest('[data-tab]'); if(!b) return;
+    t.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('sel', x===b));
+    const scope = t.parentElement;
+    t.querySelectorAll('[data-tab]').forEach(x=>{
+      const p = scope.querySelector(`[data-pane="${x.dataset.tab}"]`); if(p) p.classList.toggle('sel', x===b);
+    });
+    setTimeout(checkMore,30);
+  });
+});
+document.querySelectorAll('.quiz').forEach(q=>{
+  q.addEventListener('click',e=>{
+    const b = e.target.closest('.opt'); if(!b) return;
+    q.querySelectorAll('.opt').forEach(o=>o.classList.remove('right','wrong'));
+    b.classList.add(b.dataset.ok?'right':'wrong');
+    const fb = q.querySelector('.fb');
+    fb.innerHTML = (b.dataset.ok?'<b>Yes.</b> ':'<b>Not quite.</b> ')+b.dataset.why;
+    fb.classList.add('show'); setTimeout(checkMore,30);
+  });
+});
+document.querySelectorAll('.sortrow').forEach(r=>{
+  r.addEventListener('click',e=>{
+    const b = e.target.closest('[data-pick]'); if(!b) return;
+    const ok = b.dataset.pick===r.dataset.ans;
+    r.classList.remove('right','wrong'); r.classList.add(ok?'right':'wrong');
+    r.querySelector('.res').innerHTML = (ok?'<b>Right.</b> ':'<b>Other way.</b> ')+r.dataset.why;
+    setTimeout(checkMore,30);
+  });
+});
+document.addEventListener('change',e=>{ if(e.target.closest('details')) setTimeout(checkMore,30); });
+document.querySelectorAll('details').forEach(d=>d.addEventListener('toggle',()=>setTimeout(checkMore,30)));
+
+/* ---------- MATH CALC ---------- */
+const dials = document.getElementById('dials');
+function fmt(n){ return n>=10 ? Math.round(n).toString() : (Math.round(n*10)/10).toString(); }
+function calc(){
+  const d = +dials.value;
+  document.getElementById('dialsOut').textContent = d;
+  document.getElementById('cogAvg').textContent = fmt(d*0.027);
+  document.getElementById('cogTop').textContent = fmt(d*0.113);
+  const cv = d/19, ct = d/8;
+  document.getElementById('gConv').textContent = fmt(cv);
+  document.getElementById('gMeet').textContent = fmt(cv*0.046);
+  document.getElementById('gConvT').textContent = fmt(ct);
+  document.getElementById('gMeetT').textContent = fmt(ct*0.167);
+}
+dials.addEventListener('input',calc); calc();
+
+/* ---------- CONFIRM TEXT ---------- */
+function buildConfirm(){
+  const nm = document.getElementById('cName').value.trim() || '[Owner]';
+  const day = document.getElementById('cDay').value, tm = document.getElementById('cTime').value;
+  const fmtv = document.getElementById('cFmt').value, off = document.getElementById('cOffer').value;
+  const who = me || '[your name]';
+  let mid;
+  if(fmtv==='call') mid = `Confirming ${day} at ${tm}, 15 minutes by phone. I'll walk you through ${off}. I'll text the link the night before.`;
+  else if(fmtv==='visit') mid = `Confirming ${day} at ${tm}, 15 minutes at the shop. I'll bring ${off}.`;
+  else mid = `As promised, I'll text you ${off} by ${day}. I'll give you a quick call ${day} at ${tm} to answer questions, 10 minutes max.`;
+  document.getElementById('cOut').value = `Hi ${nm}, it's ${who} from Starwell. ${mid} It's yours to keep either way, and if it's not useful, just say so and I won't follow up.`;
+}
+['cName','cDay','cTime','cFmt','cOffer'].forEach(id=>document.getElementById(id).addEventListener('input',buildConfirm));
+document.getElementById('cCopy').addEventListener('click',()=>{
+  const t = document.getElementById('cOut'); const msg = document.getElementById('cMsg');
+  try{ navigator.clipboard.writeText(t.value).then(()=>msg.textContent='Copied.',()=>{t.select();msg.textContent='Select and copy manually.'}); }
+  catch(e){ t.select(); msg.textContent='Select and copy manually.'; }
+});
+
+/* ---------- OBJECTIONS ---------- */
+const OBJ = [
+  ['"Not interested."','"Fair enough. Is that not interested in the topic, or just not right now?" If still no: "Got it. I\'ll take you off my list. Have a good day."','One clarify, then a clean exit. A no ends follow-up.'],
+  ['"Send me an email."','"Happy to. So it\'s actually useful, is it more the website side or the phones I should send?" Then send what you promised, short, the same day.','Turns a brush-off into a choice, and keeps your promise.'],
+  ['"We already have someone."','"Good, then this is just a second set of eyes they can use. Want the one-page snapshot to pass along to them?"','Status quo bias: frame it as an addition, not a replacement (Samuelson & Zeckhauser).'],
+  ['"What\'s the catch?"','"Fair question. We\'re building our HVAC client base. If you like the snapshot, we\'d hope to talk about fixing it someday. If not, you keep it, no follow-up."','Name the motive yourself so they don\'t have to hunt for it (persuasion knowledge).'],
+  ['"We don\'t have budget."','"That\'s fine, I\'m not asking for any. The snapshot is free. If it shows a real problem, you can decide later if it\'s worth a budget."','No pressure, no discount. Free and paid stay separate.'],
+  ['"How did you get my number?"','"It\'s the number on your website, [VERIFY: source]. If you\'d rather I not call, I\'ll take it off my list right now."','Honest source, instant opt-out.'],
+  ['"I\'m busy."','"Understood, you\'re probably on a job. Is there a better time this week, or should I just text you the one finding?"','Respect the truck. Offer the smallest possible next step.'],
+  ['"I\'m not the decision maker."','"Thanks for telling me. Who handles the website (or phones) at the shop? And would you mind if I mentioned you suggested I reach out?"','Gatekeeper as ally. Use their name only if they say yes.']
+];
+document.getElementById('objList').innerHTML = OBJ.map(o=>`<button class="flip"><div class="f"><b>${o[0]}</b><span class="hint">Say yours out loud, then tap</span></div><div class="bk">${o[1]}<span class="principle">${o[2]}</span></div></button>`).join('');
+document.getElementById('objList').addEventListener('click',e=>{
+  const f = e.target.closest('.flip'); if(f){ f.classList.toggle('open'); setTimeout(checkMore,30); }
+});
+
+/* ---------- SIM ---------- */
+const SIM = [
+  {h:'"Yeah, this is Craig."', o:[
+    ['"Hi Craig, did I catch you at a bad time?"',0,'Gong\'s worst opener: 2.15% vs 11.18% for a permission-based one. It hands him an exit.'],
+    ['"Hi Craig, this is {me} with Starwell in {town}. This is a cold call, so I\'ll be quick. I\'m calling about one thing I noticed on your website."',1,'Name, company, honest about the cold call, one reason. Stating the reason is linked to 2.1× meetings.'],
+    ['"Hi Craig! How are you today? We help HVAC businesses grow with AI."',0,'Generic reason confirms suspicion, and leading with AI breaks the problem-first rule.']]},
+  {h:'"…Okay. What did you notice?"', o:[
+    ['"Honestly, your website\'s pretty outdated."',0,'Sounds like criticism. Triggers defensiveness.'],
+    ['"We\'ve helped dozens of shops double their calls."',0,'Unverifiable proof. We have no HVAC results yet, and fabricated proof is off-limits.'],
+    ['"Your site says the office closes at 5, and I didn\'t see a way to book after that. I\'m curious how evening calls get handled."',1,'One verified, checkable fact that links to money.']]},
+  {h:'"Uh, the answering service gets them, I think."', o:[
+    ['"Would you ever consider an AI voice agent?"',0,'A future question gets a polite guess, and it pitches before listening.'],
+    ['"When a call came in after hours last week, what actually happened to it?"',1,'A recent-event follow-up. Adaptive selling is our strongest evidence (155 samples, 31,000+ reps).'],
+    ['"Great, let me tell you about our voice agent. It handles…"',0,'Pitching before adapting. You don\'t know yet if there\'s a leak.']]},
+  {h:'"Honestly? I don\'t know. Probably a few went to voicemail Saturday."', o:[
+    ['"You\'re probably losing $50,000 a year on missed calls."',0,'Invented number. Let the owner do the math with his own figures.'],
+    ['"Let\'s set up a free consultation to go over your needs."',0,'Vague. Nobody can picture a "consultation," and it costs his time first.'],
+    ['"With your OK, we\'d place three test calls at times you pick and show you exactly what a caller hears. It takes you nothing but a yes."',1,'Bounded deliverable, permission-based, zero access.']]},
+  {h:'"What\'s the catch?"', o:[
+    ['"No catch at all, it\'s totally free, trust me!"',0,'"Trust me" is exactly what raises suspicion. Give the real reason.'],
+    ['"It\'s free because we\'re building our HVAC client base, and showing real work is the fastest way to earn a second conversation."',1,'One sentence, same every time, then stop talking.'],
+    ['"Well, see, we\'re new, and there are a lot of companies out there, and honestly we just want to…"',0,'Long, defensive explanations sound like hiding something.']]},
+  {h:'"Alright. When?"', o:[
+    ['"Whenever works. I\'ll check back sometime."',0,'No date, no follow-through. Implementation intentions need a when and where.'],
+    ['"Let\'s book an hour so we can go through everything."',0,'A long ask makes a small yes feel big.'],
+    ['"Tuesday at 7:30 before the trucks go out? I\'ll text you the details the night before. It\'s 15 minutes."',1,'Day, time, length, written reminder (d = .65 for implementation intentions).']]},
+  {h:'Different call. Owner: "Not interested."', o:[
+    ['"Can I just take two minutes to explain?"',0,'Pushing past a no triggers reactance.'],
+    ['"Fair enough. Is that not interested in the topic, or just not right now?"',1,'One clarifying question. That\'s your one.'],
+    ['(Hang up without a word.)',0,'You lose the one clarify you\'re allowed, and the goodwill.']]},
+  {h:'Owner: "Not right now either. Not interested."', o:[
+    ['"Got it. I\'ll take you off my list. Have a good day."',1,'Second no: accept it, end politely, update the do-not-call list today.'],
+    ['"Okay, I\'ll follow up in a couple of weeks then."',0,'A no ends follow-up. Breaking that ruins the promise.'],
+    ['"Are you sure? Most shops find this really useful."',0,'Pressure after a second no. Off-limits.']]}
+];
+let simStep=0, simScore=0, simLocked=false;
+function sub(s){ return s.replace(/\{me\}/g, me||'[your name]').replace(/\{town\}/g, TOWN); }
+function renderSim(){
+  const el = document.getElementById('sim'); if(!el) return;
+  if(simStep>=SIM.length){
+    const pct = simScore/SIM.length;
+    el.innerHTML = `<div class="score"><div class="tag">Your score, ${me||'teammate'}</div><div class="big">${simScore}/${SIM.length}</div>
+      <p class="hand ${pct<1?'em':''}">${pct===1?'Clean call. Now do it on a real phone.':pct>=.75?'Close. Re-read the cards you missed.':'Run it again after the step cards.'}</p>
+      <button class="btn v" id="simAgain">Run it again</button></div>`;
+    document.getElementById('simAgain').onclick=()=>{simStep=0;simScore=0;renderSim();};
+    return;
+  }
+  const s = SIM[simStep]; simLocked=false;
+  const order = s.o.map((x,k)=>k);
+  el.innerHTML = `<p class="tag">Round ${simStep+1} of ${SIM.length} · Score ${simScore}</p>
+    <div class="hear simline">${s.h}</div>
+    <div class="quizsim">${order.map(k=>`<button class="opt" data-k="${k}">${sub(s.o[k][0])}</button>`).join('')}</div>
+    <div class="fb" id="simFb"></div>`;
+  el.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>{
+    if(simLocked) return; simLocked=true;
+    const o = s.o[+b.dataset.k];
+    b.classList.add(o[1]?'right':'wrong');
+    if(o[1]) simScore++;
+    else el.querySelectorAll('.opt').forEach(x=>{ if(s.o[+x.dataset.k][1]) x.classList.add('right'); });
+    const fb = document.getElementById('simFb');
+    fb.innerHTML = (o[1]?'<b>Good.</b> ':'<b>Not that one.</b> ')+o[2]+`<br><button class="btn" id="simNext" style="margin-top:8px">${simStep<SIM.length-1?'Next round':'See score'}</button>`;
+    fb.classList.add('show');
+    document.getElementById('simNext').onclick=()=>{simStep++;renderSim();cards[idx].scrollTop=cards[idx].scrollTop;};
+    setTimeout(checkMore,30);
+  }));
+}
+
+/* ---------- PREP ---------- */
+const prep = document.getElementById('prepList');
+prep.addEventListener('change',()=>{
+  const n = prep.querySelectorAll('input:checked').length, t = prep.querySelectorAll('input').length;
+  const s = document.getElementById('prepScore'); s.textContent = n+'/'+t;
+  s.style.color = n===t ? 'var(--go)' : 'var(--verm)';
+});
+
+/* ---------- SCORECARD ---------- */
+function v(id){ return Math.max(0, parseFloat(document.getElementById(id).value)||0); }
+function pctS(x){ return (Math.round(x*1000)/10)+'%'; }
+function cls(val, avg, top, lowerBetter){
+  if(lowerBetter){ return val<=top?'go':(val<=avg?'maybe':'stop'); }
+  return val>=top?'go':(val>=avg?'maybe':'stop');
+}
+function score(){
+  const d=v('s_d'),c=v('s_c'),q=v('s_q'),n=v('s_n'),h=v('s_h'),neg=v('s_neg'),f=v('s_f');
+  const items=[];
+  if(d){ const r=c/d; items.push(['Connect rate',pctS(r),`avg 5.4% · top 13.3%`,cls(r,.054,.133)]); }
+  if(c){ const r=n/c; items.push(['Next steps per conversation',pctS(r),`Gong: avg 4.6% · top 16.7%`,cls(r,.046,.167)]); }
+  if(c){ items.push(['Qualified share of connects',pctS(q/c),'decision maker + answered discovery','']); }
+  if(n){ const r=d/n; items.push(['Dials per next step',fmt(r),'plan: 40–45 at first',r<=40?'go':(r<=45?'maybe':'stop'),r<=40?'Better than plan':(r<=45?'On plan':'Above plan')]); }
+  if(n){ const r=h/n; items.push(['Held ÷ booked',pctS(r),'test 6 aims to raise this','']); }
+  if(n){ const r=f/n; items.push(['Free hours per prospect',fmt(r),'proposed cap: 3',r<=3?'go':'stop',r<=3?'Under cap':'Over cap']); }
+  if(c){ items.push(['Negative reactions',pctS(neg/c),'of connects; watch weekly','']); }
+  document.getElementById('scoreOut').innerHTML = items.map(i=>`<div><div class="lbl">${i[0]}</div><div class="num">${i[1]}</div><div class="cmp">${i[3]?`<span class="pill ${i[3]}">${i[4]||(i[3]==='go'?'At/above top':i[3]==='maybe'?'At/above avg':'Below avg')}</span><br>`:''}${i[2]}</div></div>`).join('') || '<p class="small">Enter some dials to see your rates.</p>';
+}
+['s_d','s_c','s_q','s_n','s_h','s_neg','s_f'].forEach(id=>document.getElementById(id).addEventListener('input',score));
+score();
+
+/* ---------- INIT ---------- */
+applyMe();
+go(idx);
+})();
+</script>
+</body>
+</html>
