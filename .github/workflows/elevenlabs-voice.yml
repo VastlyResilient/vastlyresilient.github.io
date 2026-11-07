@@ -2,7 +2,15 @@ name: Record guide voice (ElevenLabs)
 
 # Run from the Actions tab: "Record guide voice (ElevenLabs)" -> Run workflow.
 # Needs a repository secret named ELEVENLABS_API_KEY.
+# Also runs on its own when the guide's text or the recorder changes;
+# only new or edited lines are recorded, so ElevenLabs characters aren't wasted.
 on:
+  push:
+    branches: [main]
+    paths:
+      - starwell-cold-call/index.html
+      - tools/elevenlabs-voice.mjs
+      - .github/workflows/elevenlabs-voice.yml
   workflow_dispatch:
     inputs:
       guide:
@@ -28,6 +36,8 @@ concurrency:
 jobs:
   record:
     runs-on: ubuntu-latest
+    env:
+      GUIDE: ${{ inputs.guide || 'starwell-cold-call' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -38,13 +48,14 @@ jobs:
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
           COACH_VOICE: ${{ inputs.coach_voice }}
           OWNER_VOICE: ${{ inputs.owner_voice }}
-          FORCE: ${{ inputs.force }}
-        run: node tools/elevenlabs-voice.mjs "${{ inputs.guide }}"
+          FORCE: ${{ inputs.force || 'false' }}
+        run: node tools/elevenlabs-voice.mjs "$GUIDE"
       - name: Commit audio
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
-          git add "${{ inputs.guide }}/audio"
+          git add "$GUIDE/audio"
           git diff --cached --quiet && echo "No changes" && exit 0
-          git commit -m "Record ElevenLabs narration for ${{ inputs.guide }}"
+          git commit -m "Record ElevenLabs narration for $GUIDE"
+          git pull --rebase
           git push
