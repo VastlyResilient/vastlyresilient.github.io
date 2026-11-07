@@ -62,19 +62,26 @@ async function tts(p) {
   throw new Error('ElevenLabs kept failing; try again later.');
 }
 const staleTimings = new Set();
-let n = 0;
-for (const [k, p] of todo) {
-  fs.writeFileSync(path.join(dir, k + '.mp3'), await tts(p));
-  staleTimings.add(k);
-  console.log(`${++n}/${todo.length} ${p.role}: ${p.t.slice(0, 60)}`);
+let n = 0, failure = null;
+try {
+  for (const [k, p] of todo) {
+    fs.writeFileSync(path.join(dir, k + '.mp3'), await tts(p));
+    staleTimings.add(k);
+    console.log(`${++n}/${todo.length} ${p.role}: ${p.t.slice(0, 60)}`);
+  }
+} catch (e) {
+  failure = e;   // e.g. quota used up: keep every clip finished so far; the page falls back to the phone voice for the rest
+  console.log('Stopped early: ' + e.message);
 }
 // Remove clips no longer used by the guide.
 for (const f of fs.readdirSync(dir)) if (f.endsWith('.mp3') && !jobs.has(f.slice(0, -4))) fs.unlinkSync(path.join(dir, f));
-fs.writeFileSync(manPath, JSON.stringify({ voices: { coach: COACH, owner: OWNER }, model: MODEL, files: [...jobs.keys()].sort(), texts: Object.fromEntries([...jobs].map(([k, p]) => [k, p.t])) }, null, 1));
+const done = [...jobs.keys()].filter(k => fs.existsSync(path.join(dir, k + '.mp3')) && (!force || staleTimings.has(k) || !todo.some(([t]) => t === k))).sort();
+fs.writeFileSync(manPath, JSON.stringify({ voices: { coach: COACH, owner: OWNER }, model: MODEL, files: done, texts: Object.fromEntries(done.map(k => [k, jobs.get(k).t])) }, null, 1));
 const tPath = path.join(dir, 'timings.json');
 if (fs.existsSync(tPath)) {
   const t = JSON.parse(fs.readFileSync(tPath, 'utf8'));
   for (const k of Object.keys(t)) if (staleTimings.has(k) || !jobs.has(k)) delete t[k];
   fs.writeFileSync(tPath, JSON.stringify(t));
 }
-console.log('Done. Manifest written.');
+console.log(`Manifest written: ${done.length}/${jobs.size} clips ready.`);
+if (failure) { console.log('Run the workflow again later to finish the rest.'); process.exitCode = 1; }

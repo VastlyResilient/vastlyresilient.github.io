@@ -55,10 +55,12 @@ jobs:
         with:
           python-version: '3.11'
       - name: Word timings for highlighting
+        if: always()
         run: |
           pip install --quiet "faster-whisper>=1.0"
           python tools/align-words.py "$GUIDE"
       - name: Commit audio
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
