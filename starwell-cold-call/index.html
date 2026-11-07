@@ -18,7 +18,7 @@
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;overflow:hidden;background:var(--paper);color:var(--ink);font:16px/1.5 "Public Sans",system-ui,sans-serif;-webkit-text-size-adjust:100%}
 button{font:inherit;color:inherit;cursor:pointer}
-#app{position:fixed;inset:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto}
+#app{position:fixed;inset:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;grid-template-columns:minmax(0,1fr)}
 /* top bar */
 .top{background:var(--navy);color:var(--cream);padding:calc(8px + env(safe-area-inset-top,0px)) calc(12px + var(--sr)) 8px calc(12px + var(--sl))}
 .top-row{display:flex;align-items:center;gap:10px;max-width:720px;margin:0 auto}
@@ -218,6 +218,29 @@ textarea{min-height:120px;resize:vertical}
 @keyframes pulse{50%{transform:scale(1.06)}}
 @keyframes draw{to{stroke-dashoffset:0}}
 .wave{transform-box:fill-box;transform-origin:left center}
+/* drive mode */
+#driveBtn{background:var(--verm);border:0;border-radius:10px;min-height:44px;padding:0 10px;color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px;flex:none}
+#driveBtn svg{width:22px;height:22px}
+body.driving #driveBtn{background:var(--gold);color:var(--ink)}
+@media (max-width:430px){#driveBtn .lb{display:none}#menuBtn .lb{display:none}}
+.driverow{display:none;max-width:720px;margin:0 auto}
+body.driving .bot-row.nav{display:none}
+body.driving .driverow{display:block}
+body.driving .more{display:none}
+.cap{font:600 17px/1.35 "Public Sans";color:var(--ink);min-height:46px;margin:0 0 8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cap .spk{font:800 13px "Barlow Condensed";letter-spacing:.1em;text-transform:uppercase;color:var(--ember);margin-right:6px}
+.dctl{display:flex;align-items:center;justify-content:center;gap:10px}
+.dbtn{width:58px;height:58px;border-radius:50%;border:2px solid var(--navy);background:var(--cream);display:grid;place-items:center;color:var(--navy);flex:none}
+.dbtn svg{width:28px;height:28px}
+.dplay{width:80px;height:80px;background:var(--verm);border:0;box-shadow:0 3px 0 var(--ember);color:#fff}
+.dplay svg{width:38px;height:38px}
+.dsmall{min-height:44px;min-width:50px;border-radius:10px;border:1.5px solid var(--sand3);background:var(--cream);font-weight:700;padding:0 10px;font-size:14px;flex:none}
+.listen-cta{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--navy);color:var(--cream);border:0;border-radius:16px;padding:14px;margin:14px 0;min-height:64px}
+.listen-cta svg{width:34px;height:34px;flex:none}
+.listen-cta b{font:800 22px/1 "Barlow Condensed";text-transform:uppercase;color:var(--gold);display:block}
+.speedrow{display:flex;gap:6px}
+.speedrow button{flex:1;min-height:44px;border-radius:10px;border:1.5px solid var(--sand3);background:#fff;font-weight:700}
+.speedrow button.sel{background:var(--navy);color:var(--cream);border-color:var(--navy)}
 @media (min-width:760px){
   .card{padding-top:28px}
   .minds{grid-template-columns:1fr 1fr}
@@ -242,8 +265,9 @@ textarea{min-height:120px;resize:vertical}
 <div id="app">
 <header class="top">
   <div class="top-row">
-    <button id="menuBtn" aria-label="Open list of all stops">&#9776; Menu</button>
+    <button id="menuBtn" aria-label="Open list of all stops">&#9776;<span class="lb"> Menu</span></button>
     <div class="tt"><div id="tTitle"></div><div id="tSub"></div></div>
+    <button id="driveBtn" aria-label="Listen hands-free"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16V11l2-5h10l2 5v5"/><path d="M3 16h18v3H3z"/><circle cx="7.5" cy="13" r="1"/><circle cx="16.5" cy="13" r="1"/></svg><span class="lb">Listen</span></button>
     <div id="count"></div>
     <div id="ava">?</div>
   </div>
@@ -261,6 +285,7 @@ textarea{min-height:120px;resize:vertical}
   <p class="lead">Pick your name. The guide puts it into the scripts, the role-play and your confirmation texts.</p>
   <div id="whoList"></div>
   <p class="hand">One card at a time. Use Next at the bottom, or Menu to jump anywhere.</p>
+  <button class="listen-cta" data-open-drive><svg viewBox="0 0 24 24" fill="none" stroke="#F2B33D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16V11l2-5h10l2 5v5"/><path d="M3 16h18v3H3z"/><circle cx="7.5" cy="13" r="1"/><circle cx="16.5" cy="13" r="1"/></svg><span><b>Driving? Listen instead</b>A voice reads the whole guide and turns the pages for you.</span></button>
 </div>
 </section>
 
@@ -912,10 +937,37 @@ textarea{min-height:120px;resize:vertical}
 <div class="more" id="more">more below ↓</div>
 </main>
 
-<footer class="bot"><div class="bot-row">
+<footer class="bot"><div class="bot-row nav">
   <button id="back" aria-label="Back">‹</button>
   <button id="next">Next</button>
+</div>
+<div class="driverow">
+  <div class="cap" id="cap" aria-live="off"></div>
+  <div class="dctl">
+    <button class="dsmall" id="dSpeed" aria-label="Reading speed">1×</button>
+    <button class="dbtn" id="dPrev" aria-label="Previous card"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
+    <button class="dbtn dplay" id="dPlay" aria-label="Pause"><svg viewBox="0 0 24 24" fill="currentColor" id="dPlayIco"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></button>
+    <button class="dbtn" id="dNext" aria-label="Next card"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button>
+    <button class="dsmall" id="dExit" aria-label="Exit listen mode">Exit</button>
+  </div>
 </div></footer>
+
+<div class="sheet" id="driveSheet"><div class="sheet-in">
+  <h3>Listen hands-free <button id="closeDrive">Close</button></h3>
+  <p class="lead">A voice reads every card and turns the pages on its own, start to finish (about 25 minutes at normal speed).</p>
+  <div class="rule">Set it up <b>before you drive.</b> Tap Start, put the phone in its mount, and don't touch the screen. The quizzes and tools are for when you're parked.</div>
+  <div id="driveUnsupported" class="box" style="display:none">This browser can't read aloud. Try Safari on iPhone or Chrome on Android or desktop.</div>
+  <div id="driveSetup">
+    <div class="fld"><label for="dVoice">Voice</label><select id="dVoice"></select></div>
+    <div class="fld"><label>Speed</label><div class="speedrow" id="dSpeedRow"><button data-r="0.9">0.9×</button><button data-r="1">1×</button><button data-r="1.15">1.15×</button><button data-r="1.3">1.3×</button></div></div>
+    <p class="small" style="margin-top:8px">It uses your phone's built-in voices, so it sounds different on each device. On iPhone, extra "Enhanced" voices can be downloaded in Settings → Accessibility → Spoken Content → Voices. Keep this tab open; the screen stays on while it plays where the phone allows it.</p>
+    <div class="grid2" style="margin-top:10px">
+      <button class="btn" id="dTest">Test voice</button>
+      <button class="btn" id="dHere">Start from this card</button>
+    </div>
+    <button class="btn v" id="dTop" style="width:100%;margin-top:8px;min-height:56px;font-size:18px">Start from the top</button>
+  </div>
+</div></div>
 
 <div class="sheet" id="sheet"><div class="sheet-in">
   <h3>All stops <button id="closeSheet">Close</button></h3>
@@ -1152,6 +1204,7 @@ function go(n){
   store.set('sw_cc_idx', idx);
   update();
   setTimeout(checkMore, 60);
+  if(typeof onCardChange==='function') onCardChange();
 }
 document.getElementById('next').addEventListener('click',()=>{
   if(idx===0 && !me){ const w=document.getElementById('whoList'); w.classList.remove('shake'); void w.offsetWidth; w.classList.add('shake'); return; }
@@ -1354,6 +1407,178 @@ function score(){
 }
 ['s_d','s_c','s_q','s_n','s_h','s_neg','s_f'].forEach(id=>document.getElementById(id).addEventListener('input',score));
 score();
+
+/* ---------- DRIVE MODE: NARRATION ----------
+   Tokens: {me} = signed-in name, {town} = TOWN.
+   "|" = short break. "~" alone = 2.5 second thinking pause.
+   "O>" at the start of a part = the owner speaking (second voice).
+   Avoid decimals and abbreviations with periods: sentences are split on . ! ? */
+const NARR = [
+/* 0 sign in */ null,
+/* 1 */ `Welcome to the Starwell cold call field guide, {me}. Every line you'll say on a call traces back to a study, a dataset, or an idea we've labeled as untested. | The rule is simple. If we can't point to where a claim came from, we don't say it on a call. | Here's the honest headline. Almost no peer-reviewed research studies cold calling directly. Only two of our twenty approaches rest on direct sales evidence, and even that comes from field sales, not cold calls. | So you'll hear four labels. Direct means B2B sales research, the strongest we have. Transferred means solid research from another setting, like advertising or health goals, applied to calls. Practitioner means big industry datasets, like Gong and Cognism, that don't publish their methods. And hypothesis means our own idea, which we test before we trust. | When a teammate says studies show, ask which label it is.`,
+/* 2 */ `Let's start with the real math. Nobody publishes an audited success rate, so here are the closest numbers we have. | From Gong's data on over three hundred million calls: the right person answers about five percent of dials on average, and about thirteen percent for the top quarter. It takes about nineteen dials to get one conversation, or eight for top reps. Of those conversations, a little under five percent book a meeting on average, and about seventeen percent for top performers. | Cognism puts the overall cold call success rate at under three percent in 2026, down from almost five percent in 2024. Their own top team hits about eleven percent. | The sources define success differently, so treat these as a range, not a promise. Our planning rule: assume about forty to forty-five dials per meeting at first. | Three takeaways. Say the reason for your call. Gong links it to about twice as many meetings. Successful calls run longer, almost six minutes versus a little over three, so if they engage, don't rush them off. And low connect rates usually mean bad phone data, not bad reps. | From the caller's seat: at the average rate, about ninety-seven of every hundred dials end without a meeting. A no is the base rate, not a verdict on you.`,
+/* 3 */ `Now step inside the owner's head. Our default buyer owns an established, family-run HVAC shop in Fairfield or New Haven County, with roughly ten to forty-five employees, and he often answers the phone himself. | Five things are stacked against you. One: he didn't ask for the call. You're interrupting a working day, often while he's in the truck. Two: he decides in seconds whether you're credible and relevant. Three: free cuts both ways. It sparks interest, and it triggers the question, what's the catch. Four: saying yes can cost him logins, staff time, or data. Five: the person who answers may not be the one who decides. | Gartner found seventy-three percent of B2B buyers actively avoid suppliers who send irrelevant outreach. | Here are the six worries in his head, and the answer to each. | O>If I say yes, I'll get chased forever. | It's yours to keep, and a no ends follow-up. | O>I don't have time for a meeting. | Name the exact time. Fifteen minutes, or a text with the file. | O>Who's going to do the fixes? | A fix list his current person can use. | O>What are you doing with my data? | The first step uses only public information. No logins. | O>I already have a web person. | It's a second opinion, not a replacement. | O>Free means junk. | Show the method and the date. Show the work.`,
+/* 4 */ `Now, your head, {me}. Calm comes from knowing the odds. | First, a no is the base rate. Even top teams book on only about one in nine dials. You're not failing. You're sampling. | Second, silence usually isn't about you. If nobody's picking up, fix the list before you fix yourself. | Third, your voice is the first demo. Research on thin slices found people judge warmth and competence from very short moments, and on the phone your voice is the only signal. So slow down, smile while you speak, and pause after the reason for calling. A calm delivery makes the free offer sound generous instead of desperate. | Fourth, you're not asking for a favor. You're bringing a finished thing he keeps either way. | Fifth, clarify once, then let go. If the second answer is still no, end politely. | And sixth, from Jeb Blount: prospect every day, no exceptions. Block the time, and log every call within the hour.`,
+/* 5 */ `Here's the whole call on one map. Five steps, about two minutes if it goes well. | Step one, the opener, ten seconds. Your name, Starwell, that it's a cold call, and one reason. | Step two, relevance, fifteen seconds. One verified observation about their shop. | Step three, one question, thirty to sixty seconds. Ask about something that happened recently. Listen, and ask one follow-up. | Step four, value, fifteen seconds. The bounded deliverable that fits their answer, why it's free, and one limit. | Step five, next step, fifteen seconds. A date, a length, a format, or a clean no. | Notice that the longest step is the one where they talk. And following our Promise Chain, every script leads with the owner's problem, not with AI.`,
+/* 6 */ `Step one: name the reason first. In the first ten seconds, give your name, Starwell, that this is a cold call, and the one specific reason you're calling. | It sounds like this. | Hi Craig, this is {me} with Starwell in {town}. This is a cold call, so I'll be quick. I'm calling about one thing I noticed on your website. | Why it works: it removes the question, who is this and what do they want, so he can judge relevance instead of bracing for a trick. | The evidence is practitioner data. Gong reports a permission-based opener at about eleven percent success, versus about two percent for, did I catch you at a bad time. Gong doesn't publish its method, so treat it as a lead, not proof. | So never open with, bad time. And never with, we help businesses grow with AI. A generic reason confirms his suspicion. | Last thing. Don't say, this is a cold call, like a memorized gimmick. Say it like a neighbor.`,
+/* 7 */ `Step two: lead with one true thing. That's one specific, checkable fact about their shop, found before you dial. | For example. Your site says the office closes at five, and I didn't see a way to book after that. I'm curious how evening calls get handled. | This is transferred evidence. Field experiments found that personalizing emails raised opens and later outcomes, and buyers punish irrelevant outreach. | Where to look. Their website hours and booking. What ChatGPT and Google's AI say when you ask who does furnace repair in their town. The date of their last Facebook post. And their careers page. | Good observations sound like: your last Facebook post was in March. Or: I noticed you're hiring a dispatcher. | Bad ones: your website looks outdated, which sounds like criticism. Anything you saw on Street View, which feels like surveillance. And, we help businesses like yours, which is about nobody. | One rule above all. A wrong or stale fact destroys credibility instantly. Verify everything before the call.`,
+/* 8 */ `Step three: ask about last week, then adapt. This is our strongest evidence. A meta-analysis of a hundred and fifty-five samples and over thirty-one thousand salespeople found adaptive selling improved performance, including objective sales numbers. | Ask one question about something that actually happened. Like this. | Quick question before I say anything else. When a call came in after hours last week, what happened to it? | Then listen, and shape the rest of the call around his answer. | Three moves after he answers. First, one follow-up. You said Sarah handles the callbacks. What happens on her day off? | Second, ask for his expertise. You've run this shop for thirty years. What's the one thing new homeowners get wrong when they call you? | Third, let him do the math. You said about five calls go to voicemail on a busy night. What's a typical repair worth to you? Never invent the number yourself. | Ask about last week, not someday. Would you ever consider an AI receptionist gets a polite guess. What happened to Saturday's calls gets a fact. | And watch out. Three or more questions before you give anything back turns into an interrogation.`,
+/* 9 */ `Step four: offer a thing, not a meeting. Four parts, in about fifteen seconds. | First, a bounded deliverable. A named thing with a clear size, never a free consultation. Concrete offers are easier to picture, and research on fluency says ideas that are easy to process are judged as more true. | Second, why it's free, in one sentence, with the same words every time. It's free because we're building our HVAC client base, and showing real work is the fastest way to earn a second conversation. Then stop talking. | Third, one limit. I can't promise you'll show up in ChatGPT. Nobody controls that. Admitting a limit makes everything else more believable. | Fourth, no access and no work for them. It's built only from public information. | Give one finding on the call for free, and never hold the snapshot hostage for a meeting. | Here are the offers, by service. Website: an AI answer snapshot, or a five-fix list. Social: a profile check against three local competitors, or a first-month post calendar built from ten of their own photos. Voice: an after-hours call map, which is three test calls made with their permission, or a demo number. Apps: a handoff sketch, or a build-or-buy check, where the honest answer is often, don't build.`,
+/* 10 */ `Step five: pin a date, or take a clean no. | It sounds like this. Tuesday at seven thirty, before the trucks go out? I'll text you the snapshot link the night before, and it's fifteen minutes. If it's not useful, just say so and I won't follow up. | Why each piece is there. A date plus an agenda: a meta-analysis of ninety-four tests found that specific when-and-where plans strongly raise follow-through. Agree on the day, the time, the place or link, who attends, and what they'll see. Then send it in writing. | Freedom to say no: it may lower pushback, but the best-controlled studies found almost no effect. So say it once, and mean it. | Start small. Ask for fifteen minutes, not an hour. | And never push for a date after a soft no. | The guide has a confirmation text builder on this card. Use it after the call, never while driving.`,
+/* 11 */ `Let's talk about the psychology of free. | Free pulls. In a classic study, making a cheap chocolate free instead of one cent shifted choices sharply. But that was low stakes, and who touches an owner's website or phones is not low stakes. | Free can also cheapen something. And it raises suspicion about the hidden motive. | So here's the rule. Free works when it's specific, small, clearly ours, and clearly explained. It hurts when it's vague, unexplained, or looks like a hook. | Protect the paid work. The free piece is the diagnosis, never the fix. Show the method. Never discount to close. And cap free effort per prospect. Our proposal is three hours. | How to spot a real buyer. He names a problem with a cost, like, we lose calls every Saturday. He asks how paid work would go. He brings in the person who runs the process. | A freebie hunter says, just send everything over. He asks for more free work, and he won't set a date. | At every walkthrough, ask this. If this turned out to be a real problem, is it something you'd fix this season, or is it a later thing?`,
+/* 12 */ `Who picks up the phone? | At an owner-led shop, the owner usually decides alone, and often fast. The gatekeeper is the office manager or a spouse. Treat them as an ally, because they know exactly where calls get dropped. Earn trust by being local, personal, specific, and respectful of their time. | At a larger company, a group decides. You'll hit reception or procurement, and they want documented process, security, and written terms. Avoid asking for any access early. IT approval takes weeks. | For larger companies, use Aaron Ross's move. Email the CEO or COO asking who owns the website or phones, then call that person and mention the referral. | When someone says they're not the decision maker, say this. | Thanks for telling me. Who handles the phones at the shop? And would you mind if I mentioned you suggested I reach out? | Only use their name if they say yes.`,
+/* 13 */ `Here are two of the four scripts, read in full. | First, the website script. | Hi, this is {me} with Starwell, here in {town}. This is a cold call, so I'll keep it under a minute. | I asked ChatGPT and Google's AI who does furnace repair in your town, and, here you say what actually came up. | I put it on one page with screenshots and the three things on your site most likely behind it. Nobody can promise where AI sends people, so I won't. | It's free. We're building our HVAC client base and want to show real work first. Want me to walk you through it in fifteen minutes, or just text it to you? Either is fine. | Now the voice agent script. | Hi, {me} with Starwell in {town}. This is a cold call about one thing: calls that come in after hours. | Your site says the office closes at, and here you say the time. When a call came in last night after that, what happened to it? | If it's a real leak: With your OK, we'd place three test calls at times you pick, and show you exactly what a caller hears. It takes you nothing but a yes. | It's free, and if your calls are covered, I'll tell you that and we're done. | The social media and app scripts are on screen for when you're parked.`,
+/* 14 */ `Objection gym. The rule: clarify once. If the second answer is still no, accept it and end politely. | I'll read each objection, then pause. Answer it out loud before you hear mine. | O>Not interested. | ~ | Fair enough. Is that not interested in the topic, or just not right now? And if it's still no: Got it. I'll take you off my list. Have a good day. | O>Send me an email. | ~ | Happy to. So it's actually useful, is it more the website side or the phones I should send? Then send it, short, the same day. | O>We already have someone. | ~ | Good, then this is just a second set of eyes they can use. Want the one-page snapshot to pass along to them? | O>What's the catch? | ~ | Fair question. We're building our HVAC client base. If you like the snapshot, we'd hope to talk about fixing it someday. If not, you keep it, no follow-up. | O>We don't have budget. | ~ | That's fine, I'm not asking for any. The snapshot is free. If it shows a real problem, you can decide later if it's worth a budget. | O>How did you get my number? | ~ | It's the number on your website. If you'd rather I not call, I'll take it off my list right now. | O>I'm busy. | ~ | Understood, you're probably on a job. Is there a better time this week, or should I just text you the one finding? | O>I'm not the decision maker. | ~ | Thanks for telling me. Who handles the website or phones at the shop? And would you mind if I mentioned you suggested I reach out?`,
+/* 15 */ `Let's run the whole call with Craig, out loud. Craig owns a twenty-person HVAC shop, and he picks up in his truck. | O>Yeah, this is Craig. | Hi Craig, this is {me} with Starwell in {town}. This is a cold call, so I'll be quick. I'm calling about one thing I noticed on your website. | O>Okay. What did you notice? | Your site says the office closes at five, and I didn't see a way to book after that. I'm curious how evening calls get handled. | O>The answering service gets them, I think. | When a call came in after hours last week, what actually happened to it? | O>Honestly, I don't know. Probably a few went to voicemail Saturday. | With your OK, we'd place three test calls at times you pick and show you exactly what a caller hears. It takes you nothing but a yes. | O>What's the catch? | It's free because we're building our HVAC client base, and showing real work is the fastest way to earn a second conversation. | Then you stop talking. | O>Alright. When? | Tuesday at seven thirty, before the trucks go out? I'll text you the details the night before. It's fifteen minutes. | That's the whole call. And if it goes the other way, and he says not interested twice, you say: Got it. I'll take you off my list. Have a good day. Then you update the do-not-call list today.`,
+/* 16 */ `After the dial: leave a voicemail. Every time. | Gong's data: email reply rates were under three percent without a voicemail, and almost six percent when one was left. And an email sent after a call got about twice the replies of an email with no call first. Calls make emails work better. | Here's a voicemail built on our rules. | Hi, {me} with Starwell in {town}. Cold call about one thing, and then you say your observation. I put together a one-page snapshot on it. It's yours either way. I'll text it over. Then leave your number. | The same day, send the snapshot by email. | Over the next three weeks, follow up across calls, email, and LinkedIn. That's Jason Bay's sequence. The goal of every touch is a meeting, not a close. After three weeks, the account cycles back into the target list. | One hard rule. The sequence is only for people we haven't reached. A no ends follow-up the same day. | And from Nick Saraev: free audits fail when they feel like homework. Send something finished that takes under two minutes to watch.`,
+/* 17 */ `Pre-call prep. Plan about ten minutes of research per account, and one researched why-now reason that you use in every touch. | Before you dial, check eleven things. | One. The prospect is on our Connecticut list, and you've noted whether it's owner-led or larger. | Two. The do-not-call list is checked. | Three. One verified observation, with the link saved and the date checked. | Four. Every verify placeholder in your script is filled. | Five. One free offer picked for this account. | Six. The why-free sentence, memorized word for word. | Seven. One limit chosen. | Eight. Two time options ready, like before the trucks go out. | Nine. Objections drilled out loud today. | Ten. The tracker is open, and you'll log the call within the hour. | Eleven. A person is dialing, never our AI voice agent. | Don't dial until all eleven are done.`,
+/* 18 */ `This is the owner's scorecard. Bookings alone aren't success. | We measure five things, in order. One, qualified conversations: we reached the decision maker, and they answered the discovery question. Two, accepted next steps: a dated walkthrough, or an agreed text plus a follow-up date. Three, meetings actually held. Four, qualified opportunities: a named problem, a cost the owner states himself, and agreement to discuss a paid pilot. Five, paid conversions. | Every week we also track negative reactions, like hangups and remove-me requests, and the hours spent on free work. | We run six tests, changing one thing at a time. An observation opener versus a generic one. A named deliverable versus a free consultation. With and without the freedom-to-decline line. Why-free up front versus only when asked. The snapshot by text versus a walkthrough only. And a written agenda and reminder versus a plain booking. | Run each version for at least thirty real conversations. At our volume, small gaps are noise. | And a reality check. At nineteen dials per conversation, thirty conversations is roughly five hundred and seventy dials. Plan tests in weeks, not days.`,
+/* 19 */ `Lines we never cross. | Every claim is true and checkable, and every placeholder is verified before a call. | No fabricated proof, no borrowed logos, no invented client results. | No false scarcity. | No fake familiarity, like, following up on our conversation, when there wasn't one. | No pressure based on what they owe us for free work. | No promises about revenue, rankings, or showing up in AI answers. | A no ends follow-up, and the do-not-call list is honored the same day. | Free work is capped per prospect, and logged. | And this one matters. Never cold call with our own AI voice agent. In February 2024, the FCC ruled that AI-generated voices count as artificial voices under the TCPA, so robocall consent rules apply. A person makes every cold call. We still need to check Connecticut's own telemarketing rules before we scale. | Until we have real HVAC results, the free deliverable is the proof.`,
+/* 20 */ `Your first week. | Day one. Agree who calls and when. Pick twenty prospects from the Connecticut list. Set up the tracker. And pick one free offer for the week: the AI answer snapshot. | Day two. Build the snapshot template. Verify one observation for each of the twenty, with links. Then role-play the website script and all eight objections, twice each. | Day three. First calling block, early morning, before the trucks leave. That timing is our guess, and it's untested. Log every call within the hour. | Day four. Second calling block, late afternoon. Send every promised snapshot within forty-eight hours of the call. | Day five. Hold any walkthroughs. Then review the tracker together. What got hangups, what got answers, and how many hours we spent. Then pick test one for week two. | Still open for the team: who makes the calls, who builds the deliverables, and what our hard cap on free hours should be.`,
+/* 21 */ `The field card, {me}. Here's the whole call one more time. | Opener: your name, Starwell, this is a cold call, and one reason. | Relevance: one verified, checkable fact about their shop. | One question: about last week. Listen. One follow-up. | Value: a named deliverable, the why-free sentence, one limit, no access needed. | Next step: a day, a time, fifteen minutes, in writing. Or a clean no. | The why-free sentence: We're building our HVAC client base, and showing real work is the fastest way to earn a second conversation. | Expect about forty to forty-five dials per meeting at first. A no is the base rate. | And never: fake proof, invented numbers, AI voice cold calls, or follow-up after a no. | That's the whole guide. Go make the call.`
+];
+
+/* ---------- DRIVE MODE: ENGINE ---------- */
+const synth = ('speechSynthesis' in window) ? window.speechSynthesis : null;
+const D = {on:false, playing:false, segs:[], si:0, token:0, timer:null, rate:1, voice:null, ovoice:null, wake:null, voices:[], segStart:0, ended:true};
+const RATES=[0.9,1,1.15,1.3];
+D.rate = parseFloat(store.get('sw_cc_rate')) || 1;
+const driveSheet = document.getElementById('driveSheet');
+const capEl = document.getElementById('cap');
+const playIco = document.getElementById('dPlayIco');
+const ICO_PAUSE = '<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>', ICO_PLAY = '<path d="M7 4v16l13-8z"/>';
+
+function voiceScore(v){
+  let s=0; const n=v.name||'';
+  if(/natural|neural|premium|enhanced|online/i.test(n)) s+=6;
+  if(/Samantha|Ava|Allison|Aria|Jenny|Guy|Davis|Evan|Zoe|Nathan|Google US English|Daniel/i.test(n)) s+=3;
+  if(/en[-_]US/i.test(v.lang)) s+=2;
+  if(/Novelty|Bells|Bubbles|Whisper|Zarvox|Trinoids|Albert|Bad News|Good News|Cellos|Organ|Jester|Superstar|Wobble|Boing|Bahh|Hysterical|Junior|Ralph|Fred|Kathy/i.test(n)) s-=20;
+  return s;
+}
+function loadVoices(){
+  if(!synth) return;
+  const all = synth.getVoices().filter(v=>/^en/i.test(v.lang));
+  all.sort((a,b)=>voiceScore(b)-voiceScore(a));
+  D.voices = all;
+  const sel = document.getElementById('dVoice');
+  const saved = store.get('sw_cc_voice');
+  sel.innerHTML = all.length ? all.map((v,k)=>`<option value="${k}">${v.name} (${v.lang})</option>`).join('') : '<option>Default voice</option>';
+  let pick = all.findIndex(v=>v.name===saved); if(pick<0) pick=0;
+  sel.value = String(pick);
+  setVoice(pick);
+}
+function setVoice(k){
+  D.voice = D.voices[k] || null;
+  // owner voice: the best-ranked voice that isn't the narrator
+  D.ovoice = D.voices.find(v=>D.voice && v.name!==D.voice.name && /en/i.test(v.lang)) || null;
+}
+if(synth){ loadVoices(); if('onvoiceschanged' in synth) synth.onvoiceschanged = loadVoices; }
+else { document.getElementById('driveUnsupported').style.display='block'; document.getElementById('driveSetup').style.display='none'; }
+document.getElementById('dVoice').addEventListener('change',e=>{ setVoice(+e.target.value); if(D.voice) store.set('sw_cc_voice', D.voice.name); });
+function paintSpeed(){
+  document.querySelectorAll('#dSpeedRow button').forEach(b=>b.classList.toggle('sel', +b.dataset.r===D.rate));
+  document.getElementById('dSpeed').textContent = D.rate+'×';
+}
+document.getElementById('dSpeedRow').addEventListener('click',e=>{ const b=e.target.closest('[data-r]'); if(!b) return; D.rate=+b.dataset.r; store.set('sw_cc_rate',D.rate); paintSpeed(); });
+document.getElementById('dSpeed').addEventListener('click',()=>{ D.rate = RATES[(RATES.indexOf(D.rate)+1)%RATES.length]; store.set('sw_cc_rate',D.rate); paintSpeed(); });
+paintSpeed();
+
+function buildSegs(text){
+  const out=[];
+  (text||'').replace(/\{me\}/g, me||'teammate').replace(/\{town\}/g, TOWN).split('|').forEach(part=>{
+    part = part.trim(); if(!part) return;
+    if(part==='~'){ out.push({wait:2500}); return; }
+    let owner=false; if(part.startsWith('O>')){ owner=true; part=part.slice(2).trim(); }
+    const sents = part.match(/[^.!?]+[.!?]+["'”)]*|[^.!?]+$/g) || [part];
+    sents.forEach((s,k)=>{ s=s.trim(); if(s) out.push({t:s, owner, pause: k===sents.length-1 ? 700 : 120}); });
+  });
+  return out;
+}
+function setCap(seg){
+  if(!seg || !seg.t){ capEl.innerHTML=''; return; }
+  capEl.innerHTML = `<span class="spk">${seg.owner?'Owner':'Coach'}</span>`+seg.t.replace(/</g,'&lt;');
+}
+function setPlayIcon(){ playIco.innerHTML = D.playing ? ICO_PAUSE : ICO_PLAY; document.getElementById('dPlay').setAttribute('aria-label', D.playing?'Pause':'Play'); }
+function stopSpeech(){ D.token++; clearTimeout(D.timer); if(synth) synth.cancel(); }
+function speakSeg(){
+  const tok = D.token;
+  if(!D.on || !D.playing) return;
+  if(D.si >= D.segs.length){
+    D.timer = setTimeout(()=>{
+      if(tok!==D.token) return;
+      if(idx < cards.length-1) go(idx+1);
+      else { setCap({t:'That’s the whole guide. Tap Exit when you’re parked.'}); D.playing=false; setPlayIcon(); releaseWake(); }
+    }, 1400);
+    return;
+  }
+  const s = D.segs[D.si];
+  if(s.wait){ setCap({t:'(Your turn. Answer out loud.)'}); D.timer=setTimeout(()=>{ if(tok!==D.token) return; D.si++; speakSeg(); }, s.wait/Math.max(.8,D.rate)); return; }
+  const u = new SpeechSynthesisUtterance(s.t);
+  u.rate = D.rate; u.pitch = s.owner ? (D.ovoice ? 0.95 : 0.75) : 1;
+  const v = (s.owner && D.ovoice) ? D.ovoice : D.voice;
+  if(v){ u.voice = v; u.lang = v.lang; } else u.lang = 'en-US';
+  let done=false;
+  const next = ()=>{ if(done || tok!==D.token) return; done=true; D.ended=true; D.si++; D.timer=setTimeout(speakSeg, s.pause); };
+  u.onend = next;
+  u.onerror = e=>{ if(e && (e.error==='interrupted'||e.error==='canceled')) return; next(); };
+  D.ended=false; D.segStart = Date.now(); D.curNext = next;
+  setCap(s);
+  synth.speak(u);
+}
+// Watchdog: some mobile browsers drop the end event; Chrome can stall on pause.
+setInterval(()=>{
+  if(!D.on || !D.playing || !synth || D.ended || !D.curNext) return;
+  if(synth.paused) synth.resume();
+  if(!synth.speaking && !synth.pending && Date.now()-D.segStart > 1500) D.curNext();
+}, 800);
+
+function startCard(){
+  stopSpeech();
+  if(idx===0){ go(1); return; }   // go() calls back into onCardChange
+  D.segs = buildSegs(NARR[idx]); D.si = 0;
+  if(D.playing) speakSeg(); else setCap(D.segs[0]);
+}
+function onCardChange(){ if(D.on) startCard(); }
+async function grabWake(){ try{ if('wakeLock' in navigator && !D.wake){ D.wake = await navigator.wakeLock.request('screen'); D.wake.addEventListener('release',()=>{D.wake=null}); } }catch(e){} }
+function releaseWake(){ try{ if(D.wake){ D.wake.release(); D.wake=null; } }catch(e){} }
+document.addEventListener('visibilitychange',()=>{
+  if(!D.on) return;
+  if(document.visibilityState==='visible'){ grabWake(); if(D.playing){ stopSpeech(); speakSeg(); } }
+});
+function startDrive(fromTop){
+  if(!synth) return;
+  driveSheet.classList.remove('open');
+  D.on = true; D.playing = true;
+  document.body.classList.add('driving');
+  setPlayIcon(); grabWake();
+  if(fromTop || idx===0){ if(idx===1) startCard(); else go(1); }
+  else startCard();
+}
+function exitDrive(){
+  stopSpeech(); D.on=false; D.playing=false; releaseWake();
+  document.body.classList.remove('driving'); capEl.innerHTML='';
+  update(); setTimeout(checkMore,60);
+}
+function openDrive(){ if(synth && !D.voices.length) loadVoices(); driveSheet.classList.add('open'); }
+document.getElementById('driveBtn').addEventListener('click',()=>{ if(D.on) exitDrive(); else openDrive(); });
+document.querySelectorAll('[data-open-drive]').forEach(b=>b.addEventListener('click',openDrive));
+document.getElementById('closeDrive').addEventListener('click',()=>driveSheet.classList.remove('open'));
+driveSheet.addEventListener('click',e=>{ if(e.target===driveSheet) driveSheet.classList.remove('open'); });
+document.getElementById('dTop').addEventListener('click',()=>startDrive(true));
+document.getElementById('dHere').addEventListener('click',()=>startDrive(false));
+document.getElementById('dTest').addEventListener('click',()=>{
+  if(!synth) return; synth.cancel();
+  const u = new SpeechSynthesisUtterance('Hi '+(me||'there')+'. This is how the guide will sound in the car.');
+  u.rate=D.rate; if(D.voice){u.voice=D.voice;u.lang=D.voice.lang;} synth.speak(u);
+});
+document.getElementById('dPlay').addEventListener('click',()=>{
+  if(D.playing){ D.playing=false; stopSpeech(); }
+  else { D.playing=true; grabWake(); stopSpeech(); if(D.si>=D.segs.length) D.si=0; speakSeg(); }
+  setPlayIcon();
+});
+document.getElementById('dPrev').addEventListener('click',()=>{ if(D.si>2) startCard(); else go(Math.max(1,idx-1)); });
+document.getElementById('dNext').addEventListener('click',()=>{ if(idx<cards.length-1) go(idx+1); });
 
 /* ---------- INIT ---------- */
 applyMe();
