@@ -10,6 +10,7 @@ on:
     paths:
       - starwell-cold-call/index.html
       - tools/elevenlabs-voice.mjs
+      - tools/align-words.py
       - .github/workflows/elevenlabs-voice.yml
   workflow_dispatch:
     inputs:
@@ -50,6 +51,13 @@ jobs:
           OWNER_VOICE: ${{ inputs.owner_voice }}
           FORCE: ${{ inputs.force || 'false' }}
         run: node tools/elevenlabs-voice.mjs "$GUIDE"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Word timings for highlighting
+        run: |
+          pip install --quiet "faster-whisper>=1.0"
+          python tools/align-words.py "$GUIDE"
       - name: Commit audio
         run: |
           git config user.name "github-actions[bot]"

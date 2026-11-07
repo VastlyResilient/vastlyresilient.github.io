@@ -227,7 +227,14 @@ body.driving #driveBtn{background:var(--gold);color:var(--ink)}
 body.driving .bot-row.nav{display:none}
 body.driving .driverow{display:block}
 body.driving .more{display:none}
-.cap{font:600 17px/1.35 "Public Sans";color:var(--ink);min-height:46px;margin:0 0 8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cap{position:relative;font:600 19px/1.45 "Public Sans";color:var(--mute);background:var(--cream);border:1.5px solid var(--sand2);border-radius:14px;padding:8px 12px;margin:0 0 10px;height:calc(1.45em * 3 + 16px);overflow:hidden;scroll-behavior:smooth}
+.cap .w{border-radius:5px;padding:0 2px;margin:0 -2px;transition:color .18s,background-color .18s,box-shadow .18s}
+.cap .w.past{color:var(--ink)}
+.cap .w.now{color:var(--ink);background:var(--gold);box-shadow:0 0 0 2px var(--gold),0 0 16px 2px rgba(242,179,61,.85)}
+.cap.owner .w.now{background:#FFC9AD;box-shadow:0 0 0 2px #FFC9AD,0 0 16px 2px rgba(238,106,44,.7)}
+.cap .note{color:var(--ultra);font:700 20px "Caveat"}
+@media (max-height:640px){.cap{font-size:17px;height:calc(1.45em * 2 + 16px)}}
+@media (prefers-reduced-motion:reduce){.cap .w.now{box-shadow:none}}
 .cap .spk{font:800 13px "Barlow Condensed";letter-spacing:.1em;text-transform:uppercase;color:var(--ember);margin-right:6px}
 .dctl{display:flex;align-items:center;justify-content:center;gap:10px}
 .dbtn{width:58px;height:58px;border-radius:50%;border:2px solid var(--navy);background:var(--cream);display:grid;place-items:center;color:var(--navy);flex:none}
@@ -1446,6 +1453,8 @@ const CLIPS = new Set();
 function fnv(s){ let h=0x811c9dc5; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,0x01000193)>>>0; } return h.toString(16).padStart(8,'0'); }
 function keyFor(role,t){ return fnv(role+'|'+t)+t.length.toString(36); }
 const player = new Audio(); player.preload='auto';
+let TIMINGS = {};
+try{ fetch(AUDIO_DIR+'timings.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(t=>{ if(t) TIMINGS=t; }).catch(()=>{}); }catch(e){}
 let haveClips = false;
 try{
   fetch(AUDIO_DIR+'manifest.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(m=>{
@@ -1508,18 +1517,56 @@ function buildSegs(text){
     if(part==='~'){ out.push({wait:2500}); return; }
     let owner=false; if(part.startsWith('O>')){ owner=true; part=part.slice(2).trim(); }
     const key = keyFor(owner?'owner':'coach', part);
-    if(CLIPS.has(key)){ out.push({t:part, owner, audio:AUDIO_DIR+key+'.mp3', pause:600}); return; }
+    if(CLIPS.has(key)){ out.push({t:part, owner, key, audio:AUDIO_DIR+key+'.mp3', pause:600}); return; }
     const sents = part.match(/[^.!?]+[.!?]+["'”)]*|[^.!?]+$/g) || [part];
     sents.forEach((s,k)=>{ s=s.trim(); if(s) out.push({t:s, owner, pause: k===sents.length-1 ? 700 : 120}); });
   });
   return out;
 }
-function setCap(seg){
+function esc(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+function setCap(seg, note){
+  stopSync();
+  D.capWords = [];
+  capEl.classList.toggle('owner', !!(seg && seg.owner));
+  if(note){ capEl.innerHTML = `<span class="note">${esc(note)}</span>`; capEl.scrollTop=0; return; }
   if(!seg || !seg.t){ capEl.innerHTML=''; return; }
-  capEl.innerHTML = `<span class="spk">${seg.owner?'Owner':'Coach'}</span>`+seg.t.replace(/</g,'&lt;');
+  capEl.innerHTML = `<span class="spk">${seg.owner?'Owner':'Coach'}</span>` +
+    seg.t.split(/\s+/).filter(Boolean).map((w,i)=>`<span class="w" data-i="${i}">${esc(w)}</span>`).join(' ');
+  D.capWords = [...capEl.querySelectorAll('.w')];
+  D.hl = -1; capEl.scrollTop = 0;
+}
+function highlight(i){
+  const ws = D.capWords; if(!ws || !ws.length) return;
+  i = Math.max(-1, Math.min(ws.length, i));
+  if(i===D.hl) return;
+  for(let k=0;k<ws.length;k++){ ws[k].classList.toggle('past', k<i); ws[k].classList.toggle('now', k===i); }
+  D.hl = i;
+  const w = ws[i]; if(!w) return;
+  const top = w.offsetTop, h = capEl.clientHeight;
+  if(top < capEl.scrollTop + 4 || top + w.offsetHeight > capEl.scrollTop + h - 8) capEl.scrollTop = Math.max(0, top - h/3);
+}
+function stopSync(){ if(D.raf){ cancelAnimationFrame(D.raf); D.raf=0; } if(D.ttsTick){ clearInterval(D.ttsTick); D.ttsTick=0; } }
+/* Word start times for a clip: real timings from timings.json, else an estimate from word length and punctuation. */
+function clipTimes(seg){
+  if(TIMINGS[seg.key] && TIMINGS[seg.key].length===D.capWords.length) return TIMINGS[seg.key].map(x=>x[0]);
+  const dur = player.duration; if(!isFinite(dur) || !dur) return null;
+  const words = seg.t.split(/\s+/).filter(Boolean);
+  const wt = words.map(w=>w.length+1 + (/[,;:]$/.test(w)?3:0) + (/[.!?]["'\u201D)]*$/.test(w)?6:0));
+  const lead=0.12, tail=0.3, use=Math.max(0.1,dur-lead-tail), tot=wt.reduce((a,b)=>a+b,0);
+  let acc=0; return wt.map(x=>{ const st = lead + use*acc/tot; acc+=x; return st; });
+}
+function syncClip(seg){
+  stopSync();
+  let times=null;
+  const tick=()=>{
+    if(!times) times = clipTimes(seg);
+    if(times){ const t = player.currentTime; let i=-1; for(let k=0;k<times.length;k++){ if(times[k] <= t+0.03) i=k; else break; } highlight(i); }
+    D.raf = requestAnimationFrame(tick);
+  };
+  D.raf = requestAnimationFrame(tick);
 }
 function setPlayIcon(){ playIco.innerHTML = D.playing ? ICO_PAUSE : ICO_PLAY; document.getElementById('dPlay').setAttribute('aria-label', D.playing?'Pause':'Play'); }
-function stopSpeech(){ D.token++; clearTimeout(D.timer); if(synth) synth.cancel(); try{ player.pause(); }catch(e){} }
+function stopSpeech(){ D.token++; clearTimeout(D.timer); stopSync(); if(synth) synth.cancel(); try{ player.pause(); }catch(e){} }
 function speakSeg(){
   const tok = D.token;
   if(!D.on || !D.playing) return;
@@ -1527,20 +1574,21 @@ function speakSeg(){
     D.timer = setTimeout(()=>{
       if(tok!==D.token) return;
       if(idx < cards.length-1) go(idx+1);
-      else { setCap({t:'That’s the whole guide. Tap Exit when you’re parked.'}); D.playing=false; setPlayIcon(); releaseWake(); }
+      else { setCap(null, 'That’s the whole guide. Tap Exit when you’re parked.'); D.playing=false; setPlayIcon(); releaseWake(); }
     }, 1400);
     return;
   }
   const s = D.segs[D.si];
-  if(s.wait){ setCap({t:'(Your turn. Answer out loud.)'}); D.timer=setTimeout(()=>{ if(tok!==D.token) return; D.si++; speakSeg(); }, s.wait/Math.max(.8,D.rate)); return; }
+  if(s.wait){ setCap(null, 'Your turn. Answer out loud.'); D.timer=setTimeout(()=>{ if(tok!==D.token) return; D.si++; speakSeg(); }, s.wait/Math.max(.8,D.rate)); return; }
   if(s.audio){
     let done=false;
     const nextA = ()=>{ if(done || tok!==D.token) return; done=true; D.ended=true; D.si++; D.timer=setTimeout(speakSeg, s.pause); };
     D.ended=true; D.curNext=null; setCap(s);
-    player.onended = nextA;
+    player.onended = ()=>{ stopSync(); highlight(D.capWords.length); nextA(); };
     player.onerror = ()=>{ if(tok!==D.token) return; s.audio=null; speakSeg(); };   // fall back to device voice for this part
     player.src = s.audio; player.playbackRate = D.rate; try{ player.preservesPitch = true; }catch(e){}
     const pr = player.play(); if(pr && pr.catch) pr.catch(()=>{ if(tok!==D.token) return; s.audio=null; speakSeg(); });
+    syncClip(s);
     // warm the next clip
     const nx = D.segs[D.si+1]; if(nx && nx.audio){ const w=new Audio(); w.preload='auto'; w.src=nx.audio; }
     updateMedia();
@@ -1557,6 +1605,14 @@ function speakSeg(){
   u.onerror = e=>{ if(e && (e.error==='interrupted'||e.error==='canceled')) return; next(); };
   D.ended=false; D.segStart = Date.now(); D.curNext = next;
   setCap(s);
+  const starts=[]; s.t.replace(/\S+/g,(m,off)=>{ starts.push(off); return m; });
+  let gotBoundary=false;
+  u.onboundary = e=>{ if(tok!==D.token) return; if(e.name && e.name!=='word') return; gotBoundary=true;
+    let i=0; while(i+1<starts.length && starts[i+1]<=e.charIndex) i++; highlight(i); };
+  u.onstart = ()=>{ D.segStart = Date.now(); };
+  D.ttsTick = setInterval(()=>{ if(tok!==D.token || gotBoundary) return;
+    const el=(Date.now()-D.segStart)/1000; highlight(Math.min(starts.length-1, Math.floor(el*2.6*D.rate))); }, 120);
+  u.onend = ()=>{ stopSync(); highlight(starts.length); next(); };
   synth.speak(u);
 }
 // Watchdog: some mobile browsers drop the end event; Chrome can stall on pause.
