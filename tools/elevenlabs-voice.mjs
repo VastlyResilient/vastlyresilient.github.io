@@ -20,13 +20,15 @@ const COACH = process.env.COACH_VOICE || 'nPczCjzI2devNBz1zQrb'; // Brian
 const OWNER = process.env.OWNER_VOICE || 'pqHfZKP75CvOlQylNhV4'; // Bill
 const MODEL = process.env.MODEL_ID || 'eleven_multilingual_v2';
 const KEY = process.env.ELEVENLABS_API_KEY;
+// Livelier read than the defaults, still steady enough for teaching.
+const SETTINGS = { stability: 0.45, similarity_boost: 0.75, style: 0.3, use_speaker_boost: true };
 
 // Must match keyFor() in the guide page.
 function fnv(s) { let h = 0x811c9dc5; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, '0'); }
 const keyFor = (role, t) => fnv(role + '|' + t) + t.length.toString(36);
 function parts(text, name) {
   return text.replace(/\{me\}/g, name).replace(/\{town\}/g, TOWN).split('|')
-    .map(p => p.trim()).filter(p => p && p !== '~')
+    .map(p => p.trim()).filter(p => p && p !== '~' && !p.startsWith('#'))   // '~' = pause, '#name' = sound effect played by the page
     .map(p => p.startsWith('O>') ? { role: 'owner', t: p.slice(2).trim() } : { role: 'coach', t: p });
 }
 const jobs = new Map();
@@ -36,7 +38,7 @@ const dir = path.join(guide, 'audio');
 fs.mkdirSync(dir, { recursive: true });
 const manPath = path.join(dir, 'manifest.json');
 const old = fs.existsSync(manPath) ? JSON.parse(fs.readFileSync(manPath, 'utf8')) : { voices: {}, files: [] };
-const voicesChanged = old.voices.coach !== COACH || old.voices.owner !== OWNER || old.model !== MODEL;
+const voicesChanged = old.voices.coach !== COACH || old.voices.owner !== OWNER || old.model !== MODEL || JSON.stringify(old.settings || {}) !== JSON.stringify(SETTINGS);
 const force = process.env.FORCE === 'true' || voicesChanged;
 const todo = [...jobs].filter(([k]) => force || !fs.existsSync(path.join(dir, k + '.mp3')));
 const chars = todo.reduce((a, [, p]) => a + p.t.length, 0);
@@ -52,7 +54,7 @@ async function tts(p) {
     const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice}?output_format=mp3_44100_128`, {
       method: 'POST',
       headers: { 'xi-api-key': KEY, 'Content-Type': 'application/json', Accept: 'audio/mpeg' },
-      body: JSON.stringify({ text: p.t, model_id: MODEL, voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.15, use_speaker_boost: true } })
+      body: JSON.stringify({ text: p.t, model_id: MODEL, voice_settings: SETTINGS })
     });
     if (r.ok) return Buffer.from(await r.arrayBuffer());
     const body = await r.text();
@@ -76,7 +78,7 @@ try {
 // Remove clips no longer used by the guide.
 for (const f of fs.readdirSync(dir)) if (f.endsWith('.mp3') && !jobs.has(f.slice(0, -4))) fs.unlinkSync(path.join(dir, f));
 const done = [...jobs.keys()].filter(k => fs.existsSync(path.join(dir, k + '.mp3')) && (!force || staleTimings.has(k) || !todo.some(([t]) => t === k))).sort();
-fs.writeFileSync(manPath, JSON.stringify({ voices: { coach: COACH, owner: OWNER }, model: MODEL, files: done, texts: Object.fromEntries(done.map(k => [k, jobs.get(k).t])) }, null, 1));
+fs.writeFileSync(manPath, JSON.stringify({ voices: { coach: COACH, owner: OWNER }, model: MODEL, settings: SETTINGS, files: done, texts: Object.fromEntries(done.map(k => [k, jobs.get(k).t])) }, null, 1));
 const tPath = path.join(dir, 'timings.json');
 if (fs.existsSync(tPath)) {
   const t = JSON.parse(fs.readFileSync(tPath, 'utf8'));
