@@ -2251,7 +2251,7 @@ function paintVoiceNote(){
   const n = document.getElementById('voiceNote'); if(!n) return;
   const show = (id,on)=>{ const el=document.getElementById(id); if(el) el.style.display = on ? '' : 'none'; };
   show('voiceFixed', haveClips); show('voiceField', !haveClips); show('voiceTip', !haveClips);
-  n.innerHTML = haveClips ? '<span class="pill go">ElevenLabs voice ready</span> Recorded narration plays; your phone\u2019s voice only fills any gaps.' : '<span class="pill maybe">Device voice</span> Recorded ElevenLabs narration isn\u2019t loaded here, so your phone\u2019s built-in voice reads it.';
+  n.innerHTML = haveClips ? '<span class="pill go">ElevenLabs voice ready</span> Recorded narration plays; your phone\u2019s voice only fills any gaps.' : '<span class="pill maybe">Robotic phone voice</span> This copy can\u2019t play the recorded ElevenLabs voices (Brian and Bill). <a class="btn v" style="display:flex;align-items:center;justify-content:center;margin-top:8px;text-decoration:none;color:#fff" href="https://vastlyresilient.github.io/starwell-cold-call/">Open the version with real voices</a><span class="small" style="display:block;margin-top:6px">Tip: in Safari, tap Share, then Add to Home Screen, and it opens like an app. Or copy the link: vastlyresilient.github.io/starwell-cold-call</span>';
 }
 const synth = ('speechSynthesis' in window) ? window.speechSynthesis : null;
 const D = {on:false, playing:false, segs:[], si:0, token:0, timer:null, rate:1, voice:null, ovoice:null, wake:null, voices:[], segStart:0, ended:true};
