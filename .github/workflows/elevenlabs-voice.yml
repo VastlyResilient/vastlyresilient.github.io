@@ -52,6 +52,7 @@ jobs:
           FORCE: ${{ inputs.force || 'false' }}
         run: node tools/elevenlabs-voice.mjs "$GUIDE"
       - uses: actions/setup-python@v5
+        if: always()
         with:
           python-version: '3.11'
       - name: Word timings for highlighting

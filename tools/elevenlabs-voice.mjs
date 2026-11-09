@@ -78,7 +78,7 @@ try {
 // Remove clips no longer used by the guide.
 for (const f of fs.readdirSync(dir)) if (f.endsWith('.mp3') && !jobs.has(f.slice(0, -4))) fs.unlinkSync(path.join(dir, f));
 const done = [...jobs.keys()].filter(k => fs.existsSync(path.join(dir, k + '.mp3')) && (!force || staleTimings.has(k) || !todo.some(([t]) => t === k))).sort();
-fs.writeFileSync(manPath, JSON.stringify({ voices: { coach: COACH, owner: OWNER }, model: MODEL, settings: SETTINGS, files: done, texts: Object.fromEntries(done.map(k => [k, jobs.get(k).t])) }, null, 1));
+fs.writeFileSync(manPath, JSON.stringify({ voices: { coach: COACH, owner: OWNER }, model: MODEL, settings: SETTINGS, ...(failure ? { stopped: String(failure.message).slice(0, 300) } : {}), files: done, texts: Object.fromEntries(done.map(k => [k, jobs.get(k).t])) }, null, 1));
 const tPath = path.join(dir, 'timings.json');
 if (fs.existsSync(tPath)) {
   const t = JSON.parse(fs.readFileSync(tPath, 'utf8'));
