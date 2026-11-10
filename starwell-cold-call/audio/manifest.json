@@ -10,7 +10,7 @@
   "style": 0.3,
   "use_speaker_boost": true
  },
- "stopped": "ElevenLabs 401: {\"detail\":{\"type\":\"invalid_request\",\"code\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 90000. You have 0 credits remaining, while 29 credits are required for this request.\",\"status\":\"quota_exceeded\",\"request_id\":\"1e9fbd1540c21f4c96f3967a52f12ac1\"}}",
+ "stopped": "ElevenLabs 401: {\"detail\":{\"type\":\"invalid_request\",\"code\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 90000. You have 0 credits remaining, while 29 credits are required for this request.\",\"status\":\"quota_exceeded\",\"request_id\":\"78ee7685210cf9968d237db2f4c98fbf\"}}",
  "files": [
   "00fca4e213",
   "02aa52a01d",
