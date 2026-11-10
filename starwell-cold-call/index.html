@@ -546,6 +546,7 @@ body.driving .more{display:none}
   <div class="rule">Every claim has a receipt. Every promise is true. <b>Every owner is better off for the call, even if he says no.</b></div>
   <p class="small">Labels: <span class="ev d">Direct</span> sales research · <span class="ev t">Transferred</span> research from another setting · <span class="ev p">Practitioner</span> industry data and coaches · <span class="ev h">Hypothesis</span> our idea, we test it.</p>
   <div class="box"><div class="tag">Right now</div>Heating season in Connecticut: first cold nights, no-heat calls after dinner, techs stretched thin.</div>
+  <a class="btn v" href="../starwell-practice/" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;margin-top:10px">Practice on the Practice Line: live owners, captions, coaching</a>
 </div>
 </section>
 
@@ -899,6 +900,7 @@ body.driving .more{display:none}
   <div class="eyebrow">Simulator</div>
   <h1>Call <span class="hl">Craig</span></h1>
   <p class="lead">Craig owns a 20-person shop in Wallingford, Connecticut (an example). He picks up in his truck.</p>
+  <p class="small">Want a real voice? <a href="../starwell-practice/" target="_blank" rel="noopener">Call a live practice owner on the Practice Line</a>.</p>
   <div id="sim"></div>
 </div>
 </section>
@@ -1303,6 +1305,9 @@ const seen = new Set();
 let idx = 0;
 const saved = parseInt(store.get('sw_cc_idx'),10);
 if(!isNaN(saved) && saved>0 && saved<cards.length && me) idx = saved;
+const hashId = decodeURIComponent(location.hash.slice(1));
+const hashIdx = cards.findIndex(c => c.dataset.id === hashId);
+if(hashIdx >= 0) idx = hashIdx;
 const moreEl = document.getElementById('more');
 function checkMore(){
   const c = cards[idx];
