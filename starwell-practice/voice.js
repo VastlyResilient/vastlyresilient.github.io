@@ -137,7 +137,7 @@ const Voice = {
   label(){
     const c = this.can();
     if(c.server) return 'Team voice server';
-    if(CFG.xaiKey) return 'xAI key on this device';
+    if(CFG.xaiKey) return LS.get('sw_pl_vault', '') ? 'StarWell team key (unlocked by ' + LS.get('sw_pl_vault', '') + ')' : 'xAI key on this device';
     return 'Device voice only';
   },
   pickVoices(p){
@@ -155,7 +155,7 @@ const Voice = {
       try{
         const key = prov + '|' + p.voices[prov] + '|' + text;
         let ab = this.cache.get(key);
-        if(!ab){ ab = await this.tts(prov, text, p); this.cache.set(key, ab); }
+        if(!ab){ ab = await this.tts(prov, text, p); this.cache.set(key, ab); if(this.cache.size > 50) this.cache.delete(this.cache.keys().next().value); }
         onStart && onStart(prov);
         await Player.playBytes(ab);
         return prov;
@@ -179,7 +179,15 @@ const Voice = {
   },
   async token(){
     if(CFG.server){ const j = await srv('/session', {}); return j.value || (j.client_secret && j.client_secret.value); }
-    if(CFG.xaiKey){ const j = await xai('/realtime/client_secrets', {expires_after:{seconds:600}}); return j.value || (j.client_secret && j.client_secret.value); }
+    if(CFG.xaiKey){
+      try{ const j = await xai('/realtime/client_secrets', {expires_after:{seconds:600}}); return j.value || (j.client_secret && j.client_secret.value); }
+      catch(e){
+        if(!(e instanceof TypeError)) throw e;
+        // the browser blocked the token request; the voice socket isn't subject to that, so try the key on the socket
+        diag('Token request blocked by the browser (' + e.message + '). Trying the voice line directly.');
+        return CFG.xaiKey;
+      }
+    }
     throw new Error('No voice server or xAI key set up');
   },
   /* AI coach review. Returns parsed JSON or throws. */
@@ -218,6 +226,36 @@ function deviceSay(text, p){
   });
 }
 
+/* ---------- Team key vault ----------
+   The xAI key ships encrypted, once per teammate (AES-256-GCM, PBKDF2-SHA256 600k rounds).
+   Each person's own code opens it on their phone. Remove someone's entry in config.js to cancel their code. */
+const hasVault = () => !!(window.SW_CONFIG && SW_CONFIG.vault && SW_CONFIG.vault.entries && SW_CONFIG.vault.entries.length);
+function normCode(code){
+  const c = String(code || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  return c.length === 16 ? c.match(/.{4}/g).join('-') : String(code || '').trim().toLowerCase();
+}
+async function unlockVault(code, who){
+  if(!hasVault()) throw new Error('No team key in this version');
+  if(!window.crypto || !crypto.subtle) throw new Error('This browser can\'t unlock the key (it needs the https page)');
+  const v = SW_CONFIG.vault, ub = s => Uint8Array.from(atob(s), ch => ch.charCodeAt(0));
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(normCode(code)), 'PBKDF2', false, ['deriveKey']);
+  const list = v.entries.slice().sort((a, b) => (b.who === who) - (a.who === who));   // try this person's entry first
+  for(const e of list){
+    try{
+      const k = await crypto.subtle.deriveKey({name:'PBKDF2', salt:ub(e.salt), iterations:v.iter, hash:'SHA-256'}, base, {name:'AES-GCM', length:256}, false, ['decrypt']);
+      const pt = JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:ub(e.iv)}, k, ub(e.ct))));
+      if(pt.xai) LS.set('sw_pl_xai', pt.xai);
+      if(pt.el) LS.set('sw_pl_el', pt.el);
+      LS.set('sw_pl_vault', e.who);
+      if(window.Voice) Voice.failed = {};
+      return e.who;
+    }catch(err){}
+  }
+  throw new Error('That code didn\'t work. Check it and try again.');
+}
+/* if a code is cancelled (entry removed), forget the key it unlocked */
+(() => { const w = LS.get('sw_pl_vault', ''); if(w && hasVault() && !SW_CONFIG.vault.entries.some(e => e.who === w)){ LS.del('sw_pl_xai'); LS.del('sw_pl_el'); LS.del('sw_pl_vault'); } })();
+
 /* ---------- Live owner over the xAI Voice Agent API ---------- */
 class LiveCall {
   constructor(h){ this.h = h; this.ws = null; this.queue = []; this.next = 0; this.sources = []; this.ended = false; this.ownerText = ''; this.endArgs = null; }
@@ -246,13 +284,7 @@ class LiveCall {
         input:{format:{type:'audio/pcm', rate:24000}, transcription:{language_hint:'en', keyterms:['StarWell','Connecticut', p.shop, p.owner.split(' ')[0], p.town, 'walkthrough', 'HVAC']}},
         output:{format:{type:'audio/pcm', rate:24000}, speed:Math.min(1.25, Math.max(0.85, p.rate))}
       },
-      tools:[{type:'function', name:'end_call',
-        description:'Hang up the phone. Call this right after your goodbye line, or immediately if you decide to hang up.',
-        parameters:{type:'object', properties:{
-          outcome:{type:'string', enum:['booked','email_only','not_now','hung_up'], description:'booked = you gave your email AND agreed to a specific day/time; email_only = gave email, no time; not_now = polite no; hung_up = you ended it early because the caller lost you.'},
-          trust:{type:'integer', description:'0-100, how much you trusted this caller by the end'},
-          why:{type:'string', description:'One or two sentences, first person, as the owner: why you ended where you did.'}},
-          required:['outcome','trust','why']}}]
+      tools:[END_CALL_TOOL]
     }});
     if(beforeGreet) await beforeGreet();
     if(this.ended) throw new Error('cancelled');
@@ -346,42 +378,6 @@ function b64(buf){ let s = ''; const b = new Uint8Array(buf); for(let i = 0; i <
 function ub64(s){ const bin = atob(s), b = new Uint8Array(bin.length); for(let i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i); return b; }
 
 /* ---------- Prompts ---------- */
-function ownerPrompt(p){
-  const a = ARCH[p.arch], f = p.facts;
-  const objs = p.objections.map(k => `- ${OBJ[k].say[0]}`).join('\n');
-  return `You are ${p.onLine}, ${p.gk ? `the office manager at ${p.shop} (the owner is ${p.owner})` : `the owner of ${p.shop}`}, an HVAC company in ${p.town}, Connecticut. You are a real person on a real phone call. Never say or hint that you are an AI, never break character, and never coach the caller.
-
-WHO YOU ARE
-- ${a.label}. ${a.how}
-- Age about ${p.age}. ${p.gk ? `You've run the office for years.` : `Running the shop since ${f.since}.`} ${f.techs} techs, ${f.trucks} trucks. Main work: ${f.services.join(', ')}.
-- Right now you are ${p.situation.where}. It's November: heating season in Connecticut, first cold nights, no-heat calls, boilers and oil burners acting up, people asking about heat pumps and Energize CT rebates.
-
-YOUR SHOP (facts you know)
-- Office hours end at ${f.close}. After hours, calls go to: ${f.afterLabel}.
-- Google: ${f.rating} stars, ${f.reviews} reviews. Customers often mention ${f.tech}.
-- Website: ${f.siteIssues.join('; ')}. Last social media post: ${f.lastPost}.
-- ${f.hiring ? 'You are trying to hire a service tech.' : 'Not hiring right now.'}
-- What really happened recently (share only if they ask a good question about it): ${p.painLine}
-- Your email, only if you agree to receive something: ${p.email}
-
-THE CALLER
-A young salesperson from StarWell, a Connecticut company, is cold-calling you. You don't know them. You did not ask for this call.
-
-HOW TO TALK
-- Talk like a real ${p.gk ? 'office manager' : 'tradesman'} on the phone: short, natural sentences, usually one or two. Contractions. Occasional "yeah", "uh", "look". No lists, no speeches, no corporate words.
-- Never help the caller do their job. Don't ask leading questions that set them up. Make them earn every step.
-- Keep a private trust level that starts around ${a.base} out of 100.
-  Raise it when they: say who they are and why they're calling right away, mention something true and specific about YOUR shop, ask about something that actually happened (like last week), listen, use plain words, are honest about cost or limits, ask for something small and specific.
-  Lower it when they: ask "did I catch you at a bad time", read a script, use jargon (AI, SEO, GEO, AEO, leads, algorithms), criticize your business, exaggerate or guarantee results, pressure you, ignore what you said, or ramble.
-- Bring up one or two of these concerns naturally once they pitch something (in your own words):
-${objs}
-- If they ask the price: you want a real number. A range with "in writing" satisfies you. Dodging annoys you.
-- If they're vague, ask "what is it exactly?" If they talk over you or ramble, cut in: "Look, what do you need?"
-- At low trust (say below 20) or after they push past a clear no twice, say a short goodbye and hang up.
-- Only give your email if trust is decent. Only agree to a specific day and time for a 15-minute walkthrough if they earned it and asked clearly.
-- When the conversation is over (booked, email only, a no, or you're done), say a natural goodbye, then call the end_call tool.
-${p.gk ? `- You protect ${p.owner}'s time. You can take a message or put a 15-minute walkthrough on his calendar yourself if they impress you.` : ''}`;
-}
 
 const REVIEW_SYSTEM = `You are a warm, precise cold-calling coach for StarWell, a Connecticut company that offers HVAC shop owners a free package (a website, search visibility check, social media help, and a phone-answering demo line). New callers practice on simulated owners. You get the persona, the transcript, delivery metrics, and our rule-based findings.
 Write coaching that is specific, kind, and practical. Quote the caller's actual words. Every example line you write must mention StarWell, and Connecticut when location comes up. Explain each improvement from the owner's point of view and with simple psychology (one or two sentences). Never invent statistics. Prefer these known findings when relevant: stating the reason for the call (Gong: 2.1x more meetings), "did I catch you at a bad time" (Gong: 40% less likely), average rep pace about 173 words per minute (Gong), successful cold calls run about 55/45 talk to listen (Gong), adaptive selling improves performance (Franke & Park 2006), a when-and-where plan raises follow-through (Gollwitzer & Sheeran 2006), naming your motive answers "what's the catch" (Friestad & Wright 1994), cost transparency raises trust (Mohan, Buell & John 2020).

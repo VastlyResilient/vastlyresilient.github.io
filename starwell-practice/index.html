@@ -180,8 +180,31 @@ a{color:inherit}
 .oav{width:62px;height:62px;border-radius:50%;background:#a3a3a3;display:grid;place-items:center;color:#fff;font-size:22px;font-weight:600;flex:none;position:relative}
 .oav.talk::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:3px solid #22c55e;animation:pulse 1s infinite}
 @keyframes pulse{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(1.18)}}
-.trust{margin:4px 22px 0;height:4px;border-radius:2px;background:#eee;overflow:hidden}
-.trust i{display:block;height:100%;background:linear-gradient(90deg,#ef4444,#f59e0b,#22c55e);width:50%;transition:width .6s}
+.trust{display:flex;align-items:center;gap:8px;margin:6px 22px 0;font-size:11.5px;color:#6b7280;white-space:nowrap}
+.tbar{flex:1;height:5px;border-radius:3px;background:#eee;overflow:hidden}
+.tbar i{display:block;height:100%;background:linear-gradient(90deg,#f59e0b,#84cc16,#22c55e);width:50%;transition:width .6s}
+.steps{display:flex;gap:4px;padding:8px 16px 0;overflow-x:auto;scrollbar-width:none}
+.steps span{flex:1;font-size:10.5px;text-align:center;padding:4px 6px;border-radius:999px;background:#f3f4f6;color:#9ca3af;white-space:nowrap}
+.steps span.done{background:#dcfce7;color:#15803d}.steps span.on{background:#111;color:#fff}
+.opt .why{display:none;font-size:12.5px;color:#6b7280;margin-top:6px;line-height:1.35}
+.opts.showwhy .opt .why{display:block}
+.whytap{font-size:12.5px;color:#3b82f6;padding:2px;align-self:center}
+.ln.sys.coachln{color:#047857;font-weight:600;text-align:left;font-size:13.5px}
+.phone.picking .ctrls{grid-template-columns:repeat(6,1fr);gap:2px;padding:6px 8px calc(10px + env(safe-area-inset-bottom))}
+.phone.picking .cb .c{width:42px;height:42px}.phone.picking .cb .c svg{width:19px;height:19px}.phone.picking .cb{font-size:10px;gap:3px}
+@media(max-height:740px){.ctrls{grid-template-columns:repeat(6,1fr);gap:2px;padding:6px 8px calc(10px + env(safe-area-inset-bottom))}.cb .c{width:42px;height:42px}.cb .c svg{width:19px;height:19px}.cb{font-size:10px;gap:3px}.who{padding-top:8px}.oav{width:50px;height:50px}}
+.gtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}.gtab{padding:7px 12px;border-radius:999px;background:#f3f4f6;font-size:13px}.gtab.on{background:#111;color:#fff}
+.gchips{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:6px}.gchip{white-space:nowrap;padding:5px 10px;border-radius:999px;border:1px solid #e5e7eb;font-size:12.5px;background:#fff}.gchip.on{border-color:#111;font-weight:700}
+.gstep h3{margin:4px 0 6px;font-size:18px}
+.glist{padding-left:18px;margin:4px 0 12px;line-height:1.5;font-size:15px}.glist li{margin:5px 0}.glist.avoid li{color:#b91c1c}
+.gq{border-top:1px solid rgba(0,0,0,.08);padding:10px 0}.gq summary{cursor:pointer;font-weight:600;font-size:15px}.gq p{margin:8px 0 0;line-height:1.5;font-size:15px}
+.eyes{background:#f8fafc;border-radius:14px;padding:10px 12px;margin:10px 0;font-style:italic;font-size:14.5px;line-height:1.45}
+.eyes small,.sayit small{display:block;font-style:normal;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#6b7280;font-weight:600;margin-bottom:3px}
+.sayit{background:#eff6ff;border-radius:14px;padding:10px 12px;margin:8px 0;font-size:15px;line-height:1.45}
+.gfit{display:block;width:max-content;max-width:100%;margin-top:6px;font-size:12px;background:#22c55e;color:#fff;border-radius:999px;padding:3px 10px}
+.flow{padding-left:20px;line-height:1.55;font-size:14.5px;margin:8px 0 0}
+button.gl{background:none;padding:0;cursor:pointer}
+#report,#guidePage{z-index:22}
 .cap{flex:1;min-height:96px;overflow-y:auto;padding:12px 22px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
 .ln{font-size:16.5px;line-height:1.45;max-width:100%}
 .ln .sp{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#9ca3af;font-weight:600;margin-bottom:1px}
@@ -213,7 +236,7 @@ a{color:inherit}
 @media(max-height:760px){.cb .c{width:58px;height:58px}.ctrls{gap:10px;padding-bottom:calc(14px + env(safe-area-inset-bottom))}.cb{font-size:12.5px}}
 .hint{position:absolute;left:14px;right:14px;bottom:200px;background:#111;color:#fff;border-radius:18px;padding:14px 16px;font-size:15px;line-height:1.45;box-shadow:0 10px 30px rgba(0,0,0,.25);z-index:5}
 .hint b{color:#facc15;display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
-.sheet{position:absolute;inset:0;background:rgba(253,253,253,.98);z-index:6;overflow-y:auto;padding:calc(16px + env(safe-area-inset-top)) 16px 24px}
+.sheet{position:absolute;inset:0;background:#fdfdfd;z-index:6;overflow-y:auto;padding:calc(16px + env(safe-area-inset-top)) 16px 24px}
 
 /* report */
 .rhead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
@@ -290,7 +313,8 @@ svg.chart{width:100%;height:auto;display:block}
         <span><b id="srcTitle">Random Connecticut shop</b><small id="srcSub">New owner every call</small></span>
         <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
       </button>
-      <div class="fu" style="animation-delay:.3s"><div class="big" id="readiness">0%</div><div class="bigsub">Call readiness (your last 3 calls)</div></div>
+      <div class="fu" style="animation-delay:.3s"><div class="big" id="readiness">0%</div><div class="bigsub">Call readiness (your last 3 calls)</div>
+        <div class="row" style="margin-top:10px"><button class="btn light" data-nav="calls">Your calls</button><button class="btn light" data-nav="guide">Guide</button></div></div>
       <div class="metric fu" style="animation-delay:.35s;background-image:linear-gradient(rgba(0,0,0,.18),rgba(0,0,0,.28)),url('https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260403_055416_630ff6c1-4b72-4cb6-a563-0c7e41124fe1.png&w=1280&q=85')">
         <div class="mh"><span>Practice metrics</span><span class="badge">Analytics</span></div>
         <div class="mstats"><div><b id="mCalls">0</b><small>Calls</small></div><div><b id="mMin">0m</b><small>On the phone</small></div><div><b id="mBooked">0</b><small>Booked</small></div></div>
@@ -332,7 +356,8 @@ svg.chart{width:100%;height:auto;display:block}
 <div id="call" class="hidden"><div class="phone">
   <div class="ctop"><span class="mode" id="cMode">Guided</span><div class="ctr">🇺🇸 Connecticut<small id="cSub">Practice line</small></div><button class="lnk" id="cInfo">Shop info</button></div>
   <div class="who"><div><div class="nm" id="cShop">Shop</div><div class="sub" id="cOwner"></div><div class="tm" id="cTime">00:00</div></div><div class="oav" id="cAv">?</div></div>
-  <div class="trust" title="How the owner feels about the call"><i id="cTrust"></i></div>
+  <div class="trust"><span id="cTrustLbl">How he feels</span><div class="tbar"><i id="cTrust"></i></div></div>
+  <div class="steps" id="cSteps"></div>
   <div class="cap" id="cap"></div>
   <div class="opts hidden" id="opts"></div>
   <div class="say hidden" id="say"></div>
@@ -352,10 +377,14 @@ svg.chart{width:100%;height:auto;display:block}
 <div class="page hidden" id="report"><div class="pin" id="reportIn"></div></div>
 <div class="page hidden" id="calls"><div class="pin"><div class="ptop"><h2>Your calls</h2><button class="btn light x" data-close="calls">Close</button></div><div id="callsIn"></div></div></div>
 <div class="page hidden" id="progress"><div class="pin"><div class="ptop"><h2>Progress</h2><button class="btn light x" data-close="progress">Close</button></div><div id="progIn"></div></div></div>
+<div class="page hidden" id="guidePage"><div class="pin" id="guideIn"></div></div>
 <div class="page hidden" id="settings"><div class="pin"><div class="ptop"><h2>Settings</h2><button class="btn light x" data-close="settings">Close</button></div><div id="setIn"></div></div></div>
 
 <script src="config.js"></script>
 <script src="data.js"></script>
+<script src="owner.js"></script>
+<script src="lines.js"></script>
+<script src="guide.js"></script>
 <script src="voice.js"></script>
 <script src="app.js"></script>
 </body>
