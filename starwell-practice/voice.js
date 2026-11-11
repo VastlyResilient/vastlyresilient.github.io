@@ -15,7 +15,7 @@ const LS = {
 
 const CFG = {
   get server(){ return (LS.get('sw_pl_server', '') || (window.SW_CONFIG && window.SW_CONFIG.server) || '').replace(/\/$/, ''); },
-  get team(){ return LS.get('sw_pl_team', ''); },
+  get team(){ return LS.get('sw_pl_team', '') || (window.SW_CONFIG && window.SW_CONFIG.team) || ''; },
   get xaiKey(){ return LS.get('sw_pl_xai', ''); },
   get elKey(){ return LS.get('sw_pl_el', ''); },
   get voicePref(){ return LS.get('sw_pl_voice', 'auto'); },   // auto | xai | elevenlabs | device
