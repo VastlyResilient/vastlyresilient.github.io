@@ -4,7 +4,7 @@ const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-function toast(msg, ms){ const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), ms || 3200); }
+function toast(msg, ms){ $$('.toast').forEach(x => x.remove()); const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), ms || 3200); }
 
 /* ---------- seeded randomness: every call is different ---------- */
 function rng(seed){ let s = seed >>> 0; return () => { s = (s + 0x6D2B79F5) >>> 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t ^= t + Math.imul(t ^ t >>> 7, 61 | t); return ((t ^ t >>> 14) >>> 0)/4294967296; }; }
@@ -45,7 +45,7 @@ function makePersona(opt){
   let real = opt.real || null;
   if(!real && !opt.brief && typeof SHOPS !== 'undefined' && SHOPS.length) real = pick(r, SHOPS);
   const b = opt.brief || (real ? {shop:real.name, town:real.town} : {});
-  const town = (b.town || pick(r, TOWNS)).replace(/\s*\(.*?\)\s*/g, ' ').trim();
+  const town = (b.town || pick(r, TOWNS)).replace(/\s*\(.*?\)\s*/g, ' ').replace(/\s+area$/i, '').replace(/\s*\/\s*/g, ' and ').trim();
   // a real shop keeps the same practice people every time you call it
   const nr = real ? rng(hashStr(real.name + real.town)) : r;
   const ownerFirst = (b.owner || pick(nr, A.gender === 'f' && !A.gk ? WOMEN : MEN)).split(' ')[0];
@@ -190,11 +190,11 @@ const NEW2OLD = {greet:'opener', reason:'opener', noticed:'truth', follow:'disco
 const STEP_NAMES = {greet:'Hello', reason:'Why you\'re calling', noticed:'What you noticed', follow:'Follow-up', offer:'The offer', questions:'Their questions', next:'Next step', thanks:'Goodbye'};
 STEPS.forEach(x => { if(STEP_NAMES[x[0]]) x[1] = STEP_NAMES[x[0]]; });
 if(SCRIPT_LIB.labels) Object.assign(SCRIPT_LIB.labels, STEP_NAMES);
-const KIND_NAMES = {guided:'Guided call', free:'Free-talk call', live:'Live call', drill:'Drill'};
+const KIND_NAMES = {guided:'Guided call', free:'Live call', live:'Live call', drill:'Drill'};
 const DRILL_NAMES = {opener:'Hello drill', handle:'Questions drill', close:'Next-step drill'};
 const OUTCOME = {
   booked:{label:'Walkthrough booked', col:'green', icon:'✓'},
-  email_only:{label:'Email only', col:'green', icon:'✉'},
+  email_only:{label:'Email only', col:'green', icon:'✓'},
   not_now:{label:'Not this time', col:'gray', icon:'–'},
   hung_up:{label:'Owner hung up', col:'red', icon:'✕'},
   you_ended:{label:'You ended the call', col:'gray', icon:'■'},
@@ -342,7 +342,7 @@ function showCall(c){
   c.level = c.level || 3; $('.phone').classList.remove('picking'); paintSteps();
   $('#cTime').textContent = 'Ringing…';
   ['#bMute','#bHold'].forEach(s => $(s).classList.remove('on'));
-  $('#bMute .t').textContent = 'Mute'; $('#bHold .t').textContent = 'Hold';
+  $('#bMute .t').textContent = 'Mute'; $('#bHold .t').textContent = 'Hold'; $('.phone').classList.remove('held');
   pauseBg(true);
   setTrust(c);
 }
@@ -373,6 +373,12 @@ function setHeld(on){
   C.held = !!on;
   if(on) C.holdAt = Date.now(); else if(C.holdAt){ C.heldMs = (C.heldMs || 0) + Date.now() - C.holdAt; C.holdAt = 0; }
   $('#bHold').classList.toggle('on', C.held); $('#bHold .t').textContent = C.held ? 'Resume' : 'Hold';
+  $('.phone').classList.toggle('held', C.held);
+  let hc = $('#holdCard');
+  if(C.held && !$('#endAsk') && $('#sheet').classList.contains('hidden')){
+    if(!hc){ hc = document.createElement('div'); hc.id = 'holdCard'; hc.className = 'holdcard'; hc.innerHTML = '<b>On hold</b><p class="note">The owner is waiting. Take a breath.</p><button class="btn black" id="holdResume">Resume call</button>'; $('.phone').appendChild(hc); $('#holdResume').onclick = () => $('#bHold').click(); }
+  } else if(hc) hc.remove();
+  $('#bHold .c').innerHTML = C.held ? '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg>' : '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>';
 }
 
 async function ring(){
@@ -444,7 +450,7 @@ function sayIt(opt){
     box.innerHTML = `<div class="sayline">${words.map((w, i) => `<span class="w" data-i="${i}">${esc(w)}</span>`).join(' ')}</div>
       <div class="saybar"><span id="sayState" class="listen">Listening. Say it out loud.</span><div class="lvl"><i id="sayLvl"></i></div>
       <button class="btn light" id="sayBack">Pick another</button><button class="btn black" id="sayDone">Done</button></div>`;
-    box.classList.remove('hidden');
+    box.classList.remove('hidden'); muteState();
     const spans = [...box.querySelectorAll('.w')];
     let lit = new Set(), lastChange = performance.now(), heard = '', finished = false;
     const paint = () => spans.forEach((s, i) => { s.classList.toggle('lit', lit.has(i)); s.classList.toggle('nx', !lit.has(i) && i === Math.max(-1, ...lit) + 1); });
@@ -487,7 +493,7 @@ function freeTurn(){
     const box = $('#say');
     box.style.setProperty('--oc', 'var(--accent)');
     box.innerHTML = `<div class="saybar"><span id="sayState" class="listen">Your turn. Talk naturally.</span><div class="lvl"><i id="sayLvl"></i></div><button class="btn black" id="sayDone">Done</button></div>`;
-    box.classList.remove('hidden');
+    box.classList.remove('hidden'); muteState();
     const live = addLine('c', '…'); live.style.opacity = .6;
     let heard = '', spoke = false, lastVoice = 0, finished = false;
     const readyAt = performance.now();
@@ -546,6 +552,13 @@ async function callerTurn(stage, objKey){
   }
 }
 
+/* the say bar always tells the truth about the mic */
+function muteState(){
+  const ss = $('#sayState'); if(!ss || !C) return;
+  if(C.muted){ if(!ss.dataset.was) ss.dataset.was = ss.textContent; ss.textContent = 'You\'re muted. Tap Unmute to talk.'; ss.classList.remove('listen'); }
+  else if(ss.dataset.was){ ss.textContent = ss.dataset.was; delete ss.dataset.was; ss.classList.add('listen'); }
+  const d = $('#sayDone'); if(d) d.disabled = !!C.muted;
+}
 /* one short, specific coaching line after a pick (never the same sentence twice in a call) */
 function coachLine(opt, best){
   const p = C.p, A = ARCH[p.arch], n = (C.coachN = (C.coachN || 0) + 1);
@@ -578,7 +591,8 @@ async function deliveryCheck(turn){
 async function runScripted(){
   const c = C, p = c.p, A = ARCH[p.arch];
   const alive = () => C === c && !c.ended;
-  await ring(); if(!alive()) return;
+  const rl = addLine('sys', 'Ringing… Take a breath. Hint is here if you freeze.', 'ln sys');
+  await ring(); rl.remove(); if(!alive()) return;
   while(c.held && !c.ended) await sleep(250);
   if(!alive()) return;
   startClock(); AE.noiseOn(p.situation.noise);
@@ -884,7 +898,7 @@ function buildReport(c){
   if(D.fillers + D.hedges.length >= 2) dfix.push({name:`Soft words (${D.fillers + D.hedges.length})`, quote:D.hedges.length ? `You said: "${D.hedges.join('", "')}"` : '', better:'Swap "I just wanted to" and "sorry to bother you" for your reason for calling.', why:'Sounding sorry makes the call feel like a bother. You have a real reason to call, so lead with it.', tag:''});
   if(D.missed.length >= 3) dfix.push({name:'Words that didn\'t come through clearly', quote:D.missed.join(', '), url:(allTurns.find(t => (t.missed || []).length > 2) || {}).url, better:'Say these slowly three times before your next call. Names and numbers matter most.', why:'The owner may be on a cell phone in a truck. If "StarWell" or the day sounds mushy, they won\'t remember who called.', tag:''});
   if(D.latency > 3) dfix.push({name:`Pauses before answering (${D.latency}s)`, better:'Learn the four common questions (the catch, the price, AI, "send me an email") until the answers come easily.', why:'A long pause after "what\'s the catch?" can sound like there is one. A calm, quick answer sounds honest.', tag:''});
-  if(D.talk && (D.talk < 35 || D.talk > 72)) dfix.push({name:`You talked ${D.talk}% of the call`, better: D.talk < 35 ? 'Lead a little more: say why you\'re calling, offer the gift clearly, then ask for the email and a time.' : 'After each question, stop and let the owner answer fully.', why:'In calls that go well, you talk a little over half the time.', tag:''});
+  if(D.talk && (D.talk < 35 || D.talk > 72)) dfix.push({name:`You talked ${D.talk}% of the call`, better: D.talk < 35 ? 'Lead a little more: say why you\'re calling, make the offer clearly, then ask for the email and a time.' : 'After each question, stop and let the owner answer fully.', why:'In calls that go well, you talk a little over half the time.', tag:''});
   if(D.longest > 45) dfix.push({name:`Longest stretch talking: ${D.longest}s`, better:'One sentence, then a question.', why:'Long stretches lose people on the phone. Keep each turn under about 40 seconds.', tag:''});
 
   const outcomeLabel = outcomeOf(c.outcome).label;
@@ -902,7 +916,8 @@ function buildReport(c){
   const nextT = turnFor.next;
   const outcomeNote = c.outcome === 'email_only' ? (nextT && hasTime(nextT.text) ? `You offered a specific time. ${p.onLine} wasn't ready to pick one yet. More trust earlier in the call makes that easier.` : 'Next time, also ask for one specific 15-minute time.')
     : c.outcome === 'booked' ? 'Email and a specific time. That\'s the goal.' : c.outcome === 'not_now' ? `A polite no is still a good call. ${p.onLine} will remember StarWell as respectful.` : '';
-  return {score, skills, D, strengths, fixes, also, dfix, outcomeLabel, outcomeNote, take, drill, stageQ, good};
+  const early = c.userEnded && new Set(c.turns.map(t => t.stage).filter(Boolean)).size < 2 && c.kind !== 'live';
+  return {score, skills, D, strengths, fixes, also, dfix, outcomeLabel, outcomeNote, take, drill, stageQ, good, early};
 }
 
 const SKILL_NAMES = Object.assign({}, STEP_NAMES, {delivery:'Your voice'});
@@ -937,12 +952,21 @@ function showReport(c, rep, fromHist){
   // exactly one win and one thing to try, up front
   const pri = ['follow','noticed','next','offer','questions','reason','greet','thanks'];
   const win = rep.strengths.slice().sort((x, y) => pri.indexOf(x.stage) - pri.indexOf(y.stage))[0];
-  const stepsDone = new Set(c.turns.map(t => t.stage).filter(Boolean)).size;
+  const stepsDone = c.stepsDone !== undefined ? c.stepsDone : new Set((c.turns || []).map(t => t.stage).filter(Boolean)).size;
+  const st = n => `${n} step${n === 1 ? '' : 's'}`;
+  if(rep.early){
+    $('#reportIn').innerHTML = `<div class="ptop"><h2>Call ended early</h2><button class="btn light x" data-close="report">Close</button></div>
+      <section class="box"><p style="margin:0 0 6px">No score this time, and that's fine. Stopping early is part of practicing.</p>
+      <p class="note" style="margin:0">Scores start once you've gone through at least two steps.</p></section>
+      <div class="actions">${c.drill ? `<button class="btn black wide" data-drill="${esc(c.drill)}">Try the drill again</button>` : `<button class="btn black wide" data-start="${c.kind === 'guided' ? 'guided' : 'live'}">Try again</button>`}<button class="btn light" data-close="report">Back home</button></div>`;
+    openPage('report'); return;
+  }
   const fix = rep.fixes[0];
   const rest = rep.fixes.slice(1).map(fixHTML).concat(rep.also.map(alsoHTML));
   const winHTML = win ? `<div class="item"><h4>${esc(win.name)} <span class="tag green">Great fit</span></h4>${win.quote ? `<div class="ex"><small>You said</small>"${esc(win.quote)}"</div>` : ''}${win.why ? `<p class="why">${esc(win.why)}</p>` : ''}${playBtn(win.url)}</div>`
-    : rep.also.length ? `<div class="item"><p class="why">Every line you picked was a good one for ${esc(p.onLine)}. ${stepsDone ? `You got through ${stepsDone} step${stepsDone > 1 ? 's' : ''} and kept it friendly.` : ''}</p></div>`
-    : `<div class="item"><p class="why">${stepsDone ? `You got through ${stepsDone} step${stepsDone > 1 ? 's' : ''} and stayed on the call. That's the hardest part.` : 'You picked up the phone. That\'s the hardest part.'}</p></div>`;
+    : c.outcome === 'hung_up' ? `<div class="item"><p class="why">You got through ${st(stepsDone)}. Hang-ups happen, even to pros. The note below shows what to try.</p></div>`
+    : c.kind === 'guided' && rep.also.length && !rep.fixes.length ? `<div class="item"><p class="why">Every line you picked was a good one for ${esc(p.onLine)}. You got through ${st(stepsDone)} and kept it friendly.</p></div>`
+    : `<div class="item"><p class="why">${stepsDone ? `You got through ${st(stepsDone)} and kept it friendly. That's the hardest part.` : 'You picked up the phone. That\'s the hardest part.'}</p></div>`;
   const tryHTML = fix ? fixHTML(fix) : rep.also[0] ? alsoHTML(rep.also[0]) : rep.dfix[0] ? dfixHTML(rep.dfix[0]) : `<p class="why">Every step fit ${esc(p.onLine)}. Try a tougher owner or a live call next.</p>`;
   const restAll = fix ? rest : rep.also[0] ? rep.fixes.slice(1).map(fixHTML).concat(rep.also.slice(1).map(alsoHTML)) : rest;
   const dUsed = fix || rep.also[0] ? 0 : 1;   // the first voice note may already be "Try this next"
@@ -980,7 +1004,7 @@ function showReport(c, rep, fromHist){
 }
 function skillScores(rep){
   return `<details><summary style="font-weight:600">Score by step</summary><div class="bars" style="margin:4px 0 8px">${Object.keys(SKILL_NAMES).filter(k => rep.skills[k] !== undefined).map(k => bar(SKILL_NAMES[k], rep.skills[k])).join('')}</div>
-    <p class="note">Each step: great fit 100, also fits 85, didn't land 50, skipped 30. Your score is 70% steps and 30% voice.</p></details>`;
+    <p class="note">Each step: great fit 100, also fits 85, didn't land 50, skipped 30. A step that came up twice is averaged. Your score is 70% steps and 30% voice.</p></details>`;
 }
 
 async function aiReview(c, rep){
@@ -1018,7 +1042,9 @@ function renderAI(ai, p){
 function saveCallToHistory(c, rep){
   const h = hist();
   h.push({id:c.id, ts:Date.now(), kind:c.drill ? 'drill' : c.kind, arch:c.p.arch, shop:c.p.shop, owner:c.p.onLine, town:c.p.town, outcome:c.outcome, score:rep.score, skills:rep.skills,
-    dur:Math.round(c.dur || 0), wpm:rep.D.wpm, log:c.log.map(l => ({who:l.who, text:l.text})), fixes:rep.fixes.slice(0, 3).map(f => f.name).concat(rep.also.slice(0, 2).map(f => f.name)), drill:rep.drill, take:rep.take, note:rep.outcomeNote || ''});
+    dur:Math.round(c.dur || 0), wpm:rep.D.wpm, log:c.log.map(l => ({who:l.who, text:l.text})), fixes:rep.fixes.slice(0, 3).map(f => f.name).concat(rep.also.slice(0, 2).map(f => f.name)), drill:rep.drill, take:rep.take, note:rep.outcomeNote || '', early:!!rep.early,
+    c:{p:{onLine:c.p.onLine, shop:c.p.shop, arch:c.p.arch, town:c.p.town}, kind:c.kind, drill:c.drill || null, outcome:c.outcome, dur:c.dur, log:c.log.map(l => ({who:l.who, text:l.text})), stepsDone:new Set(c.turns.map(t => t.stage).filter(Boolean)).size},
+    rep:JSON.parse(JSON.stringify(rep, (k, v) => ['url', 'rises', 'trails', 'm', 'frames', 'cap'].includes(k) ? undefined : v))});
   saveHist(h);
 }
 
@@ -1028,11 +1054,12 @@ function saveCallToHistory(c, rep){
 let pending = null;   // {kind, p}
 const GIFT_WORDS = {phone:'the demo line that answers when they can\'t', site:'a fresh website', found:'the one-page search check', social:'a month of posts from their real jobs'};
 const OBJ_Q = {catch:/catch/i, price:/cost|price|how much/i, allset:/all set|already have|nephew/i, email:/email/i, busy:/busy|on a job|can't talk/i, ai:/\bAI\b|robot/i, agency:/agency|marketing|burned|SEO compan/i, wordofmouth:/word of mouth|referral/i, scam:/scam|number/i};
+const cap1 = t => String(t || '').charAt(0).toUpperCase() + String(t || '').slice(1);
 function slidesHTML(p, forPrep, stages){
   const f = p.facts, first = p.owner.split(' ')[0], A = ARCH[p.arch];
   const stars = '★'.repeat(Math.round(f.rating)) + '☆'.repeat(5 - Math.round(f.rating));
   const eyes = t => `<div class="eyes"><small>Through ${esc(p.onLine)}'s eyes</small>"${esc(t)}"</div>`;
-  const say = (t, gift) => `<div class="sayit"><small>What to say</small>${esc(t)}${gift ? `<span class="gfit">Gift fit: ${esc(GIFT_WORDS[gift])}</span>` : ''}</div>`;
+  const say = (t, gift) => `<div class="sayit"><small>What to say</small>${esc(t)}${gift ? `<span class="gfit">Best offer here: ${esc(GIFT_WORDS[gift])}</span>` : ''}</div>`;
   const out = [], keys = [];
   const push = (k, h) => { keys.push(k); out.push(h); };
   out.keys = keys;
@@ -1040,7 +1067,7 @@ function slidesHTML(p, forPrep, stages){
   const list = stages ? STEPS.filter(x => stages.includes(x[0])) : STEPS;
   if(forPrep) push('intro', `<div class="box"><div class="lbl">${stages ? 'This drill' : 'How this call goes'}</div>
       <h3 style="font-size:20px">${stages ? `Practice ${list.length === 2 ? 'two steps' : 'these steps'}: ${esc(list.map(x => x[1]).join(' and '))}.` : `Your goal: ${esc(p.onLine)} feels noticed and respected, and gladly says yes to something useful.`}</h3>
-      ${freeTalk ? '<p class="prepnote">No lines here. Talk naturally. The Hint button is there if you freeze.</p>' : `<p class="note">${stages ? '' : 'Start like a person, not a pitch. The offer comes after you understand how the owner\'s week goes. '}Each turn you'll see three good lines. Pick the one that fits ${esc(p.onLine)}, then say it out loud.</p>`}
+      ${freeTalk ? `<p class="prepnote">No lines here. Talk naturally. The Hint button is there if you freeze.${forPrep === 'free' && !stages ? ' The live AI owner is off on this phone, so a practice owner answers. Ask Bobby for your StarWell code to turn it on.' : ''}</p>` : `<p class="note">${stages ? '' : 'Start like a person, not a pitch. The offer comes after you understand how the owner\'s week goes. '}Each turn you'll see three good lines. Pick the one that fits ${esc(p.onLine)}, then say it out loud.</p>`}
       <ol class="flow">${list.map(x => `<li><b>${esc(x[1])}</b> · ${esc(SCRIPT_LIB.arc[x[0]] || '')}</li>`).join('')}</ol></div>`);
   if(p.real){
     const R = p.real;
@@ -1099,8 +1126,8 @@ function slidesHTML(p, forPrep, stages){
     <div class="kv" style="grid-template-columns:1fr">
       <div><small>Clue about who answers</small><span>${esc(A.clue)}</span></div>
       <div><small>What to notice</small><span>${esc(A.notice || A.how)}</span></div>
-      <div><small>Main thing to offer</small><span>${esc(GIFT_WORDS[p.lead])}. ${esc(reasons[p.lead])}</span></div>
-      <div><small>Mention in one line</small><span>${esc(GIFT_WORDS[second])}</span></div>
+      <div><small>Main thing to offer</small><span>${esc(cap1(GIFT_WORDS[p.lead]))}. ${esc(reasons[p.lead])}</span></div>
+      <div><small>Mention in one line</small><span>${esc(cap1(GIFT_WORDS[second]))}</span></div>
       <div><small>What you noticed</small><span>${esc(p.trueThing ? p.trueThing + '.' : sayAfter.replace(/"/g, ''))}</span></div>
       <div><small>Follow-up question</small><span>${esc(gfill(dq, p).replace(/[“”]/g, ''))}</span></div>
       <div><small>15-minute walkthrough time to offer</small><span>${esc(p.day)} at ${esc(p.time)}, ${esc(p.vars.when)}</span></div></div>
@@ -1147,7 +1174,7 @@ function guideHTML(stage, p, tab){
   const G = CALL_GUIDE; stage = OLD2NEW[stage] || stage; const st = G.steps[stage] ? stage : 'greet';
   tab = tab || 'step';
   const chips = STEPS.map(x => `<button class="gchip ${x[0] === st && tab === 'step' ? 'on' : ''}" data-gstep="${x[0]}">${esc(x[1])}</button>`).join('');
-  const tabs = [['step','Steps'],['gifts','Gifts'],['questions','FAQ'],['rules','Rules']].map(t => `<button class="gtab ${t[0] === tab ? 'on' : ''}" data-gtab="${t[0]}">${t[1]}</button>`).join('');
+  const tabs = [['step','Steps'],['gifts','Offers'],['questions','FAQ'],['rules','Rules']].map(t => `<button class="gtab ${t[0] === tab ? 'on' : ''}" data-gtab="${t[0]}">${t[1]}</button>`).join('');
   let body = '';
   if(tab === 'step'){
     const s = G.steps[st];
@@ -1198,18 +1225,32 @@ function openSheet(html, after){
 /* ======================================================================
    IN-CALL BUTTONS
    ====================================================================== */
-$('#bEnd').onclick = () => { if(!C || C.ended) return; if(!C.outcome){ C.outcome = 'you_ended'; C.userEnded = true; } finishCall(); };
+function endNow(){ if(!C || C.ended) return; $('#endAsk') && $('#endAsk').remove(); if(!C.outcome){ C.outcome = 'you_ended'; C.userEnded = true; } finishCall(); }
+$('#bEnd').onclick = () => {
+  if(!C || C.ended) return;
+  if($('#endAsk')) return;
+  const wasHeld = C.held;
+  const d = document.createElement('div'); d.id = 'endAsk'; d.className = 'endask';
+  d.innerHTML = `<div class="endcard" role="dialog" aria-label="End this call?"><b>End this practice call?</b><p class="note">${C.turns.length < 2 ? 'You\'re just getting started. Calls ended this early aren\'t scored.' : 'You\'ll get your report for the steps so far.'}</p>
+    <button class="btn black wide" id="endKeep">Keep going</button><button class="btn light wide" id="endYes">End call</button></div>`;
+  $('.phone').appendChild(d);
+  if(!C.live && !wasHeld){ setHeld(true); C.sayCut = true; Player.stop(); }
+  $('#endKeep').onclick = () => { d.remove(); if(!wasHeld && C && !C.ended) setHeld(false); };
+  $('#endYes').onclick = endNow;
+};
 $('#bMute').onclick = () => {
   if(!C || C.ended) return; C.muted = !C.muted;
   $('#bMute').classList.toggle('on', C.muted); $('#bMute .t').textContent = C.muted ? 'Unmute' : 'Mute';
+  $('#bMute .c').innerHTML = C.muted ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l18 18M9 9v3a3 3 0 0 0 5.1 2.1M15 9.3V5a3 3 0 0 0-5.9-.7M5 10a7 7 0 0 0 11.6 5.3M19 10a7 7 0 0 1-.6 2.8M12 17v5"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5"/></svg>';
+  muteState();
   if(C.live) C.live.muted = C.muted || C.held;
-  callToast(C.muted ? 'Muted. The owner can\'t hear you.' : 'Mic on', 1400);
+  callToast(C.muted ? 'Muted' : 'Mic on', 1000);
 };
 $('#bHold').onclick = () => {
   if(!C || C.ended) return; setHeld(!C.held);
   if(C.live){ C.live.muted = C.held || C.muted; C.live.onHold = C.held; if(C.held) C.live.cutOwner(); }
   else if(C.held){ C.sayCut = true; Player.stop(); }
-  callToast(C.held ? 'On hold. Tap Resume to come back.' : 'Back on the call', 1600);
+  if(!C.held) callToast('Back on the call', 1200);
 };
 $('#bHint').onclick = () => {
   if(!C) return;
@@ -1245,7 +1286,7 @@ document.addEventListener('click', e => {
    ====================================================================== */
 function pauseBg(on){ const v = $('#bgv'); if(!v) return; try{ if(on) v.pause(); else if(!matchMedia('(prefers-reduced-motion: reduce)').matches) v.play().catch(() => {}); }catch(e){} }
 const anyOpen = () => $$('.page').some(x => !x.classList.contains('hidden')) || !$('#call').classList.contains('hidden');
-function openPage(id){ $('#' + id).classList.remove('hidden'); $('#' + id).scrollTop = 0; pauseBg(true); }
+function openPage(id){ $('#' + id).classList.remove('hidden'); $('#' + id).scrollTop = 0; pauseBg(true); $$('.toast').forEach(x => x.remove()); markNav(); }
 function closePage(id){ $('#' + id).classList.add('hidden'); if(!anyOpen()) pauseBg(false); markNav(); }
 document.addEventListener('click', e => {
   const c = e.target.closest('[data-close]'); if(c) closePage(c.dataset.close);
@@ -1264,7 +1305,8 @@ function nav(where){
   markNav();
 }
 function markNav(){
-  const cur = Object.keys(NAV_PAGES).find(k => !$('#' + NAV_PAGES[k]).classList.contains('hidden')) || 'home';
+  const other = ['report', 'prep', 'settings', 'shopsPage'].some(id => !$('#' + id).classList.contains('hidden'));
+  const cur = Object.keys(NAV_PAGES).find(k => !$('#' + NAV_PAGES[k]).classList.contains('hidden')) || (other ? '' : 'home');
   $$('.nav [data-nav]').forEach(b => { b.classList.toggle('on', b.dataset.nav === cur); b.setAttribute('aria-current', b.dataset.nav === cur ? 'page' : 'false'); });
 }
 
@@ -1306,29 +1348,29 @@ function renderHome(){
   $('#hey').textContent = me ? `Hey, ${me}!` : 'Hey there!';
   $('#signin').classList.toggle('hidden', !!me);
   $('#home').classList.toggle('hidden', !me);
-  const h = hist(), last3 = h.slice(-3);
-  if(h.length >= 3){
+  const h = hist(), scored = h.filter(x => x.kind !== 'drill' && !x.early), last3 = scored.slice(-3);
+  if(scored.length >= 3){
     $('#readiness').className = 'big';
     $('#readiness').innerHTML = Math.round(last3.reduce((a, x) => a + (x.aiScore || x.score), 0)/3) + '<small>/ 100</small>';
     $('#readySub').textContent = 'From your 3 most recent calls.';
   } else {
     $('#readiness').className = 'big empty';
-    $('#readiness').textContent = h.length ? 'Not yet' : 'No calls yet';
-    $('#readySub').textContent = `Your average shows after 3 calls (${h.length} of 3 done).`;
+    $('#readiness').textContent = scored.length ? 'Not yet' : 'No calls yet';
+    $('#readySub').textContent = `Your average shows after 3 calls (${scored.length} of 3 done).`;
   }
   $('#mCalls').textContent = h.length;
   $('#mMin').textContent = fmtDur(h.reduce((a, x) => a + (x.dur || 0), 0));
   $('#mBooked').textContent = h.filter(x => x.outcome === 'booked').length;
-  const g = guidedDone(), ai = Voice.can().xai, last = h[h.length - 1];
+  const g = guidedDone(), ai = Voice.can().xai, last = scored[scored.length - 1];
   const steps = [
     ['Guided call 1', 'Learn the 8 steps. A tip on every line.'],
     ['Guided call 2', 'Pick the best fit. Tips after you pick.'],
     ['Live call', ai ? 'Talk freely with the live AI owner. Hint only.' : 'Talk freely with a practice owner. Hint only.'],
-    ['Guided call 3+', 'Sharpen it. Coaching in the report.']
+    ['More practice', 'Guided or live calls, as many as you like.']
   ];
   const curI = g === 0 ? 0 : g === 1 ? 1 : 2;
   const liveDone = h.some(x => x.kind === 'live' || x.kind === 'free');
-  const state = i => i < 2 ? (i < g ? 'done' : i === curI ? 'cur' : 'lock') : i === 2 ? (liveDone ? 'done' : g >= 2 ? 'cur' : 'lock') : (g >= 3 ? 'done' : g >= 2 ? '' : 'lock');
+  const state = i => i < 2 ? (i < g ? 'done' : i === curI ? 'cur' : 'lock') : i === 2 ? (liveDone ? 'done' : g >= 2 ? 'cur' : 'lock') : (g < 2 ? 'lock' : liveDone && g >= 3 ? 'done' : '');
   const path = `<ol class="path">${steps.map((s, i) => { const st = state(i); return `<li class="${st}"><span class="dot">${st === 'done' ? '✓' : st === 'lock' ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>' : i + 1}</span><span><b>${s[0]}</b><small>${st === 'lock' && i === 2 ? 'Opens after 2 guided calls.' : s[1]}</small></span></li>`; }).join('')}</ol>`;
   const primary = g < 2 ? `<button class="btn black wide" data-start="guided">Start guided call ${g + 1}</button>`
     : `<button class="btn black wide" data-start="live">Start a live call</button><button class="lnkbtn alt" data-start="guided">Or another guided call</button>`;
@@ -1387,11 +1429,11 @@ function openShops(){
       <button class="btn black" id="rGo" ${Voice.can().xai ? '' : 'disabled'}>Research it</button> <span class="note" id="rMsg">${Voice.can().xai ? '' : 'Needs the AI coach turned on. Ask Bobby for your StarWell code.'}</span></div>`;
   paintShops();
   $('#shopQ').oninput = e => { shopFilter.q = e.target.value; paintShops(); };
-  $('#shopAny').onclick = () => { source = {type:'random'}; closePage('shopsPage'); renderHome(); toast('Next call: any Connecticut shop'); };
+  $('#shopAny').onclick = () => { source = {type:'random'}; closePage('shopsPage'); renderHome(); };
   $('#shopsIn').onclick = async e => {
     const c = e.target.closest('[data-county]'); if(c){ shopFilter.county = c.dataset.county; paintShops(); return; }
     const pk = e.target.closest('[data-pickshop]');
-    if(pk){ const x = SHOPS[+pk.dataset.pickshop]; source = {type:'real', shop:x}; closePage('shopsPage'); renderHome(); toast('Next call: ' + x.name.replace(/\s*\(.*?\)\s*/g, ' ').trim() + ', ' + x.town); return; }
+    if(pk){ const x = SHOPS[+pk.dataset.pickshop]; source = {type:'real', shop:x}; closePage('shopsPage'); renderHome(); return; }
     if(e.target.id === 'rGo'){
       const shop = $('#rShop').value.trim(), town = $('#rTown').value.trim(); if(!shop || !town) return toast('Add the shop and town');
       $('#rMsg').textContent = 'Searching the web…'; e.target.disabled = true;
@@ -1433,6 +1475,7 @@ function openHist(id){
   closePage('calls');
   const x = hist().find(e => e.id === id); if(!x) return;
   if(C && C.id === id && C.report){ showReport(C, C.report, true); return; }
+  if(x.c && x.rep){ const pc = Object.assign({id:x.id, turns:[], ai:x.ai, fullUrl:null}, x.c); showReport(pc, x.rep, true); return; }
   const kind = x.kind === 'drill' ? 'Drill' : KIND_NAMES[x.kind] || 'Call';
   $('#reportIn').innerHTML = `<div class="ptop"><h2>How it went</h2><button class="btn light x" data-close="report">Close</button></div>
     <section class="box"><div class="rhead"><div style="min-width:0"><div class="lbl">${esc(kind)} · ${esc(x.owner)} at ${esc(x.shop)}</div>${outcomePill(x.outcome)}
@@ -1449,9 +1492,9 @@ function openHist(id){
 }
 
 function renderProgress(){
-  const h = hist();
+  const h = hist().filter(x => !x.early);
   if(!h.length){ $('#progIn').innerHTML = '<div class="box"><p class="note" style="margin:0">Your progress chart appears after your first call.</p></div>'; return; }
-  const W = 640, H = 300, padL = 56, padR = 24, padT = 20, padB = 40, n = h.length;
+  const W = Math.max(280, Math.min(712, window.innerWidth - 80)), H = 220, padL = 40, padR = 16, padT = 14, padB = 30, n = h.length;
   const xs = i => padL + (n === 1 ? (W - padL - padR)/2 : i*(W - padL - padR)/(n - 1)), ys = v => H - padB - v*(H - padT - padB)/100;
   const pts = h.map((x, i) => `${xs(i)},${ys(x.aiScore || x.score)}`).join(' ');
   const skillAvg = {}; for(const k of Object.keys(SKILL_NAMES)){ const v = h.filter(x => x.skills[k] !== undefined).map(x => x.skills[k]); if(v.length) skillAvg[k] = Math.round(v.reduce((a, b) => a + b, 0)/v.length); }
@@ -1459,13 +1502,14 @@ function renderProgress(){
   const wpm = h.filter(x => x.wpm).map(x => x.wpm);
   const colOf = k => ({green:'#1f7a4d', red:'#b42318', gray:'#5b6472', blue:'#2f5bd3'})[outcomeOf(k).col];
   const shape = (x, cx, cy) => { const o = outcomeOf(x.outcome), c = colOf(x.outcome), t = `<title>Call ${h.indexOf(x) + 1}: ${esc(x.owner)}, ${x.aiScore || x.score}, ${esc(o.label)}</title>`;
-    return o.col === 'red' ? `<g stroke="${c}" stroke-width="4">${t}<path d="M${cx - 8} ${cy - 8}L${cx + 8} ${cy + 8}M${cx + 8} ${cy - 8}L${cx - 8} ${cy + 8}"/></g>` : o.col === 'green' ? `<circle cx="${cx}" cy="${cy}" r="9" fill="${c}">${t}</circle>` : `<circle cx="${cx}" cy="${cy}" r="8" fill="#fff" stroke="${c}" stroke-width="4">${t}</circle>`; };
+    if(x.kind === 'drill') return `<path d="M${cx} ${cy - 7}L${cx + 7} ${cy}L${cx} ${cy + 7}L${cx - 7} ${cy}Z" fill="#2f5bd3">${t}</path>`;
+    return o.col === 'red' ? `<g stroke="${c}" stroke-width="2.5">${t}<path d="M${cx - 5} ${cy - 5}L${cx + 5} ${cy + 5}M${cx + 5} ${cy - 5}L${cx - 5} ${cy + 5}"/></g>` : o.col === 'green' ? `<circle cx="${cx}" cy="${cy}" r="6" fill="${c}">${t}</circle>` : `<circle cx="${cx}" cy="${cy}" r="5" fill="#fff" stroke="${c}" stroke-width="2.5">${t}</circle>`; };
   const every = Math.max(1, Math.ceil(n/8));
   $('#progIn').innerHTML = `<div class="box"><h3>Score by call</h3>
-    <svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Score for each call">${[0,50,100].map(v => `<line x1="${padL}" x2="${W - padR}" y1="${ys(v)}" y2="${ys(v)}" stroke="#e3e6eb"/><text x="${padL - 10}" y="${ys(v) + 7}" text-anchor="end" font-size="22" fill="#5b6472">${v}</text>`).join('')}
-    ${h.map((x, i) => i % every === 0 || i === n - 1 ? `<text x="${xs(i)}" y="${H - 8}" text-anchor="middle" font-size="20" fill="#5b6472">${i + 1}</text>` : '').join('')}
-    <polyline points="${pts}" fill="none" stroke="#2f5bd3" stroke-width="3" stroke-linejoin="round"/>${h.map((x, i) => shape(x, xs(i), ys(x.aiScore || x.score))).join('')}</svg>
-    <p class="note" style="margin:6px 0 0">Bottom numbers are your calls in order. ● booked or email · ○ not this time or ended · ✕ owner hung up.</p></div>
+    <svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Score for each call">${[0,50,100].map(v => `<line x1="${padL}" x2="${W - padR}" y1="${ys(v)}" y2="${ys(v)}" stroke="#e3e6eb"/><text x="${padL - 8}" y="${ys(v) + 4}" text-anchor="end" font-size="13" fill="#5b6472">${v}</text>`).join('')}
+    ${h.map((x, i) => i % every === 0 || i === n - 1 ? `<text x="${xs(i)}" y="${H - 8}" text-anchor="middle" font-size="12" fill="#5b6472">${i + 1}</text>` : '').join('')}
+    <polyline points="${pts}" fill="none" stroke="#2f5bd3" stroke-width="2" stroke-linejoin="round"/>${h.map((x, i) => shape(x, xs(i), ys(x.aiScore || x.score))).join('')}</svg>
+    <p class="note" style="margin:6px 0 0">Bottom numbers are your calls in order. <span style="color:var(--success)">●</span> booked or email · <span style="color:var(--muted)">○</span> not this time or ended · <span style="color:var(--danger)">✕</span> owner hung up · <span style="color:var(--accent)">◆</span> drill.</p></div>
     <div class="box"><h3>Average by step</h3><div class="bars">${Object.keys(skillAvg).map(k => bar(SKILL_NAMES[k], skillAvg[k])).join('')}</div>
     ${weakest ? `<p style="margin-top:12px"><b>Focus next:</b> ${esc(SKILL_NAMES[weakest])}. ${guideLink(weakest)}</p>` : ''}</div>
     ${wpm.length ? `<div class="box"><h3>Your pace</h3><p style="margin:0 0 6px">${wpm.slice(-8).map(w => `<span class="chip">${w} words a minute</span>`).join('')}</p><p class="note" style="margin:0">Aim for ${DELIVERY.pace.target}.</p></div>` : ''}`;

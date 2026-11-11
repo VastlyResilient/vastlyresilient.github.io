@@ -100,7 +100,7 @@ const OBJ = {
          ok:'"You could get more" ignores what they just told you they value.',
          weak:'Telling a proud owner their life\'s work is "dying" ends the call.'}},
   scam:{say:['How\'d you get my number? Is this a scam?','Who gave you this number?'], guide:'questions', skill:'"Is this a scam?"',
-    best:'Smart to ask. It\'s on your website and your Google listing. We\'re StarWell, in North Haven. Nothing to pay, nothing to sign, no logins. Look us up, and call me back on this number if you\'d rather.',
+    best:'Smart to ask. It\'s on your website and your Google listing. We\'re StarWell, here in Connecticut. Nothing to pay, nothing to sign, no logins. Look us up, and call me back on this number if you\'d rather.',
     ok:'No, no, it\'s legit, I swear.',
     weak:'We have a lot of data on local businesses.',
     why:{best:'Say where you found the number. Hidden sources feel invasive; named ones feel normal.',

@@ -50,7 +50,7 @@ const CALL_GUIDE = {
     { q: "Will it mess with my phones?", a: "It can't. The demo line has its own phone number. Your phones stay exactly as they are." },
     { q: "What if it tells a customer something wrong?", a: "The demo only uses your public info. If you ever went live, you'd approve what it says and what it must never say." },
     { q: "Just send me an email.", a: "Happy to, that's my next step anyway. What's the best address? And so it doesn't sit in your inbox, could I take fifteen minutes {day} at {time} to walk you through it?" },
-    { q: "Is this a scam? How'd you get my number?", a: "Smart to ask. Your number's on your website and Google listing. We're StarWell, in North Haven. Nothing to pay, nothing to sign, no logins. Look us up and call me back if you'd rather." },
+    { q: "Is this a scam? How'd you get my number?", a: "Smart to ask. Your number's on your website and Google listing. We're StarWell, here in Connecticut. Nothing to pay, nothing to sign, no logins. Look us up and call me back if you'd rather." },
     { q: "Do you have other HVAC clients?", a: "Not in HVAC yet. You'd be one of our first, which means our best attention. We run these same systems for a Connecticut transportation company." },
     { q: "Will this get me more calls?", a: "I can't promise a number, and I won't. It's built so more people find you and fewer calls slip by. The walkthrough shows where you stand today, so you can judge." },
     { q: "It's all word of mouth.", a: "That's the best kind. When a neighbor recommends you, people still look you up first. This makes sure what they find matches what your neighbor said." },
