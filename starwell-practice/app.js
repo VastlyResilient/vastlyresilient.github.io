@@ -15,7 +15,8 @@ function hashStr(s){ let h = 2166136261; for(const ch of String(s)){ h ^= ch.cha
 function fill(t, p){ return t.replace(/\{(\w+)\}/g, (m, k) => p.vars[k] ?? m); }
 
 /* ---------- people ---------- */
-let me = LS.get('sw_cc_me', '');
+let me = (() => { try{ return sessionStorage.getItem('sw_pl_me') || ''; }catch(e){ return ''; } })();
+function signIn(name){ me = name; LS.set('sw_cc_me', name); try{ sessionStorage.setItem('sw_pl_me', name); }catch(e){} }
 const histKey = () => 'sw_pl_hist_' + (me || 'guest');
 const hist = () => LS.json(histKey(), []);
 function saveHist(h){ LS.set(histKey(), JSON.stringify(h.slice(-40))); }
@@ -1345,7 +1346,10 @@ function sourceLine(){
   return `<button class="shopline" id="srcPill" aria-label="Choose who to call">${PIN_ICON}<span>Calling: ${t}</span><em>Change</em></button>`;
 }
 function renderHome(){
-  $('#hey').textContent = me ? `Hey, ${me}!` : 'Hey there!';
+  $('#hey').textContent = me ? `Hey, ${me}!` : 'Welcome to StarWell';
+  $('#whoBtn').classList.toggle('hidden', !me);
+  if(me){ $('#whoAv').textContent = me.slice(0, 2).toUpperCase(); $('#whoName').textContent = me; }
+  $('.nav').classList.toggle('hidden', !me);
   $('#signin').classList.toggle('hidden', !!me);
   $('#home').classList.toggle('hidden', !me);
   const h = hist(), scored = h.filter(x => x.kind !== 'drill' && !x.early), last3 = scored.slice(-3);
@@ -1542,7 +1546,7 @@ function renderSettings(){
   $('#sFx').onchange = () => { LS.set('sw_pl_fx', $('#sFx').checked ? '1' : '0'); toast('Saved', 1000); };
   $('#sNoise').onchange = () => { LS.set('sw_pl_noise', $('#sNoise').checked ? '1' : '0'); toast('Saved', 1000); };
   $('#setIn').onclick = async e => {
-    const m = e.target.closest('[data-me]'); if(m){ me = m.dataset.me; LS.set('sw_cc_me', me); renderSettings(); renderHome(); return; }
+    const m = e.target.closest('[data-me]'); if(m){ signIn(m.dataset.me); renderSettings(); renderHome(); return; }
     if(e.target.id === 'sUnlock'){
       $('#sMsg').textContent = 'Unlocking…';
       try{ await unlockVault($('#sCode').value, me); renderSettings(); renderHome(); $('#sMsg').textContent = 'Unlocked. Tap "Test live connection" to check the line.'; }
@@ -1577,8 +1581,14 @@ $$('#modeToggle button').forEach(b => b.onclick = () => { $$('#modeToggle button
 (() => { const m = LS.get('sw_pl_mode', 'guided'); $$('#modeToggle button').forEach(x => x.classList.toggle('on', x.dataset.mode === m)); })();
 
 /* sign-in */
-$('#signinBtns').innerHTML = TEAM.map(n => `<button data-who="${n}">${n}</button>`).join('');
-$('#signinBtns').onclick = e => { const b = e.target.closest('[data-who]'); if(!b) return; me = b.dataset.who; LS.set('sw_cc_me', me); renderHome(); };
+function paintSignin(){
+  const lastMe = LS.get('sw_cc_me', '');
+  $('#signinBtns').innerHTML = TEAM.map(n => { const calls = LS.json('sw_pl_hist_' + n, []).length;
+    return `<button data-who="${n}" class="${n === lastMe ? 'last' : ''}"><span class="wav">${esc(n.slice(0, 2).toUpperCase())}</span>${esc(n)}<small>${calls ? calls + ' call' + (calls > 1 ? 's' : '') : 'New'}${n === lastMe ? ' · last used' : ''}</small></button>`; }).join('');
+}
+paintSignin();
+$('#signinBtns').onclick = e => { const b = e.target.closest('[data-who]'); if(!b) return; signIn(b.dataset.who); source = {type:'random'}; renderHome(); window.scrollTo(0, 0); };
+$('#whoBtn').onclick = () => { if(C && !C.ended) return; nav('home'); me = ''; try{ sessionStorage.removeItem('sw_pl_me'); }catch(e){} paintSignin(); renderHome(); window.scrollTo(0, 0); };
 
 /* mic check card: listens up to 10 seconds, then gives a plain verdict */
 (() => {
