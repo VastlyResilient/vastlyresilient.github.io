@@ -109,10 +109,11 @@ const OBJ = {
 };
 
 /* Steps of every call, with the short labels shown in the step bar */
-const STEPS = [['opener','Hello'],['truth','Noticed'],['discover','His week'],['gift','The gift'],['handle','Questions'],['close','Send it'],['wrap','Thanks']];
+const STEPS = (SCRIPT_LIB.stageOrder || ['greet','reason','noticed','follow','offer','questions','next','thanks']).map(k => [k, SCRIPT_LIB.labels[k] || k]);
 
 /* The owner's take for the report, by how well your line fit him */
 const TAKE = {
+  reason:{warm:'You told me plainly why you were calling. No games. I appreciated that.', even:'Okay reason. I was still figuring out what you wanted.', cool:'I wasn\'t sure what you were after.'},
   opener:{warm:'You were friendly and got to the point. That\'s why I kept listening.', even:'Nice enough. It took me a second to know why you were calling.', cool:'Polite, but it didn\'t feel like it was meant for me.'},
   truth:{warm:'You noticed something real about my shop. That got me.', even:'Kind words. I still wasn\'t sure where you were going.', cool:'It felt like something you\'d say to any shop.'},
   discover:{warm:'You asked about last week, and I ended up telling you more than I meant to.', even:'Fair question. I gave you the usual answer.', cool:'I wasn\'t sure why you were asking.'},
@@ -129,3 +130,6 @@ const DELIVERY = {
   fillers:['um','uh','umm','uhh','er','ah','like','you know','basically','kind of','sort of','i mean','literally'],
   hedges:['just wanted','just calling','sorry to bother','i was wondering','maybe','i think','hopefully','if that\'s okay','does that make sense']
 };
+
+/* the same takes under the new step names */
+Object.assign(TAKE, {greet:TAKE.opener, noticed:TAKE.truth, follow:TAKE.discover, offer:TAKE.gift, questions:TAKE.handle, next:TAKE.close, thanks:TAKE.wrap});

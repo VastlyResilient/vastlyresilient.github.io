@@ -41,14 +41,18 @@ function makePersona(opt){
   const arch = opt.arch || pick(r, fresh.length ? fresh : pool);
   LS.set('sw_pl_recent', JSON.stringify([arch, ...recent].slice(0, 3)));
   const A = ARCH[arch];
-  const b = opt.brief || {};
-  const town = b.town || pick(r, TOWNS);
+  let real = opt.real || null;
+  if(!real && !opt.brief && typeof SHOPS !== 'undefined' && SHOPS.length) real = pick(r, SHOPS);
+  const b = opt.brief || (real ? {shop:real.name, town:real.town} : {});
+  const town = (b.town || pick(r, TOWNS)).replace(/\s*\(.*?\)\s*/g, ' ').trim();
   const ownerFirst = (b.owner || pick(r, A.gender === 'f' && !A.gk ? WOMEN : MEN)).split(' ')[0];
   const last = pick(r, LAST);
   const gk = !!A.gk;
   const gkName = gk ? pick(r, WOMEN) : '';
   const s = {last, town, first:ownerFirst, r3:Math.floor(r()*3)};
   const shop = b.shop || pick(r, A.gender === 'f' && !A.gk ? SHOP_PATTERNS.slice(1) : SHOP_PATTERNS)(s);
+  // how people say it on the phone: no Inc./LLC/Co.
+  const said = shop.replace(/,?\s*(inc\.?|incorporated|l\.?l\.?c\.?|corp\.?|co\.?|company|ltd\.?)\s*$/i, '').replace(/,?\s*(inc\.?|l\.?l\.?c\.?)\s*$/i, '').replace(/\s+/g, ' ').trim();
   const afterKeys = Object.keys(A.reveal);
   const after = b.after ? ({'Voicemail':'voicemail','Answering service':'service',"Owner's cell":'cell'}[b.after] || pick(r, afterKeys)) : pick(r, afterKeys);
   const techs = 3 + Math.floor(r()*14);
@@ -70,7 +74,8 @@ function makePersona(opt){
   if(A.force && A.force.hiring) facts.hiring = true;
   if(A.force && A.force.techMin){ facts.techs = Math.max(facts.techs, A.force.techMin); facts.trucks = Math.max(facts.trucks, facts.techs); }
   if((after === 'cell' || after === 'service') && facts.siteIssues.includes(SITE_ISSUES[0])) facts.siteIssues[facts.siteIssues.indexOf(SITE_ISSUES[0])] = SITE_ISSUES.slice(1).find(x => !facts.siteIssues.includes(x));
-  const lead = (after === 'voicemail' || after === 'none' || after === 'service' || after === 'cell') ? 'phone' : facts.siteIssues.includes(SITE_ISSUES[0]) ? 'site' : 'found';
+  const lr = r();
+  const lead = lr < 0.2 ? 'site' : lr < 0.4 ? 'found' : (after === 'voicemail' || after === 'none' || after === 'service' || after === 'cell') ? 'phone' : facts.siteIssues.includes(SITE_ISSUES[0]) ? 'site' : 'found';
   const objections = [];
   objections.push(pickW(r, A.objections));
   if(r() < 0.6) objections.push(pickW(r, A.objections, objections));
@@ -83,16 +88,17 @@ function makePersona(opt){
     facts, lead, objections, day, time,
     rate: A.rate + (r() - 0.5)*0.08, pitchMul: A.pitch + (r() - 0.5)*0.1,
     painLine: fillRaw(pick(r, A.pain), {owner:ownerFirst}),
-    email: (gk ? 'office' : ownerFirst.toLowerCase()) + '@' + (() => { let d = shop.toLowerCase().replace(/&| and |heating|cooling|\bair\b|'s|hvac|brothers|sons/g, ' ').replace(/[^a-z]/g, '').slice(0, 16); if(!d || d === ownerFirst.toLowerCase()) d = last.toLowerCase() + 'hvac'; return d; })() + '.com',
+    email: (gk ? 'office' : ownerFirst.toLowerCase()) + '@' + (() => { let d = said.toLowerCase().replace(/&|\band\b|heating|cooling|plumbing|conditioning|\bair\b|'s|hvac|brothers|sons|mechanical|services?|repairs?|llc|inc/g, ' ').replace(/[^a-z]/g, '').slice(0, 18); if(!d || d === ownerFirst.toLowerCase()) d = last.toLowerCase() + 'hvac'; return d; })() + '.com',
     reviewsList: shuffle(r, REVIEW_TPL).slice(0, 2).map(t => t.replace('{tech}', tech)),
-    brief: opt.brief ? true : false,
+    brief: opt.brief ? true : false, real,
     trueThing: (b.true || '').trim().replace(/[.!]+$/, ''), compliment: (b.comp || '').trim().replace(/[.!]+$/, '')
   };
   p.voices = Voice.pickVoices(p);
-  p.vars = {name:p.onLine, owner:ownerFirst, shop, town, me: me || 'teammate', tech, day, time,
+  p.vars = {name:p.onLine, owner:ownerFirst, shop:said, town, me: me || 'teammate', tech, day, time,
             close: facts.close, rating: facts.rating, reviews: facts.reviews,
             when: am ? 'before the trucks go out' : 'after the trucks come back', gk: gkName,
             email: p.email, day2: DAYS[(DAYS.indexOf(day) + 1) % DAYS.length]};
+  p.shopSaid = said;
   p.answer = fill(pick(r, A.answer), p);
   p.r = r;
   return p;
@@ -100,19 +106,18 @@ function makePersona(opt){
 function fillRaw(t, v){ return t.replace(/\{(\w+)\}/g, (m, k) => v[k] ?? m); }
 
 /* the three "one true thing" lines and other stage options for this persona */
-function optionsFor(stage, p, objKey){
-  const opts = newOptionsFor(stage, p, objKey);
-  if(opts.length && !opts.some(o => o.q === 'best')){
-    const style = (NEWLINES.bestFit && NEWLINES.bestFit[p.arch]) || 'Straight & brief';
-    opts.forEach(o => { if(o.style === style) o.q = 'best'; });
-  }
+function optionsFor(stage, p, key){
+  const opts = scriptOptions(OLD2NEW[stage] || stage, p, key);
+  if(opts.length && !opts.some(o => o.q === 'best')){ const style = bestStyle(p); opts.forEach(o => { if(o.style === style) o.q = 'best'; }); }
   return opts;
 }
-function bestStyle(p){ return (NEWLINES.bestFit && NEWLINES.bestFit[p.arch]) || 'Straight & brief'; }
+function bestStyle(p){ return (SCRIPT_LIB.bestFit && SCRIPT_LIB.bestFit[p.arch]) || 'Straight & brief'; }
 
 /* ---------- free-talk classifier (used when the AI owner isn't available, and for live scoring) ---------- */
 const has = (t, re) => re.test(t);
 function classify(stage, text, p, objKey){
+  if(stage === 'greet') return /star ?well/i.test(text) ? 'best' : 'ok';
+  if(NEW2OLD[stage]) stage = NEW2OLD[stage];
   const t = ' ' + text.toLowerCase().replace(/[^a-z0-9$' ]/g, ' ') + ' ';
   const pressure = /sign up|sign you up|today only|lock in|deal|discount|you need to|you'd be crazy|guarantee|10x|ten times/;
   const jargon = /\b(ai|geo|aeo|seo|algorithm|leads|optimization|automation)\b/;
@@ -172,7 +177,9 @@ let C = null;      // the current call
 /* every open turn registers a cleanup here; End runs them all */
 function onAbort(fn){ if(C) (C.aborts = C.aborts || []).push(fn); }
 function offAbort(fn){ if(C && C.aborts) C.aborts = C.aborts.filter(x => x !== fn); }
-const STAGE_ORDER = ['opener','truth','discover','gift','handle','close','wrap'];
+const STAGE_ORDER = SCRIPT_LIB.stageOrder || ['greet','reason','noticed','follow','offer','questions','next','thanks'];
+const OLD2NEW = {opener:'greet', truth:'noticed', discover:'follow', gift:'offer', handle:'questions', close:'next', wrap:'thanks'};
+const NEW2OLD = {greet:'opener', reason:'opener', noticed:'truth', follow:'discover', offer:'gift', questions:'handle', next:'close', thanks:'wrap'};
 const OPT_COLORS = [['--o1','#2563eb'],['--o2','#d97706'],['--o3','#7c3aed']];
 
 function newCall(kind, p, extra){
@@ -297,7 +304,7 @@ function showCall(c){
   $('#cMode').textContent = c.drill ? 'Drill' : {guided:'Guided', free:'Test call', live:'Live test'}[c.kind];
   $('#cSub').textContent = c.kind === 'live' ? 'Live AI owner' : 'Practice line';
   $('#cShop').textContent = p.shop;
-  $('#cOwner').textContent = p.gk ? `${p.onLine}, office manager` : `${p.owner}, owner`;
+  $('#cOwner').textContent = (p.gk ? `${p.onLine}, office manager` : `${p.owner}, owner`) + (p.real ? ' · practice person' : '');
   $('#cAv').textContent = p.onLine[0];
   $('#cAv').style.background = ['#a3a3a3','#8b9bb4','#b4a08b','#9bb48b','#b48b9b'][p.seed % 5];
   $('#cap').innerHTML = ''; $('#opts').classList.add('hidden'); $('#say').classList.add('hidden');
@@ -473,7 +480,8 @@ async function callerTurn(stage, objKey){
     const said = res.said || '(not heard)';
     const q = res.said ? classify(stage, said, C.p, objKey) : 'ok';
     const m = metrics(res.cap.frames, said, /\?$/.test(said));
-    const turn = {stage, objKey, q, text:said, said, url:res.cap.url, m, latency:m.firstVoiceMs || 0, best:optionsFor(stage, C.p, objKey).find(o => o.q === 'best')};
+    const pool = optionsFor(stage, C.p, objKey);
+    const turn = {stage, objKey, q, text:said, said, url:res.cap.url, m, latency:m.firstVoiceMs || 0, best:pool.find(o => o.q === 'best'), opt:pool.find(o => o.q === 'best') || pool[0]};
     C.turns.push(turn); addLine('c', said); C.log.push({who:'c', text:said, at:Date.now() - C.t0, turn:C.turns.length - 1});
     return turn;
   }
@@ -487,7 +495,7 @@ async function callerTurn(stage, objKey){
     const acc = res.srOk ? res.lit/res.total : 1;
     const m = metrics(res.cap.frames, opt.t, /\?$/.test(opt.t));
     const best = C.lastOpts.find(o => o.q === 'best');
-    const turn = {stage, objKey, q:opt.q, style:opt.style, tags:opt.tags || [], why:opt.why, text:opt.t, said:res.said, acc, missed:res.missed, url:res.cap.url, m, color:opt.color, best};
+    const turn = {stage, objKey, opt, q:opt.q, style:opt.style, tags:opt.tags || [], why:opt.why, text:opt.t, said:res.said, acc, missed:res.missed, url:res.cap.url, m, color:opt.color, best};
     addLine('c', opt.t, null, opt.color);
     C.turns.push(turn); C.log.push({who:'c', text:opt.t, at:Date.now() - C.t0, turn:C.turns.length - 1});
     if(C.level <= 2 && !C.drillQuiet){   // one coaching line right after the pick
@@ -520,59 +528,43 @@ async function runScripted(){
   Full.start();
   await ownerSays((p.situation.noise ? p.situation.noise + ' ' : '') + p.answer);
   const stages = c.stages || STAGE_ORDER;
-  let objKey = null, outcome = null, asideDone = false;
-  const aside = () => {   // one realistic interruption per call, matched to where he is
-    if(asideDone || p.r() > 0.3) return '';
-    asideDone = true;
-    const w = p.situation.where;
-    const k = /truck/.test(w) ? 'truck' : /van/.test(w) ? 'van' : /supply/.test(w) ? 'supply' : /basement/.test(w) ? 'basement' : /roof/.test(w) ? 'roof' : /front desk/.test(w) ? 'desk' : 'office';
-    return pick(p.r, REACT.aside[k] || REACT.aside.office) + ' ';
-  };
+  let objKey = null, outcome = null;
+  const reply = (turn, fitOrTone, extra) => ownerReply(turn.opt, fitOrTone, p, extra || {});
   const cheer = (fit, line) => { if(fit === 'warm' && c.streak >= 3 && !c.encouraged){ c.encouraged = true; line += ' ' + pick(p.r, REACT.encourage); } return line; };
   for(const stage of stages){
     if(!alive()) return;
-    if(stage === 'handle' && !objKey) continue;
-    if(stage === 'close' && c.skipClose) continue;
-    if(stage === 'wrap'){ objKey = (outcome === 'booked' || outcome === 'email_only') ? 'yes' : 'no'; }
-    let turn = await callerTurn(stage, objKey);
+    if(stage === 'questions' && !objKey) objKey = p.objections[0];
+    if(stage === 'thanks') objKey = (outcome === 'booked' || outcome === 'email_only') ? 'yes' : 'no';
+    let turn = await callerTurn(stage, stage === 'questions' || stage === 'thanks' ? objKey : p.lead);
     if(!turn || !alive()) return;
-    if(await deliveryCheck(turn) === 'again'){ c.turns.pop(); turn = await callerTurn(stage, objKey); if(!turn || !alive()) return; }
-    const fit = fitOf(turn.q);
-    c.stageQ[stage + (stage === 'handle' ? ':' + objKey : '')] = turn.q;
+    if(await deliveryCheck(turn) === 'again'){ c.turns.pop(); turn = await callerTurn(stage, stage === 'questions' || stage === 'thanks' ? objKey : p.lead); if(!turn || !alive()) return; }
+    const fit = fitOf(turn.q), f2 = fit === 'off' ? 'cool' : fit;
+    c.stageQ[stage + (stage === 'questions' ? ':' + objKey : '')] = turn.q;
     applyTrust(turn);
-    if(fit === 'off' && c.trust <= TRUST.hangup && stage !== 'wrap'){ await ownerSays(pick(p.r, REACT.hangup)); outcome = 'hung_up'; break; }
-    if(stage === 'opener'){
-      await ownerSays(cheer(fit, ownerReact('opener', fit === 'off' ? 'cool' : fit, p)));
-    } else if(stage === 'truth'){
-      await ownerSays(aside() + (fit === 'warm' ? fillRaw(A.reveal[p.facts.after], {owner:p.owner.split(' ')[0]}) : ownerReact('truth', fit === 'off' ? 'cool' : fit, p)));
-    } else if(stage === 'discover'){
-      await ownerSays(fit === 'warm' ? p.painLine : ownerReact('discover', fit === 'off' ? 'cool' : fit, p));
-    } else if(stage === 'gift'){
+    if(fit === 'off' && c.trust <= TRUST.hangup && stage !== 'thanks'){ await ownerSays(pick(p.r, REACT.hangup)); outcome = 'hung_up'; break; }
+    if(stage === 'offer'){
       objKey = p.objections[0];
-      await ownerSays(aside() + cheer(fit, ownerReact('gift', fit === 'off' ? 'cool' : fit, p, fit === 'warm' ? p.lead : null)) + ' ' + pick(p.r, OBJ[objKey].say));
-    } else if(stage === 'handle'){
-      const second = p.objections[1] && !c.didSecond && c.trust < 75 && !(objKey === 'email' && fit === 'warm');
+      await ownerSays(cheer(fit, reply(turn, f2, {objection:pick(p.r, OBJ[objKey].say)})));
+    } else if(stage === 'questions'){
+      const second = p.objections[1] && !c.didSecond && c.trust < 75 && stages.includes('next');
       if(second){
         c.didSecond = true;
-        await ownerSays(ownerReact('handle', fit === 'off' ? 'cool' : fit, p) + ' ' + pick(p.r, OBJ[p.objections[1]].say));
+        await ownerSays(reply(turn, f2) + ' ' + pick(p.r, OBJ[p.objections[1]].say));
         if(!alive()) return;
         objKey = p.objections[1];
-        const t2 = await callerTurn('handle', objKey); if(!t2 || !alive()) return;
-        c.stageQ['handle:' + objKey] = t2.q; applyTrust(t2);
-        if(fitOf(t2.q) === 'off' && c.trust <= TRUST.hangup){ await ownerSays(pick(p.r, REACT.hangup)); outcome = 'hung_up'; break; }
+        const t2 = await callerTurn('questions', objKey); if(!t2 || !alive()) return;
+        const fit2 = fitOf(t2.q);
+        c.stageQ['questions:' + objKey] = t2.q; applyTrust(t2);
+        if(fit2 === 'off' && c.trust <= TRUST.hangup){ await ownerSays(pick(p.r, REACT.hangup)); outcome = 'hung_up'; break; }
+        await ownerSays(cheer(fit2, reply(t2, fit2 === 'off' ? 'cool' : fit2)) + (c.trust >= TRUST.bridge && stages.includes('next') ? ' ' + pick(p.r, REACT.bridge) : ''));
+      } else {
+        await ownerSays(cheer(fit, reply(turn, f2)) + (c.trust >= TRUST.bridge && stages.includes('next') ? ' ' + pick(p.r, REACT.bridge) : ''));
       }
-      const lastT = c.turns[c.turns.length - 1], lf = fitOf(lastT.q);
-      if(objKey === 'email' && lf === 'warm' && stages.includes('close')){
-        // the best "send me an email" answer already asked for the email and a time
-        c.skipClose = true; c.stageQ.close = 'best';
-        const res = decideOutcome('warm', c.trust, A); outcome = res.outcome;
-        await ownerSays(closeLine(res, p));
-      } else await ownerSays(cheer(lf, ownerReact('handle', lf === 'off' ? 'cool' : lf, p)) + (c.trust >= TRUST.bridge ? ' ' + pick(p.r, REACT.bridge) : ''));
-    } else if(stage === 'close'){
+    } else if(stage === 'next'){
       const res = decideOutcome(fit, c.trust, A); outcome = res.outcome;
-      await ownerSays(closeLine(res, p));
-    } else if(stage === 'wrap'){
-      await ownerSays(ownerReact('wrap', fit === 'off' ? 'cool' : fit, p));
+      await ownerSays(reply(turn, res.tone));
+    } else {
+      await ownerSays(cheer(fit, reply(turn, f2)));
     }
   }
   if(alive()){ c.outcome = outcome || c.outcome || (c.drill ? 'drill' : 'not_now'); await finishCall(); }
@@ -652,17 +644,18 @@ async function runLive(){
 
 /* hint: a nudge, never the full line */
 function currentHintStage(){
-  if(!C) return 'opener';
-  if(C.kind !== 'live') return C.stage;
+  if(!C) return 'greet';
+  if(C.kind !== 'live') return C.stage || 'greet';
   const said = C.turns.map(t => (t.text || '').toLowerCase()).join(' ');
   const last = (C.lastOwner || '').toLowerCase();
-  if(!/star ?well/.test(said)) return 'opener';
-  if(/catch|cost|price|how much|email|ai\b|robot|agency|marketing company|word of mouth|referral|scam|my number|busy|on a job|all set/.test(last)) return 'handle';
-  if(!/(reviews|website|site|book|after|facebook|google|closes|\d)/.test(said)) return 'truth';
-  if(!/(last week|last night|cold night|recently|this week)/.test(said)) return 'discover';
-  if(!/(demo|website|free|yours)/.test(said)) return 'gift';
-  if(!/email/.test(said)) return 'close';
-  return 'wrap';
+  if(!/star ?well/.test(said)) return 'greet';
+  if(C.turns.length < 2) return 'reason';
+  if(/catch|cost|price|how much|send me|\bai\b|robot|agency|marketing company|word of mouth|referral|scam|my number|on a job|all set/.test(last)) return 'questions';
+  if(!/(reviews|website|site|book|after|facebook|google|closes|phone)/.test(said)) return 'noticed';
+  if(C.turns.length < 4) return 'follow';
+  if(!/(free|yours|keep|example|show you)/.test(said)) return 'offer';
+  if(!/email|text you|send it/.test(said)) return 'next';
+  return 'thanks';
 }
 
 /* ======================================================================
@@ -713,7 +706,7 @@ const _gd = () => parseInt(LS.get('sw_pl_guided_' + me, '0'), 10) || 0;
 /* ======================================================================
    REPORT
    ====================================================================== */
-const SKILL_NAMES = {opener:'Opener', truth:'True thing', discover:'His week', gift:'The gift', handle:'His questions', close:'Email + date', wrap:'Ending', delivery:'Delivery'};
+const SKILL_NAMES_OLD = {opener:'Opener', truth:'True thing', discover:'His week', gift:'The gift', handle:'His questions', close:'Email + date', wrap:'Ending', delivery:'Delivery'};
 
 function liveStageQ(c){
   // score a free-form transcript stage by stage
@@ -742,7 +735,9 @@ function liveStageQ(c){
   if(i >= 0){ out.close = classify('close', turns.slice(i).map(t => t.text).join(' '), p); idx.close = i; } else out.close = 'missing';
   const last = turns[turns.length - 1];
   if(last && turns.length > 2){ out.wrap = classify('wrap', last.text, p); idx.wrap = turns.length - 1; }
-  return {q:out, idx, turns};
+  const q2 = {}, i2 = {};
+  for(const k in out){ const [st, ob] = k.split(':'); const nk = (OLD2NEW[st] || st) + (ob ? ':' + ob : ''); q2[nk] = out[k]; if(idx[k] !== undefined) i2[nk] = idx[k]; }
+  return {q:q2, idx:i2, turns};
 }
 
 const FITP = {warm:100, even:65, cool:35, off:10, missing:30};
@@ -796,17 +791,18 @@ function buildReport(c){
   const keys = Object.keys(stageQ).sort((a, b) => STAGE_ORDER.indexOf(a.split(':')[0]) - STAGE_ORDER.indexOf(b.split(':')[0]));
   for(const k of keys){
     const [stage, obj] = k.split(':'); const fit = fitK(k), t = turnFor[k];
-    const name = stage === 'handle' ? OBJ[obj].skill : SKILL_NAMES[stage];
+    const name = stage === 'questions' ? OBJ[obj].skill : SKILL_NAMES[stage];
     const step = CALL_GUIDE.steps[stage] || {};
-    if(fit === 'warm'){ strengths.push({stage, name, quote:t ? t.text : '', why:(t && t.why) || step.why || '', take:TAKE[stage].warm, url:t && t.url}); continue; }
+    const tk = TAKE[stage] || TAKE[NEW2OLD[stage]] || {};
+    if(fit === 'warm'){ strengths.push({stage, name, quote:t ? t.text : '', why:(t && t.why) || step.why || '', take:tk.warm || '', url:t && t.url}); continue; }
     let best = t && t.best;
-    if(!best){ const o = optionsFor(stage, p, stage === 'handle' ? obj : stage === 'wrap' ? yesNo : null); best = o.find(x => x.q === 'best') || o[0]; }
+    if(!best){ const o = optionsFor(stage, p, stage === 'questions' ? obj : stage === 'thanks' ? yesNo : p.lead); best = o.find(x => x.q === 'best') || o[0]; }
     const why = fit === 'missing' ? `You didn't get to this step. ${step.why || ''}`
       : fit === 'off' ? `To an owner, that can sound like pressure or criticism. Stay on his side. ${best ? best.why : ''}`
       : fit === 'cool' ? `It didn't quite land for ${p.onLine}. ${best ? best.why : ''}`
       : `A good line. ${best ? best.style : 'Another style'} fits ${p.onLine} even better. ${best ? best.why : ''}`;
     fixes.push({stage, name, fit, quote:t ? t.text : '', better:best ? best.t : '', betterStyle:best ? best.style : '', why,
-      take:TAKE[stage][fit === 'missing' ? 'even' : fit === 'off' ? 'cool' : fit], url:t && t.url, sev:{off:4, cool:3, missing:2, even:1}[fit]});
+      take:tk[fit === 'missing' ? 'even' : fit === 'off' ? 'cool' : fit] || '', url:t && t.url, sev:{off:4, cool:3, missing:2, even:1}[fit]});
   }
   fixes.sort((a, b) => b.sev - a.sev);
 
@@ -825,7 +821,7 @@ function buildReport(c){
 
   const outcomeLabel = {booked:'Walkthrough booked', email_only:'Gift accepted', not_now:'Not this time', hung_up:'He hung up', you_ended:'You ended the call', drill:'Drill done'}[c.outcome] || 'Call ended';
   const good = c.outcome === 'booked' || c.outcome === 'email_only';
-  const pri = ['discover','truth','close','gift','handle','opener','wrap'];
+  const pri = ['follow','noticed','next','offer','questions','reason','greet','thanks'];
   const topWin = strengths.slice().sort((x, y) => pri.indexOf(x.stage) - pri.indexOf(y.stage))[0];
   let take = c.ownerWhy || (good && topWin ? topWin.take : fixes.length ? fixes[0].take : topWin ? topWin.take : fill(ARCH[p.arch].take, p));
   const f0 = fixes[0];
@@ -833,6 +829,7 @@ function buildReport(c){
   return {score, skills, D, strengths, fixes, dfix, outcomeLabel, take, drill, stageQ, good};
 }
 
+const SKILL_NAMES = {greet:'Hello', reason:'Why you called', noticed:'Noticed', follow:'Follow-up', offer:'The offer', questions:'His questions', next:'Next step', thanks:'Thanks', delivery:'Delivery'};
 function bar(name, v){ const col = v >= 80 ? '#22c55e' : v >= 55 ? '#f59e0b' : '#ef4444'; return `<div class="bar"><span>${esc(name)}</span><div class="t"><i style="width:${v}%;background:${col}"></i></div><b>${v}</b></div>`; }
 const playBtn = (url, label) => url ? `<button class="play" data-play="${url}"><svg viewBox="0 0 10 10"><path d="M2 1l7 4-7 4z"/></svg>${label || 'Hear yourself'}</button>` : '';
 const guideLink = id => id && CALL_GUIDE.steps[id] ? `<button class="gl" data-guidecard="${id}">See this step in the guide →</button>` : '';
@@ -935,20 +932,30 @@ function slidesHTML(p, forPrep){
   const say = (t, gift) => `<div class="sayit"><small>What to say</small>${esc(t)}${gift ? `<span class="gfit">Gift fit: ${esc(GIFT_WORDS[gift])}</span>` : ''}</div>`;
   const out = [];
   if(forPrep) out.push(`<div class="box"><div class="lbl">Before you call · How this call goes</div>
-      <h3 style="font-size:20px">Your goal: ${esc(p.onLine)} gladly accepts a free gift.</h3>
-      <p class="note">A 15-minute walkthrough is the bonus. Every line you'll see is a good one; pick the one that fits ${esc(p.onLine)}.</p>
-      <ol class="flow">${STEPS.map(x => `<li><b>${esc(x[1])}</b> · ${esc(NEWLINES.arc[x[0]] || '')}</li>`).join('')}</ol></div>`);
+      <h3 style="font-size:20px">Your goal: ${esc(p.onLine)} feels noticed and respected, and gladly says yes to something useful.</h3>
+      <p class="note">Start like a person, not a pitch: hello, why you called, what you noticed, then listen. The offer comes only after you understand his week. Every line you'll see is a good one; pick the one that fits ${esc(p.onLine)}.</p>
+      <ol class="flow">${STEPS.map(x => `<li><b>${esc(x[1])}</b> · ${esc(SCRIPT_LIB.arc[x[0]] || '')}</li>`).join('')}</ol></div>`);
+  if(p.real){
+    const R = p.real;
+    out.push(`<div class="box"><div class="lbl">Real shop · from public listings</div><h3 style="font-size:22px">${esc(R.name)}</h3>
+      <div class="kv"><div><small>Town</small><span>${esc(R.town)}, ${esc(R.county)} County</span></div>
+      ${R.phone ? `<div><small>Listed phone</small><span>${esc(R.phone)}</span></div>` : ''}
+      ${R.website ? `<div><small>Website</small><span><a href="${esc(R.website)}" target="_blank" rel="noopener">${esc(R.website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''))}</a></span></div>` : ''}
+      ${R.services ? `<div><small>Listed as</small><span>${esc(R.services)}</span></div>` : ''}</div>
+      <p class="note" style="margin-top:10px">The person you'll talk to, the hours, reviews and website details below are a <b>practice scenario</b>, not facts about this shop. Before a real call, check their website and Google listing and use one real detail.${R.source ? ` <a href="${esc(R.source)}" target="_blank" rel="noopener">Where this listing came from</a>` : ''}</p></div>`);
+  }
   // 1 · who he is
   const old = +f.since <= 1990, small = f.techs <= 6;
-  out.push(`<div class="box"><div class="lbl">Who ${p.gk ? 'answers' : 'he is'}</div><h3 style="font-size:22px">${esc(p.shop)}</h3>
+  const scen = p.real ? ' <span class="chip">practice scenario</span>' : '';
+  out.push(`<div class="box"><div class="lbl">Who ${p.gk ? 'answers' : 'he is'}${scen}</div><h3 style="font-size:22px">${esc(p.shop)}</h3>
     <div class="kv"><div><small>${p.gk ? 'Owner' : 'Owner'}</small><span>${esc(p.owner)}</span></div><div><small>Town</small><span>${esc(p.town)}, CT</span></div><div><small>Since</small><span>${esc(f.since)}</span></div>
     <div><small>Team</small><span>${f.techs} techs, ${f.trucks} trucks</span></div><div><small>Office hours</small><span>7:30 AM to ${esc(f.close)} PM</span></div><div><small>Main work</small><span>${esc(f.services.join(', '))}</span></div></div>
     ${p.gk ? `<p class="note" style="margin-top:10px">${esc(p.onLine)} usually answers the main line.</p>` : ''}
     ${eyes(p.gk ? `I keep ${p.shop} running and I protect ${first}'s time. Respect mine and I'll get you to him.` : old ? `I've kept this shop going since ${f.since}. People in ${p.town} know my name.` : small ? `I'm probably on a job myself right now. Show me you noticed something real.` : `${f.techs} guys depend on me. Show me you looked at my shop, not a list.`)}
     ${say(p.gk ? `"You probably know the phones better than anyone at ${p.shop}."` : `"Serving ${p.town} since ${f.since}, that's something." Save it for later in the call, or the goodbye.`)}</div>`);
   // 2 · reviews
-  out.push(`<div class="box"><div class="lbl">What customers say</div><h3><span class="stars">${stars}</span> ${f.rating} on Google · ${f.reviews} reviews</h3>
-    ${p.reviewsList.map(t => `<div class="rev">"${esc(t)}"<br><small>Google review</small></div>`).join('')}
+  out.push(`<div class="box"><div class="lbl">What customers say${scen}</div><h3><span class="stars">${stars}</span> ${f.rating} on Google · ${f.reviews} reviews</h3>
+    ${p.real ? `<p class="note">Practice scenario: customers often name ${esc(f.tech)} in reviews. Before a real call, read their actual Google reviews and pick one real detail.</p>` : p.reviewsList.map(t => `<div class="rev">"${esc(t)}"<br><small>Google review</small></div>`).join('')}
     ${eyes('My guys work hard and customers notice. If you saw that, you looked at my shop.')}
     ${say(`"${f.rating} stars from ${f.reviews} reviews, and people keep naming ${f.tech}. That's rare."`, +f.rating >= 4.7 ? 'found' : 'site')}</div>`);
   // 3 · after hours and website
@@ -958,7 +965,7 @@ function slidesHTML(p, forPrep){
     : /tap-to-call|slow/.test(i) ? `"On my phone the number wasn't tap-to-call. Most people find you on their phone at night."`
     : /heat pump|nearby towns/.test(i) ? `"When people in ${p.town} ask about heat pump rebates, there isn't a page of yours that answers it."` : '';
   const issue = f.siteIssues.find(i => siteSay(i));
-  out.push(`<div class="box"><div class="lbl">After hours and the website</div>
+  out.push(`<div class="box"><div class="lbl">After hours and the website${scen}</div>
     <div class="flag gap"><b>!</b><span>After ${esc(f.close)}, calls go to ${esc(f.afterLabel)}.</span></div>
     ${f.siteIssues.map(x => `<div class="flag gap"><b>!</b><span>Website: ${esc(x)}.${/2019/.test(x) ? ' <i>(True, but skip it. It sounds like a judgment.)</i>' : ''}</span></div>`).join('')}
     <div class="flag good"><b>✓</b><span>Phone number is on the home page and the Google listing.</span></div>
@@ -966,7 +973,7 @@ function slidesHTML(p, forPrep){
     ${say(sayAfter, 'phone')}${issue ? say(siteSay(issue), /heat pump|nearby/.test(issue) ? 'found' : 'site') : ''}</div>`);
   // 4 · how people find him
   const stale = !/week/.test(f.lastPost);
-  out.push(`<div class="box"><div class="lbl">How people find him</div>
+  out.push(`<div class="box"><div class="lbl">How people find him${scen}</div>
     <div class="flag gap"><b>!</b><span>${esc(f.aiCheck)}</span></div>
     <div class="flag"><b>i</b><span>Last social post: ${esc(f.lastPost)}.</span></div>
     <div class="flag"><b>i</b><span>${f.hiring ? 'Hiring a service tech right now.' : 'Not hiring right now.'}</span></div>
@@ -980,7 +987,7 @@ function slidesHTML(p, forPrep){
   const reasons = {phone:`Every call after ${f.close} goes to ${f.afterLabel}. The demo line catches them, and he tests it on a separate number first.`, site:'People find him at night and can\'t book. A fresh site he can look at before deciding.', found:'His reviews are better than the shops showing up first.'};
   const ready = Object.keys(A.objections).sort((a, b) => A.objections[b] - A.objections[a]).slice(0, 2)
     .map(k => CALL_GUIDE.questions.find(q => OBJ_Q[k] && OBJ_Q[k].test(q.q))).filter(Boolean);
-  const dq = (CALL_GUIDE.steps.discover.say[0] || '').replace(/^Ask about something that already happened: /, '');
+  const dq = ((CALL_GUIDE.steps.follow || CALL_GUIDE.steps.discover || {say:['']}).say[0] || '');
   out.push(`<div class="box"><div class="lbl">Your game plan</div>
     <div class="kv" style="grid-template-columns:1fr">
       <div><small>Clue about who answers</small><span>${esc(A.clue)}</span></div>
@@ -991,7 +998,7 @@ function slidesHTML(p, forPrep){
       <div><small>Question about his week</small><span>${esc(gfill(dq, p).replace(/[“”]/g, ''))}</span></div>
       <div><small>Walkthrough time to offer</small><span>${esc(p.day)} at ${esc(p.time)}, ${esc(p.vars.when)}</span></div></div>
     ${ready.length ? `<div class="lbl" style="margin-top:12px">Be ready for</div>${ready.map(q => `<details class="gq"><summary>${esc(gfill(q.q, p))}</summary><p>${esc(gfill(q.a, p))}</p></details>`).join('')}` : ''}
-    <p class="note" style="margin-top:12px">${p.brief ? 'Facts from your Prospect Brief or research. The owner\'s personality is still a surprise.' : 'Practice shop: invented for this call. Every call is a new owner.'}</p></div>`);
+    <p class="note" style="margin-top:12px">${p.brief ? 'Facts from your Prospect Brief or research. The owner\'s personality is still a surprise.' : p.real ? 'Real Connecticut shop, practice scenario. Every call is a new person and situation.' : 'Practice shop: invented for this call.'}</p></div>`);
   return out;
 }
 let slideI = 0;
@@ -1024,7 +1031,7 @@ $('#readyBtn').onclick = () => { if(!pending) return; closePage('prep'); const {
 const SAMPLE_VARS = {name:'the owner', owner:'the owner', shop:'his shop', town:'his town', close:'5:00', rating:'4.8', reviews:'120', tech:'Mike', day:'Tuesday', time:'7:30', when:'before the trucks go out', email:'his email', day2:'Wednesday'};
 function gfill(t, p){ const v = Object.assign({}, SAMPLE_VARS, {me: me || 'you'}, p ? p.vars : {}); return String(t).replace(/\{(\w+)\}/g, (m, k) => v[k] ?? m); }
 function guideHTML(stage, p, tab){
-  const G = CALL_GUIDE, st = G.steps[stage] ? stage : 'opener';
+  const G = CALL_GUIDE; stage = OLD2NEW[stage] || stage; const st = G.steps[stage] ? stage : 'greet';
   tab = tab || 'step';
   const chips = STEPS.map(x => `<button class="gchip ${x[0] === st && tab === 'step' ? 'on' : ''}" data-gstep="${x[0]}">${esc(x[1])}</button>`).join('');
   const tabs = [['step','This step'],['gifts','Our gifts'],['questions','Questions'],['rules','Our rules']].map(t => `<button class="gtab ${t[0] === tab ? 'on' : ''}" data-gtab="${t[0]}">${t[1]}</button>`).join('');
@@ -1035,7 +1042,7 @@ function guideHTML(stage, p, tab){
       <div class="lbl" style="margin-top:12px">What to say</div><ul class="glist">${s.say.map(x => `<li>${esc(gfill(x, p))}</li>`).join('')}</ul>
       <div class="lbl">Why it works for the owner</div><p class="why">${esc(gfill(s.why, p))}</p>
       ${s.avoid && s.avoid.length ? `<div class="lbl">Skip</div><ul class="glist avoid">${s.avoid.map(x => `<li>${esc(gfill(x, p))}</li>`).join('')}</ul>` : ''}
-      ${NEWLINES.arc && NEWLINES.arc[st] ? `<p class="note"><b>Your tone here:</b> ${esc(NEWLINES.arc[st])}</p>` : ''}</div>`;
+      ${SCRIPT_LIB.arc && SCRIPT_LIB.arc[st] ? `<p class="note"><b>Your tone here:</b> ${esc(SCRIPT_LIB.arc[st])}</p>` : ''}</div>`;
   } else if(tab === 'gifts'){
     body = G.services.map(x => `<div class="item"><h4>${esc(x.name)}</h4><p>${esc(gfill(x.ownerWords, p))}</p><p class="note"><b>Picture it:</b> ${esc(x.analogy)}</p><p class="note"><b>Honest limits:</b> ${esc(x.honestLimits)}</p></div>`).join('');
   } else if(tab === 'questions'){
@@ -1089,7 +1096,7 @@ $('#bHint').onclick = () => {
   if(!C) return;
   const st = currentHintStage(); const h = $('#hint');
   if(!h.classList.contains('hidden')){ h.classList.add('hidden'); return; }
-  const H = NEWLINES.hints || {};
+  const H = SCRIPT_LIB.hints || {};
   h.innerHTML = `<b>Hint · ${esc(SKILL_NAMES[st] || st)}</b>${esc(fill(H[st] || H.opener || '', C.p))}`;
   h.classList.remove('hidden'); clearTimeout(h._t); h._t = setTimeout(() => h.classList.add('hidden'), 9000);
   if(C) C.hints = (C.hints || 0) + 1;
@@ -1135,6 +1142,7 @@ let source = {type:'random'};
 function personaFromSource(pool){
   if(source.type === 'brief' && source.brief) return makePersona({brief:source.brief, pool});
   if(source.type === 'research' && source.brief) return makePersona({brief:source.brief, pool});
+  if(source.type === 'real' && source.shop) return makePersona({real:source.shop, pool});
   return makePersona({pool});
 }
 function startFlow(kind){
@@ -1151,7 +1159,7 @@ function startFlow(kind){
 function startDrill(stage){
   if(!me){ toast('Pick your name first'); return; }
   const p = makePersona();
-  const stages = stage === 'opener' ? ['opener'] : stage === 'handle' ? ['gift','handle'] : ['close','wrap'];
+  const stages = stage === 'opener' ? ['greet','reason'] : stage === 'handle' ? ['offer','questions'] : ['next','thanks'];
   pending = null;
   const kind = LS.get('sw_pl_mode', 'guided') === 'live' ? 'free' : 'guided';
   openPrep(kind, p);
@@ -1198,43 +1206,70 @@ function renderHome(){
     $('#unlockBtn').onclick = go; $('#unlockCode').onkeydown = e => { if(e.key === 'Enter') go(); };
   }
   const briefs = LS.json('sw_cc_briefs', []);
-  $('#srcTitle').textContent = source.type === 'random' ? 'Random Connecticut shop' : source.brief.shop;
-  $('#srcSub').textContent = source.type === 'random' ? (briefs.length ? `New owner every call · ${briefs.length} saved briefs` : 'New owner every call') : source.type === 'brief' ? 'From your Prospect Brief' : 'From web research';
+  $('#srcTitle').textContent = source.type === 'random' ? 'Any Connecticut shop' : source.type === 'real' ? source.shop.name : source.brief.shop;
+  $('#srcSub').textContent = source.type === 'random' ? `${SHOPS.length} real shops by town · tap to choose` : source.type === 'real' ? source.shop.town + ' · tap to change' : source.type === 'brief' ? 'From your Prospect Brief' : 'From web research';
 }
 
 /* ---------- source picker ---------- */
-$('#srcPill').onclick = () => {
-  const briefs = LS.json('sw_cc_briefs', []);
-  $('#callsIn').innerHTML = `<div class="box"><h3>Who do you want to call?</h3>
-      <button class="fli" data-src="random"><b>Random Connecticut shop</b>&nbsp;· new owner every time<svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg></button>
-      ${briefs.map((b, i) => `<button class="fli" data-src="brief:${i}"><b>${esc(b.shop || 'Unnamed shop')}</b>&nbsp;· ${esc(b.town || '')} · Prospect Brief<svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg></button>`).join('')}
-      ${briefs.length ? '' : `<p class="note">Save Prospect Briefs in the <a href="${GUIDE}#brief" target="_blank" rel="noopener">cold-call guide</a> and they show up here, so you can practice the real shop before the real call.</p>`}</div>
-    <div class="box"><h3>Research a real shop <span class="chip">beta · AI</span></h3>
-      <p class="note">Grok searches the web for reviews, hours, website setup and more, then builds the prep slides.</p>
-      <div class="fld"><label>Shop name</label><input type="text" id="rShop" placeholder="Valley Comfort Heating and Cooling"></div>
-      <div class="fld"><label>Connecticut town</label><input type="text" id="rTown" placeholder="Wallingford"></div>
-      <button class="btn black" id="rGo" ${Voice.can().xai ? '' : 'disabled'}>Research it</button> <span class="note" id="rMsg">${Voice.can().xai ? '' : 'Needs the AI set up in Settings.'}</span></div>`;
-  openPage('calls');
-  $('#callsIn').onclick = async e => {
-    const b = e.target.closest('[data-src]');
-    if(b){ const v = b.dataset.src; if(v === 'random') source = {type:'random'}; else source = {type:'brief', brief:briefs[+v.split(':')[1]]}; closePage('calls'); renderHome(); toast('Next call: ' + $('#srcTitle').textContent); return; }
-    if(e.target.id === 'rGo'){
-      const shop = $('#rShop').value.trim(), town = $('#rTown').value.trim(); if(!shop || !town) return toast('Add the shop and town');
-      $('#rMsg').textContent = 'Searching the web…'; e.target.disabled = true;
-      try{
-        const j = await Voice.research(shop, town);
-        source = {type:'research', brief:{shop:j.shop || shop, town:j.town || town, owner:j.owner || '', since:j.since || '', social:j.social || '', hiring:j.hiring || '', true:j.true_thing || '', comp:(j.review_themes || [])[0] ? `People's reviews keep mentioning ${j.review_themes[0]}` : '', research:j}};
-        closePage('calls'); renderHome(); toast('Research done. Your prep slides use it.');
-      }catch(err){ $('#rMsg').textContent = 'Research failed: ' + err.message.slice(0, 90); e.target.disabled = false; }
-    }
-  };
-};
+$('#srcPill').onclick = () => openShops();
 
 /* quick check that the xAI line answers from this browser */
 async function checkLive(){
   try{ await Voice.token(); diag('Live check: token OK'); }
   catch(e){ diag('Live check failed: ' + e.message); toast('Unlocked, but xAI didn\'t answer from this browser. Settings > Diagnostics has details.', 6000); }
 }
+/* ======================================================================
+   WHO DO YOU WANT TO CALL? Real Connecticut HVAC shops, by town
+   ====================================================================== */
+const COUNTIES = ['New Haven','Fairfield','Hartford','Middlesex','New London','Litchfield','Tolland','Windham'];
+let shopFilter = {q:'', county:''};
+const shopId = x => SHOPS.indexOf(x);
+function openShops(){
+  $('#shopsIn').innerHTML = `<div class="ptop"><h2>Who do you want to call?</h2><button class="btn light x" data-close="shopsPage">Close</button></div>
+    <div class="box"><p class="note" style="margin-top:0">${SHOPS.length} real Connecticut HVAC shops in ${new Set(SHOPS.map(x => x.town)).size} towns, from public listings. Pick one to practice with or to prep a real call. Listings can be out of date, so check the shop's own site or Google listing first.</p>
+      <div class="row"><input type="text" id="shopQ" placeholder="Search a shop or town" value="${esc(shopFilter.q)}" style="flex:1;min-width:0"><button class="btn light" id="shopAny">Any shop</button></div>
+      <div class="gchips" style="margin-top:10px" id="shopCounties"></div></div>
+    <div id="shopList"></div>
+    <div class="box"><h3>A shop that isn't listed? <span class="chip">AI research</span></h3>
+      <p class="note">Grok searches the web for their reviews, hours and website, then builds your prep slides.</p>
+      <div class="fld"><label>Shop name</label><input type="text" id="rShop" placeholder="Shop name"></div>
+      <div class="fld"><label>Connecticut town</label><input type="text" id="rTown" placeholder="Town"></div>
+      <button class="btn black" id="rGo" ${Voice.can().xai ? '' : 'disabled'}>Research it</button> <span class="note" id="rMsg">${Voice.can().xai ? '' : 'Needs the AI turned on in Settings.'}</span></div>`;
+  paintShops();
+  $('#shopQ').oninput = e => { shopFilter.q = e.target.value; paintShops(); };
+  $('#shopAny').onclick = () => { source = {type:'random'}; closePage('shopsPage'); renderHome(); toast('Next call: any Connecticut shop'); };
+  $('#shopsIn').onclick = async e => {
+    const c = e.target.closest('[data-county]'); if(c){ shopFilter.county = c.dataset.county; paintShops(); return; }
+    const pk = e.target.closest('[data-pickshop]');
+    if(pk){ const x = SHOPS[+pk.dataset.pickshop]; source = {type:'real', shop:x}; closePage('shopsPage'); renderHome(); toast('Next call: ' + x.name + ', ' + x.town); return; }
+    if(e.target.id === 'rGo'){
+      const shop = $('#rShop').value.trim(), town = $('#rTown').value.trim(); if(!shop || !town) return toast('Add the shop and town');
+      $('#rMsg').textContent = 'Searching the web…'; e.target.disabled = true;
+      try{
+        const j = await Voice.research(shop, town);
+        source = {type:'research', brief:{shop:j.shop || shop, town:j.town || town, owner:j.owner || '', since:j.since || '', social:j.social || '', hiring:j.hiring || '', true:j.true_thing || '', comp:(j.review_themes || [])[0] ? `People's reviews keep mentioning ${j.review_themes[0]}` : '', research:j}};
+        closePage('shopsPage'); renderHome(); toast('Research done. Your prep slides use it.');
+      }catch(err){ $('#rMsg').textContent = 'Research failed: ' + err.message.slice(0, 90); e.target.disabled = false; }
+    }
+  };
+  openPage('shopsPage');
+}
+function paintShops(){
+  const q = shopFilter.q.trim().toLowerCase(), county = shopFilter.county;
+  $('#shopCounties').innerHTML = `<button class="gchip ${!county ? 'on' : ''}" data-county="">All counties</button>` +
+    COUNTIES.filter(c => SHOPS.some(x => x.county === c)).map(c => `<button class="gchip ${county === c ? 'on' : ''}" data-county="${c}">${c} <span class="note">${SHOPS.filter(x => x.county === c).length}</span></button>`).join('');
+  const list = SHOPS.filter(x => (!county || x.county === county) && (!q || (x.name + ' ' + x.town + ' ' + x.services).toLowerCase().includes(q)));
+  const byTown = {}; list.forEach(x => (byTown[x.town] = byTown[x.town] || []).push(x));
+  const towns = Object.keys(byTown).sort();
+  const open = q || towns.length <= 4;
+  $('#shopList').innerHTML = towns.length ? towns.map(t => `<details class="box town" ${open ? 'open' : ''}><summary><b>${esc(t)}</b> <span class="note">· ${byTown[t].length} shop${byTown[t].length > 1 ? 's' : ''} · ${esc(byTown[t][0].county)} County</span></summary>
+      ${byTown[t].map(x => `<div class="shoprow"><div style="min-width:0"><b>${esc(x.name)}</b>
+        <div class="note">${esc(x.services || 'HVAC')}</div>
+        <div class="note">${x.phone ? esc(x.phone) : 'No phone listed'}${x.website ? ` · <a href="${esc(x.website)}" target="_blank" rel="noopener">website</a>` : ''}${x.source ? ` · <a href="${esc(x.source)}" target="_blank" rel="noopener">listing</a>` : ''}</div></div>
+        <button class="btn dark" data-pickshop="${shopId(x)}">Practice</button></div>`).join('')}</details>`).join('')
+    : '<div class="box"><p class="note">No shops match. Try the AI research below.</p></div>';
+}
+
 function renderCalls(){
   const h = hist().slice().reverse();
   $('#callsIn').innerHTML = h.length ? h.map(x => `<button class="tc" data-hist="${x.id}" style="display:block;width:100%;text-align:left;margin-bottom:12px">

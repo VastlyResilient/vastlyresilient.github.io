@@ -161,8 +161,9 @@ a{color:inherit}
 .flag{display:flex;gap:8px;align-items:flex-start;margin:7px 0;font-size:15px;line-height:1.4}
 .flag b{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;color:#fff;background:#94a3b8}
 .flag.good b{background:var(--green)}.flag.gap b{background:#f59e0b}
-.ready{position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent,rgba(240,243,247,.95) 35%);display:flex;justify-content:center;z-index:25}
-.ready .btn{font-size:16px;padding:14px 28px}
+.ready{pointer-events:none;position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent,rgba(240,243,247,.95) 35%);display:flex;justify-content:center;z-index:25}
+.ready .btn{font-size:16px;padding:14px 28px;pointer-events:auto}
+.snav{margin-bottom:84px}
 
 /* ===== CALL SCREEN (phone style, from the sample) ===== */
 #call{position:fixed;inset:0;z-index:40;background:#fff;display:flex;justify-content:center}
@@ -205,6 +206,10 @@ a{color:inherit}
 .flow{padding-left:20px;line-height:1.55;font-size:14.5px;margin:8px 0 0}
 button.gl{background:none;padding:0;cursor:pointer}
 #report,#guidePage{z-index:22}
+details.town summary{cursor:pointer;font-size:16px}
+.shoprow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-top:1px solid rgba(0,0,0,.08)}
+.shoprow:first-of-type{margin-top:8px}
+.shoprow a{color:#3b82f6}
 .cap{flex:1;min-height:96px;overflow-y:auto;padding:12px 22px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
 .ln{font-size:16.5px;line-height:1.45;max-width:100%}
 .ln .sp{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#9ca3af;font-weight:600;margin-bottom:1px}
@@ -377,14 +382,16 @@ svg.chart{width:100%;height:auto;display:block}
 <div class="page hidden" id="report"><div class="pin" id="reportIn"></div></div>
 <div class="page hidden" id="calls"><div class="pin"><div class="ptop"><h2>Your calls</h2><button class="btn light x" data-close="calls">Close</button></div><div id="callsIn"></div></div></div>
 <div class="page hidden" id="progress"><div class="pin"><div class="ptop"><h2>Progress</h2><button class="btn light x" data-close="progress">Close</button></div><div id="progIn"></div></div></div>
+<div class="page hidden" id="shopsPage"><div class="pin" id="shopsIn"></div></div>
 <div class="page hidden" id="guidePage"><div class="pin" id="guideIn"></div></div>
 <div class="page hidden" id="settings"><div class="pin"><div class="ptop"><h2>Settings</h2><button class="btn light x" data-close="settings">Close</button></div><div id="setIn"></div></div></div>
 
 <script src="config.js"></script>
+<script src="script.js"></script>
 <script src="data.js"></script>
 <script src="owner.js"></script>
-<script src="lines.js"></script>
 <script src="guide.js"></script>
+<script src="shops.js"></script>
 <script src="voice.js"></script>
 <script src="app.js"></script>
 </body>

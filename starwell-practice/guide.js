@@ -197,3 +197,6 @@ const CALL_GUIDE = {
     "A person dials, never our AI voice. Check the do-not-call list first."
   ]
 };
+
+/* step-by-step guide now comes from the call script (greeting first, gradual opening) */
+if(typeof SCRIPT_LIB !== 'undefined' && SCRIPT_LIB.guide) CALL_GUIDE.steps = SCRIPT_LIB.guide;
