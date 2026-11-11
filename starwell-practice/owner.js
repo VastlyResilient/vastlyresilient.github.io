@@ -29,20 +29,20 @@ const ARCH = {
     answer:["{shop}, this is {name}.","{shop}, {name} speaking. How can I help ya?","Yeah, {shop}."],
     objections:{wordofmouth:4,catch:3,ai:3,price:2,email:1},
     reveal:{
-      voicemail:"After five? Goes to the machine. I check it when I get home. Always have.",
+      voicemail:"After we close? Goes to the machine. I check it when I get home. Always have.",
       service:"We use an answering service at night. They take a message, I call back in the morning.",
       cell:"After hours it rings my cell. My wife loves that, believe me.",
       none:"After hours? Well, people call back in the morning, I guess."},
     pain:["Last week, first cold snap, I bet I missed four or five at night. Two never left a message. Thirty years ago they'd have waited for me. Now they call the next guy.",
           "Funny you ask. Tuesday night a lady called, no heat, went to the machine. By morning she'd booked somebody else. Hurts a little.",
-          "Sunday morning I had four messages from Saturday night. One fella's pipes were getting close. He'd already got somebody out of Meriden. Can't blame him."],
+          "Sunday morning I had four messages from Saturday night. One fella's pipes were getting close. He'd already got somebody from the next town over. Can't blame him."],
     take:"I've been doing this a long time. I can tell when somebody did their homework.",
     say:{
       opener:{warm:["Okay. Sounds like you looked us up. Go ahead.","Well, alright. What can I do for ya?"],
               even:["Can't complain. Busy, it's that time of year. What's this about?","Doing alright, thanks. Do I know you?"],
-              cool:["Okay... slow down a little. What's this about?"]},
+              cool:["Okay… slow down a little. What's this about?"]},
       gift:{warm:["Huh. And it doesn't cost me anything? Alright, I'm listening.","Well, that's nice of you."]},
-      close:{glad:["Sure, why not. It's {email}. {day} at {time}, I'm up early anyway. I'll put the coffee on."]}
+      close:{glad:["Sure, why not. It's {email}. {day} at {time}, I'm up early anyway. I'll be in the office."]}
     }
   },
 
@@ -52,7 +52,7 @@ const ARCH = {
     notice:'Noise, clipped answers, "who\'s this?". He is working. The respectful move is one clear sentence about why you called, then offer to call back at a time he picks.',
     how:'Short on time, not on manners. Wants the point in one breath. Respect his time (offer a callback at his time) and he gives you more of it.',
     self:'You run calls yourself with a small crew and you are on a job right now. You are not rude, just slammed: it is no-heat season. Short answers until you hear a reason to keep listening. If someone gets to the point or offers to call back at a time you pick, you relax.',
-    earns:['getting to the reason in one sentence','offering to call back at a time you pick','something you can do in ten seconds, like calling a test number tonight'],
+    earns:['getting to the reason in one sentence','offering to call back at a time you pick','something you can do in ten seconds, like calling the demo line tonight'],
     cools:['small talk before the point','long explanations while you are on a ladder','being kept on the line after you said you are busy'],
     likes:['brief','time','specific'], dislikes:['warmup','long'],
     answer:["Yeah, {name}.","{name}. Who's this?","Yeah, go ahead."],
@@ -98,7 +98,7 @@ const ARCH = {
       opener:{warm:["Okay. What's this about?","Alright. I'm listening. For now."],
               even:["Uh huh. And you're with who?"],
               cool:["If this is marketing, I've done it. What is it?"]},
-      gift:{warm:["Hm. That's... more specific than usual.","Okay. I can check that myself, at least."]},
+      gift:{warm:["Hm. That's… more specific than usual.","Okay. I can check that myself, at least."]},
       close:{glad:["Alright. {email}. {day} at {time}. Fifteen minutes, and you show me, you don't sell me."]}
     }
   },
@@ -109,13 +109,13 @@ const ARCH = {
     notice:'Online booking and a posted arrival time mean he measures things. Give him a range, tell him how he would check it himself, and say "I don\'t know" when you don\'t.',
     how:'Analytical. Wants what it is, what it costs, and how he would know it works. Straight numbers and honest limits win.',
     self:'You run the shop off numbers: call log, close rate, average ticket. You pull reports on Sunday nights. You do not need a pitch; you need what it is, what it costs, and how you would know it is working. You respect "I don\'t know" more than a guess.',
-    earns:['a real number or range, said calmly','how you could check it yourself (your call log, the test number)','admitting what they do not know'],
+    earns:['a real number or range, said calmly','how you could check it yourself (your call log, the demo line)','admitting what they do not know'],
     cools:['big claims with no number behind them','dodging cost','long stories instead of answers'],
     likes:['numbers','specific','control'], dislikes:['promise','long'],
     answer:["{shop}, {name} speaking.","This is {name}."],
     objections:{price:5,catch:3,ai:2,allset:2},
     reveal:{
-      voicemail:"Voicemail after five. We get maybe fifteen percent of those back.",
+      voicemail:"Voicemail after we close. We get maybe fifteen percent of those back.",
       service:"Answering service. Costs me about two-fifty a month and books nothing.",
       cell:"Forwards to the on-call tech's cell.",
       none:"We don't have a great answer for after hours, honestly."},
@@ -144,7 +144,7 @@ const ARCH = {
       voicemail:"After I leave it goes to voicemail. {owner} checks it at night if he's not too tired.",
       service:"We use an answering service. They're okay. They don't book anything, though.",
       cell:"After hours it forwards to {owner}'s cell, and he's already worked ten hours.",
-      none:"Honestly, after five nobody picks up."},
+      none:"Honestly, after we close nobody picks up."},
     pain:["Last week was crazy. I came in Monday to eight voicemails. Three were no-heats from Saturday, and by Monday they'd gone with someone else.",
           "This week alone I had four people say they called Sunday and nobody answered. I felt terrible."],
     take:"My job is protecting {owner}'s time. If you respect mine, I'll get you in front of him.",
@@ -193,7 +193,7 @@ const ARCH = {
     answer:["{shop}, {name} here, how can I help ya?","Hey there, {name} speaking."],
     objections:{email:4,busy:3,wordofmouth:3,price:2},
     reveal:{
-      voicemail:"Voicemail after five. I try to call everybody back first thing.",
+      voicemail:"Voicemail after we close. I try to call everybody back first thing.",
       service:"Answering service picks up. They're nice. They just take messages.",
       cell:"Goes to my cell, and my kids are getting tired of it, ha.",
       none:"Honestly, it just rings out after hours."},
@@ -220,7 +220,7 @@ const ARCH = {
     answer:["{shop}, this is {name}.","Good morning, {shop}, {name} speaking.","{name}."],
     objections:{email:3,catch:3,price:3,allset:2,scam:1},
     reveal:{
-      voicemail:"After five it goes to voicemail, and I listen to every one at night.",
+      voicemail:"After we close it goes to voicemail, and I listen to every one at night.",
       service:"We have a service. They're polite. They can't book anything, so it all lands on me in the morning.",
       cell:"Forwards to my cell. I've taken no-heat calls at my son's basketball games.",
       none:"After hours it just rings. I hate that, honestly. It's on my list."},
@@ -248,10 +248,10 @@ const ARCH = {
     answer:["{shop}, this is {name}.","Yeah, {name}.","{shop}, {name}, what can I do for you?"],
     objections:{busy:3,allset:3,ai:2,price:2,email:2},
     reveal:{
-      voicemail:"Our office person leaves at five, then it's voicemail. We're working on it.",
+      voicemail:"Our office person leaves when we close, then it's voicemail. We're working on it.",
       service:"Answering service at night. Fine for messages, but they can't book, so Monday's a mess.",
       cell:"After hours it goes to whoever's on call. Usually me.",
-      none:"After five it just rings. I know, I know."},
+      none:"After we close it just rings. I know, I know."},
     pain:["We added a truck in October and still couldn't keep up. Monday morning there were eleven voicemails. We called everybody back, but three had already booked someone.",
           "Friday I was interviewing a tech at the diner and let six calls go. Two were no-heats. Didn't get either one."],
     take:"I'm building something. I'll make time for anybody who helps me not drop the ball while I do.",
@@ -275,7 +275,7 @@ const ARCH = {
 const REACT = {
   opener:{
     warm:["Okay. What'd you notice?","Alright, I've got a minute. Go ahead.","Okay, you've got my attention. What is it?","Sure, go ahead. I'm listening."],
-    even:["Okay... what's this about?","Sorry, who is this again?","Uh huh. Go ahead.","Alright. What can I do for you?"],
+    even:["Okay… what's this about?","Sorry, who is this again?","Uh huh. Go ahead.","Alright. What can I do for you?"],
     cool:["I've only got a second. What is it?","Okay. What's this regarding?","I'm kind of in the middle of something. What do you need?"]
   },
   truth:{   /* warm uses ARCH.reveal (he tells you how after-hours really works) */
@@ -289,20 +289,20 @@ const REACT = {
   gift:{
     warm:{
       phone:["Huh. A separate number, so it doesn't touch my phones?","Hm. So I just call it tonight and see?","Okay. That's actually interesting.","Wait, it books the call and texts me? Huh."],
-      site:["Huh. You already built it?","Okay, that's actually interesting.","Hm. And I don't have to do anything?","Built for us? Huh."],
+      site:["Huh. You'd build the whole thing?","Okay, that's actually interesting.","Hm. And I don't have to do anything?","For us, free? Huh."],
       found:["Okay, I'd be curious about that, honestly.","Huh. Two other shops come up first?","Hm. That's worth a look.","Really? After all these years they come up first?"]},
-    even:["Okay... so what exactly is it?","Hm. I get a lot of calls about websites.","Alright. What's that look like?"],
+    even:["Okay… so what exactly is it?","Hm. I get a lot of calls about websites.","Alright. What's that look like?"],
     cool:["I'm not sure I follow. What is it, exactly?","Okay. I get a lot of these calls.","Hm. Sounds like a lot."]
   },
   handle:{
-    warm:["Okay. That's fair.","Alright, that's a straight answer.","Okay, I can respect that.","Huh. Alright, that makes sense."],
-    even:["Hm. Okay.","Okay...","Alright, if you say so."],
+    warm:["Okay. That's fair.","Alright, I hear you.","Okay, I can respect that.","Huh. Alright, that makes sense."],
+    even:["Hm. Okay.","Okay…","Alright, if you say so."],
     cool:["Hm. I don't know.","Yeah, that's kind of what I figured.","Okay. I'd want to think about that."]
   },
   /* said after a settled concern, only when trust >= TRUST.bridge, so the call visibly opens up */
   bridge:["So what do you need from me?","Okay. So what's the next step?","Alright, so what are you asking?"],
   /* once per call, appended to a warm reaction when the caller has 3+ warm turns in a row */
-  encourage:["I'll give you this, you did your homework.","You're alright, you know that?","Most people who call me don't listen this good."],
+  encourage:["Huh. You did your homework.","You're alright, you know that?","Huh. You actually listen."],
   close:{
     glad:["Yeah, let's do it. It's {email}. {day} at {time} works.","Sure. {email}. {day} at {time}, I'll be here. Appreciate you calling."],
     booked:["Okay. It's {email}. {day} at {time} works.","Alright, {email}. {day} at {time}. Fifteen minutes, right?"],
@@ -427,7 +427,7 @@ YOUR SHOP
 - Your email, only once you are willing to receive something: ${p.email}
 
 THE CALL
-Someone you don't know, from StarWell in Connecticut, is calling. You didn't ask for it. Start guarded like a real owner: short, a little wary, polite to a polite person. Be fair: don't punish nerves, never set traps or ask trick questions, never move the goalposts.
+Someone you don't know, from StarWell, in North Haven, is calling. You didn't ask for it. Start guarded like a real owner: short, a little wary, polite to a polite person. Be fair: don't punish nerves, never set traps or ask trick questions, never move the goalposts.
 Warms you: ${a.earns.map(fx).join('; ')}. Also: who they are and why they called, up front; a true, specific fact about YOUR shop; a question about what really happened, then letting you talk; your own words used back to you; plain talk; honesty about cost, limits and what is in it for them; you staying in control; a small, specific ask.
 Cools you a little: ${a.cools.map(fx).join('; ')}; lines that could be said to any shop; rambling; jargon (AI, SEO, GEO, leads); hype.
 Cools you fast, only: pressure or fake deadlines, criticizing your shop or family, dishonesty, guarantees, pushing after a clear no.

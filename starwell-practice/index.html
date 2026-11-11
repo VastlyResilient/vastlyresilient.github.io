@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>StarWell Practice Line</title>
-<meta name="theme-color" content="#0b0b0c">
+<meta name="theme-color" content="#eef1f5">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect width=%2216%22 height=%2216%22 rx=%224%22 fill=%22%232f5bd3%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -136,7 +137,8 @@ a{color:inherit}
 @media(min-width:640px){.pin{padding:28px 24px 100px}}
 .ptop{display:flex;align-items:center;gap:10px;margin-bottom:16px}
 .ptop h2{margin:0;font-family:'Instrument Serif',serif;font-weight:400;font-size:34px;line-height:1}
-.ptop .x{margin-left:auto}
+.ptop .x,.ptop>[data-close]{margin-left:auto}
+#sSkip:not(.hidden)+[data-close]{margin-left:0}
 .box{background:#fff;border-radius:22px;padding:18px;box-shadow:0 1px 2px rgba(0,0,0,.06);margin-bottom:14px}
 @media(min-width:640px){.box{padding:22px 24px;border-radius:28px}}
 .box h3{margin:0 0 10px;font-size:17px;font-weight:600}
@@ -277,6 +279,267 @@ input[type=text],input[type=password],select,textarea{font:inherit;font-size:15p
 .signin{display:flex;gap:10px;flex-wrap:wrap}
 .signin button{flex:1;min-width:90px;background:#fff;border-radius:18px;padding:16px;font-size:17px;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.08)}
 svg.chart{width:100%;height:auto;display:block}
+
+/* =====================================================================
+   CALM LAYER: one set of tokens, one accent, one button hierarchy.
+   Everything below overrides the original sample styles above.
+   ===================================================================== */
+:root{
+  --bg:#eef1f5; --surface:#fff; --surface-2:#f6f7f9; --surface-3:#eceff3;
+  --ink:#1f2430; --ink-2:#3d4451; --muted:#5b6472; --faint:#8a93a0;
+  --line:#e3e6eb; --line-strong:#cfd4dc;
+  --accent:#2f5bd3; --accent-ink:#fff; --accent-soft:#eaf0fd;
+  --success:#1f7a4d; --success-soft:#e8f5ee;
+  --warning:#8a5a00; --warning-soft:#fdf3e1;
+  --danger:#b42318; --danger-soft:#fdecea; --end:#d92d20;
+  --scrim:rgba(238,241,245,.94);
+  --serif:"Instrument Serif","Iowan Old Style",Georgia,serif;
+  --fs-xs:12px; --fs-sm:14px; --fs-md:16px; --fs-lg:18px; --fs-xl:22px; --fs-2xl:30px; --fs-display:48px;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+  --r-sm:8px; --r-md:12px; --r-lg:20px; --r-pill:999px;
+  --shadow-1:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.04);
+  --shadow-2:0 8px 24px rgba(16,24,40,.12);
+  --dur:180ms; --ease:cubic-bezier(.2,.8,.2,1); --tap:44px;
+  --g5:var(--muted); --g9:var(--ink); --bl5:var(--accent); --o1:var(--accent);
+}
+html,body{color:var(--ink);background:var(--bg)}
+.serif,.brand b,.hey h1,.ptop h2,.score,.voice h4{font-family:var(--serif)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button:focus:not(:focus-visible){outline:none}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}#bgv{display:none}}
+#bgshade{background:linear-gradient(180deg,rgba(238,241,245,.55),rgba(238,241,245,.8))}
+body.loaded .fu{opacity:1;animation:none}
+.fu{animation-duration:.45s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* header + nav (nav shows on every size; on phones it sits under the brand) */
+.hdr{flex-wrap:wrap;border-radius:var(--r-lg);row-gap:6px}
+.nav{display:flex;gap:4px;font-size:var(--fs-sm);order:3;width:100%;justify-content:space-between}
+.nav button{color:var(--muted);min-height:40px;padding:0 10px;border-radius:var(--r-pill);white-space:nowrap}
+@media(max-width:380px){.nav button{padding:0 7px;font-size:13.5px}}
+.nav button.on{color:var(--accent);background:var(--accent-soft);font-weight:600}
+@media(min-width:768px){.hdr{flex-wrap:nowrap;border-radius:var(--r-pill)}.nav{order:0;width:auto;gap:8px;justify-content:center}}
+.circ{width:var(--tap);height:var(--tap);background:var(--surface-2);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+
+/* buttons: one primary per screen, everything else quiet */
+.btn{min-height:var(--tap);padding:0 var(--s4);font-size:var(--fs-sm);font-weight:600;justify-content:center;transition:transform var(--dur) var(--ease),background var(--dur)}
+.btn:active{transform:scale(.97)}
+.btn.black{background:var(--accent);color:var(--accent-ink)}
+.btn.dark,.btn.light{background:var(--surface);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-strong)}
+.btn:disabled{background:var(--surface-3);color:var(--faint);box-shadow:none;opacity:1}
+.btn.wide{min-height:52px;font-size:var(--fs-md);padding:0 var(--s5);width:100%}
+.lnkbtn{color:var(--accent);font-size:var(--fs-sm);font-weight:600;min-height:var(--tap);padding:0 4px}
+
+/* tags and chips: soft fill + dark text, never color alone */
+.tag{font-size:var(--fs-xs);font-weight:600;padding:3px 10px}
+.tag.green{background:var(--success-soft);color:var(--success)}
+.tag.yellow{background:var(--warning-soft);color:var(--warning)}
+.tag.red{background:var(--danger-soft);color:var(--danger)}
+.tag.blue{background:var(--accent-soft);color:var(--accent)}
+.tag.gray{background:var(--surface-3);color:var(--ink-2)}
+.chip{background:var(--surface-2);color:var(--ink-2);font-size:var(--fs-xs)}
+.note,.det small,.kv small,.pill small,.who .sub,.bigsub{color:var(--muted)}
+.lbl{text-transform:none;letter-spacing:0;font-size:var(--fs-sm);color:var(--muted)}
+.box,.tc,.fc{border-radius:var(--r-lg);box-shadow:var(--shadow-1);background:var(--surface)}
+.page{background:var(--scrim)}
+.pin{max-width:760px}
+
+/* home */
+.srow{border-bottom:0;padding:var(--s5) 0 var(--s4);margin-bottom:0}
+@media(min-width:1024px){.srow{display:flex}}
+.srow{align-items:flex-start}
+.hey h1{font-size:34px}
+@media(min-width:1024px){.hey h1{font-size:42px}}
+.hey .sub{color:var(--muted);font-size:var(--fs-sm);margin-top:4px}
+.av{background:var(--accent)}
+@media(max-width:1023px){.cc{order:-1}.ccin{max-width:640px}}
+@media(min-width:1024px){.ccin{width:100%;max-width:640px}}
+.next{padding:var(--s5)}
+.next .eyebrow{font-size:var(--fs-sm);color:var(--muted);margin:0 0 4px}
+.next h2{margin:0 0 4px;font-size:var(--fs-xl);font-weight:600;letter-spacing:-.01em}
+.next p{margin:0 0 var(--s4);color:var(--ink-2);line-height:1.5}
+.path{list-style:none;margin:0 0 var(--s4);padding:0;display:grid;gap:2px}
+.path li{display:flex;align-items:center;gap:var(--s3);padding:10px 0;border-top:1px solid var(--line)}
+.path li:first-child{border-top:0}
+.path .dot{width:30px;height:30px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:var(--fs-sm);font-weight:600;background:var(--surface-3);color:var(--muted)}
+.path li.done .dot{background:var(--success-soft);color:var(--success)}
+.path li.cur .dot{background:var(--accent);color:#fff;box-shadow:0 0 0 4px var(--accent-soft)}
+.path li.lock{color:var(--faint)}
+.path b{display:block;font-size:var(--fs-md);font-weight:600}
+.path small{display:block;font-size:var(--fs-sm);color:var(--muted)}
+.path li.lock b,.path li.lock small{color:var(--faint)}
+.shopline{display:flex;align-items:center;gap:var(--s2);width:100%;text-align:left;background:var(--surface-2);border-radius:var(--r-md);padding:10px 12px;margin:0 0 var(--s3);min-height:var(--tap)}
+.shopline svg{width:18px;height:18px;flex:none;color:var(--accent)}
+.shopline span{flex:1;min-width:0;font-size:var(--fs-sm);color:var(--ink-2)}
+.shopline b{color:var(--ink)}
+.shopline em{font-style:normal;color:var(--accent);font-weight:600;font-size:var(--fs-sm)}
+.alt{display:block;text-align:center;margin-top:var(--s2)}
+.statcard{padding:var(--s5)}
+.big{font-family:var(--serif);font-size:clamp(44px,9vw,64px);line-height:1;margin:0}
+.big small{font-family:var(--font);font-size:var(--fs-md);color:var(--muted);margin-left:4px}
+.big.empty{font-family:var(--font);font-size:var(--fs-xl);font-weight:600}
+.metric{background:var(--ink);color:#fff;border-radius:var(--r-lg);padding:var(--s5);min-height:0}
+.metric .mh{font-size:var(--fs-md)}
+.mstats{margin-top:var(--s4)}
+.mstats b{font-size:var(--fs-xl)}
+.mstats small{font-size:var(--fs-xs);opacity:.8}
+.tc .r3 .bl{color:var(--muted)}
+.fch h3{font-size:var(--fs-xl);font-family:var(--font);font-weight:600;letter-spacing:-.01em}
+@media(min-width:1280px){.fch h3{font-size:var(--fs-xl)}}
+.fch .st{width:36px;height:36px;background:var(--accent-soft);color:var(--accent)}
+.fch .st svg{width:18px;height:18px}
+.fli{min-height:52px;font-size:var(--fs-sm)}
+.fli b{display:block;font-size:var(--fs-md);font-weight:600}
+.fli small{display:block;color:var(--muted)}
+.fli svg{fill:var(--accent)}
+.seg{display:flex;background:var(--surface-3);border-radius:var(--r-pill);padding:3px;margin:var(--s2) 0 var(--s2)}
+.seg button{flex:1;min-height:38px;border-radius:var(--r-pill);font-size:var(--fs-sm);color:var(--muted)}
+.seg button.on{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:var(--shadow-1)}
+.voice{background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow-1);padding:var(--s5) var(--s5) 40px}
+.voice h4{font-family:var(--font);font-size:var(--fs-xl);font-weight:600;margin:0 0 var(--s3)}
+.voice p{color:var(--ink-2);font-size:var(--fs-sm)}
+.wave i{background:var(--accent)}
+.float{background:var(--accent);color:#fff;width:52px;height:52px;bottom:-22px}
+
+/* prep: one sticky bar holds Back · count · Next / Ready */
+.sdots{display:none}
+.snav{position:sticky;bottom:0;margin:var(--s4) -14px 0;padding:var(--s3) 14px calc(var(--s3) + env(safe-area-inset-bottom));background:var(--scrim);border-top:1px solid var(--line);z-index:3}
+.snav .sc{flex:1;text-align:center;font-size:var(--fs-sm);color:var(--muted)}
+.ready{display:none!important}
+.flag b{background:var(--surface-3);color:var(--ink-2)}
+.flag.gap b{background:var(--warning-soft);color:var(--warning)}
+.flag.good b{background:var(--success-soft);color:var(--success)}
+.stars{color:#b7791f}
+.eyes{background:var(--surface-2)}
+.sayit{background:var(--accent-soft)}
+.gfit{background:var(--success-soft);color:var(--success);font-weight:600}
+.prepnote{background:var(--accent-soft);color:var(--ink);border-radius:var(--r-md);padding:var(--s3) var(--s4);font-size:var(--fs-sm);line-height:1.5;margin:0 0 var(--s3)}
+
+/* call screen */
+.phone{background:var(--surface)}
+.ctop,.who,.trust,.steps,.stepline,.ctrls,.hint{flex:none}
+.ctop{grid-template-columns:auto 1fr auto}
+.ctop .mode,.ctop .ctr small{color:var(--muted)}
+.ctop .ctr{font-size:var(--fs-sm)}
+.who .nm{font-size:var(--fs-lg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who>div:first-child{min-width:0}
+.who .sub{font-size:var(--fs-sm)}
+.who .tm{font-size:var(--fs-md);color:var(--ink-2)}
+.oav{width:52px;height:52px;font-size:20px}
+.oav.talk::after{border:2px solid var(--success);animation:pulse 1.8s ease-out infinite}
+.trust{font-size:var(--fs-xs);color:var(--muted)}
+.tbar{height:6px;background:var(--surface-3)}
+.tbar i{background:var(--accent)}
+.stepline{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 22px 0;font-size:var(--fs-sm);color:var(--ink-2)}
+.stepline b{font-weight:600;color:var(--ink)}
+.steps{gap:3px;padding:6px 22px 0}
+.steps span{height:4px;padding:0;font-size:0;border-radius:2px;background:var(--surface-3)}
+.steps span.done{background:var(--success)}
+.steps span.on{background:var(--accent)}
+.cap{min-height:72px}
+.ln{font-size:var(--fs-md);line-height:1.5;color:var(--ink)}
+.ln .sp{font-size:var(--fs-xs);color:var(--muted);text-transform:none;letter-spacing:0}
+.ln.o{color:var(--ink)}
+.ln.o .noise{color:var(--muted)}
+.ln.c{color:var(--accent)}
+.ln.sys{color:var(--muted);font-size:var(--fs-sm)}
+.ln.sys.coachln{color:var(--success);background:var(--success-soft);border-radius:var(--r-md);padding:8px 12px;font-weight:500;font-size:var(--fs-sm)}
+.ln.sys.coachln.alt{color:var(--ink-2);background:var(--surface-2)}
+.opts{max-height:none;flex:0 1 auto;min-height:0}
+.opts .lbl{font-size:var(--fs-sm);color:var(--muted)}
+.opt{background:var(--surface);border:1px solid var(--line-strong);border-radius:var(--r-md);padding:var(--s3) var(--s4);font-size:var(--fs-md);min-height:var(--tap);color:var(--ink);transition:border-color var(--dur),background var(--dur)}
+.opt:hover{border-color:var(--accent)}
+.opt:active{border-color:var(--accent);background:var(--accent-soft)}
+.opt::before{display:none}
+.opt{flex:none}
+.ccin .box{margin-bottom:0}
+.opt .k{color:var(--muted);text-transform:none;letter-spacing:0;font-size:var(--fs-xs);font-weight:600;margin-bottom:2px}
+.opt .why{color:var(--muted);font-size:var(--fs-sm)}
+.whytap{min-height:var(--tap);color:var(--accent);font-size:var(--fs-sm);font-weight:600}
+@media(max-height:700px){.opt .k{display:none}.trust span{display:none}.opts .lbl{display:none}}
+.sayline{font-size:var(--fs-lg);background:var(--surface);border-color:var(--line-strong)}
+.sayline .w{color:var(--ink-2);transition:background var(--dur),color var(--dur);border-radius:4px}
+.sayline .w.lit{color:var(--accent);font-weight:inherit;text-shadow:none;background:var(--accent-soft);box-shadow:0 0 0 2px var(--accent-soft)}
+.sayline .w.nx{text-decoration-color:var(--accent)}
+.saybar{flex-wrap:wrap}
+.saybar #sayState{width:100%}
+.saybar .btn{min-height:var(--tap);padding:0 var(--s4);font-size:var(--fs-sm)}
+.lvl i{background:var(--accent)}
+.listen{display:flex;align-items:center;gap:8px;font-weight:600;color:var(--ink)}
+.listen::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--success);animation:pulse2 1.4s ease-in-out infinite}
+@keyframes pulse2{0%,100%{opacity:1}50%{opacity:.35}}
+.cb{color:var(--ink);font-size:var(--fs-xs)}
+.cb .c{background:var(--surface-3)}
+.cb.on .c{background:var(--ink);color:#fff}
+.cb.end .c{background:var(--end)}
+.phone.picking .cb .c{width:46px;height:46px}
+.hint{position:static;margin:0 18px 8px;background:var(--ink);border-radius:var(--r-md);box-shadow:none;font-size:var(--fs-sm)}
+.hint b{color:#fde68a}
+.ctoast{position:absolute;left:50%;top:calc(64px + env(safe-area-inset-top));transform:translateX(-50%);background:var(--ink);color:#fff;padding:8px 14px;border-radius:var(--r-pill);font-size:var(--fs-sm);z-index:7;white-space:nowrap;box-shadow:var(--shadow-2)}
+.sheet{background:var(--surface)}
+.sheethead{display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:calc(-16px - env(safe-area-inset-top));background:var(--surface);padding:8px 0 10px;margin-bottom:6px;z-index:2;border-bottom:1px solid var(--line)}
+.sheethead b{font-size:var(--fs-lg)}
+
+/* guide */
+.gtabs{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:var(--surface-3);border-radius:var(--r-pill);padding:3px;margin-bottom:var(--s3)}
+.gtab{min-height:40px;background:none;border-radius:var(--r-pill);font-size:var(--fs-sm);color:var(--muted);padding:0 4px}
+.gtab.on{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:var(--shadow-1)}
+.gchip{min-height:36px;background:var(--surface);border:1px solid var(--line-strong);font-size:var(--fs-sm);color:var(--ink-2)}
+.gchip.on{border-color:var(--accent);color:var(--accent);background:var(--accent-soft);font-weight:600}
+.glist.avoid{list-style:none;padding-left:0}
+.glist.avoid li{color:var(--ink);padding-left:22px;position:relative}
+.glist.avoid li::before{content:"✕";position:absolute;left:2px;color:var(--danger);font-weight:700}
+.gq summary{min-height:var(--tap);display:flex;align-items:center}
+
+/* report */
+.rhead .lbl{font-size:var(--fs-sm)}
+.score{font-size:64px}
+.outcome{display:inline-flex;align-items:center;gap:6px;font-size:var(--fs-md);font-weight:600;padding:6px 14px;border-radius:var(--r-pill);margin:8px 0 4px}
+.outcome.green{background:var(--success-soft);color:var(--success)}
+.outcome.gray{background:var(--surface-3);color:var(--ink-2)}
+.outcome.red{background:var(--danger-soft);color:var(--danger)}
+.outcome.blue{background:var(--accent-soft);color:var(--accent)}
+.ex{background:var(--success-soft);border-left:3px solid var(--success);border-radius:var(--r-md)}
+.ex.bad{background:var(--surface-2);border-left-color:var(--line-strong)}
+.ex.mine{background:var(--accent-soft);border-left-color:var(--accent)}
+.ex small{display:block;font-size:var(--fs-xs);font-weight:600;color:var(--muted);margin-bottom:2px}
+.why{color:var(--ink-2);font-size:var(--fs-sm)}
+.play{min-height:36px;background:var(--accent-soft);color:var(--accent);padding:0 14px}
+.play svg{fill:var(--accent)}
+details>summary{min-height:var(--tap);display:flex;align-items:center;cursor:pointer;list-style:none}
+details>summary::-webkit-details-marker{display:none}
+details>summary::after{content:"";width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);margin-left:auto;margin-right:4px;transition:transform var(--dur)}
+details[open]>summary::after{transform:rotate(-135deg)}
+.meter div{background:var(--surface-2)}
+.meter .ok{color:var(--success)}.meter .warn{color:var(--warning)}
+.bar .t{background:var(--surface-3)}
+.tr .c{color:var(--accent)}
+.gl{color:var(--accent);min-height:36px;display:inline-flex;align-items:center}
+.actions{display:flex;flex-direction:column;gap:var(--s2);max-width:420px;margin:var(--s4) auto 0}
+
+/* directory: one compact list */
+.dirhead{position:sticky;top:0;z-index:3;background:var(--scrim);padding:var(--s2) 0 var(--s2);margin:0 0 var(--s2)}
+.dirhead .gchips{scrollbar-width:none;mask-image:linear-gradient(90deg,#000 88%,transparent)}
+.dirlist{padding:var(--s2) var(--s4)}
+details.town{border-top:1px solid var(--line)}
+details.town:first-child{border-top:0}
+details.town summary{font-size:var(--fs-md);gap:6px}
+.shoprow{border-top:1px solid var(--line);padding:10px 0}
+.shoprow .btn{min-height:40px}
+.shoprow a{color:var(--accent)}
+
+/* settings */
+input[type=text],input[type=password],select,textarea{min-height:var(--tap);border-color:var(--line-strong);border-radius:var(--r-md)}
+input[type=checkbox]{width:22px;height:22px;accent-color:var(--accent);flex:none}
+label.row{min-height:var(--tap)}
+.signin button{box-shadow:inset 0 0 0 1px var(--line-strong);min-height:56px}
+.signin button.on{box-shadow:inset 0 0 0 2px var(--accent);color:var(--accent)}
+.toast{background:var(--ink);bottom:calc(24px + env(safe-area-inset-bottom))}
+/* the header and nav stay reachable above every page */
+.hdr{position:sticky;top:12px;z-index:30;box-shadow:var(--shadow-1)}
+.page .pin{padding-top:calc(var(--hdrH, 64px) + 32px)}
+@media(min-width:640px){.page .pin{padding-top:calc(var(--hdrH, 64px) + 52px)}}
+.hint b{text-transform:none;letter-spacing:0;font-size:var(--fs-sm)}
 </style>
 </head>
 <body>
@@ -286,62 +549,57 @@ svg.chart{width:100%;height:auto;display:block}
 <div class="root"><div class="wrap">
   <header class="hdr fu" style="animation-delay:0s">
     <div class="brand"><div class="logo"><i></i><i></i><i></i><i></i></div><b>starwell</b></div>
-    <nav class="nav">
+    <nav class="nav" aria-label="Main">
       <button class="on" data-nav="home">Practice</button>
       <button data-nav="calls">Calls</button>
       <button data-nav="progress">Progress</button>
-      <button data-nav="guide">Cold-call guide</button>
+      <button data-nav="guide">Call guide</button>
     </nav>
     <div class="hr">
-      <div class="toggle" id="modeToggle"><button data-mode="guided" class="on">Guided</button><button data-mode="live">Live</button></div>
       <button class="circ" id="setBtn" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
     </div>
   </header>
 
   <div class="srow">
-    <div class="hey fu" style="animation-delay:.1s"><div class="av"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div><h1 id="hey">Hey there!</h1></div>
-    <div class="mid fu" style="animation-delay:.15s" id="midTitle">Practice line</div>
-    <div class="crew fu" style="animation-delay:.2s"><span style="color:#374151;font-size:14px">Crew:</span><div class="stack" id="crewStack"></div><span style="font-size:14px;color:#374151">StarWell</span></div>
+    <div class="hey fu" style="animation-delay:.05s"><div class="av"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div><div><h1 id="hey">Hey there!</h1><div class="sub">StarWell practice line</div></div></div>
   </div>
 
   <!-- sign-in -->
-  <div id="signin" class="box fu hidden" style="animation-delay:.2s;max-width:560px">
+  <section id="signin" class="box fu hidden" style="animation-delay:.1s;max-width:560px">
     <h3>Who's practicing?</h3>
     <p class="note">Your calls, scores and progress are saved on this device under your name.</p>
     <div class="signin" id="signinBtns"></div>
-  </div>
+  </section>
 
   <main class="grid" id="home">
-    <section class="cl">
-      <button class="pill fu" style="animation-delay:.25s" id="srcPill">
-        <span class="xi"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 3l10 10M13 3L3 13" stroke="#EAB308" stroke-width="3.5" stroke-linecap="round"/></svg></span>
-        <span><b id="srcTitle">Random Connecticut shop</b><small id="srcSub">New owner every call</small></span>
-        <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-      </button>
-      <div class="fu" style="animation-delay:.3s"><div class="big" id="readiness">0%</div><div class="bigsub">Call readiness (your last 3 calls)</div>
-        <div class="row" style="margin-top:10px"><button class="btn light" data-nav="calls">Your calls</button><button class="btn light" data-nav="guide">Guide</button></div></div>
-      <div class="metric fu" style="animation-delay:.35s;background-image:linear-gradient(rgba(0,0,0,.18),rgba(0,0,0,.28)),url('https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260403_055416_630ff6c1-4b72-4cb6-a563-0c7e41124fe1.png&w=1280&q=85')">
-        <div class="mh"><span>Practice metrics</span><span class="badge">Analytics</span></div>
-        <div class="mstats"><div><b id="mCalls">0</b><small>Calls</small></div><div><b id="mMin">0m</b><small>On the phone</small></div><div><b id="mBooked">0</b><small>Booked</small></div></div>
-        <button class="float" data-nav="progress" aria-label="Progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></button>
+    <section class="cc" aria-label="Your next call"><div class="ccin" id="cards"></div></section>
+
+    <section class="cl" aria-label="Your numbers">
+      <div class="box statcard fu" style="animation-delay:.15s">
+        <div class="lbl">Average score, last 3 calls</div>
+        <div class="big" id="readiness"></div>
+        <div class="bigsub" id="readySub"></div>
+      </div>
+      <div class="metric fu" style="animation-delay:.2s">
+        <div class="mh"><span>Practice so far</span></div>
+        <div class="mstats"><div><b id="mCalls">0</b><small>Calls</small></div><div><b id="mMin">0m</b><small>On the phone</small></div><div><b id="mBooked">0</b><small>Walkthroughs booked</small></div></div>
       </div>
     </section>
 
-    <section class="cc"><div class="ccin" id="cards"></div></section>
-
-    <section class="cr">
-      <div class="fc fu" style="animation-delay:.5s">
-        <div class="fch"><span class="st">⭐</span><h3>Fast drills</h3><button class="add" data-nav="guide">+ Guide</button></div>
-        <button class="fli" data-drill="opener">Opener drill: three owners, three first lines<svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg></button>
-        <button class="fli" data-drill="handle">Objection drill: the catch, the price, "send me an email"<svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg></button>
-        <button class="fli" data-drill="close">Close drill: email plus a specific time<svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg></button>
+    <section class="cr" aria-label="Drills and mic check">
+      <div class="fc fu" style="animation-delay:.25s">
+        <div class="fch"><span class="st"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span><h3>Quick drills</h3></div>
+        <p class="note" style="margin:0">Practice two steps at a time. Drills don't change your path.</p>
+        <div class="seg" id="modeToggle" role="group" aria-label="Drill style"><button data-mode="guided" class="on">With lines</button><button data-mode="live">Free talk</button></div>
+        <button class="fli" data-drill="opener"><span><b>Hello drill</b><small>Your first two lines</small></span><svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg></button>
+        <button class="fli" data-drill="handle"><span><b>Questions drill</b><small>Answer the owner's worry</small></span><svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg></button>
+        <button class="fli" data-drill="close"><span><b>Next-step drill</b><small>Email and one specific time</small></span><svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg></button>
       </div>
-      <div class="voice fu" style="animation-delay:.55s">
-        <span class="badge">Mic check</span>
-        <h4>Speak now to StarWell!</h4>
+      <div class="voice fu" style="animation-delay:.3s">
+        <h4>Mic check</h4>
         <div class="wave" id="wave"></div>
-        <p id="micMsg">Tap the mic and say your opener out loud.</p>
-        <button class="float" id="micBtn" aria-label="Mic check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5"/></svg></button>
+        <p id="micMsg">Tap the mic and say your hello out loud.</p>
+        <button class="float" id="micBtn" aria-label="Start mic check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5"/></svg></button>
       </div>
     </section>
   </main>
@@ -349,32 +607,32 @@ svg.chart{width:100%;height:auto;display:block}
 
 <!-- PREP SLIDES -->
 <div class="page hidden" id="prep"><div class="pin">
-  <div class="ptop"><h2>Call prep</h2><span class="tag gray" id="prepMode">Guided</span><button class="btn light x" data-close="prep">Close</button></div>
+  <div class="ptop"><h2>Call prep</h2><span class="tag gray" id="prepMode">Guided call</span><button class="lnkbtn x hidden" id="sSkip">Skip to the call</button><button class="btn light" data-close="prep">Close</button></div>
   <div class="sdots" id="sdots"></div>
   <div class="slides" id="slides"></div>
-  <div class="snav"><button class="btn light" id="sPrev">Back</button><span class="note" id="sCount"></span><button class="btn dark" id="sNext">Next</button></div>
+  <div class="snav"><button class="btn light" id="sPrev">Back</button><span class="sc" id="sCount"></span><button class="btn light" id="sNext">Next</button><button class="btn black hidden" id="readyBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>Ready to call</button></div>
 </div>
-<div class="ready"><button class="btn black" id="readyBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>Ready to call</button></div>
 </div>
 
 <!-- CALL -->
 <div id="call" class="hidden"><div class="phone">
-  <div class="ctop"><span class="mode" id="cMode">Guided</span><div class="ctr">🇺🇸 Connecticut<small id="cSub">Practice line</small></div><button class="lnk" id="cInfo">Shop info</button></div>
+  <div class="ctop"><span class="mode" id="cMode">Guided</span><div class="ctr">🇺🇸 Connecticut<small id="cSub">Practice line</small></div><span></span></div>
   <div class="who"><div><div class="nm" id="cShop">Shop</div><div class="sub" id="cOwner"></div><div class="tm" id="cTime">00:00</div></div><div class="oav" id="cAv">?</div></div>
-  <div class="trust"><span id="cTrustLbl">How he feels</span><div class="tbar"><i id="cTrust"></i></div></div>
-  <div class="steps" id="cSteps"></div>
-  <div class="cap" id="cap"></div>
+  <div class="trust"><span id="cTrustLbl">How they feel</span><div class="tbar"><i id="cTrust"></i></div></div>
+  <div class="stepline" id="cStepLine"></div>
+  <div class="steps" id="cSteps" aria-hidden="true"></div>
+  <div class="cap" id="cap" aria-live="polite"></div>
+  <div class="hint hidden" id="hint"></div>
   <div class="opts hidden" id="opts"></div>
   <div class="say hidden" id="say"></div>
   <div class="ctrls">
-    <button class="cb" id="bMute"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5"/></svg></span>Mute</button>
-    <button class="cb" id="bHold"><span class="c"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg></span>Hold</button>
-    <button class="cb" id="bHint"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg></span>Hint</button>
-    <button class="cb" id="bShop"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l1-5h16l1 5M3 9h18v11H3zM9 20v-6h6v6"/></svg></span>Shop info</button>
-    <button class="cb end" id="bEnd"><span class="c"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 9c-1.6 0-3.2.3-4.6.7v3.1c0 .4-.2.7-.6.9-1 .5-1.9 1.1-2.7 1.8-.2.2-.4.3-.7.3-.3 0-.5-.1-.7-.3L.3 13.1a1 1 0 0 1 0-1.4C3.3 8.8 7.5 7 12 7s8.7 1.8 11.7 4.7a1 1 0 0 1 0 1.4l-2.4 2.4c-.2.2-.4.3-.7.3-.3 0-.5-.1-.7-.3-.8-.7-1.7-1.3-2.7-1.8-.3-.2-.6-.5-.6-.9V9.7C15.2 9.3 13.6 9 12 9z"/></svg></span>End</button>
-    <button class="cb" id="bGuide"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5V21h16"/></svg></span>Guide</button>
+    <button class="cb" id="bMute"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5"/></svg></span><span class="t">Mute</span></button>
+    <button class="cb" id="bHold"><span class="c"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg></span><span class="t">Hold</span></button>
+    <button class="cb" id="bHint"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg></span><span class="t">Hint</span></button>
+    <button class="cb" id="bShop"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l1-5h16l1 5M3 9h18v11H3zM9 20v-6h6v6"/></svg></span><span class="t">Shop info</span></button>
+    <button class="cb end" id="bEnd"><span class="c"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 9c-1.6 0-3.2.3-4.6.7v3.1c0 .4-.2.7-.6.9-1 .5-1.9 1.1-2.7 1.8-.2.2-.4.3-.7.3-.3 0-.5-.1-.7-.3L.3 13.1a1 1 0 0 1 0-1.4C3.3 8.8 7.5 7 12 7s8.7 1.8 11.7 4.7a1 1 0 0 1 0 1.4l-2.4 2.4c-.2.2-.4.3-.7.3-.3 0-.5-.1-.7-.3-.8-.7-1.7-1.3-2.7-1.8-.3-.2-.6-.5-.6-.9V9.7C15.2 9.3 13.6 9 12 9z"/></svg></span><span class="t">End</span></button>
+    <button class="cb" id="bGuide"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5V21h16"/></svg></span><span class="t">Guide</span></button>
   </div>
-  <div class="hint hidden" id="hint"></div>
   <div class="sheet hidden" id="sheet"></div>
 </div></div>
 

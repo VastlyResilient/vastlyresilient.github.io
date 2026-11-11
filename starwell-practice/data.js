@@ -41,77 +41,77 @@ const SITUATIONS = [
 const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
 const TIMES = ['7:00','7:30','4:30','5:30'];
 
-/* ---------- Objections he raises after the gift ---------- */
+/* ---------- Questions the owner raises after the free help ---------- */
 const OBJ = {
-  catch:{say:['So what\'s the catch? Nobody gives stuff away free.','Free? What\'s the catch?'], guide:'price', skill:'The catch',
-    best:'Fair question. StarWell is new to Connecticut HVAC, and we\'d rather show you than tell you. If you love it, maybe we work together down the road. If not, it\'s still yours.',
+  catch:{say:['So what\'s the catch? Nobody gives stuff away free.','Free? What\'s the catch?'], guide:'questions', skill:'The catch',
+    best:'Fair question. StarWell is new to HVAC, and we\'d rather show you than tell you. If you like it, we could work together down the road. If not, it\'s still yours.',
     ok:'There\'s no catch, I promise. It\'s totally free.',
-    weak:'Well, it\'s free for now, but most people end up upgrading, so...',
-    why:{best:'Naming your real motive answers the question he is actually asking: "what does this guy get out of it?" People trust a stated motive more than a promise (Friestad & Wright, 1994).',
-         ok:'"I promise" gives him no reason. With no motive stated, his brain fills one in, usually the worst one.',
-         weak:'"Free for now" sounds like bait and switch. That is exactly the trap he was listening for.'}},
-  price:{say:['Alright, what\'s this going to cost me?','So how much is this?'], guide:'price', skill:'The price question',
-    best:'Great question. The package StarWell built is free, and it stays yours. If you ever want us to keep it running, most shops start around $300 to $400 a month, in writing, no surprises.',
+    weak:'Well, it\'s free for now, but most people end up upgrading, so…',
+    why:{best:'Your real reason answers what the owner is really asking: what do you get out of it?',
+         ok:'"I promise" gives no reason, so the owner fills one in, usually the worst one.',
+         weak:'"Free for now" sounds like bait and switch, the exact trap the owner was listening for.'}},
+  price:{say:['Alright, what\'s this going to cost me?','So how much is this?'], guide:'questions', skill:'The price question',
+    best:'Fair question. This is free, and it stays yours. If you ever want ongoing help, it\'s three to four hundred a month, in writing.',
     ok:'It depends on a lot of things. We can talk about that later.',
     weak:'For you, I can do a special deal if you decide this week.',
-    why:{best:'A real range, said calmly, builds trust. Volunteering cost details raised trust and sales in a field study (Mohan, Buell & John, 2020).',
+    why:{best:'A real range, said calmly, builds trust; owners respect a straight number.',
          ok:'"Later" sounds like hiding. Owners hear a dodge and assume the number is scary.',
          weak:'A rushed "special deal" breaks our rule: no invented deadlines. It turns a helper into a salesman in one sentence.'}},
   allset:{say:['We\'re all set. My nephew does our website.','We\'re good, we already have a guy for that stuff.'], guide:'questions', skill:'"We\'re all set"',
     best:'That\'s great, sounds like you\'re covered there. Can I ask, when calls come in after you close, who picks those up?',
     ok:'No problem. I\'ll just send it over anyway in case it\'s useful.',
     weak:'Honestly, family-built websites usually hurt you on Google.',
-    why:{best:'You agree with him first, then ask about a different gap. No argument, so nothing to defend (Carnegie: never say "you\'re wrong").',
+    why:{best:'You agree first, then ask about a different gap. No argument, so nothing to defend.',
          ok:'Polite, but you gave up the conversation. A question would have kept it going.',
-         weak:'You just criticized his nephew. Now he is defending family, not listening.'}},
-  email:{say:['Just send me an email.','Send me something and I\'ll look at it.'], guide:'step5', skill:'"Just send me an email"',
+         weak:'You just criticized their nephew. Now the owner is defending family, not listening.'}},
+  email:{say:['Just send me an email.','Send me something and I\'ll look at it.'], guide:'next', skill:'"Just send me an email"',
     best:'Happy to. What\'s the best email? And so it doesn\'t sit in your inbox, could I take fifteen minutes {day} at {time} to walk you through it?',
     ok:'Sure, what\'s the email?',
     weak:'Emails never get read. Can I just tell you about it now?',
-    why:{best:'Say yes to his request, then attach one specific time. A when-and-where plan makes follow-through far more likely (Gollwitzer & Sheeran, 2006).',
+    why:{best:'Say yes to the request, then add one specific time; a set time actually happens.',
          ok:'You got the email, but no time. "Send me an email" is often a polite way to end the call.',
-         weak:'Arguing with his request tells him you won\'t respect his next "no" either.'}},
-  busy:{say:['I\'m on a job right now, man.','I really can\'t talk, I\'m in the middle of something.'], guide:'step1', skill:'"I\'m busy"',
-    best:'Totally get it, I\'ll be quick. StarWell put something together for {shop}. Should I email it and call you {day} morning, or is later today better?',
+         weak:'Arguing with the request says you won\'t respect their next "no" either.'}},
+  busy:{say:['I\'m on a job right now, man.','I really can\'t talk, I\'m in the middle of something.'], guide:'greet', skill:'"I\'m busy"',
+    best:'Totally get it, I\'ll be quick. Should I email you one page about {shop} and call you {day} morning, or is later today better?',
     ok:'Okay, I\'ll call you back sometime.',
-    weak:'This will only take two seconds. So basically, we built...',
-    why:{best:'Respecting his time is the pitch. Giving him two easy choices keeps the door open.',
+    weak:'This will only take two seconds. So basically, we built…',
+    why:{best:'Respecting their time is the whole message. Two easy choices keep the door open.',
          ok:'"Sometime" never happens. Without a time, there\'s no next step.',
          weak:'Ignoring "I\'m busy" proves you don\'t listen. Owners hang up on that.'}},
   ai:{say:['Is this one of those AI robot things? I don\'t want robots talking to my customers.','Wait, is this AI? I don\'t trust that stuff.'], guide:'questions', skill:'"Is this AI?"',
-    best:'Smart to ask. With StarWell, what you\'d see is simple: every call you miss gets answered, and you get a text. It runs on a separate test number first, and nothing touches your phones unless you say yes.',
+    best:'Smart to ask. With StarWell, what you\'d see is simple: calls you miss get answered, and you get a text. It runs on its own phone number first, and nothing touches your phones unless you say yes.',
     ok:'It\'s AI, but it\'s really good. It sounds just like a person.',
     weak:'Everyone\'s using AI now. You\'ll fall behind if you don\'t.',
-    why:{best:'Talk about what he gets and what he controls, not the technology. Control lowers fear.',
-         ok:'"Sounds like a person" can sound like tricking his customers. That worries owners.',
-         weak:'Fear-based selling breaks our rule. It also makes you sound like every other pitch he has hung up on.'}},
+    why:{best:'Talk about what the owner gets and controls, not the technology. Control lowers fear.',
+         ok:'"Sounds like a person" can sound like tricking their customers. That worries owners.',
+         weak:'Fear-based selling breaks our rule, and sounds like every call they have hung up on.'}},
   agency:{say:['We paid a marketing company two grand a month last year. Got nothing.','I tried one of these SEO companies. Total waste of money.'], guide:'questions', skill:'"We got burned before"',
     best:'That\'s frustrating, and I\'m sorry that happened. That\'s exactly why it\'s free first and it stays yours. You\'d judge it on your own numbers, not our promises.',
     ok:'We\'re not like those guys.',
     weak:'They probably didn\'t know what they were doing. We guarantee first page on Google.',
-    why:{best:'Acknowledge the pain, then remove the risk. "Judge it on your own numbers" hands him control.',
+    why:{best:'Acknowledge the pain, then remove the risk. "Judge it on your own numbers" hands over control.',
          ok:'Every agency says "we\'re not like those guys". It proves nothing.',
-         weak:'A ranking guarantee is a promise nobody can keep, and it\'s the same line that burned him.'}},
+         weak:'A ranking guarantee is a promise nobody can keep, and it\'s the same line that burned them.'}},
   wordofmouth:{say:['Ninety percent of my work is word of mouth.','We don\'t really need it. It\'s all referrals.'], guide:'questions', skill:'"It\'s all word of mouth"',
-    best:'That\'s the best kind. When a neighbor recommends you, people still look you up before they call. This makes sure what they find matches what your neighbor said. That\'s what StarWell built for you.',
+    best:'That\'s the best kind. When a neighbor recommends you, people still look you up before they call. This makes sure what they find matches what your neighbor said.',
     ok:'Sure, but you could still get more.',
     weak:'Word of mouth is kind of dying, though.',
-    why:{best:'You honor what he\'s proud of, then show how the gift protects it. No argument needed.',
-         ok:'"You could get more" ignores what he just told you he values.',
-         weak:'Telling a proud owner his life\'s work is "dying" ends the call.'}},
+    why:{best:'You honor what the owner is proud of, then show how the free help protects it.',
+         ok:'"You could get more" ignores what they just told you they value.',
+         weak:'Telling a proud owner their life\'s work is "dying" ends the call.'}},
   scam:{say:['How\'d you get my number? Is this a scam?','Who gave you this number?'], guide:'questions', skill:'"Is this a scam?"',
-    best:'Smart to ask. It\'s on your website and your Google listing. We\'re StarWell, a Connecticut company. Nothing to pay, nothing to sign, no logins. Look us up, and call me back on this number if you\'d rather.',
+    best:'Smart to ask. It\'s on your website and your Google listing. We\'re StarWell, in North Haven. Nothing to pay, nothing to sign, no logins. Look us up, and call me back on this number if you\'d rather.',
     ok:'No, no, it\'s legit, I swear.',
     weak:'We have a lot of data on local businesses.',
-    why:{best:'Say where you found him. Hidden sources feel invasive; named ones feel normal (Aguirre et al., 2015).',
-         ok:'"I swear" is what a scammer would say too. Specifics calm him down; promises don\'t.',
+    why:{best:'Say where you found the number. Hidden sources feel invasive; named ones feel normal.',
+         ok:'"I swear" is what a scammer would say too. Specifics calm people down; promises don\'t.',
          weak:'"We have data on you" sounds like surveillance. That\'s the creepiest possible answer.'}}
 };
 
 /* Steps of every call, with the short labels shown in the step bar */
 const STEPS = (SCRIPT_LIB.stageOrder || ['greet','reason','noticed','follow','offer','questions','next','thanks']).map(k => [k, SCRIPT_LIB.labels[k] || k]);
 
-/* The owner's take for the report, by how well your line fit him */
+/* The owner's take for the report, by how well your line fit them */
 const TAKE = {
   reason:{warm:'You told me plainly why you were calling. No games. I appreciated that.', even:'Okay reason. I was still figuring out what you wanted.', cool:'I wasn\'t sure what you were after.'},
   opener:{warm:'You were friendly and got to the point. That\'s why I kept listening.', even:'Nice enough. It took me a second to know why you were calling.', cool:'Polite, but it didn\'t feel like it was meant for me.'},
@@ -126,9 +126,9 @@ const TAKE = {
 /* Delivery coaching */
 const DELIVERY = {
   pace:{low:125, high:190, target:'about 150 to 180 words a minute',
-    src:'Gong\'s data puts the average sales rep around 173 words a minute, and average reps speed up to about 188 when flustered by an objection.'},
+    src:'Most callers land around 170 words a minute and speed up when nervous.'},
   fillers:['um','uh','umm','uhh','er','ah','like','you know','basically','kind of','sort of','i mean','literally'],
-  hedges:['just wanted','just calling','sorry to bother','i was wondering','maybe','i think','hopefully','if that\'s okay','does that make sense']
+  hedges:['just wanted','just calling','sorry to bother','i was wondering','i think','hopefully','does that make sense']
 };
 
 /* the same takes under the new step names */
