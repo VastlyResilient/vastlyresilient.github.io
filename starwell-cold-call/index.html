@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>StarWell HVAC Field Guide: Services + Cold Call</title>
+<title>StarWell Call Guide: what to say, why it works</title>
 <link rel="icon" type="image/png" href="../starwell-practice/assets/favicon-64.png"><link rel="apple-touch-icon" href="../starwell-practice/assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -272,6 +272,18 @@ body.driving .more{display:none}
   .bar i{width:var(--w)}
   .draw{stroke-dashoffset:0}
 }
+
+/* call card additions */
+.go-step{border:0;background:none;color:var(--ultra);font-weight:700;font-size:14px;min-height:40px;padding:0 0 0 28px;text-decoration:underline;text-underline-offset:3px}
+ul.skip{list-style:none;padding-left:0}
+ul.skip li{position:relative;padding-left:26px;margin:6px 0}
+ul.skip li::before{content:"✕";position:absolute;left:4px;color:var(--stop);font-weight:800}
+.det{padding:4px 12px 12px}
+.det .mind{margin-top:8px}
+.quiz .opt{display:block;width:100%;text-align:left}
+td ul{margin:0;padding-left:18px}
+td ul li{margin:4px 0}
+@media (max-width:430px){table td ul{padding-left:14px}}
 </style>
 </head>
 <body>
@@ -292,749 +304,147 @@ body.driving .more{display:none}
 <section class="card" data-id="signin" data-sec="start" data-t="Sign in" data-s="Who's prepping today?" data-short="Sign in">
 <div class="inner">
   <div class="art" data-art="caller" data-say="Let's go!"></div>
-  <div class="eyebrow">StarWell SI · HVAC Field Guide</div>
+  <div class="eyebrow">StarWell · Call guide</div>
   <h1>Who's <span class="hl">calling</span> today?</h1>
   <div id="whoList"></div>
-  <button class="listen-cta" data-goid="s-overview" style="background:var(--ultra)"><span style="font:800 30px 'Barlow Condensed';color:var(--gold);width:34px;text-align:center">1</span><span><b>Know our services</b>What we offer and how it works. Start here.</span></button>
-  <button class="listen-cta" data-goid="welcome"><span style="font:800 30px 'Barlow Condensed';color:var(--gold);width:34px;text-align:center">2</span><span><b>The cold call</b>How to call an owner and serve him well.</span></button>
-  <button class="listen-cta" data-open-drive><svg viewBox="0 0 24 24" fill="none" stroke="#F2B33D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16V11l2-5h10l2 5v5"/><path d="M3 16h18v3H3z"/><circle cx="7.5" cy="13" r="1"/><circle cx="16.5" cy="13" r="1"/></svg><span><b>Driving? Listen instead</b>Hands-free, real voices.</span></button>
+  <button class="listen-cta" data-goid="card" style="background:var(--ultra)"><span style="font:800 30px 'Barlow Condensed';color:var(--gold);width:34px;text-align:center">1</span><span><b>Before every call</b>The call card: five steps, what to say, why it works.</span></button>
+  <button class="listen-cta" data-goid="free"><span style="font:800 30px 'Barlow Condensed';color:var(--gold);width:34px;text-align:center">2</span><span><b>What we offer</b>Each gift in plain words, and what is free, honestly.</span></button>
+  <button class="listen-cta" data-goid="questions" style="background:var(--navy)"><span style="font:800 30px 'Barlow Condensed';color:var(--gold);width:34px;text-align:center">3</span><span><b>Go deeper (optional)</b>Owner questions, his side of the call, follow-up.</span></button>
+  <button class="listen-cta" data-open-drive><svg viewBox="0 0 24 24" fill="none" stroke="#F2B33D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16V11l2-5h10l2 5v5"/><path d="M3 16h18v3H3z"/><circle cx="7.5" cy="13" r="1"/><circle cx="16.5" cy="13" r="1"/></svg><span><b>Driving? Listen instead</b>Hands-free.</span></button>
+  <p class="small" style="margin-top:12px">The guide and the <a href="../starwell-practice/" target="_blank" rel="noopener">Practice Line</a> read from the same offer card, so they always say the same thing. Use this guide to know what to say and why. Use the Practice Line to say it out loud.</p>
 </div>
 </section>
 
-<!-- S1 OVERVIEW -->
-<section class="card" data-id="s-overview" data-sec="services" data-t="One system" data-s="Know our services" data-short="One system">
-<div class="inner">
-  <div class="art" data-art="house"></div>
-  <div class="eyebrow">Know our services</div>
-  <h1>Four tools, <span class="hl">one system</span></h1>
-  <p class="lead">StarWell's package works like a home heating system. Every part matters.</p>
-  <table>
-    <tr><th>Part</th><th>Our service</th><th>Job</th></tr>
-    <tr><td>Ductwork</td><td>Search visibility</td><td>Carries homeowners from Google, Maps and ChatGPT to the shop</td></tr>
-    <tr><td>Furnace</td><td>Website</td><td>Turns a visit into a call</td></tr>
-    <tr><td>Thermostat</td><td>Phone answering</td><td>Reacts at 2am: answers, books, texts the owner</td></tr>
-    <tr><td>Vents</td><td>Social media</td><td>Keeps the shop present and trusted</td></tr>
-  </table>
-  <div class="rule">Great furnace, leaky ducts: <b>nobody arrives.</b> Great ducts, no thermostat: <b>the 2am call goes nowhere.</b></div>
-  <p><b>The homeowner's path:</b> found → trusted → answered → remembered.</p>
-  <div class="box"><div class="tag">Terms</div>Built free. Run free during our pilot. The site, accounts and content stay his. Nothing goes live without his OK. Ongoing help only with a written quote he chooses.</div>
-</div>
-</section>
-
-<!-- S2 WHY NOW -->
-<section class="card" data-id="s-whynow" data-sec="services" data-t="Why now" data-s="The front door keeps moving" data-short="Why now">
-<div class="inner">
-  <div class="art" data-art="clock"></div>
-  <div class="eyebrow">Know our services</div>
-  <h1>The front door <span class="hl">keeps moving</span></h1>
-  <table>
-    <tr><th>When</th><th>Where homeowners went</th></tr>
-    <tr><td>2011</td><td>The internet passed print for local business info (Pew)</td></tr>
-    <tr><td>2015</td><td>Phones passed computers; Google's map shrank from 7 shops to 3</td></tr>
-    <tr><td>2020s</td><td>Short video: U.S. adults on TikTok rose from 21% to 37% (Pew)</td></tr>
-    <tr><td>2025</td><td>AI summaries on Google: link clicks fell from 15% to 8% of visits (Pew)</td></tr>
-    <tr><td>2026</td><td>45% asked AI for local recommendations, up from 6% (BrightLocal, vendor survey)</td></tr>
-  </table>
-  <p>Today, 97% read local reviews, and most who get an AI recommendation go check the reviews behind it (BrightLocal, 2026). Google and referrals still lead; social and AI are where people go to <i>check</i>.</p>
-  <div class="box"><div class="tag">Analogy</div>It's the phone book to Google, happening again. Early shops on Google Maps didn't work harder. They showed up where people had already moved. <small>(Our read of the timeline.)</small></div>
-</div>
-</section>
-
-<!-- S3 WEBSITE -->
-<section class="card" data-id="s-website" data-sec="services" data-t="The website" data-s="The furnace" data-short="Website">
-<div class="inner">
-  <div class="art" data-art="magnify"></div>
-  <div class="eyebrow">Know our services · 1 of 4</div>
-  <h1>A site that <span class="hl">makes the phone ring</span></h1>
-  <div class="say">StarWell builds you a website that makes calling you the obvious choice, made from your own trucks, crew and reviews.</div>
-  <h3>How it works</h3>
-  <ul>
-    <li><b>Look:</b> rebuilt from one of 509 top sites we've studied; he picks between two.</li>
-    <li><b>Real work:</b> a short film from his own photos. No stock.</li>
-    <li><b>Nothing lost:</b> every page and link moves over, keeping his Google traffic.</li>
-    <li><b>Tested</b> on real phones, fast on old ones.</li>
-  </ul>
-  <h3>The layout, and why</h3>
-  <table>
-    <tr><td>Stars, town, Call + Book on screen one</td><td>Visitors judge a site's look in ~50 milliseconds (Lindgaard, 2006)</td></tr>
-    <tr><td>Recent reviews from several sites</td><td>Five reviews lifted purchase likelihood 270% over none (Spiegel Center)</td></tr>
-    <tr><td>Prices and financing up front</td><td>70% of homeowners prefer contractors open about price (ACHR News)</td></tr>
-    <tr><td>Short forms, fast follow-up</td><td>Firms replying within an hour were ~7× likelier to qualify a lead (HBR, 2011)</td></tr>
-  </table>
-  <p><b>Goal:</b> 3–6% of visitors become leads. Only true claims. His name on the domain and files.</p>
-  <div class="box"><div class="tag">Analogy</div>"A showroom that's open all night."</div>
-</div>
-</section>
-
-<!-- S4 SEO -->
-<section class="card" data-id="s-seo" data-sec="services" data-t="Search visibility" data-s="The ductwork" data-short="Visibility">
-<div class="inner">
-  <div class="art" data-art="funnel"></div>
-  <div class="eyebrow">Know our services · 2 of 4</div>
-  <h1>Be the shop they <span class="hl">find first</span></h1>
-  <p class="lead">At 2am with no heat, homeowners call one of the first few names they see.</p>
-  <table>
-    <tr><th>Game</th><th>Plain meaning</th><th>Analogy</th></tr>
-    <tr><td><b>SEO</b></td><td>Ranking on Google and the map's top 3</td><td>The highway sign</td></tr>
-    <tr><td><b>AEO</b></td><td>Being the answer Google's AI summary quotes</td><td>The information desk's answer</td></tr>
-    <tr><td><b>GEO</b></td><td>Being named when someone asks ChatGPT</td><td>A well-read friend's pick</td></tr>
-  </table>
-  <h3>What the system does</h3>
-  <ol class="steps">
-    <li><b>Finds lost jobs:</b> the searches he misses, and why.</li>
-    <li><b>Fixes basics first:</b> Google Business Profile, listings, a page per service.</li>
-    <li><b>Publishes answers:</b> "repair or replace," seasonal prep.</li>
-    <li><b>Joins Reddit and YouTube honestly</b>, always disclosed.</li>
-    <li><b>Reports weekly</b> on what moved.</li>
-  </ol>
-  <p class="small">Primary Google category is the #1 local ranking factor (Whitespark, 2026). 68% only use businesses rated 4+ stars (BrightLocal, 2026).</p>
-  <div class="rule">Gains take <b>months</b>. No one can guarantee #1. Visibility gets the call; his service wins the job.</div>
-</div>
-</section>
-
-<!-- S5 SOCIAL -->
-<section class="card" data-id="s-social" data-sec="services" data-t="Social media" data-s="The vents" data-short="Social">
+<section class="card" data-id="card" data-sec="card" data-t="The call card" data-s="Before every call" data-short="Call card">
 <div class="inner">
   <div class="art" data-art="phone"></div>
-  <div class="eyebrow">Know our services · 3 of 4</div>
-  <h1>Keep the <span class="hl">lights on</span></h1>
-  <div class="say">StarWell runs your Facebook, Instagram and TikTok, built around Connecticut's seasons. You spend about 15 minutes a month approving it.</div>
-  <div class="stat">
-    <div><div class="lbl">Posts a week</div><div class="num">3–4</div></div>
-    <div><div class="lbl">Short videos a week</div><div class="num">3</div></div>
-  </div>
-  <ul>
-    <li><b>Why steady:</b> accounts posting most weeks got ~5× more engagement per post (Buffer, 2025, vendor data).</li>
-    <li><b>Why Facebook:</b> it's where homeowners most often discover home-services companies (Tinuiti, 2024).</li>
-    <li><b>Calendar:</b> CO safety in winter, AC tune-ups in spring, heat waves in summer, the first cold snap in fall.</li>
-  </ul>
-  <h3>Images</h3>
-  <p>We automate image creation. <b>With the owner's OK</b>, some are AI-made (seasonal and teaching scenes), labeled where platforms require. <b>Otherwise we use his company's own photos.</b> AI images are never passed off as a real job.</p>
-  <p class="small">Posts go out through each platform's official sign-in. His accounts stay his; we never see passwords.</p>
-  <div class="box"><div class="tag">Analogy</div>"A page last updated in 2022 looks like a shop with the lights off."</div>
+  <div data-render="card"></div>
 </div>
 </section>
 
-<!-- S6 PHONE -->
-<section class="card" data-id="s-phone" data-sec="services" data-t="Phone answering" data-s="The thermostat" data-short="Phones">
+<section class="card" data-id="step1" data-sec="card" data-t="Step 1 · Hello" data-s="Who you are, why you called" data-short="Step 1">
 <div class="inner">
-  <div class="art" data-art="caller" data-say="Thanks for calling!"></div>
-  <div class="eyebrow">Know our services · 4 of 4</div>
-  <h1>Every ring <span class="hl">answered</span></h1>
-  <div class="say">StarWell sets up a virtual receptionist for the calls you miss. It books the job or transfers emergencies to your on-call tech, then texts you a summary.</div>
-  <p class="small">Say "phone answering" or "virtual receptionist." Never lead with "AI."</p>
-  <h3>Why it matters</h3>
-  <ul>
-    <li>27% of home-services calls went unanswered (Invoca, 2024).</li>
-    <li>Under 3% of callers sent to voicemail leave a message (Invoca).</li>
-    <li>46% of home-services phone leads book on the call (Invoca, 2025).</li>
-  </ul>
-  <h3>The call flow</h3>
-  <ol class="steps">
-    <li>Greeting + Connecticut's recording notice (CGS §52-570d).</li>
-    <li><b>Emergencies first:</b> gas smell or CO alarm → leave the home, call 911 or the gas utility → live transfer to the on-call tech.</li>
-    <li>Booking details, one question at a time.</li>
-    <li>Summary texted to the owner.</li>
-  </ol>
-  <p><b>Rollout:</b> a test number first. Week one: learn, build, practice calls with the owner, soft launch, tune. His line forwards only with his yes.</p>
-  <div class="rule">Missed-call money: use <b>his</b> numbers only. Missed calls × real jobs × his booking rate × his ticket. Never quote our own figure.</div>
-  <div class="box"><div class="tag">Analogy</div>"A dispatcher who never sleeps."</div>
+  <div class="art" data-art="caller"></div>
+  <div data-render="step1"></div>
 </div>
 </section>
 
-<!-- S7 PRICING -->
-<section class="card" data-id="s-pricing" data-sec="services" data-t="Pricing" data-s="For the team" data-short="Pricing">
-<div class="inner">
-  <div class="art" data-art="gift"></div>
-  <div class="eyebrow">Know our services · team knowledge</div>
-  <h1>Fair, printed, <span class="hl">no surprises</span></h1>
-  <div class="say">Most shops start around $300 to $400 a month with StarWell, in writing, no surprises, and the free package stays yours either way.</div>
-  <table>
-    <tr><th>Tier</th><th>Monthly</th><th>Adds</th><th>Bought separately</th></tr>
-    <tr><td><b>Care</b></td><td class="n">$300–400</td><td>Hosting, updates, Google profile, monthly report</td><td class="n">$396–699</td></tr>
-    <tr><td><b>Growth</b></td><td class="n">$800–1,200</td><td>+ ongoing search work</td><td class="n">$796–1,850</td></tr>
-    <tr><td><b>Full Front Office</b></td><td class="n">$1,500–2,000</td><td>+ phone answering on his real line</td><td class="n">$1,245–2,700</td></tr>
-    <tr><td><b>Custom</b></td><td class="n">$2.5–7.5K once</td><td>1–2 week tool or agent</td><td class="n">Medians $5–20K</td></tr>
-  </table>
-  <p><b>Our rules:</b> month-to-month · $0 setup · no surprise overages or increases · his name on every account · one printed price card · a monthly plain-English report.</p>
-  <p class="small">From our Nov 2026 research (mostly vendor prices). Team check: fill in our cost floor before quoting.</p>
-  <h3>At walkthroughs, learn from him</h3>
-  <p>"What do you pay now for answering, a web person, and marketing?" Then the four Van Westendorp questions: too cheap to trust, a good deal, expensive but considered, too expensive. Log answers in his Prospect Brief.</p>
-</div>
-</section>
-
-<!-- S8 PROOF + WIN-WIN -->
-<section class="card" data-id="s-proof" data-sec="services" data-t="Proof and the win-win" data-s="Honest results, earned trust" data-short="Proof & win-win">
-<div class="inner">
-  <div class="art" data-art="talk" data-say="this works!"></div>
-  <div class="eyebrow">Know our services</div>
-  <h1>His win <span class="hl">first</span></h1>
-  <p class="lead">We give it away to prove it in real Connecticut shops. Results earn feedback and reviews. Then we charge, knowing it works.</p>
-  <h3>Others' reported results</h3>
-  <table>
-    <tr><td>Dallas HVAC shop: 90%+ of 1,300 calls booked by an AI voice agent</td><td><span class="ev p">Vendor claim</span> ServiceTitan</td></tr>
-    <tr><td>Riley Plumbing Heating &amp; Air: booking rate from under 50% to 80%</td><td><span class="ev p">Vendor claim</span> ServiceTitan</td></tr>
-    <tr><td>Posting most weeks: ~5× engagement per post</td><td><span class="ev p">Vendor data</span> Buffer</td></tr>
-  </table>
-  <div class="say">One HVAC company reported a phone system like this booked over 90% of its calls. That's the vendor's report. Your shop is different, so StarWell will measure yours.</div>
-  <p><b>Our own proof:</b> we run these systems for Absolute Transportation, a Connecticut chauffeur company. HVAC results are still being earned, which is why it's free.</p>
-  <h3>Asking for reviews, the right way</h3>
-  <ul>
-    <li>Only after he's seen results. Never a condition.</li>
-    <li>His honest words. Never scripted, never traded for anything (FTC rule, 16 CFR 465).</li>
-    <li>Permission before using his name or numbers.</li>
-  </ul>
-  <div class="box"><span class="q">Let another man praise thee, and not thine own mouth</span> <small>Proverbs 27:2</small></div>
-</div>
-</section>
-
-<!-- S9 SAFETY -->
-<section class="card" data-id="s-safety" data-sec="services" data-t="Safety" data-s="Guardrails by design" data-short="Safety">
-<div class="inner">
-  <div class="art" data-art="shield"></div>
-  <div class="eyebrow">Know our services</div>
-  <h1>Safe by <span class="hl">design</span></h1>
-  <p class="lead">No human check on every step. Rules are built in, and the owner approves at three moments: <b>setup, anything new, and anything that speaks for his shop.</b></p>
-  <table>
-    <tr><th>System</th><th>Guardrails</th></tr>
-    <tr><td>Website</td><td>True claims only · every link moved · his name on files · goes live only with his OK</td></tr>
-    <tr><td>Visibility</td><td>Google's guidelines · no fake reviews (FTC) · Reddit always disclosed · no guarantees</td></tr>
-    <tr><td>Social</td><td>He approves the plan · AI images only with his OK, labeled · no passwords · stop anytime</td></tr>
-    <tr><td>Phones</td><td>Safety script first · no prices unless approved · no card numbers · honest it's virtual · Connecticut recording notice · test number first, off anytime</td></tr>
-    <tr><td>Data</td><td>Kept on StarWell's own machines where possible · never sold · team-only access</td></tr>
-  </table>
-</div>
-</section>
-
-<!-- S10 CHECK -->
-<section class="card" data-id="s-check" data-sec="services" data-t="Learn it, prove it" data-s="Teach-back and self-check" data-short="Self-check">
-<div class="inner">
-  <div class="art" data-art="clock"></div>
-  <div class="eyebrow">Know our services</div>
-  <h1>Teach it to <span class="hl">know it</span></h1>
-  <div class="box"><b>Explain any system in three beats:</b> one sentence (what it does for him) + one analogy + one sourced fact.</div>
-  <div class="say">StarWell's phone answering picks up every call you miss, like a dispatcher who never sleeps. Under 3% of callers who hit voicemail leave a message.</div>
-  <p class="small"><span class="ev t">Transferred</span> Recall practice beats rereading (Roediger &amp; Karpicke, 2006). Expecting to teach improves learning (Nestojko et al., 2014). So: quiz yourself, then explain it to a teammate.</p>
-  <div id="svcQuiz">
-  <h3 class="qh">1. In the heating-system analogy, what part is the website?</h3>
-  <div class="quiz"><button class="opt" data-why="The furnace: it turns a visitor&#x27;s interest into a call.">The ductwork</button><button class="opt" data-ok="1" data-why="The furnace: it turns a visitor&#x27;s interest into a call.">The furnace</button><button class="opt" data-why="The furnace: it turns a visitor&#x27;s interest into a call.">The thermostat</button><div class="fb"></div></div>
-  <h3 class="qh">2. What does AEO mean in plain words?</h3>
-  <div class="quiz"><button class="opt" data-why="AEO: being the answer the information desk gives.">Ads on every website</button><button class="opt" data-ok="1" data-why="AEO: being the answer the information desk gives.">Being the answer Google&#x27;s AI summaries quote</button><button class="opt" data-why="AEO: being the answer the information desk gives.">Answering emails online</button><div class="fb"></div></div>
-  <h3 class="qh">3. When does the phone system answer the owner&#x27;s real line?</h3>
-  <div class="quiz"><button class="opt" data-why="Test number first. His line forwards only with his yes, and he can turn it off anytime.">Right after the cold call</button><button class="opt" data-ok="1" data-why="Test number first. His line forwards only with his yes, and he can turn it off anytime.">Only after he says yes; it starts on a test number</button><button class="opt" data-why="Test number first. His line forwards only with his yes, and he can turn it off anytime.">After 30 days automatically</button><div class="fb"></div></div>
-  <h3 class="qh">4. On an emergency call, what does the receptionist do first?</h3>
-  <div class="quiz"><button class="opt" data-why="Leave the home if unsafe, call 911 or the gas utility, then live transfer.">Books the next open slot</button><button class="opt" data-why="Leave the home if unsafe, call 911 or the gas utility, then live transfer.">Quotes the emergency fee</button><button class="opt" data-ok="1" data-why="Leave the home if unsafe, call 911 or the gas utility, then live transfer.">The safety script, then a live transfer to the on-call tech</button><div class="fb"></div></div>
-  <h3 class="qh">5. How do we talk about what a missed call costs?</h3>
-  <div class="quiz"><button class="opt" data-why="No source with a stated method gives a reliable dollar cost. Use his call log and his ticket.">Quote $48,000 a month</button><button class="opt" data-ok="1" data-why="No source with a stated method gives a reliable dollar cost. Use his call log and his ticket.">Use the owner&#x27;s own numbers only</button><button class="opt" data-why="No source with a stated method gives a reliable dollar cost. Use his call log and his ticket.">Say it&#x27;s about $1,000 a call</button><div class="fb"></div></div>
-  <h3 class="qh">6. Can an AI-made image be shown as a real job?</h3>
-  <div class="quiz"><button class="opt" data-why="With his OK, some images are AI-made and labeled. Real jobs always use his company&#x27;s own photos.">Yes, if it looks real</button><button class="opt" data-ok="1" data-why="With his OK, some images are AI-made and labeled. Real jobs always use his company&#x27;s own photos.">Never. AI images need his OK; real jobs use his own photos</button><button class="opt" data-why="With his OK, some images are AI-made and labeled. Real jobs always use his company&#x27;s own photos.">Only on TikTok</button><div class="fb"></div></div>
-  <h3 class="qh">7. If asked about price, what does a caller say?</h3>
-  <div class="quiz"><button class="opt" data-why="An honest, narrow range, said with confidence.">We&#x27;ll talk about that later</button><button class="opt" data-ok="1" data-why="An honest, narrow range, said with confidence.">Most shops start around $300 to $400 a month, in writing, and the free package stays yours</button><button class="opt" data-why="An honest, narrow range, said with confidence.">It depends, I can&#x27;t say</button><div class="fb"></div></div>
-  <h3 class="qh">8. When do we ask for a review or testimonial?</h3>
-  <div class="quiz"><button class="opt" data-why="Never scripted, never traded for anything, never a condition (FTC rule).">Before we build anything</button><button class="opt" data-why="Never scripted, never traded for anything, never a condition (FTC rule).">As a condition of the free package</button><button class="opt" data-ok="1" data-why="Never scripted, never traded for anything, never a condition (FTC rule).">After he&#x27;s seen results, for his honest words</button><div class="fb"></div></div>
-  <div class="mission">Missed one? Reread that card, then explain it to a teammate.</div>
-  </div>
-</div>
-</section>
-
-<!-- WELCOME -->
-<section class="card" data-id="welcome" data-sec="call" data-t="You're calling to help" data-s="The cold call" data-short="Welcome">
-<div class="inner">
-  <div class="art" data-art="house"></div>
-  <div class="eyebrow">The cold call</div>
-  <h1>You're calling to <span class="hl">help</span></h1>
-  <p class="lead"><span class="me"></span>, you'll call family-run HVAC shops in Fairfield and New Haven County, roughly 10–45 people. Great at the work, short on time for the website, the search results and the after-hours phone. You bring a free package built for their shop.</p>
-  <div class="rule">Every claim has a receipt. Every promise is true. <b>Every owner is better off for the call, even if he says no.</b></div>
-  <p class="small">Labels: <span class="ev d">Direct</span> sales research · <span class="ev t">Transferred</span> research from another setting · <span class="ev p">Practitioner</span> industry data and coaches · <span class="ev h">Hypothesis</span> our idea, we test it.</p>
-  <div class="box"><div class="tag">Right now</div>Heating season in Connecticut: first cold nights, no-heat calls after dinner, techs stretched thin.</div>
-  <a class="btn v" href="../starwell-practice/" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;margin-top:10px">Practice on the Practice Line: live owners, captions, coaching</a>
-</div>
-</section>
-
-<!-- PACKAGE -->
-<section class="card" data-id="package" data-sec="call" data-t="The package, in owner words" data-s="Four gifts, one sentence each" data-short="The package">
-<div class="inner">
-  <div class="art" data-art="gift"></div>
-  <div class="eyebrow">What you're bringing</div>
-  <h1>Sell the <span class="hl">feeling</span>, not the tech</h1>
-  <table>
-    <tr><th>Gift</th><th>Say</th><th>Analogy</th></tr>
-    <tr><td>Website</td><td>"A site that makes calling you the obvious choice."</td><td>Showroom open all night</td></tr>
-    <tr><td>Visibility</td><td>"More people find you first, on Google and when they ask their phone."</td><td>Highway sign</td></tr>
-    <tr><td>Social</td><td>"Your pages stay active, so people checking you out see a busy shop."</td><td>Lights on</td></tr>
-    <tr><td>Phones</td><td>"Every call you miss gets answered, and you get a text."</td><td>Dispatcher who never sleeps</td></tr>
-  </table>
-  <h3>The why-free sentence (word for word)</h3>
-  <div class="say">StarWell is new to Connecticut HVAC, and we'd rather show you than tell you. If you love it, maybe we work together down the road. If not, it's still yours.</div>
-  <h3>Plain truths</h3>
-  <ul>
-    <li>Website, visibility check and demo line are ready right away. Custom tools take 1–2 weeks.</li>
-    <li>Social needs his accounts connected through official sign-in. No passwords.</li>
-    <li>Nothing goes live, on his site or phones, without his OK. No ranking promises.</li>
-  </ul>
-  <p class="small"><span class="ev t">Transferred</span> Needlessly complex words make speakers seem less intelligent (Oppenheimer, 2006).</p>
-</div>
-</section>
-
-<!-- MATH -->
-<section class="card" data-id="math" data-sec="call" data-t="The math" data-s="Real numbers, read right" data-short="The math">
-<div class="inner">
-  <div class="art" data-art="funnel"></div>
-  <div class="eyebrow">Set expectations</div>
-  <h1>The math is <span class="hl">on your side</span></h1>
-  <p class="lead">You don't need most owners to say yes. You need a few great conversations a week.</p>
-  <table>
-    <tr><th>Metric</th><th>Average</th><th>Top</th></tr>
-    <tr><td>Right person answers</td><td class="n">5.4%</td><td class="n">13.3%</td></tr>
-    <tr><td>Meetings per conversation</td><td class="n">4.6%</td><td class="n">16.7%</td></tr>
-    <tr><td>Cold call success, 2026</td><td class="n">2.7%</td><td class="n">11.3%</td></tr>
-  </table>
-  <p class="src"><span class="ev p">Practitioner</span> Gong (300M+ calls); Cognism. Definitions differ; read as a range.</p>
-  <div class="box">
-    <div class="fld"><label for="dials">Dials this week: <b id="dialsOut">100</b></label><input type="range" id="dials" min="20" max="400" step="10" value="100"></div>
-    <div class="stat">
-      <div><div class="lbl">Walkthroughs at 2.7%</div><div class="num" id="cogAvg">2.7</div></div>
-      <div><div class="lbl">At a top team's 11.3%</div><div class="num" id="cogTop">11.3</div></div>
-    </div>
-  </div>
-  <ul>
-    <li><b>Plan ~40–45 dials per walkthrough.</b> Every dial moves you closer.</li>
-    <li><b>Say why you're calling:</b> ~2.1× more meetings (Gong).</li>
-    <li><b>If he's talking, let it run.</b> Calls that book run nearly twice as long.</li>
-  </ul>
-  <p><span class="ev t">Transferred</span> On new skills, <b>learning goals beat outcome goals</b> (Winters &amp; Latham, 1996). Weeks 1–2: 20 briefs, 10 "last week" questions, 3 opener styles, 5 recaps sent within the hour.</p>
-</div>
-</section>
-
-<!-- CONFIDENCE -->
-<section class="card" data-id="confidence" data-sec="call" data-t="Confidence kit" data-s="Psychology for you" data-short="Confidence">
-<div class="inner">
-  <div class="art" data-art="caller" data-say="I'm excited!"></div>
-  <div class="eyebrow">Psychology · the caller</div>
-  <h1>Your <span class="hl">confidence</span> kit</h1>
-  <ol class="steps">
-    <li><b>They like you more than you think.</b> After first conversations, people underestimate how much the other person liked them (Boothby et al., 2018).</li>
-    <li><b>Call nerves "excitement."</b> Saying "I'm excited" reliably raises how excited people feel (Brooks, 2014); the performance boost is less certain.</li>
-    <li><b>Your voice is the demo.</b> Slow down, smile, pause after the reason.</li>
-    <li><b>You hold a gift.</b> You're not asking for a favor.</li>
-    <li><b>"Not now" is timing.</b> Thank him, move on, keep your energy.</li>
-    <li><b>Rhythm beats mood.</b> Call daily, log within the hour (Jeb Blount).</li>
-  </ol>
-</div>
-</section>
-
-<!-- HIS SIDE -->
-<section class="card" data-id="his-side" data-sec="call" data-t="See it from his side" data-s="Perspective and homework" data-short="His side">
-<div class="inner">
-  <div class="art" data-art="truck"></div>
-  <div class="eyebrow">Psychology · the owner</div>
-  <h1>Hear it <span class="hl">through his ears</span></h1>
-  <p class="lead">Craig is on a roof unit, two trucks out, a no-heat call waiting. Every line should save him time.</p>
-  <table>
-    <tr><th>He notices</th><th>He thinks</th><th>What helps</th></tr>
-    <tr><td>Unknown number</td><td>"Sales? Scam?"</td><td>Name, StarWell, "cold call," one reason</td></tr>
-    <tr><td>Script voice</td><td>"Says this to everyone"</td><td>One true fact about <i>his</i> shop</td></tr>
-    <tr><td>"Free"</td><td>"What's the hook?"</td><td>Why-free sentence, then silence</td></tr>
-    <tr><td>Tech words</td><td>"Not for me"</td><td>Owner words</td></tr>
-    <tr><td>Being heard</td><td>"He gets it"</td><td>Let him talk; one follow-up</td></tr>
-  </table>
-  <p class="small"><span class="ev t">Transferred</span> Taking the other side's perspective led to more win-win deals (Galinsky et al., 2008).</p>
-  <h3>Homework that shows respect</h3>
-  <ul>
-    <li><b>People like people who like them</b> (Montoya &amp; Insko, 2008), and shared ground counts when it's real (313-study meta-analysis).</li>
-    <li><b>Say where you found it:</b> personal details felt invasive when the source was hidden (Aguirre et al., 2015).</li>
-    <li><b>Know the shop, not his private life.</b> Website, reviews, business pages. Never home or family.</li>
-  </ul>
-  <div class="box"><div class="tag">A real owner's warning</div><span class="q">I love when sales teams reach out acting like they know everything about my HVAC company and my personal background...</span> <small>HVAC owner on X, 2026 (sarcastic)</small></div>
-</div>
-</section>
-
-<!-- BRIEF -->
-<section class="card" data-id="brief" data-sec="call" data-t="Prospect Brief" data-s="Ten minutes per shop" data-short="Prospect Brief">
+<section class="card" data-id="step2" data-sec="card" data-t="Step 2 · Notice & ask" data-s="One true thing, one question" data-short="Step 2">
 <div class="inner">
   <div class="art" data-art="magnify"></div>
-  <div class="eyebrow">Our system</div>
-  <h1>The <span class="hl">Prospect Brief</span></h1>
-  <p class="lead">Ten minutes of homework. It writes your call card. Our outreach bot's research is a head start; verify every fact.</p>
-  <div class="box" id="briefForm">
-    <div class="grid2">
-      <div class="fld"><label for="b_shop">Shop</label><input type="text" id="b_shop" placeholder="Valley Comfort Heating &amp; Cooling"></div>
-      <div class="fld"><label for="b_owner">Owner first name</label><input type="text" id="b_owner" placeholder="Craig"></div>
-      <div class="fld"><label for="b_town">Connecticut town</label><input type="text" id="b_town" placeholder="Wallingford"></div>
-      <div class="fld"><label for="b_phone">Phone</label><input type="text" id="b_phone" placeholder="(203) …"></div>
-      <div class="fld"><label for="b_since">Since / family-run?</label><input type="text" id="b_since" placeholder="Since 1987, family-run"></div>
-      <div class="fld"><label for="b_service">Main service</label><input type="text" id="b_service" placeholder="furnace repair"></div>
-    </div>
-    <div class="fld"><label for="b_true">One true thing</label><input type="text" id="b_true" placeholder="Your site says the office closes at 5, and I didn't see a way to book after that"></div>
-    <div class="fld"><label for="b_src">Where you found it</label><input type="text" id="b_src" placeholder="website contact page"></div>
-    <div class="fld"><label for="b_comp">Genuine compliment</label><input type="text" id="b_comp" placeholder="Reviewers keep mentioning how Mike explains the fix"></div>
-    <div class="grid2">
-      <div class="fld"><label for="b_after">After-hours calls go to</label><select id="b_after"><option>Not sure yet</option><option>Voicemail</option><option>Answering service</option><option>Owner's cell</option><option>Online booking</option></select></div>
-      <div class="fld"><label for="b_ai">Google / AI check</label><select id="b_ai"><option>Not checked</option><option>They show up</option><option>Others show up, not them</option></select></div>
-      <div class="fld"><label for="b_social">Last social post</label><input type="text" id="b_social" placeholder="March"></div>
-      <div class="fld"><label for="b_hiring">Hiring?</label><input type="text" id="b_hiring" placeholder="Dispatcher"></div>
-      <div class="fld"><label for="b_hook">Why now</label><select id="b_hook"><option>Heating season</option><option>AC season</option><option>Hiring</option><option>New location or service</option><option>Recent reviews</option><option>Not in AI answers</option><option>Other</option></select></div>
-      <div class="fld"><label for="b_lead">Lead gift</label><select id="b_lead"><option value="phone">Phones</option><option value="found">Getting found</option><option value="site">Website</option><option value="social">Social</option></select></div>
-    </div>
-    <details style="margin-top:8px"><summary>After the walkthrough: pricing answers</summary><div class="det">
-      <div class="fld"><label for="b_paynow">What he pays now</label><input type="text" id="b_paynow" placeholder="Answering service $250/mo"></div>
-      <div class="grid2">
-        <div class="fld"><label for="b_vw1">Too cheap to trust</label><input type="text" id="b_vw1" placeholder="$"></div>
-        <div class="fld"><label for="b_vw2">A good deal</label><input type="text" id="b_vw2" placeholder="$"></div>
-        <div class="fld"><label for="b_vw3">Expensive, would consider</label><input type="text" id="b_vw3" placeholder="$"></div>
-        <div class="fld"><label for="b_vw4">Too expensive</label><input type="text" id="b_vw4" placeholder="$"></div>
-      </div></div></details>
-  </div>
-  <div class="box" id="briefOut" style="white-space:pre-wrap;font-size:15px"></div>
-  <div class="grid2"><button class="btn v" id="b_save">Save brief</button><button class="btn" id="b_copy">Copy call card</button></div>
-  <p class="small" id="b_msg"></p>
-  <div id="b_list" class="small">No saved briefs yet.</div>
-  <button class="btn" id="b_export" style="margin-top:8px">Copy all for the team tracker</button>
-  <div class="rule">Hooks must be <b>real, recent and his</b>. An easy win, never a scare. No invented deadlines.</div>
+  <div data-render="step2"></div>
 </div>
 </section>
 
-<!-- MAP -->
-<section class="card" data-id="map" data-sec="call" data-t="The 2-minute call" data-s="Five steps" data-short="Call map">
+<section class="card" data-id="step3" data-sec="card" data-t="Step 3 · The one gift" data-s="The one that fits" data-short="Step 3">
 <div class="inner">
-  <div class="art" data-art="clock"></div>
-  <div class="eyebrow">Call structure</div>
-  <h1>Five steps, <span class="hl">two minutes</span></h1>
-  <div class="map">
-    <button data-goid="step1"><span class="no">1</span><span><b>Opener</b><br><small>Name, StarWell, cold call, one reason</small><div class="bar"><i style="--w:13%"></i></div></span><span class="sec">10s</span></button>
-    <button data-goid="step2"><span class="no">2</span><span><b>One true thing</b><br><small>A checkable fact about his shop</small><div class="bar"><i style="--w:19%"></i></div></span><span class="sec">15s</span></button>
-    <button data-goid="step3"><span class="no">3</span><span><b>His week</b><br><small>A real question. Listen.</small><div class="bar"><i style="--w:75%"></i></div></span><span class="sec">30–60s</span></button>
-    <button data-goid="step4"><span class="no">4</span><span><b>The gift</b><br><small>The piece that fits, why it's free</small><div class="bar"><i style="--w:25%"></i></div></span><span class="sec">20s</span></button>
-    <button data-goid="step5"><span class="no">5</span><span><b>Email + date</b><br><small>Recap within the hour, 15-minute walkthrough</small><div class="bar"><i style="--w:19%"></i></div></span><span class="sec">15s</span></button>
-  </div>
-  <div class="rule">The longest step is the one where <b>he</b> talks.</div>
+  <div class="art" data-art="gift"></div>
+  <div data-render="step3"></div>
 </div>
 </section>
 
-<!-- STEP 1 -->
-<section class="card" data-id="step1" data-sec="call" data-t="Step 1 · Opener" data-s="Say why you're calling" data-short="Step 1">
-<div class="inner">
-  <div class="art" data-art="phone"></div>
-  <div class="eyebrow">Step 1 · 10 seconds</div>
-  <h1>Say <span class="hl">why</span> you're calling</h1>
-  <div class="say">Hi Craig, this is <span class="me"></span> with StarWell, here in Connecticut. This is a cold call, so I'll be quick. I was on your website this morning and noticed one thing I think could help.</div>
-  <p><span class="ev p">Practitioner</span> Gong: permission-style openers ~11% success vs ~2% for "Did I catch you at a bad time?"</p>
-  <div class="quiz">
-    <button class="opt" data-why="Hands him an exit, no reason to stay.">"Hi Craig, did I catch you at a bad time?"</button>
-    <button class="opt" data-ok="1" data-why="Who, why, and where you looked.">"Hi Craig, <span class="me"></span> with StarWell here in Connecticut. Cold call, I'll be quick. I noticed one thing about your after-hours calls."</button>
-    <button class="opt" data-why="Generic, and it leads with tech.">"Hi Craig! StarWell helps HVAC companies grow with AI."</button>
-    <div class="fb"></div>
-  </div>
-  <div class="box"><div class="tag">Mentor</div><b>John Barrows:</b> say the reason for your call. Never "just checking in."</div>
-</div>
-</section>
-
-<!-- STEP 2 -->
-<section class="card" data-id="step2" data-sec="call" data-t="Step 2 · One true thing" data-s="Proof you did homework" data-short="Step 2">
-<div class="inner">
-  <div class="art" data-art="magnify"></div>
-  <div class="eyebrow">Step 2 · 15 seconds</div>
-  <h1>One <span class="hl">true thing</span></h1>
-  <div class="say">Your site says the office closes at 5, and I didn't see a way to book after that. I'm curious how evening no-heat calls get handled.</div>
-  <table>
-    <tr><th>Look at</th><th>You might find</th></tr>
-    <tr><td>Contact page</td><td>No booking after hours</td></tr>
-    <tr><td>Google reviews</td><td>What customers love</td></tr>
-    <tr><td>"Furnace repair in [Connecticut town]" on Google/ChatGPT</td><td>Who shows up</td></tr>
-    <tr><td>Facebook, careers page</td><td>Last post, hiring</td></tr>
-  </table>
-  <div class="sort">
-    <div class="sortrow" data-ans="use" data-why="Factual, checkable.">"Your last Facebook post was in March." <div class="btns"><button data-pick="use">Use it</button><button data-pick="skip">Skip it</button></div><div class="res"></div></div>
-    <div class="sortrow" data-ans="skip" data-why="Criticism makes him defensive.">"Your website looks pretty outdated." <div class="btns"><button data-pick="use">Use it</button><button data-pick="skip">Skip it</button></div><div class="res"></div></div>
-  </div>
-  <div class="rule">Verify it the same day. A wrong fact costs all credibility.</div>
-</div>
-</section>
-
-<!-- STEP 3 -->
-<section class="card" data-id="step3" data-sec="call" data-t="Step 3 · His week" data-s="Ask about something real" data-short="Step 3">
+<section class="card" data-id="step4" data-sec="card" data-t="Step 4 · The rest, and why it's free" data-s="Then his question" data-short="Step 4">
 <div class="inner">
   <div class="art" data-art="talk"></div>
-  <div class="eyebrow">Step 3 · 30–60 seconds · strongest evidence</div>
-  <h1>Ask about <span class="hl">last week</span></h1>
-  <div class="say">When that first cold night hit last week, how did the phones go after hours?</div>
-  <p><span class="ev d">Direct</span> Adaptive selling, shaping the talk around the buyer, improved real sales performance across 155 samples and 31,000+ salespeople (Franke &amp; Park, 2006).</p>
-  <ol class="steps">
-    <li><b>Follow up once:</b> "You said Sarah handles callbacks. What about her day off?"</li>
-    <li><b>Ask his advice:</b> "Thirty years in Connecticut HVAC: what do homeowners get wrong?"</li>
-    <li><b>Let him do the math:</b> "What's a typical no-heat repair worth to you?"</li>
-  </ol>
-  <p>"Last week" gets facts. "Would you ever…" gets polite guesses.</p>
-  <div class="box"><div class="tag">Mentors</div><b>Josh Braun:</b> one neutral question beats any pitch. <b>Neil Rackham:</b> people commit when <i>they</i> name the cost.</div>
+  <div data-render="step4"></div>
 </div>
 </section>
 
-<!-- STEP 4 -->
-<section class="card" data-id="step4" data-sec="call" data-t="Step 4 · The gift" data-s="Lead with what fits" data-short="Step 4">
-<div class="inner">
-  <div class="art" data-art="gift"></div>
-  <div class="eyebrow">Step 4 · 20 seconds</div>
-  <h1>Lead with <span class="hl">what fits</span></h1>
-  <div class="tabs" data-tabs="gifts"><button data-tab="g1" class="sel">Phones</button><button data-tab="g2">Found</button><button data-tab="g3">Website</button><button data-tab="g4">Social</button></div>
-  <div data-pane="g1" class="sel"><div class="say">StarWell built a demo line that answers like your office, books the call and texts you. It's a separate test number. Call it tonight.</div></div>
-  <div data-pane="g2"><div class="say">I'll send one page showing how you come up when people in [town] search or ask their phone, in plain English.</div></div>
-  <div data-pane="g3"><div class="say">StarWell built a fresh version of your website, made to turn visitors into calls. It's yours either way.</div></div>
-  <div data-pane="g4"><div class="say">StarWell can run your Facebook, Instagram and TikTok from your real jobs. About 15 minutes a month of your time.</div></div>
-  <div class="say">I'll put the rest in an email. It's free: StarWell is new to Connecticut HVAC, and we'd rather show you than tell you.</div>
-  <p><span class="ev t">Transferred</span> Naming the motive answers "what's the catch" before he asks (Friestad &amp; Wright, 1994). One honest limit makes the rest believable (Eisend, 2006).</p>
-  <div class="rule">One gift in focus. The rest in one line. <b>Then stop talking.</b></div>
-</div>
-</section>
-
-<!-- STEP 5 -->
-<section class="card" data-id="step5" data-sec="call" data-t="Step 5 · Email + date" data-s="Recap within the hour" data-short="Step 5">
+<section class="card" data-id="step5" data-sec="card" data-t="Step 5 · Next step" data-s="15 minutes and the email" data-short="Step 5">
 <div class="inner">
   <div class="art" data-art="calendar"></div>
-  <div class="eyebrow">Step 5 · 15 seconds</div>
-  <h1>Email, then <span class="hl">a date</span></h1>
-  <div class="say">What's the best email? I'll send it within the hour. Could I walk you through it Tuesday at 7:30, before the trucks go out? Fifteen minutes. If it's not useful, say so and I won't follow up.</div>
-  <p><span class="ev t">Transferred</span> Specific when-and-where plans strongly raise follow-through (94 tests, Gollwitzer &amp; Sheeran, 2006).</p>
-  <div class="box">
-    <div class="grid2">
-      <div class="fld"><label for="e_owner">Owner</label><input type="text" id="e_owner" value="Craig"></div>
-      <div class="fld"><label for="e_shop">Shop</label><input type="text" id="e_shop" value="Valley Comfort"></div>
-      <div class="fld"><label for="e_town">Connecticut town</label><input type="text" id="e_town" value="Wallingford"></div>
-      <div class="fld"><label for="e_lead">He cared most about</label><select id="e_lead"><option value="phone">Phones</option><option value="found">Getting found</option><option value="site">Website</option><option value="social">Social</option></select></div>
-      <div class="fld"><label for="e_day">Day</label><select id="e_day"><option>Monday</option><option selected>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option></select></div>
-      <div class="fld"><label for="e_time">Time</label><select id="e_time"><option>7:00am</option><option selected>7:30am</option><option>4:30pm</option><option>5:30pm</option></select></div>
-      <div class="fld"><label for="e_fmt">Format</label><select id="e_fmt"><option value="phone">by phone</option><option value="shop">at the shop</option></select></div>
-      <div class="fld"><label for="e_phone">Your phone</label><input type="text" id="e_phone" placeholder="(203) …"></div>
-    </div>
-    <div class="fld"><label for="e_true">The true thing you noticed</label><input type="text" id="e_true" value="your site doesn't offer a way to book after 5"></div>
-    <textarea id="e_out" readonly style="min-height:240px;margin-top:8px"></textarea>
-    <button class="btn v" id="e_copy">Copy email</button> <span class="small" id="e_msg"></span>
-  </div>
+  <div data-render="step5"></div>
 </div>
 </section>
 
-<!-- HOW WE TALK -->
-<section class="card" data-id="howtalk" data-sec="call" data-t="How we talk" data-s="Tools and principles" data-short="How we talk">
+<section class="card" data-id="prepsheet" data-sec="card" data-t="Prep sheet" data-s="Your call card for one shop" data-short="Prep sheet">
 <div class="inner">
-  <div class="art" data-art="talk" data-say="great question"></div>
-  <div class="eyebrow">Our way</div>
-  <h1>Talk like a <span class="hl">good steward</span></h1>
-  <div class="box"><b>Every answer:</b> Thank → Truth (including what we don't know) → Tie it to his shop → Turn it back with a question.</div>
-  <div class="tabs" data-tabs="talk"><button data-tab="t1" class="sel">Tools</button><button data-tab="t2">Carnegie</button><button data-tab="t3">Scripture</button><button data-tab="t4">Hormozi</button></div>
-  <div data-pane="t1" class="sel"><ul>
-    <li><b>Follow-up questions</b> make people like you more (Huang et al., 2017).</li>
-    <li><b>Repeat his words back.</b> Servers who repeated orders verbatim got bigger tips (van Baaren et al., 2003).</li>
-    <li><b>Summarize, then offer:</b> "So nights and Saturdays slip. That's what the demo is for."</li>
-    <li><b>Analogies from his trade.</b> Make him the hero; StarWell is the guide.</li>
-    <li><b>Pause</b> after the reason and after why-free.</li>
-    <li><b>"I'm not sure, I'll text you by tonight."</b> Honest uncertainty, said confidently, keeps trust (Gaertig &amp; Simmons, 2018).</li>
-  </ul></div>
-  <div data-pane="t2"><ul><li>Begin in a friendly way.</li><li>Let him do most of the talking.</li><li>Avoid arguments; never say "you're wrong."</li><li>If we're wrong, admit it quickly.</li><li>See it from his point of view.</li></ul></div>
-  <div data-pane="t3"><ul>
-    <li><span class="q">Let your communication be, Yea, yea; Nay, nay</span> Matthew 5:37</li>
-    <li><span class="q">Swift to hear, slow to speak</span> James 1:19</li>
-    <li><span class="q">A soft answer turneth away wrath</span> Proverbs 15:1</li>
-    <li><span class="q">Go with him twain</span> Matthew 5:41 · the free package is our second mile</li>
-    <li><span class="q">Faithful in that which is least</span> Luke 16:10 · keep small promises</li>
-  </ul><p class="small">King James Version.</p></div>
-  <div data-pane="t4"><ul><li><b>Value equation:</b> show the result, make it believable, cut his time and effort.</li><li>Give away the secrets, sell the implementation.</li><li>Make the offer so good there's no need to push.</li></ul></div>
-  <div class="rule">The test: <b>would I be comfortable if he knew exactly why I said it?</b></div>
+  <div class="art" data-art="clock"></div>
+  <div data-render="prepsheet"></div>
 </div>
 </section>
 
-<!-- NO CATCH + PRICE -->
-<section class="card" data-id="price" data-sec="call" data-t="Price and no catch" data-s="Honest, humble, in writing" data-short="Price">
+<section class="card" data-id="free" data-sec="offer" data-t="Free, honestly" data-s="What is yours to keep, what is a trial" data-short="Free, honestly">
 <div class="inner">
   <div class="art" data-art="shield"></div>
-  <div class="eyebrow">When he asks "what's the catch?" or "what's it cost?"</div>
-  <h1>Good questions. <span class="hl">Straight answers.</span></h1>
-  <div class="say">Great question. The package StarWell built is free, and it stays yours. If you ever want us to keep it running, most shops start around $300 to $400 a month, in writing, no surprises. We'd rather see it work for you first.</div>
-  <ul>
-    <li><b>Depends on:</b> locations and trucks, call volume, how much he wants us to run.</li>
-    <li><b>Never:</b> dodge, invent a number, discount on the spot, "sign today," or change a quote without talking first.</li>
-    <li>Free stays free. A no is respected the same day.</li>
-  </ul>
-  <p><span class="ev t">Transferred</span> Honest "it depends," said confidently, isn't trusted less (Gaertig &amp; Simmons, 2018). Volunteering cost details raised trust and sales (Mohan, Buell &amp; John, 2020).</p>
-  <div class="mission">At the walkthrough: <span class="q">If this really helped, would you want it running this season, or later?</span></div>
+  <div data-render="free"></div>
 </div>
 </section>
 
-<!-- SCRIPTS -->
-<section class="card" data-id="scripts" data-sec="call" data-t="Three scripts" data-s="Pick by what he cares about" data-short="Scripts">
-<div class="inner">
-  <div class="art" data-art="caller" data-say="~45 seconds"></div>
-  <div class="eyebrow">Say it out loud</div>
-  <h1>Three <span class="hl">scripts</span></h1>
-  <div class="tabs" data-tabs="scripts"><button data-tab="sc1" class="sel">Phones</button><button data-tab="sc2">Getting found</button><button data-tab="sc3">First impression</button></div>
-  <div data-pane="sc1" class="sel">
-    <div class="say">Hi [Owner], <span class="me"></span> with StarWell, here in Connecticut. Cold call, I'll be quick. Your site says the office closes at [time]. When that first cold night hit last week, how did the evening calls go?</div>
-    <div class="hear">(Listen.)</div>
-    <div class="say">StarWell built a demo line that answers like your office and texts you every call. Separate number. I'll include a fresh website, a search check and a month of social posts. All free. Best email, and could I walk you through it Tuesday at 7:30?</div>
-  </div>
-  <div data-pane="sc2">
-    <div class="say">Hi [Owner], <span class="me"></span> with StarWell, here in Connecticut. Cold call, I'll be quick. I asked my phone who does furnace repair in [town], and [what came up]. Your reviews are great, especially [compliment]. How do most new customers find you?</div>
-    <div class="hear">(Listen.)</div>
-    <div class="say">I'll send one page showing exactly where you show up, plus a fresh website with the fixes built in. All free from StarWell. Best email, and could I show you Thursday morning?</div>
-  </div>
-  <div data-pane="sc3">
-    <div class="say">Hi [Owner], <span class="me"></span> with StarWell, here in Connecticut. Cold call, under a minute. Serving [town] since [year], that's something. When someone with no heat finds you at night, what do you want them to feel?</div>
-    <div class="hear">(Listen.)</div>
-    <div class="say">StarWell built a version of your site around exactly that. Yours either way. Best email, and could I walk you through it Wednesday evening?</div>
-  </div>
-</div>
-</section>
-
-<!-- QUESTIONS -->
-<section class="card" data-id="questions" data-sec="call" data-t="Owner questions" data-s="Every question, answered with care" data-short="Owner questions">
-<div class="inner">
-  <div class="art" data-art="talk"></div>
-  <div class="eyebrow">Practice library</div>
-  <h1>A question means <span class="hl">he's listening</span></h1>
-  <p class="lead">Answer out loud, then tap to compare.</p>
-  <div id="objList"></div>
-</div>
-</section>
-
-<!-- ROLEPLAY -->
-<section class="card" data-id="roleplay" data-sec="call" data-t="Live role-play" data-s="Call Craig" data-short="Role-play">
-<div class="inner">
-  <div class="art" data-art="truck"></div>
-  <div class="eyebrow">Simulator</div>
-  <h1>Call <span class="hl">Craig</span></h1>
-  <p class="lead">Craig owns a 20-person shop in Wallingford, Connecticut (an example). He picks up in his truck.</p>
-  <p class="small">Want a real voice? <a href="../starwell-practice/" target="_blank" rel="noopener">Call a live practice owner on the Practice Line</a>.</p>
-  <div id="sim"></div>
-</div>
-</section>
-
-<!-- FOLLOW UP -->
-<section class="card" data-id="followup" data-sec="call" data-t="Voicemail & follow-up" data-s="Each touch warms the next" data-short="Follow-up">
+<section class="card" data-id="g-phone" data-sec="offer" data-t="The answering line" data-s="Picks up when he can't" data-short="Answering line">
 <div class="inner">
   <div class="art" data-art="phone"></div>
-  <div class="eyebrow">After the dial</div>
-  <h1>Always leave a <span class="hl">voicemail</span></h1>
-  <p>Email replies: 2.73% without a voicemail, 5.87% with one; 1.81% without a prior call, 3.44% with one (Gong).</p>
-  <div class="say">Hi [Owner], <span class="me"></span> with StarWell, here in Connecticut. I noticed [true thing]. We put together a free website and phone demo for [Shop], yours either way. Details coming by email. My number is [number].</div>
-  <p><b>Rhythm (Jason Bay):</b> same-day call, voicemail, email. A few friendly touches over 3 weeks, each giving something. Then back on the list for next season.</p>
-  <div class="rule">Only for owners we haven't reached. <b>A no ends follow-up.</b></div>
+  <div data-render="g-phone"></div>
 </div>
 </section>
 
-<!-- PREP -->
-<section class="card" data-id="prep" data-sec="call" data-t="Pre-call prep" data-s="Ready check" data-short="Prep">
+<section class="card" data-id="g-site" data-sec="offer" data-t="The website" data-s="Visitors into booked jobs" data-short="Website">
+<div class="inner">
+  <div class="art" data-art="house"></div>
+  <div data-render="g-site"></div>
+</div>
+</section>
+
+<section class="card" data-id="g-found" data-sec="offer" data-t="Getting found" data-s="Google, ChatGPT and the search check" data-short="Getting found">
 <div class="inner">
   <div class="art" data-art="magnify"></div>
-  <div class="eyebrow">Before you dial</div>
-  <h1>Ready <span class="hl">check</span></h1>
-  <ul class="check" id="prepList">
-    <li><label><input type="checkbox"><span>Brief done, true thing verified today</span></label></li>
-    <li><label><input type="checkbox"><span>Compliment and lead gift ready</span></label></li>
-    <li><label><input type="checkbox"><span>Why-free sentence memorized</span></label></li>
-    <li><label><input type="checkbox"><span>Two walkthrough times ready</span></label></li>
-    <li><label><input type="checkbox"><span>Recap email filled in</span></label></li>
-    <li><label><input type="checkbox"><span>Do-not-call list checked</span></label></li>
-    <li><label><input type="checkbox"><span>Said "I'm excited" out loud</span></label></li>
-    <li><label><input type="checkbox"><span>A person dials, never our AI voice (FCC, 2024)</span></label></li>
-  </ul>
-  <div class="score"><div class="tag">Ready</div><div class="big" id="prepScore">0/8</div></div>
+  <div data-render="g-found"></div>
 </div>
 </section>
 
-<!-- MENTORS -->
-<section class="card" data-id="mentors" data-sec="call" data-t="Mentor council" data-s="The best takes" data-short="Mentors">
-<div class="inner">
-  <div class="art" data-art="talk" data-say="here's what works"></div>
-  <div class="eyebrow">Learn from the best</div>
-  <h1>Your <span class="hl">mentors</span></h1>
-  <table>
-    <tr><td><b>Alex Hormozi</b></td><td>Make the free offer feel almost too good.</td></tr>
-    <tr><td><b>Chet Holmes</b></td><td>Serve your 100 best-fit shops steadily, for a year.</td></tr>
-    <tr><td><b>Aaron Ross</b></td><td>At bigger shops, ask the top who owns the job.</td></tr>
-    <tr><td><b>Marcus Sheridan</b></td><td>Answer every question honestly and plainly.</td></tr>
-    <tr><td><b>Josh Braun</b></td><td>One neutral question beats any pitch.</td></tr>
-    <tr><td><b>Farrokh &amp; Cegelski</b></td><td>Context first, then a problem he'd recognize.</td></tr>
-    <tr><td><b>Jeb Blount</b></td><td>Prospect every single day.</td></tr>
-    <tr><td><b>Jason Bay</b></td><td>First goal is a conversation, not a sale.</td></tr>
-    <tr><td><b>Becc Holland</b></td><td>One researched "why now," all about him.</td></tr>
-    <tr><td><b>Jill Konrath</b></td><td>Real events are the best reason to call.</td></tr>
-    <tr><td><b>Neil Rackham</b></td><td>He commits when he names the cost.</td></tr>
-    <tr><td><b>Nick Saraev</b></td><td>Free must be finished, never homework.</td></tr>
-    <tr><td><b>Eric Nowoslawski</b></td><td>Ten minutes of research; the offer matters most.</td></tr>
-  </table>
-  <p class="small">Most coaches' results are self-reported. Our tracker is the final judge.</p>
-</div>
-</section>
-
-<!-- FIRST WEEK + SCORECARD -->
-<section class="card" data-id="firstweek" data-sec="call" data-t="First week + scorecard" data-s="What we do and measure" data-short="First week">
+<section class="card" data-id="walk" data-sec="offer" data-t="The 15 minutes" data-s="What you are booking" data-short="The 15 minutes">
 <div class="inner">
   <div class="art" data-art="calendar"></div>
-  <div class="eyebrow">Go time</div>
-  <h1>Your <span class="hl">first week</span></h1>
-  <ol class="steps">
-    <li><b>Day 1:</b> finish Know Our Services and the self-check. Pick 20 Connecticut shops.</li>
-    <li><b>Day 2:</b> 20 Prospect Briefs. Role-play scripts and owner questions.</li>
-    <li><b>Day 3:</b> early-morning calls (our guess, untested). Log within the hour.</li>
-    <li><b>Day 4:</b> late-afternoon calls. Every recap sent within the hour.</li>
-    <li><b>Day 5:</b> walkthroughs, then review together. Celebrate the learning goals.</li>
-  </ol>
-  <h3>We celebrate, in order</h3>
-  <p>Real conversations → emails collected → walkthroughs held → owners wanting ongoing help → happy paying clients.</p>
-  <div class="box">
-    <div class="grid2">
-      <div class="fld"><label for="s_d">Dials</label><input type="number" id="s_d" min="0" value="100"></div>
-      <div class="fld"><label for="s_c">Conversations</label><input type="number" id="s_c" min="0" value="6"></div>
-      <div class="fld"><label for="s_e">Emails</label><input type="number" id="s_e" min="0" value="3"></div>
-      <div class="fld"><label for="s_n">Walkthroughs booked</label><input type="number" id="s_n" min="0" value="2"></div>
-      <div class="fld"><label for="s_h">Walkthroughs held</label><input type="number" id="s_h" min="0" value="1"></div>
-      <div class="fld"><label for="s_f">Package hours</label><input type="number" id="s_f" min="0" step=".5" value="6"></div>
-    </div>
-    <div class="stat" id="scoreOut"></div>
-  </div>
-  <p><b>Test one change at a time</b> (true-thing opener, one gift vs all, recap timing), 30+ conversations each before calling a winner.</p>
+  <div data-render="walk"></div>
 </div>
 </section>
 
-<!-- FIELD CARD -->
-<section class="card" data-id="fieldcard" data-sec="call" data-t="Field card" data-s="Keep this one" data-short="Field card">
+<section class="card" data-id="questions" data-sec="deep" data-t="Owner questions" data-s="The honest answers" data-short="Owner questions">
 <div class="inner">
-  <div class="field">
-    <div class="eyebrow" style="color:var(--gold)">Field card · <span class="me"></span></div>
-    <h2>The call on one card</h2>
-    <ol>
-      <li><span class="g">Opener:</span> name, StarWell, here in Connecticut, cold call, where you looked.</li>
-      <li><span class="g">True thing:</span> one checkable fact.</li>
-      <li><span class="g">His week:</span> a real question. Listen. One follow-up.</li>
-      <li><span class="g">Gift:</span> what fits, in owner words. Why free.</li>
-      <li><span class="g">Email + date:</span> recap within the hour, 15 minutes.</li>
-    </ol>
-    <p style="margin-top:12px"><span class="g">Why free:</span> "StarWell is new to Connecticut HVAC, and we'd rather show you than tell you."</p>
-    <p style="margin:0"><span class="g">Always:</span> true facts, owner words, no pressure, a no respected.</p>
-  </div>
-  <h3>Sources</h3>
-  <ol class="sources">
-    <li><a href="https://doi.org/10.1509/jmkr.43.4.693">Franke &amp; Park (2006), adaptive selling</a></li>
-    <li><a href="https://doi.org/10.1002/ejsp.431">Montoya &amp; Insko (2008), reciprocity of liking</a></li>
-    <li><a href="https://doi.org/10.1177/0956797618783714">Boothby et al. (2018), the liking gap</a></li>
-    <li><a href="https://pubmed.ncbi.nlm.nih.gov/24364682/">Brooks (2014), anxiety as excitement</a></li>
-    <li><a href="https://doi.org/10.1177/1059601196212007">Winters &amp; Latham (1996), learning goals</a></li>
-    <li><a href="https://doi.org/10.1016/j.jretai.2014.09.005">Aguirre et al. (2015), personalization paradox</a></li>
-    <li><a href="https://doi.org/10.1002/acp.1178">Oppenheimer (2006), complex words</a></li>
-    <li><a href="https://www.psychologicalscience.org/journals/psychological-science/0956797617739369/">Gaertig &amp; Simmons (2018), uncertain advice</a></li>
-    <li><a href="https://pubsonline.informs.org/doi/fpi/10.1287/mksc.2019.1200">Mohan, Buell &amp; John (2020), cost transparency</a></li>
-    <li><a href="https://dash.harvard.edu/handle/1/35647952">Huang et al. (2017), questions and liking</a></li>
-    <li><a href="https://ideas.repec.org/a/oup/jconrs/v21y1994i1p1-31.html">Friestad &amp; Wright (1994), persuasion knowledge</a></li>
-    <li><a href="https://kops.uni-konstanz.de/entities/publication/2e749bfb-8533-437c-8203-7e788c910c5f">Gollwitzer &amp; Sheeran (2006), implementation intentions</a></li>
-    <li><a href="https://www.gong.io/resources/labs/the-best-and-worst-cold-call-openers-backed-by-data-from-300m-calls/">Gong Labs, cold call openers</a></li>
-    <li><a href="https://prospeo.io/s/cold-calling-success-rate">Cognism data via Prospeo (2026)</a></li>
-    <li><a href="https://www.pewresearch.org/short-reads/2025/07/22/google-users-are-less-likely-to-click-on-links-when-an-ai-summary-appears-in-the-results/">Pew (2025), AI summaries and clicks</a></li>
-    <li><a href="https://www.brightlocal.com/research/local-consumer-review-survey/">BrightLocal (2026), local reviews</a></li>
-    <li><a href="https://www.invoca.com/blog/how-much-missed-sales-calls-cost-home-services-businesses">Invoca (2024), missed calls</a></li>
-    <li><a href="https://buffer.com/resources/consistent-posting-study/">Buffer (2025), consistent posting</a></li>
-    <li><a href="https://whitespark.ca/local-search-ranking-factors/">Whitespark (2026), local ranking factors</a></li>
-    <li><a href="https://www.servicetitan.com/press/bill-joplins-air-conditioning-and-heating-books-over-90-of-calls-with-servicetitan-ai-voice-agent">ServiceTitan (2026), vendor case</a></li>
-    <li><a href="https://www.federalregister.gov/documents/2024/08/22/2024-18519/trade-regulation-rule-on-the-use-of-consumer-reviews-and-testimonials">FTC reviews and testimonials rule (2024)</a></li>
-    <li><a href="https://cooley.com/news/insight/2024/2024-02-15-fcc-ai-generated-robocalls-illegal-under-the-tcpa">FCC ruling on AI voices (2024)</a></li>
-  </ol>
+  <div class="art" data-art="talk"></div>
+  <div data-render="questions"></div>
+</div>
+</section>
+
+<section class="card" data-id="team" data-sec="deep" data-t="Team questions" data-s="So we all say the same thing" data-short="Team questions">
+<div class="inner">
+  <div class="art" data-art="caller"></div>
+  <div data-render="team"></div>
+</div>
+</section>
+
+<section class="card" data-id="hisside" data-sec="deep" data-t="His side of the call" data-s="The owner's point of view" data-short="His side">
+<div class="inner">
+  <div class="art" data-art="truck"></div>
+  <div data-render="hisside"></div>
+</div>
+</section>
+
+<section class="card" data-id="words" data-sec="deep" data-t="Words and rules" data-s="How we talk" data-short="Words and rules">
+<div class="inner">
+  <div class="art" data-art="shield"></div>
+  <div data-render="words"></div>
+</div>
+</section>
+
+<section class="card" data-id="followup" data-sec="deep" data-t="Voicemail and email" data-s="After the call" data-short="Follow-up">
+<div class="inner">
+  <div class="art" data-art="funnel"></div>
+  <div data-render="followup"></div>
+</div>
+</section>
+
+<section class="card" data-id="confidence" data-sec="deep" data-t="Nerves are normal" data-s="For you" data-short="Confidence">
+<div class="inner">
+  <div class="art" data-art="caller"></div>
+  <div data-render="confidence"></div>
+</div>
+</section>
+
+<section class="card" data-id="sources" data-sec="deep" data-t="Sources" data-s="Where this comes from" data-short="Sources">
+<div class="inner">
+  
+  <div data-render="sources"></div>
 </div>
 </section>
 
@@ -1058,7 +468,7 @@ body.driving .more{display:none}
 
 <div class="sheet" id="driveSheet"><div class="sheet-in">
   <h3>Listen hands-free <button id="closeDrive">Close</button></h3>
-  <p class="lead">A voice reads every card and turns the pages on its own, start to finish. Pick a section: services (about 9 minutes) or the cold call (about 16 minutes).</p>
+  <p class="lead">A voice reads every card and turns the pages on its own. Start with the call card (about 12 minutes) or what we offer (about 8 minutes).</p>
   <div class="rule">Set it up <b>before you drive.</b> Tap Start, put the phone in its mount, and don't touch the screen. The quizzes and tools are for when you're parked.</div>
   <div id="driveUnsupported" class="box" style="display:none">This browser can't read aloud. Try Safari on iPhone or Chrome on Android or desktop.</div>
   <p id="voiceNote" class="small"></p>
@@ -1073,8 +483,8 @@ body.driving .more{display:none}
       <button class="btn" id="dHere">Start from this card</button>
     </div>
     <div class="grid2" style="margin-top:8px">
-      <button class="btn v" id="dSvc" style="min-height:56px;font-size:16px">Start: Know our services</button>
-      <button class="btn v" id="dTop" style="min-height:56px;font-size:16px">Start: The cold call</button>
+      <button class="btn v" id="dSvc" style="min-height:56px;font-size:16px">Start: What we offer</button>
+      <button class="btn v" id="dTop" style="min-height:56px;font-size:16px">Start: The call card</button>
     </div>
   </div>
 </div></div>
@@ -1085,9 +495,10 @@ body.driving .more{display:none}
 </div></div>
 </div>
 
+<script src="../starwell-practice/offer.js"></script>
 <script>
 (function(){
-const TOWN = 'Connecticut'; // Starwell's home base as written in the Cold Call Playbook. Change here if needed.
+const TOWN = 'Connecticut'; // StarWell is a Connecticut team: callers say "StarWell, here in Connecticut".
 const TEAM = [
   {n:'Bobby', r:'Founder · owner'},
   {n:'Dan', r:'Partner · caller'},
@@ -1097,6 +508,183 @@ const store = {
   get(k){try{return localStorage.getItem(k)}catch(e){return null}},
   set(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 };
+
+/* ---------- CONTENT: everything below is rendered from the shared offer card ----------
+   ../starwell-practice/offer.js is the ONE source of truth for both the guide and the Practice Line.
+   Change the offer there and both tools change together. */
+const O = window.STARWELL_OFFER;
+const ME = '\u0001';
+const escH = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+/* fill tokens with the example shop, then show the caller's own name where {me} was */
+const fx = (t, v) => escH(O.fill(t, Object.assign({me:ME}, v || {}))).replace(/\u0001/g, '<span class="me"></span>');
+const sayB = (t, v) => `<div class="say">${fx(t, v)}</div>`;
+const hearB = t => `<div class="hear">${fx(t)}</div>`;
+const li = arr => arr.map(x => `<li>${fx(x)}</li>`).join('');
+const GIFT_ORDER = ['phone','site','found'];
+
+/* what goes on in YOUR head at each step (the owner's side comes from the offer card) */
+const YOU = {
+  hello:'I\'m a local neighbor with one honest question. If he\'s busy, I ask when to call back.',
+  notice:'I\'m curious how his shop runs. My job right now is to listen, not to fix anything.',
+  gift:'One thing, tied to what he just said. If it doesn\'t fit, I don\'t push it.',
+  rest:'Say the reason, say the terms, then stop talking. His question is a good sign.',
+  invite:'Small and specific. If he says no, I thank him like a friend. That\'s a win too.'
+};
+/* pick the best line: one right answer, two common mistakes, each with the reason */
+const QUIZ = {
+  hello:[['Hi Dave, did I catch you at a bad time?',0,'It hands him an easy way out before he even knows who you are.'],
+         ['Hey Dave, this is {me} with StarWell, here in Connecticut. Heating season\'s on, so I\'ll be quick.',1,'Who you are, where you\'re from, and respect for his time, in one breath.'],
+         ['Hi Dave! StarWell helps HVAC companies grow with AI automation.',0,'Jargon and a pitch in the first sentence. He hears every sales call he has ever hung up on.']],
+  notice:[['You\'re probably losing a lot of calls at night, right?',0,'Telling him his problem, plus a trick question. He will defend himself.'],
+          ['People mention Mike by name in your reviews. When you\'re out on a job or after you close, what happens when a customer calls?',1,'One true detail, then a real question. He names the problem himself.'],
+          ['I love what you guys do! Your company is amazing.',0,'Big praise with nothing specific sounds like flattery.']],
+  gift:[['We do websites, SEO, AEO, GEO, social media, voice agents and custom AI.',0,'A list full of jargon. It\'s a pitch, and none of it is tied to what he said.'],
+        ['That\'s actually what we help with. We set up an answering line trained on your company. It picks up when you can\'t and sends you the job details right away.',1,'It starts from his words: one gift, in plain language.'],
+        ['We already built you an AI system that books all your jobs automatically.',0,'Not true unless it exists, and "books all your jobs" is a promise we can\'t keep.']],
+  rest:[['There\'s no catch, I promise. It\'s totally free.',0,'A promise with no reason. He will fill in the worst one.'],
+        ['It\'s part of a small free starter set we\'re doing for Connecticut shops. Honest reason: we\'re new here, and we\'d rather earn real results and honest reviews than make a quick sale.',1,'The real reason, said before he asks.'],
+        ['It\'s free for now, and most shops upgrade after.',0,'"Free for now" sounds like bait and switch.']],
+  invite:[['I\'ll follow up with you sometime next week.',0,'Vague times never happen.'],
+          ['No commitment at all. Could I show you in 15 minutes? Would Tuesday at 7:30 or Wednesday afternoon work? And what\'s the best email?',1,'Small, specific, two choices, and the email.'],
+          ['This offer is only good this week, so let\'s get you set up today.',0,'A fake deadline is pressure, and it breaks our rules.']]
+};
+const quizHTML = k => `<h3>Pick the best line</h3><div class="quiz">${QUIZ[k].map(q => `<button class="opt" ${q[1] ? 'data-ok="1"' : ''} data-why="${escH(q[2])}">${fx(q[0])}</button>`).join('')}<div class="fb"></div></div>`;
+
+function stepCard(s){
+  let extra = '';
+  if(s.key === 'notice'){
+    extra = `<h3>Match the question to the gift</h3>${GIFT_ORDER.map(k => `<p class="small" style="margin:10px 0 0"><b>${escH(O.gifts[k].name)}</b></p>${sayB(s.questions[k])}`).join('')}
+      <h3>Listen for</h3><table><tr><th>If he says…</th><th>Lead with</th></tr>${s.listenFor.map(x => `<tr><td>${fx(x.heard)}</td><td><b>${escH(O.gifts[x.lead].name)}</b></td></tr>`).join('')}</table>
+      <p class="small">Your prep sheet picks your best guess. His answer confirms it or changes it.</p>`;
+  }
+  if(s.key === 'gift'){
+    extra = `<h3>The line for each gift</h3>${GIFT_ORDER.map(k => `<p class="small" style="margin:10px 0 0"><b>${escH(O.gifts[k].name)}</b> · ${escH(O.gifts[k].short)} <a href="#" data-goid="g-${k}">What it is →</a></p>${sayB(O.gifts[k].say)}`).join('')}`;
+  }
+  return `<div class="eyebrow">Step ${s.n} of 5 · ${escH(s.time)}</div>
+    <h1>${escH(s.name.split(' ').slice(0, -1).join(' '))} <span class="hl">${escH(s.name.split(' ').slice(-1)[0])}</span></h1>
+    <div class="mission">${fx(s.goal)}</div>
+    <h3>Say it</h3>${s.say.map(x => /^\(/.test(x.t) ? `<div class="why">${fx(x.t.replace(/^\(|\)$/g, ''))}</div>` : x.who === 'him' ? hearB(x.t) : sayB(x.t)).join('')}
+    ${extra}
+    <h3>Why it works</h3><ul>${li(s.why)}</ul>
+    <div class="minds"><div class="mind o"><h4>In his head</h4><p>${fx(s.owner)}</p></div><div class="mind y"><h4>In your head</h4><p>${fx(YOU[s.key])}</p></div></div>
+    ${s.ifHe && s.ifHe.length ? `<h3>If he says…</h3>${s.ifHe.map(x => `${hearB(x.he)}${sayB(x.you)}<div class="why">${fx(x.why)}</div>`).join('')}` : ''}
+    <h3>Skip</h3><ul class="skip">${li(s.avoid)}</ul>
+    ${quizHTML(s.key)}`;
+}
+function giftCard(k){
+  const g = O.gifts[k], SC = O.searchCheck;
+  return `<div class="eyebrow">What we offer · ${escH(g.short)}</div>
+    <h1>${escH(g.name.replace(/^The /, ''))}</h1>
+    <h3>What it is</h3><p class="lead">${fx(g.what)}</p>
+    <h3>What you say</h3>${sayB(g.say)}
+    <div class="minds"><div class="mind o"><h4>How the owner feels</h4><p>${fx(g.feels)}</p></div><div class="mind y"><h4>The value to him</h4><p>${fx(g.value)}</p></div></div>
+    <h3>Keep it true</h3><ul>${li(g.truth)}</ul>
+    <table><tr><th>Built before the call</th><th>After he says yes</th></tr><tr><td>${fx(g.before)}</td><td>${fx(g.after)}</td></tr></table>
+    <div class="rule"><b>Terms:</b> ${fx(g.terms)}</div>${g.whyTrial ? `<p class="small">${fx(g.whyTrial)}</p>` : ''}
+    ${k === 'found' ? `<div class="box" id="searchcheck"><div class="tag">${escH(SC.name)}</div><p>${fx(SC.what)}</p><b>What's on the page</b><ul>${li(SC.includes)}</ul><p>${fx(SC.why)}</p><p class="small"><b>How the owner sees it:</b> ${fx(SC.owner)}</p></div>` : ''}`;
+}
+
+const RENDER = {
+  card: () => `<div class="eyebrow">Before every call · read this first</div>
+    <h1>The call <span class="hl">card</span></h1>
+    <p class="lead"><b>${fx(O.goal)}</b> ${fx(O.goalWhy)}</p>
+    ${O.steps.map(s => `<h3>${s.n} · ${escH(s.name)} <span class="small" style="font:600 13px 'Public Sans';text-transform:none">${escH(s.time)}</span></h3>
+      ${s.key === 'gift' ? `${sayB('That\'s actually what we help with.')}<p class="small" style="margin:0 0 0 28px">Then the line for the ONE gift that fits: ${GIFT_ORDER.map(k => `<a href="#" data-goid="g-${k}">${escH(O.gifts[k].name.replace(/^The /, '').toLowerCase())}</a>`).join(', ')}.</p>`
+        : s.say.filter(x => !/^\(/.test(x.t)).map(x => x.who === 'him' ? hearB(x.t) : sayB(x.t)).join('')}
+      <button class="go-step" data-goid="step${s.n}">Why it works →</button>`).join('')}
+    <div class="rule"><b>If he asks what's free:</b> ${fx(O.free.line)}</div>
+    <div class="box"><div class="tag">Updated ${escH(O.updated)}</div><ul>${li(O.changes)}</ul><p class="small" style="margin:0">The Practice Line uses this same card, word for word.</p></div>
+    <a class="btn v" href="../starwell-practice/" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;text-decoration:none;margin-top:10px">Practice it out loud on the Practice Line</a>`,
+  step1: () => stepCard(O.steps[0]), step2: () => stepCard(O.steps[1]), step3: () => stepCard(O.steps[2]),
+  step4: () => stepCard(O.steps[3]), step5: () => stepCard(O.steps[4]),
+  prepsheet: () => `<div class="eyebrow">Before every call · 10 minutes</div>
+    <h1>Your <span class="hl">prep sheet</span></h1>
+    <p class="lead">Fill this in for each shop. It turns the call card into the exact lines for that shop. Bobby's per-shop sheet uses the same headings.</p>
+    <div class="box" id="pform">
+      <div class="grid2"><div class="fld"><label for="p_shop">Shop</label><input type="text" id="p_shop" placeholder="Hillside Heating"></div>
+      <div class="fld"><label for="p_name">Owner first name</label><input type="text" id="p_name" placeholder="Dave"></div></div>
+      <div class="grid2"><div class="fld"><label for="p_town">Town</label><input type="text" id="p_town" placeholder="Hamden"></div>
+      <div class="fld"><label for="p_close">Office closes at</label><input type="text" id="p_close" placeholder="5"></div></div>
+      <div class="fld"><label for="p_true">One true thing you noticed (and where)</label><input type="text" id="p_true" placeholder="People mention Mike by name in your reviews"></div>
+      <div class="fld"><label for="p_lead">The ONE gift that fits best</label><select id="p_lead">${GIFT_ORDER.map(k => `<option value="${k}">${escH(O.gifts[k].name)}</option>`).join('')}</select></div>
+      <div class="fld"><label for="p_why">Why that gift, for this shop</label><input type="text" id="p_why" placeholder="Calls after 5 go to voicemail"></div>
+      <div class="grid2"><div class="fld"><label for="p_day">Walkthrough day and time</label><input type="text" id="p_day" placeholder="Tuesday at 7:30"></div>
+      <div class="fld"><label for="p_day2">Second choice</label><input type="text" id="p_day2" placeholder="Wednesday afternoon"></div></div>
+    </div>
+    <div class="box" id="pout" style="white-space:pre-wrap;font-size:15px"></div>
+    <div class="grid2"><button class="btn v" id="p_copy">Copy my call card</button><button class="btn" id="p_clear">Clear</button></div>
+    <p class="small" id="p_msg"></p>
+    <h3>Ready check</h3>
+    <ul class="check" id="prepList">${['Prep sheet filled in, true thing checked today','I know which ONE gift I\'m leading with, and why','I can say the free line from memory','Two walkthrough times ready','Shop checked against the do-not-call list','A person dials. We never use an AI voice to call owners.'].map(t => `<li><label><input type="checkbox"><span>${escH(t)}</span></label></li>`).join('')}</ul>`,
+  free: () => `<div class="eyebrow">What we offer · read this before any call</div>
+    <h1>Free, <span class="hl">honestly</span></h1>
+    <p class="lead">Free help with no reason sounds like a catch. Free help with a clear reason and clear terms sounds like a good neighbor. This page is the line we never cross.</p>
+    <h3>Say it like this</h3>${sayB(O.free.line)}${sayB(O.free.reason)}
+    <table><tr><th>Yours to keep</th><th>Free trial</th><th>Not free</th></tr><tr><td><ul>${li(O.free.keep)}</ul></td><td><ul>${li(O.free.trial)}</ul></td><td><ul>${li(O.free.notFree)}</ul></td></tr></table>
+    <h3>Why the answering line is a trial</h3><p>${fx(O.gifts.phone.whyTrial)}</p>
+    <div class="rule">${O.free.rules.map(r => `<div>${fx(r)}</div>`).join('')}</div>
+    <div class="minds"><div class="mind o"><h4>In his head</h4><p>"Nobody gives anything away. What's the catch?" He has been burned before. Hearing the terms before he asks is what makes him believe the rest.</p></div><div class="mind y"><h4>In your head</h4><p>I'm giving him real work and straight terms. I have nothing to hide, so I say it plainly.</p></div></div>`,
+  'g-phone': () => giftCard('phone'), 'g-site': () => giftCard('site'), 'g-found': () => giftCard('found'),
+  walk: () => `<div class="eyebrow">What we offer · what you're booking</div>
+    <h1>The 15 <span class="hl">minutes</span></h1>
+    <p class="lead">${fx(O.walkthrough.who)}</p>
+    <h3>If he asks what happens</h3>${sayB(O.walkthrough.sentence)}
+    <h3>How it goes</h3><ol class="steps">${O.walkthrough.agenda.map(a => `<li><b>${fx(a.t)}.</b> ${fx(a.d)}</li>`).join('')}</ol>
+    <h3>Custom tools</h3><p>${fx(O.custom.when)}</p>${sayB(O.custom.line)}<p class="small">${fx(O.custom.terms)}</p>
+    <div class="minds"><div class="mind o"><h4>In his head</h4><p>"Fifteen minutes, then I'm on the hook?" A short, clear plan, where he decides at the end, tells him you'll guard his time.</p></div><div class="mind y"><h4>In your head</h4><p>I don't need to know every system. I need to book 15 minutes and get his email.</p></div></div>`,
+  questions: () => `<div class="eyebrow">Go deeper · owner questions</div>
+    <h1>What owners <span class="hl">ask</span></h1>
+    <p class="lead">His question is a good sign: people only ask about things they're considering. Agree it's fair, answer straight, then stop talking.</p>
+    ${O.questions.map(q => `<details><summary>${fx(q.q)}</summary><div class="det">${sayB(q.a)}<div class="why">${fx(q.why)}</div><div class="mind o"><h4>In his head</h4><p>${fx(q.owner)}</p></div></div></details>`).join('')}`,
+  team: () => `<div class="eyebrow">Go deeper · for Dan, RJ and Bobby</div>
+    <h1>Team <span class="hl">questions</span></h1>
+    <p class="lead">So we never tell two owners two different things.</p>
+    ${O.team.map(q => `<details><summary>${fx(q.q)}</summary><div class="det"><p>${fx(q.a)}</p></div></details>`).join('')}`,
+  hisside: () => `<div class="eyebrow">Go deeper · the owner's point of view</div>
+    <h1>Hear it <span class="hl">through his ears</span></h1>
+    <p class="lead">He's on a roof unit, two trucks are out, and a no-heat call is waiting. Every line you say should save him time and make him feel respected.</p>
+    ${O.steps.map(s => `<h3>${s.n} · ${escH(s.name)}</h3><div class="mind o"><h4>In his head</h4><p>${fx(s.owner)}</p></div>`).join('')}
+    <h3>Homework, the respectful way</h3><ul>
+      <li>Keep it about the shop: reviews, hours, services, the website. Never his home, family or anything personal.</li>
+      <li>Say where you found each fact ("your website says…", "your Google listing…"). Named sources feel normal; hidden ones feel creepy.</li>
+      <li>Only say what you checked today. If you're not sure, ask instead.</li></ul>`,
+  words: () => `<div class="eyebrow">Go deeper · how we talk</div>
+    <h1>Words and <span class="hl">rules</span></h1>
+    <table><tr><th>Say</th><th>Not</th></tr>${O.words.map(w => `<tr><td><b>${fx(w.say)}</b></td><td>${fx(w.not)}</td></tr>`).join('')}</table>
+    <p class="small">Plain words sound smarter and more honest than jargon. If an owner wouldn't say it, we don't either.</p>
+    <h3>Our rules</h3><ol class="steps">${li(O.rules)}</ol>`,
+  followup: () => `<div class="eyebrow">Go deeper · after the call</div>
+    <h1>Voicemail and the <span class="hl">same-day email</span></h1>
+    <h3>No answer? One short voicemail</h3>${sayB('Hi {name}, this is {me} with StarWell, here in Connecticut. I had one quick question about {shop}. I\'ll try you again Thursday morning, or you can call me back at [your number]. Thanks!')}
+    <div class="why">Name, company, one reason, and when you'll try again. No pitch on a voicemail.</div>
+    <h3>The same-day email</h3><div class="box" style="white-space:pre-wrap;font-size:15px">${fx('Subject: {shop}: what we talked about\n\nHi {name},\n\nThanks for taking my call today. As promised, here is [the one-page search check / the demo number / a first look at the website].\n\nThe terms, plainly: the website, pages and search check are yours to keep. The answering line is a free 30-day trial, then it\'s your call. No card, nothing automatic.\n\nWe\'re set for [day and time] for 15 minutes: we show you what we made, ask how your week runs, and you decide if you want any of it.\n\nIf anything looks off, just reply. I\'d want to know.\n\n{me}\nStarWell, here in Connecticut\n[your number]')}</div>
+    <h3>Follow-up, without pestering</h3><ul>
+      <li>He named a time ("after the season")? Call exactly then, not before.</li>
+      <li>No reply to the email? One friendly check-in about a week later. Then stop.</li>
+      <li>He asked to come off the list? Same day, and say thank you.</li></ul>`,
+  confidence: () => `<div class="eyebrow">Go deeper · for you</div>
+    <h1>Nerves are <span class="hl">normal</span></h1>
+    <ul>
+      <li><b>Strangers like you more than you think.</b> After a first conversation, people consistently underestimate how much the other person liked them. Researchers call it the liking gap (Boothby and colleagues, 2018).</li>
+      <li><b>Asking makes you likable.</b> People who ask follow-up questions are liked more (Huang and colleagues, 2017). Step 2 is built on that.</li>
+      <li><b>Chase learning, not results, for your first two weeks.</b> Count good conversations and what you learned, not bookings.</li>
+      <li><b>A no is not a failure.</b> A warm goodbye means he'd take your call again. Owners talk to each other.</li></ul>
+    <a class="btn v" href="../starwell-practice/" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;text-decoration:none;margin-top:10px">Practice on the Practice Line</a>`,
+  sources: () => `<div class="eyebrow">Go deeper · receipts</div>
+    <h1>Where this <span class="hl">comes from</span></h1>
+    <ol class="sources">
+      <li><a href="https://www.gong.io/resources/labs/the-best-and-worst-cold-call-openers-backed-by-data-from-300m-calls/">Gong Labs: the best and worst call openers</a> (saying why you're calling)</li>
+      <li><a href="https://doi.org/10.1037/pspi0000097">Huang, Yeomans, Brooks, Minson and Gino (2017): question-asking increases liking</a></li>
+      <li><a href="https://doi.org/10.1177/0956797618783714">Boothby, Cooney, Sandstrom and Clark (2018): the liking gap in conversations</a></li>
+      <li><a href="https://doi.org/10.1086/209380">Friestad and Wright (1994): the persuasion knowledge model</a></li>
+      <li><a href="https://doi.org/10.1080/10510974.2012.727941">Carpenter (2013): the "but you are free" technique</a></li>
+      <li><a href="https://developers.google.com/search/docs/essentials/spam-policies">Google Search spam policies</a> (why we never mass-produce pages)</li>
+      <li><a href="https://www.fcc.gov/document/fcc-makes-ai-generated-voices-robocalls-illegal">FCC (2024): AI-generated voices in robocalls</a> (why a person always dials)</li>
+    </ol>
+    <p class="small">The offer card was last updated ${escH(O.updated)}.</p>`
+};
+document.querySelectorAll('[data-render]').forEach(el => { const f = RENDER[el.dataset.render]; if(f) el.innerHTML = f(); });
+document.addEventListener('click', e => { const a = e.target.closest('a[data-goid]'); if(a) e.preventDefault(); });
 
 /* ---------- ART ---------- */
 const skin='#E9B98A';
@@ -1289,8 +877,7 @@ function applyMe(){
   document.querySelectorAll('.me').forEach(e=>e.textContent = me || 'teammate');
   document.getElementById('ava').textContent = me ? me[0] : '?';
   whoList.querySelectorAll('.who').forEach(b=>b.classList.toggle('sel', b.dataset.n===me));
-  renderSim();
-  if(typeof buildRecap==='function') try{ buildRecap(); renderBrief(); }catch(e){}
+  if(typeof renderPrep==='function') renderPrep();
 }
 whoList.addEventListener('click',e=>{
   const b = e.target.closest('.who'); if(!b) return;
@@ -1320,15 +907,15 @@ function update(){
   document.getElementById('tTitle').textContent = c.dataset.t;
   document.getElementById('tSub').textContent = c.dataset.s;
   document.getElementById('count').textContent = (idx+1)+'/'+cards.length;
-  [...prog.children].forEach((b,k)=>{b.className = (cards[k].dataset.sec==='services'?'svc ':'') + (k<idx?'done':(k===idx?'cur':''))});
+  [...prog.children].forEach((b,k)=>{b.className = (cards[k].dataset.sec==='offer'?'svc ':'') + (k<idx?'done':(k===idx?'cur':''))});
   const nx = document.getElementById('next');
   if(idx===0 && !me){ nx.textContent='Pick your name'; nx.classList.add('wait'); }
   else { nx.classList.remove('wait'); nx.textContent = idx<cards.length-1 ? 'Next: '+cards[idx+1].dataset.short : 'Start over'; }
   document.getElementById('back').disabled = idx===0;
-  const SECN = {start:'', services:'Know our services', call:'The cold call'};
+  const SECN = {start:'', card:'Before every call', offer:'What we offer', deep:'Go deeper (optional)'};
   let last = null;
   stops.innerHTML = cards.map((k,j)=>{
-    const sec = k.dataset.sec||'call'; let head='';
+    const sec = k.dataset.sec||'card'; let head='';
     if(sec!==last){ last=sec; if(SECN[sec]) head=`<li class="sechead">${SECN[sec]}</li>`; }
     return head + `<li><button data-j="${j}" class="${j===idx?'cur':(seen.has(j)?'seen':'')}"><b>${j+1}</b>${k.dataset.t}</button></li>`;
   }).join('');
@@ -1398,238 +985,53 @@ document.querySelectorAll('.sortrow').forEach(r=>{
 document.addEventListener('change',e=>{ if(e.target.closest('details')) setTimeout(checkMore,30); });
 document.querySelectorAll('details').forEach(d=>d.addEventListener('toggle',()=>setTimeout(checkMore,30)));
 
-/* ---------- MATH CALC ---------- */
-const dials = document.getElementById('dials');
-function fmt(n){ return n>=10 ? Math.round(n).toString() : (Math.round(n*10)/10).toString(); }
-function calc(){
-  const d = +dials.value;
-  document.getElementById('dialsOut').textContent = d;
-  document.getElementById('cogAvg').textContent = fmt(d*0.027);
-  document.getElementById('cogTop').textContent = fmt(d*0.113);
-}
-dials.addEventListener('input',calc); calc();
-
-/* ---------- RECAP EMAIL ---------- */
-const LEAD_LINES = {
-  phone: ['A phone demo line', 'Call it tonight and hear how every after-hours caller could get answered, booked, and texted to you. It’s a separate test number, so nothing touches your phones.'],
-  found: ['A one-page visibility check', 'How {shop} shows up when homeowners in {town} search, or ask their phone who to call, in plain English, with what we already fixed.'],
-  site:  ['A new website', 'Built to make calling {shop} the obvious choice when someone’s heat or AC quits.'],
-  social:['Social media, done for you', 'A few posts and short videos a week on Facebook, Instagram and TikTok, built from your real jobs. You approve the plan in about 15 minutes a month, and your accounts stay yours.']
-};
-function buildRecap(){
-  const g = id=>document.getElementById(id).value.trim();
-  const owner=g('e_owner')||'[Owner]', shop=g('e_shop')||'[Shop]', town=g('e_town')||'[town]';
-  const lead=g('e_lead'), day=g('e_day'), time=g('e_time'), fmt=g('e_fmt'), phone=g('e_phone')||'[your number]', tt=g('e_true');
-  const fill = s=>s.replace(/\{shop\}/g,shop).replace(/\{town\}/g,town);
-  const order = [lead].concat(['phone','found','site','social'].filter(k=>k!==lead));
-  const items = order.map((k,i)=>`${i+1}. ${LEAD_LINES[k][0]}: ${fill(LEAD_LINES[k][1])}\n   [link]`).join('\n\n');
-  const who = me || '[your name]';
-  document.getElementById('e_out').value =
-`Subject: Your free StarWell package, ${shop}
-
-Hi ${owner},
-
-Thanks for the few minutes today. ${tt ? 'When we looked, we noticed ' + tt.replace(/[.\s]+$/,'') + ', so we built around that.' : ''}
-
-Here's what we put together for ${shop}. It's free, and it's yours to keep:
-
-${items}
-
-Why free: we're new to Connecticut HVAC, and we'd rather show you than tell you. If you love it, maybe we work together down the road. If not, it's still yours.
-
-Walkthrough: ${day} at ${time}, 15 minutes ${fmt==='shop' ? 'at the shop' : 'by phone'}.
-
-If this isn't useful, just reply "no thanks" and we won't follow up.
-
-${who}
-StarWell SI
-${phone}`;
-}
-['e_owner','e_shop','e_town','e_lead','e_day','e_time','e_fmt','e_phone','e_true'].forEach(id=>document.getElementById(id).addEventListener('input',buildRecap));
-function copyText(text, msgEl, ta){
-  try{ navigator.clipboard.writeText(text).then(()=>msgEl.textContent='Copied.',()=>{ if(ta) ta.select(); msgEl.textContent='Select and copy manually.'; }); }
-  catch(e){ if(ta) ta.select(); msgEl.textContent='Select and copy manually.'; }
-}
-document.getElementById('e_copy').addEventListener('click',()=>{ const t=document.getElementById('e_out'); copyText(t.value, document.getElementById('e_msg'), t); });
-
-/* ---------- PROSPECT BRIEF ---------- */
-const BF = ['shop','owner','town','phone','since','service','true','src','comp','after','ai','social','hiring','hook','lead','paynow','vw1','vw2','vw3','vw4'];
-const LEAD_SAY = {
-  phone: 'StarWell built a demo line that answers like your office would, books the call, and texts you who called. Separate test number; nothing touches your phones.',
-  found: 'I’ll send one page showing how you come up when people search or ask their phone who to call, plus what we already fixed.',
-  site:  'StarWell built a fresh version of your website, made to turn people who find you into phone calls. It’s yours either way.',
-  social:'We’ll run your Facebook, Instagram and TikTok for you, built from your real jobs. You approve the plan in about 15 minutes a month.'
-};
-const HOOK_Q = {
-  'Heating season': 'When that first cold night hit last week, how did the phones go after hours?',
-  'AC season': 'When that heat wave hit, how did the phones go after hours?',
-  'Hiring': 'Looks like the phones are busy. Congrats on the growth. Who handles calls when everyone’s out?',
-  'New location or service': 'Congrats on the expansion. How are new customers finding you there so far?',
-  'Recent reviews': 'Your reviews are great lately. How do most new customers find you right now?',
-  'Not in AI answers': 'How do most of your new customers find you right now?',
-  'Other': 'What happened with calls after hours last week?'
-};
-function readBrief(){ const b={}; BF.forEach(k=>{ b[k]=document.getElementById('b_'+k).value.trim(); }); return b; }
-function fillBrief(b){ BF.forEach(k=>{ const el=document.getElementById('b_'+k); if(b[k]!=null) el.value=b[k]; }); renderBrief(); }
-function renderBrief(){
-  const b = readBrief(), who = me || '[your name]';
-  const o = b.owner || '[Owner]', shop = b.shop || '[Shop]';
-  const lines = [
-    `CALL CARD · ${shop}${b.town?' · '+b.town:''}${b.phone?' · '+b.phone:''}`,
+/* ---------- PREP SHEET: the call card, filled in for one shop ---------- */
+const PF = ['shop','name','town','close','true','lead','why','day','day2'];
+function readPrep(){ const v = {}; PF.forEach(k => { const el = document.getElementById('p_' + k); v[k] = el ? el.value.trim() : ''; }); return v; }
+function prepText(){
+  const v = readPrep(), g = O.gifts[v.lead || 'phone'], S = O.steps;
+  const ex = O.example;
+  const vars = {name:v.name || ex.name, shop:v.shop || ex.shop, town:v.town || ex.town, close:v.close || ex.close, lead:v.lead || 'phone', me:me || '[your name]'};
+  const f = t => O.fill(t, vars);
+  const day = v.day || `${ex.day} at ${ex.time}`, day2 = v.day2 || `${ex.day2} afternoon`;
+  return [
+    `CALL CARD · ${vars.shop}, ${vars.town}`,
     ``,
-    `1 OPENER: "Hi ${o}, this is ${who} with StarWell, here in Connecticut. This is a cold call, so I'll be quick. I was on your ${b.src||'website'} and noticed one thing I think could help."`,
-    `2 TRUE THING: "${b.true||'[one checkable fact]'}."`,
-    b.comp ? `   COMPLIMENT (if it fits): "${b.comp}."` : `   COMPLIMENT: [add one from their reviews]`,
-    b.since ? `   SHARED GROUND: ${b.since}` : '',
-    `3 THEIR WEEK: "${HOOK_Q[b.hook]||HOOK_Q.Other}"`,
-    `4 LEAD GIFT: "${LEAD_SAY[b.lead]||LEAD_SAY.phone}"`,
-    `   + "I'll put the rest of the package in the email. It's all free; we're new to Connecticut HVAC and would rather show you than tell you."`,
-    `5 EMAIL + DATE: "What's the best email? And could I walk you through it [day] at [time], fifteen minutes?"`,
+    `1 · HELLO`,
+    f(S[0].say[0].t),
+    f(S[0].say[2].t),
     ``,
-    `NOTES: after-hours → ${b.after||'?'} · AI/Google → ${b.ai||'?'} · last post → ${b.social||'?'} · hiring → ${b.hiring||'no'} · service → ${b.service||'?'}`
-  ].filter(x=>x!=='');
-  document.getElementById('briefOut').textContent = lines.join('\n');
+    `2 · NOTICE & ASK`,
+    `${f('I was looking at {shop}.')} ${v.true ? v.true + '.' : '[one true thing]'}`,
+    `Can I ask you one thing? ${f(S[1].questions[vars.lead])}`,
+    `(Listen. Follow up on his words.)`,
+    ``,
+    `3 · THE ONE GIFT: ${g.name}${v.why ? ' (' + v.why + ')' : ''}`,
+    `That's actually what we help with. ${f(g.say)}`,
+    ``,
+    `4 · THE REST, AND WHY IT'S FREE`,
+    f(S[3].say[0].t),
+    f(S[3].say[1].t),
+    `If he asks: ${O.free.line}`,
+    ``,
+    `5 · NEXT STEP`,
+    `No commitment at all. Could I show you in 15 minutes? Would ${day} or ${day2} work? And what's the best email to send it to?`,
+    `Thanks, ${vars.name}. I'll send it today.`
+  ].join('\n');
 }
-BF.forEach(k=>document.getElementById('b_'+k).addEventListener('input',renderBrief));
-function loadBriefs(){ try{ return JSON.parse(store.get('sw_cc_briefs')||'[]'); }catch(e){ return []; } }
-function saveBriefs(a){ store.set('sw_cc_briefs', JSON.stringify(a)); }
-function renderBriefList(){
-  const a = loadBriefs(), el = document.getElementById('b_list');
-  if(!a.length){ el.textContent='None yet.'; return; }
-  el.innerHTML = a.map((b,i)=>`<div class="sortrow" style="display:flex;gap:8px;align-items:center;justify-content:space-between"><span><b>${esc(b.shop||'(no name)')}</b> · ${esc(b.town||'')} <span class="small">${esc(b.saved||'')}</span></span><span style="display:flex;gap:6px"><button class="dsmall" data-load="${i}">Open</button><button class="dsmall" data-del="${i}">Delete</button></span></div>`).join('');
-}
-document.getElementById('b_list').addEventListener('click',e=>{
-  const l=e.target.closest('[data-load]'), d=e.target.closest('[data-del]'); const a=loadBriefs();
-  if(l){ fillBrief(a[+l.dataset.load]); document.getElementById('b_msg').textContent='Brief opened.'; }
-  if(d){ a.splice(+d.dataset.del,1); saveBriefs(a); renderBriefList(); }
-});
-document.getElementById('b_save').addEventListener('click',()=>{
-  const b = readBrief(); const msg=document.getElementById('b_msg');
-  if(!b.shop){ msg.textContent='Add the shop name first.'; return; }
-  b.saved = new Date().toLocaleDateString(); b.by = me||'';
-  const a = loadBriefs(); const i = a.findIndex(x=>(x.shop||'').toLowerCase()===b.shop.toLowerCase());
-  if(i>=0) a[i]=b; else a.push(b);
-  saveBriefs(a); renderBriefList(); msg.textContent='Saved on this device.';
-});
-document.getElementById('b_copy').addEventListener('click',()=>copyText(document.getElementById('briefOut').textContent, document.getElementById('b_msg')));
-document.getElementById('b_export').addEventListener('click',()=>{
-  const a = loadBriefs(); const msg=document.getElementById('b_msg');
-  if(!a.length){ msg.textContent='No saved briefs yet.'; return; }
-  const cols = ['shop','owner','town','phone','since','service','true','src','comp','after','ai','social','hiring','hook','lead','paynow','vw1','vw2','vw3','vw4','by','saved'];
-  const tsv = [cols.join('\t')].concat(a.map(b=>cols.map(c=>(b[c]||'').replace(/[\t\n]/g,' ')).join('\t'))).join('\n');
-  copyText(tsv, msg);
-});
-
-/* ---------- OBJECTIONS ---------- */
-const OBJ = [{"cat": "Price", "items": [["What does this cost?", "Great question, and I'll be straight with you. The package is free, and it stays yours. If you ever want us to keep it running or take more off your plate, that's priced per shop, because every shop is different. You'd get a clear written quote first, with no surprises.", "Yea, yea; nay, nay (Matthew 5:37). Honest \"it depends,\" said with confidence, is trusted (Gaertig & Simmons)."], ["Just give me a ballpark.", "Fair enough. I'd rather give you a real number than guess and be wrong. After fifteen minutes on your setup, you'll have it in writing within a day. [team to confirm: starting range]", "False certainty isn't needed to be trusted; a real number in writing is."], ["What happens after the free part?", "Nothing, unless you ask. You keep everything. If you want us to keep it running, we'll talk about it then, with a written quote.", "Free has to stay free. A good name over riches (Proverbs 22:1)."], ["Is there a contract?", "Not for the package. Nothing to sign. If you ever choose ongoing help, everything's in writing, in plain English, before you decide.", "Remove effort and risk from his side (Hormozi's value equation)."], ["How do you make money, then?", "Some owners love the package and ask us to keep it running and add more. That's our business. The free work is how we earn the chance.", "Name the motive yourself (persuasion knowledge)."], ["Will the price go up later?", "Any price you see will be in writing before you decide, and we'll never change it without talking to you first. We don't go back on our word.", "Faithful in little, faithful in much (Luke 16:10)."], ["I can't afford anything right now.", "Then don't spend a dime. The package is yours. If things pick up and you want help, we're here.", "Look on the things of others (Philippians 2:4). Serve first, sell never."]]}, {"cat": "The catch", "items": [["What's the catch?", "Fair question. StarWell is new to Connecticut HVAC, and we'd rather show you than tell you. If you love it, maybe we work together down the road. If not, it's still yours.", "The why-free sentence, word for word. Then stop talking."], ["Why would you do this for free?", "Because showing real work is the best way to earn a second conversation. We'd rather prove it than promise it.", "Give away the secrets, sell the implementation (Hormozi)."], ["Is this a scam?", "Smart to ask. We're StarWell SI, a Connecticut company. There's nothing to pay, nothing to sign, and no logins. Look us up, and call me back on this number if you'd rather.", "Never argue; give him control (Carnegie)."], ["Never heard of you.", "You wouldn't have yet. We're new, and that's exactly why we do the work first.", "Admit the limit and the rest is believed (Eisend)."], ["Do you have other HVAC clients?", "Not in HVAC yet. You'd be one of our first, which means you'd get our very best attention. I can show you work we've done for other Connecticut businesses.", "Only real results, ever. Honesty about being new is a strength."], ["Are you going to sell my info?", "No. We protect client information like it's our own. It stays with us.", "Good stewards of what we're trusted with (1 Peter 4:10)."], ["Will you keep calling me?", "Only if you want me to. Say the word and you're off my list today.", "A no is respected the same day. That's our promise."]]}, {"cat": "What it does", "items": [["What exactly do I get?", "Three things, all yours. A new website made to turn the people who find you into calls. One page showing how you show up when people search or ask their phone. And a demo phone line you can call tonight to hear every caller get answered.", "Owner words, not tech words."], ["Will this get me more calls?", "I can't promise a number, and I won't. It's built to help more people find you and to make sure fewer calls slip by. The walkthrough shows exactly where you stand today, so you can judge.", "Honest uncertainty, said with confidence (Gaertig & Simmons)."], ["We get all our work from word of mouth.", "That's the best kind. When a neighbor recommends you, the first thing people do is look you up. This makes sure what they find matches what your neighbor said.", "Respect his view, then build on it (Carnegie)."], ["What's wrong with my website?", "Nothing's wrong with it. Your reviews section is great. The new one is just built for how people look for help now, mostly on their phone, often at night.", "Never criticize, condemn or complain (Carnegie)."], ["I don't need a website, I'm on Google and Facebook.", "Makes sense. The one-page check shows how that's working for you, and the site is there if you ever want it.", "See it from his side. No arguing."], ["We're already too busy.", "That's a great problem. The phone demo is mostly about the calls you already get, so your office isn't buried.", "Talk in terms of his interests (Carnegie)."], ["We're too small for this.", "Shops your size are exactly who we built this for.", "Make him feel important, sincerely (Carnegie)."]]}, {"cat": "Tech and trust", "items": [["Is this AI? I don't trust that stuff.", "We handle the tech. What you'd see is simple: more calls answered and more people finding you. And nothing touches your phones unless you say so.", "Owner words, and control stays with him."], ["Will the phone thing sound like a robot?", "Call the demo line tonight and judge for yourself. If you don't like it, you've lost nothing.", "Let him see the result himself (Hormozi: make it believable)."], ["Will it mess with my phones?", "It can't. It's a separate test number. Your phones stay exactly as they are.", "Plain truth, no hedging."], ["What if it tells a customer something wrong?", "Great question to ask. The demo only uses your public info. If you ever went live, you'd approve everything it says, and everything it should never say. Nothing goes live without your OK.", "Thank, truth, tie, turn."], ["I'm not a computer guy.", "You don't have to be. We do the tech; you just tell us how you like things done.", "Remove effort from his side (Hormozi)."]]}, {"cat": "What to expect", "items": [["How long does this take?", "The website, the visibility check and the demo line are ready right away, usually before our walkthrough. If you ever want custom tools built just for your shop, that's about one to two weeks to build, test and launch.", "Small promises kept earn big ones (Luke 16:10)."], ["What do you need from me?", "Nothing to start. If you love the site and want it live, just a few minutes with whoever handles your web address.", "Make yes easy."], ["Do I have to meet with you?", "Not at all. I can just email it. A quick walkthrough helps you see it faster, but it's your call.", "Freedom to choose lowers pushback."], ["Can my office manager or web guy join?", "Please do. The more the merrier.", "The people who run the phones are allies."], ["What if I don't like it?", "Then toss it, no hard feelings. I'd honestly love to hear why, so we can do better.", "If we're wrong, admit it quickly (Carnegie)."], ["Who owns it?", "You do. If you ever want us to keep it running, that's a separate choice.", "Ownership removes the hidden-hook worry."]]}, {"cat": "Timing and fit", "items": [["Not interested.", "Totally fair. Is that not interested in a free website, or just not right now while you're on a job? And if it's still no: no problem at all. Thanks for your time, and have a great day.", "One kind clarify, then a warm exit. A soft answer (Proverbs 15:1)."], ["Call me back after the season.", "Will do. Would early spring be better? I'll send the package now so it's waiting for you, and I'll call when you said.", "He asked for the follow-up, so honor it exactly."], ["Just send me an email.", "Perfect, that's exactly what I want to do. What's the best address? And would fifteen minutes this week to walk you through it help?", "Not a brush-off here. Email is our next step anyway."], ["We already have someone for that.", "Great. Then think of this as a second option, not a replacement. Show it to them; they might like the ideas.", "Be the more useful advisor (Iannarino)."], ["I'm not the owner.", "Thanks for telling me. You probably know the phones better than anyone. Who'd be the right person to send it to?", "The office manager is an ally."]]}];
-(function(){
-  const el = document.getElementById('objList');
-  const tabs = OBJ.map((c,i)=>`<button data-qt="${i}" class="${i?'':'sel'}">${c.cat}</button>`).join('');
-  const panes = OBJ.map((c,i)=>`<div class="qpane" data-qp="${i}" style="${i?'display:none':''}">` + c.items.map(o=>
-    `<button class="flip"><div class="f"><b>"${esc(o[0])}"</b><span class="hint">Say yours out loud, then tap</span></div><div class="bk">${esc(o[1]).replace(/\[team to confirm([^\]]*)\]/g,'<b style="color:var(--gold)">[team to confirm$1]</b>')}<span class="principle">${esc(o[2])}</span></div></button>`).join('') + `</div>`).join('');
-  el.innerHTML = `<div class="tabs" id="qTabs">${tabs}</div>` + panes;
-  document.getElementById('qTabs').addEventListener('click',e=>{
-    const b=e.target.closest('[data-qt]'); if(!b) return;
-    el.querySelectorAll('[data-qt]').forEach(x=>x.classList.toggle('sel',x===b));
-    el.querySelectorAll('[data-qp]').forEach(x=>x.style.display = x.dataset.qp===b.dataset.qt ? '' : 'none');
-    setTimeout(checkMore,30);
+function renderPrep(){ const out = document.getElementById('pout'); if(out) out.textContent = prepText(); }
+(() => {
+  const form = document.getElementById('pform'); if(!form) return;
+  try{ const saved = JSON.parse(store.get('sw_cc_prep') || '{}'); PF.forEach(k => { const el = document.getElementById('p_' + k); if(el && saved[k]) el.value = saved[k]; }); }catch(e){}
+  form.addEventListener('input', () => { store.set('sw_cc_prep', JSON.stringify(readPrep())); renderPrep(); });
+  form.addEventListener('change', () => { store.set('sw_cc_prep', JSON.stringify(readPrep())); renderPrep(); });
+  document.getElementById('p_copy').addEventListener('click', () => {
+    const t = prepText(), msg = document.getElementById('p_msg');
+    (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => { msg.textContent = 'Copied. Paste it into your notes.'; }).catch(() => { msg.textContent = 'Select the card above and copy it.'; });
   });
+  document.getElementById('p_clear').addEventListener('click', () => { PF.forEach(k => { const el = document.getElementById('p_' + k); if(el) el.value = el.tagName === 'SELECT' ? 'phone' : ''; }); store.set('sw_cc_prep', '{}'); renderPrep(); });
+  renderPrep();
 })();
-document.getElementById('objList').addEventListener('click',e=>{
-  const f = e.target.closest('.flip'); if(f){ f.classList.toggle('open'); setTimeout(checkMore,30); }
-});
-
-/* ---------- SIM ---------- */
-const SIM = [
-  {h:'"Yeah, this is Craig."', o:[
-    ['"Hi Craig, did I catch you at a bad time?"',0,'Gong\'s weakest opener (about 2% vs about 11%). It hands him an exit and no reason to stay.'],
-    ['"Hi Craig, this is {me} with StarWell, here in Connecticut. This is a cold call, so I\'ll be quick. I was on your website this morning and noticed one thing about after-hours calls."',1,'Who, why, and where you looked. He can relax and listen.'],
-    ['"Hi Craig! StarWell helps HVAC companies grow with AI and automation."',0,'Generic, and it leads with tech. Owners buy outcomes.']]},
-  {h:'"Okay. What\'d you notice?"', o:[
-    ['"Your site says the office closes at 5, and I didn\'t see a way to book after that. When that first cold night hit last week, how did the evening calls go?"',1,'One true thing plus a last-week question. Adaptive selling is our strongest evidence.'],
-    ['"Honestly, your website\'s pretty outdated."',0,'Criticism makes people defensive. Point to the opportunity instead.'],
-    ['"We\'ve helped dozens of HVAC shops double their calls."',0,'We have no HVAC results yet. Only real results, ever.']]},
-  {h:'"Answering service gets them, I think. Honestly, a couple went to voicemail Saturday night."', o:[
-    ['"We use a retrieval-augmented LLM voice agent with real-time calendar integration."',0,'All true, all noise. Sell the feeling.'],
-    ['"You\'re probably losing $50,000 a year on missed calls."',0,'Invented number. Let him do the math with his own figures.'],
-    ['"StarWell built a demo line that answers like your office would, books the call, and texts you who called. Separate number, nothing touches your phones. I\'ll include a fresh website and a quick check on how people find you too."',1,'Lead gift that matches his answer, in owner words, two more in one line.']]},
-  {h:'"What\'s the catch?"', o:[
-    ['"StarWell is new to Connecticut HVAC, and we\'d rather show you than tell you. If you love it, maybe we work together down the road. If not, it\'s still yours."',1,'The why-free sentence, word for word. Then stop talking.'],
-    ['"No catch, trust me!"',0,'"Trust me" raises the very question it tries to answer.'],
-    ['"Well, see, we\'re a new company, and there are a lot of agencies out there, and honestly we just want to get some clients, so..."',0,'Long and nervous sounds like hiding something.']]},
-  {h:'"Alright. Send it over."', o:[
-    ['"Great, I\'ll send it. Talk soon!"',0,'No email captured and no date. Implementation intentions need a when.'],
-    ['"What\'s the best email? I\'ll send it within the hour. And could I walk you through it Tuesday at 7:30, before the trucks go out? Fifteen minutes."',1,'Email, a specific short slot, in writing after. That\'s the step.'],
-    ['"Let\'s book an hour so I can go through everything."',0,'Too big an ask. Start with 15 minutes.']]},
-  {h:'Different call. Owner: "Not interested."', o:[
-    ['"Can I just take two minutes to explain?"',0,'Pushing past a no creates pushback.'],
-    ['"Totally fair. Is that not interested in a free website, or just not right now while you\'re on a job?"',1,'One kind clarify. That\'s your one.'],
-    ['(Hang up without a word.)',0,'You lose the warm ending, and maybe next season.']]},
-  {h:'Owner: "Not right now either."', o:[
-    ['"No problem at all. Thanks for your time, have a great day."',1,'Warm, respectful, done. He\'ll remember how you made him feel.'],
-    ['"Okay, I\'ll call you back in two weeks then."',0,'A no ends follow-up. That\'s our promise.'],
-    ['"Are you sure? It\'s completely free."',0,'Pressure after a second no. Never.']]}
-];
-let simStep=0, simScore=0, simLocked=false;
-function sub(s){ return s.replace(/\{me\}/g, me||'[your name]').replace(/\{town\}/g, TOWN); }
-function renderSim(){
-  const el = document.getElementById('sim'); if(!el) return;
-  if(simStep>=SIM.length){
-    const pct = simScore/SIM.length;
-    el.innerHTML = `<div class="score"><div class="tag">Your score, ${me||'teammate'}</div><div class="big">${simScore}/${SIM.length}</div>
-      <p class="hand ${pct<1?'em':''}">${pct===1?'Clean call. Now do it on a real phone.':pct>=.75?'Close. Re-read the cards you missed.':'Run it again after the step cards.'}</p>
-      <button class="btn v" id="simAgain">Run it again</button></div>`;
-    document.getElementById('simAgain').onclick=()=>{simStep=0;simScore=0;renderSim();};
-    return;
-  }
-  const s = SIM[simStep]; simLocked=false;
-  const order = s.o.map((x,k)=>k);
-  el.innerHTML = `<p class="tag">Round ${simStep+1} of ${SIM.length} · Score ${simScore}</p>
-    <div class="hear simline">${s.h}</div>
-    <div class="quizsim">${order.map(k=>`<button class="opt" data-k="${k}">${sub(s.o[k][0])}</button>`).join('')}</div>
-    <div class="fb" id="simFb"></div>`;
-  el.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>{
-    if(simLocked) return; simLocked=true;
-    const o = s.o[+b.dataset.k];
-    b.classList.add(o[1]?'right':'wrong');
-    if(o[1]) simScore++;
-    else el.querySelectorAll('.opt').forEach(x=>{ if(s.o[+x.dataset.k][1]) x.classList.add('right'); });
-    const fb = document.getElementById('simFb');
-    fb.innerHTML = (o[1]?'<b>Good.</b> ':'<b>Not that one.</b> ')+o[2]+`<br><button class="btn" id="simNext" style="margin-top:8px">${simStep<SIM.length-1?'Next round':'See score'}</button>`;
-    fb.classList.add('show');
-    document.getElementById('simNext').onclick=()=>{simStep++;renderSim();cards[idx].scrollTop=cards[idx].scrollTop;};
-    setTimeout(checkMore,30);
-  }));
-}
-
-/* ---------- PREP ---------- */
-const prep = document.getElementById('prepList');
-prep.addEventListener('change',()=>{
-  const n = prep.querySelectorAll('input:checked').length, t = prep.querySelectorAll('input').length;
-  const s = document.getElementById('prepScore'); s.textContent = n+'/'+t;
-  s.style.color = n===t ? 'var(--go)' : 'var(--verm)';
-});
-
-/* ---------- SCORECARD ---------- */
-function v(id){ return Math.max(0, parseFloat(document.getElementById(id).value)||0); }
-function pctS(x){ return (Math.round(x*1000)/10)+'%'; }
-function cls(val, avg, top, lowerBetter){
-  if(lowerBetter){ return val<=top?'go':(val<=avg?'maybe':'stop'); }
-  return val>=top?'go':(val>=avg?'maybe':'stop');
-}
-function score(){
-  const d=v('s_d'),c=v('s_c'),e=v('s_e'),n=v('s_n'),h=v('s_h'),f=v('s_f');
-  const items=[];
-  if(d){ const r=c/d; items.push(['Conversations per dial',pctS(r),'avg 5.4% · top 13.3%',cls(r,.054,.133)]); }
-  if(c){ items.push(['Emails per conversation',pctS(e/c),'our own number to grow','']); }
-  if(c){ const r=n/c; items.push(['Walkthroughs per conversation',pctS(r),'Gong: avg 4.6% · top 16.7%',cls(r,.046,.167)]); }
-  if(n){ const r=d/n; items.push(['Dials per walkthrough',fmt(r),'plan: 40–45 at first',r<=40?'go':(r<=45?'maybe':'stop'),r<=40?'Better than plan':(r<=45?'On plan':'Keep going')]); }
-  if(n){ items.push(['Held ÷ booked',pctS(h/n),'test 5 aims to raise this','']); }
-  if(n){ items.push(['Package hours per walkthrough',fmt(f/n),'know our cost per package','']); }
-  document.getElementById('scoreOut').innerHTML = items.map(i=>`<div><div class="lbl">${i[0]}</div><div class="num">${i[1]}</div><div class="cmp">${i[3]?`<span class="pill ${i[3]}">${i[4]||(i[3]==='go'?'At/above top':i[3]==='maybe'?'At/above avg':'Building up')}</span><br>`:''}${i[2]}</div></div>`).join('') || '<p class="small">Enter some dials to see your rates.</p>';
-}
-['s_d','s_c','s_e','s_n','s_h','s_f'].forEach(id=>document.getElementById(id).addEventListener('input',score));
-score();
 
 /* ---------- DRIVE MODE: NARRATION ----------
    Tokens: {me} = signed-in name, {town} = TOWN.
@@ -1638,40 +1040,26 @@ score();
    Avoid decimals and abbreviations with periods: sentences are split on . ! ? */
 const NARR = [
 /* signin */ null,
-/* s-overview */ `Know our services. | Four tools, one system. Think of a home heating system. | Search visibility is the ductwork. It carries homeowners from Google, Maps and ChatGPT to the shop. | The website is the furnace. It turns a visit into a call. | Phone answering is the thermostat. It reacts at two in the morning: answers, books, and texts the owner. | Social media is the vents. It keeps the shop present and trusted. | A great furnace with leaky ducts? Nobody arrives. Great ducts, no thermostat? The two A M call goes nowhere. | The terms are simple. Built free. Run free during our pilot. Everything stays his. Nothing goes live without his OK.`,
-/* s-whynow */ `Why now? Because the front door keeps moving. | In 2011, the internet passed print for local business information. In 2015, phones passed computers, and Google's map shrank from seven shops to three. | Then short video. TikTok use among U S adults rose from twenty-one to thirty-seven percent. | In 2025, Pew found that when Google shows an AI summary, link clicks drop from fifteen percent of visits to eight. | And in 2026, forty-five percent of people asked AI for a local recommendation, up from six. | Here's the analogy. It's the phone book to Google, happening again. The early shops on Google Maps didn't work harder. They showed up where people had already moved.`,
-/* s-website */ `The website. A site that makes the phone ring. | We rebuild the look from more than five hundred top sites we've studied, and the owner picks between two. His own trucks and crew, never stock photos. Every old page and link moves over, so he keeps his Google traffic. | Every piece of the layout has a reason. Visitors judge a site in about fifty milliseconds, so stars, town, and a Call button sit on the first screen. Five reviews lifted purchase likelihood two hundred seventy percent over none. Seventy percent of homeowners prefer contractors who are open about price. | Our goal: three to six percent of visitors become leads. | In owner words? A showroom that's open all night.`,
-/* s-seo */ `Search visibility. Be the shop they find first. | When the heat quits at two in the morning, people call one of the first few names they see. | Three games, in plain words. S E O: ranking on Google and the map's top three. That's the highway sign. A E O: being the answer Google's AI summary quotes. The information desk. G E O: being named when someone asks ChatGPT. A well-read friend's pick. | The system finds the searches he's losing, fixes the basics first, publishes real answers, and reports weekly. | Be honest about this part. Gains take months, and nobody can guarantee number one. Visibility gets the call. His service wins the job.`,
-/* s-social */ `Social media. Keep the lights on. | We run his Facebook, Instagram and TikTok. Three to four posts and three short videos a week, built around Connecticut's seasons: carbon monoxide safety in winter, tune-ups in spring, the first cold snap in fall. He spends about fifteen minutes a month approving it. | Why steady? Buffer's data: accounts posting most weeks saw about five times the engagement per post. | Images are automated. With the owner's OK, some are AI-made and labeled where platforms require. Otherwise, we use his company's own photos. And an AI image is never passed off as a real job. | The analogy: a page last updated in 2022 looks like a shop with the lights off.`,
-/* s-phone */ `Phone answering. Every ring answered. | Call it phone answering, or a virtual receptionist. Never lead with AI. | Why it matters: Invoca found twenty-seven percent of home services calls went unanswered, and under three percent of callers sent to voicemail leave a message. | The flow. A greeting with Connecticut's recording notice. Emergencies first: a gas smell or a carbon monoxide alarm means leave the home, call nine one one or the gas utility, then a live transfer to the on-call tech. Then booking, one question at a time. Then a text summary to the owner. | It starts on a test number. His real line forwards only with his yes. | And for what missed calls cost, use his numbers only. Never ours.`,
-/* s-pricing */ `Pricing, for the team. | The caller line, word for word: Most shops start around three hundred to four hundred dollars a month with StarWell, in writing, no surprises, and the free package stays yours either way. | Behind it, four tiers. Care, three to four hundred: hosting, updates, the Google profile, and a monthly report. Growth, eight hundred to twelve hundred, adds ongoing search work. Full Front Office, fifteen hundred to two thousand, adds phone answering on his real line. And custom tools, a one-time project. | Our rules: month to month, no setup fee, no surprise increases, his name on every account. | At walkthroughs, ask what he pays now, and log it in his brief.`,
-/* s-proof */ `Proof, and the win-win. | We give it away to prove it in real Connecticut shops. Results earn feedback. Then we charge, knowing it works. | Share others' results honestly. ServiceTitan reports a Dallas HVAC shop booked over ninety percent of thirteen hundred calls with a voice agent. That's a vendor claim, so say so: his shop is different, and StarWell will measure his. | Our own proof today comes from Absolute Transportation, a Connecticut company. HVAC results are still being earned. That's why it's free. | Reviews come only after results. His honest words, never scripted, never traded for anything. As Proverbs puts it: let another man praise thee, and not thine own mouth.`,
-/* s-safety */ `Safe by design. | No human check on every step. The rules are built in, and the owner approves at three moments: setup, anything new, and anything that speaks for his shop. | The website: true claims only, and it goes live only with his OK. Visibility: no fake reviews, no guarantees, Reddit always disclosed. Social: AI images only with his OK, and we never touch passwords. Phones: the safety script first, no prices unless he approves them, and it's honest that it's virtual. | And his data is never sold.`,
-/* s-check */ `Teach it to know it. | Explain any system in three beats. One sentence about what it does for him. One analogy. One sourced fact. | Like this: StarWell's phone answering picks up every call you miss, like a dispatcher who never sleeps. Under three percent of callers who hit voicemail leave a message. | Research backs this up. Recall practice beats rereading. So, quick quiz. Answer out loud. | In the heating system, what part is the website? | ~ | The furnace. It turns interest into a call. | When does phone answering take over his real line? | ~ | Only after he says yes. It starts on a test number. | Can an AI image ever be shown as a real job? | ~ | Never. AI images need his OK, and real jobs use his own photos. | That's Know our services. Next, the cold call.`,
-/* welcome */ `The cold call. | {me}, you're calling to help. | You'll call family-run HVAC shops across Connecticut. Great at the work. Short on time for the website, the search results, and the after-hours phone. | You bring a free package, built for their shop. | Three rules. Every claim has a receipt. Every promise is true. And every owner is better off for the call, even if he says no.`,
-/* package */ `The package, in owner words. Sell the feeling, not the tech. | The website: a site that makes calling you the obvious choice. A showroom open all night. | Visibility: more people find you first. A highway sign. | Social: your pages stay active. The lights stay on. | Phones: every call you miss gets answered, and you get a text. A dispatcher who never sleeps. | Then the why-free sentence. Learn it word for word. | StarWell is new to Connecticut HVAC, and we'd rather show you than tell you. If you love it, maybe we work together down the road. If not, it's still yours.`,
-/* math */ `The math is on your side. | You don't need most owners to say yes. You need a few great conversations a week. | Cognism's 2026 data puts the average cold call success rate around three percent. Top teams reach about eleven. Plan roughly forty dials per walkthrough. Every dial moves you closer. | Two habits from Gong's data. Say why you're calling: about twice the meetings. And when he's talking, let it run. Calls that book run nearly twice as long. | For your first two weeks, chase learning goals, not results. Research shows that beats outcome goals on a new skill.`,
-/* confidence */ `Your confidence kit. | One. They like you more than you think. After first conversations, people underestimate how much the other person liked them. | Two. Call your nerves excitement. Saying I'm excited, out loud, raises how excited people feel. | Three. Your voice is the demo. Slow down. Smile. Pause after the reason. | Four. You're holding a gift, not asking a favor. | Five. Not now is just timing. Thank him, and dial the next one.`,
-/* his-side */ `See it from his side. | Craig is on a roof unit. Two trucks are out. A no-heat call is waiting. Every line you say should save him time. | An unknown number makes him think: sales? So say your name, StarWell, cold call, and one reason. | A script voice makes him think: says this to everyone. So say one true fact about his shop. | Free makes him think: what's the hook? So use the why-free sentence, then go quiet. | Do your homework, but keep it about the shop. People like people who like them. Say where you found each fact, and never bring up his home or family.`,
-/* brief */ `The Prospect Brief. Ten minutes per shop. | Fill in the shop, the owner's first name, the town, and one true thing, with where you found it. Add a genuine compliment, where after-hours calls go, and whether they show up on Google and in AI answers. Then pick a lead gift. | The brief writes your call card for you. | Our outreach bot's research is a head start. Verify every fact the same day. | And keep hooks real, recent, and his. An easy win, never a scare.`,
-/* map */ `The two-minute call. Five steps. | One, the opener. Ten seconds. | Two, one true thing. Fifteen seconds. | Three, his week. Thirty to sixty seconds. This is where he talks. | Four, the gift. Twenty seconds. | Five, email and a date. Fifteen seconds. | Notice: the longest step is his.`,
-/* step1 */ `Step one. Say why you're calling. | #ring | Hi Craig, this is {me} with StarWell, here in Connecticut. This is a cold call, so I'll be quick. I was on your website this morning and noticed one thing I think could help. | Who you are, why you're calling, and where you looked. | Gong's data: openers like this succeed around eleven percent of the time. Did I catch you at a bad time? About two.`,
-/* step2 */ `Step two. One true thing. | Your site says the office closes at five, and I didn't see a way to book after that. I'm curious how evening no-heat calls get handled. | Look at his contact page, his Google reviews, and who shows up when you search furnace repair in his town. | Use facts, not criticism. Your last Facebook post was in March: use it. Your website looks outdated: skip it. That makes him defensive. | Verify it the same day. One wrong fact costs all your credibility.`,
-/* step3 */ `Step three. Ask about last week. This is our strongest evidence. | A meta-analysis of more than thirty-one thousand salespeople found that adapting to the buyer improves real sales performance. | So ask: When that first cold night hit last week, how did the phones go after hours? | Then listen, and follow up once. You said Sarah handles callbacks. What about her day off? | Last week gets facts. Would you ever gets polite guesses.`,
-/* step4 */ `Step four. The gift. Lead with what fits. | If he talked about phones: StarWell built a demo line that answers like your office, books the call, and texts you. It's a separate test number. Call it tonight. | Then one line for the rest, and why it's free: StarWell is new to Connecticut HVAC, and we'd rather show you than tell you. | Naming your motive answers the catch before he asks. | One gift in focus. Then stop talking.`,
-/* step5 */ `Step five. Email, then a date. | What's the best email? I'll send it within the hour. Could I walk you through it Tuesday at seven thirty, before the trucks go out? Fifteen minutes. If it's not useful, say so and I won't follow up. | A specific when and where makes follow-through far more likely. | Send the recap within the hour. The builder on this card writes it for you.`,
-/* howtalk */ `How we talk. | Every answer has four beats. Thank him. Tell the truth, including what we don't know. Tie it to his shop. Turn it back with a question. | Ask follow-up questions; people like you more for them. Repeat his words back. And if you're not sure, say: I'll text you by tonight. | Carnegie: let him do most of the talking, and never say you're wrong. | Scripture: let your yea be yea, and your nay, nay. Be swift to hear, slow to speak. And go the second mile. The free package is our second mile. | Hormozi: make the offer so good there's no need to push. | The test: would I be comfortable if he knew exactly why I said it?`,
-/* price */ `Price, and the catch. Good questions. Straight answers. | When he asks what it costs: | Great question. The package StarWell built is free, and it stays yours. If you ever want us to keep it running, most shops start around three hundred to four hundred dollars a month, in writing, no surprises. We'd rather see it work for you first. | Never dodge. Never invent a number. Never discount on the spot, or say sign today. | Research shows an honest it depends, said with confidence, isn't trusted less. And volunteering cost details raised trust and sales.`,
-/* scripts */ `Here's the phones script, start to finish. | Hi, this is {me} with StarWell, here in Connecticut. Cold call, I'll be quick. Your site says the office closes at five. When that first cold night hit last week, how did the evening calls go? | Then listen. | StarWell built a demo line that answers like your office and texts you every call. Separate number. I'll include a fresh website, a search check, and a month of social posts. All free. What's the best email, and could I walk you through it Tuesday at seven thirty? | The other two scripts are on the card: getting found, and first impressions.`,
-/* questions */ `Owner questions. A question means he's listening. | I'll ask as the owner, then pause. Answer out loud before you hear ours. | O>What does this cost? | ~ | Great question. The package is free, and it stays yours. If you ever want us to keep it running, most shops start around three hundred to four hundred dollars a month, in writing, no surprises. | O>What's the catch? | ~ | Fair question. StarWell is new to Connecticut HVAC, and we'd rather show you than tell you. If you love it, maybe we work together down the road. If not, it's still yours. | O>Is this a scam? | ~ | Smart to ask. We're StarWell, a Connecticut company. Nothing to pay, nothing to sign, no logins. Look us up, and call me back on this number if you'd rather. | O>Will this get me more calls? | ~ | I can't promise a number, and I won't. It's built so more people find you and fewer calls slip by. The walkthrough shows where you stand today. | O>We get all our work from word of mouth. | ~ | That's the best kind. When a neighbor recommends you, people look you up first. This makes sure what they find matches what your neighbor said. | O>Is this AI? I don't trust that stuff. | ~ | We handle the tech. What you'd see is simple: more calls answered. And nothing touches your phones unless you say so. | O>Will it mess with my phones? | ~ | It can't. It's a separate test number. Your phones stay exactly as they are. | O>Who owns it? | ~ | You do. Keeping it running is a separate choice. | O>Not interested. | ~ | Totally fair. Is that not interested at all, or just not right now while you're on a job? And if it's still no: thanks for your time, have a great day. | O>Call me back after the season. | ~ | Will do. I'll send the package now so it's waiting, and call when you said. | The full library is on the card. Answer once, kindly. If it's still no, thank him and move on.`,
-/* roleplay */ `Role-play. Craig owns a twenty-person shop in Wallingford, Connecticut. He picks up in his truck. | #ring | O>Yeah, this is Craig. | Hi Craig, this is {me} with StarWell, here in Connecticut. This is a cold call, so I'll be quick. I was on your website this morning and noticed one thing about after-hours calls. | O>Okay. What'd you notice? | Your site says the office closes at five, and I didn't see a way to book after that. When that first cold night hit last week, how did the evening calls go? | O>Answering service gets them, I think. Honestly, a couple went to voicemail Saturday night. | StarWell built a demo line that answers like your office, books the call, and texts you. It's a separate number, so nothing touches your phones. I'll also include a fresh website and a quick check on how people find you. | O>What's the catch? | StarWell is new to Connecticut HVAC, and we'd rather show you than tell you. If you love it, maybe we work together down the road. If not, it's still yours. | O>Alright. Send it over. | What's the best email? I'll send it within the hour. Could I walk you through it Tuesday at seven thirty? Fifteen minutes. | That's the whole call. If he'd said no twice: thanks for your time, have a great day. And mean it.`,
-/* followup */ `Always leave a voicemail. | Gong's data: email replies roughly doubled when a voicemail came first. | Keep it short: Hi, this is {me} with StarWell, here in Connecticut. We put together a free website and phone demo for your shop, yours either way. Details are coming by email. | Then a few friendly touches over three weeks, each one giving something. | And a no ends follow-up. Same day.`,
-/* prep */ `Ready check, before you dial. | Brief done, and the true thing verified today. Compliment and lead gift ready. Why-free sentence memorized. Two walkthrough times. Recap email filled in. Do-not-call list checked. | Say I'm excited, out loud. | And remember: a person dials. Never our AI voice. That's the law.`,
-/* mentors */ `Your mentors, one line each. | Hormozi: make the free offer feel almost too good. | Josh Braun: one neutral question beats any pitch. | Neil Rackham: he commits when he names the cost. | Jeb Blount: prospect every single day. | Jason Bay: the first goal is a conversation, not a sale. | Marcus Sheridan: answer every question honestly. | The rest are on the card. And our own tracker is the final judge.`,
-/* firstweek */ `Your first week. | Day one: finish Know our services, and pick twenty Connecticut shops. | Day two: twenty Prospect Briefs, and role-play the scripts. | Days three and four: calls, morning and late afternoon. Log within the hour. Every recap sent within the hour. | Day five: walkthroughs, then review together. | We celebrate in order: real conversations, emails, walkthroughs, owners who want ongoing help, and happy clients. | Test one change at a time, over thirty conversations, before you call a winner.`,
-/* fieldcard */ `The field card. The whole call, one more time. | Opener: name, StarWell, here in Connecticut, cold call, and where you looked. | One true thing. | His week: a real question, then listen. | The gift, in owner words, and why it's free. | Email, and a date. | Always true facts, owner words, no pressure, and a no respected. | Go help someone, {me}.`
+/* card */ `The call card. Read this before every call. | The owner feels noticed and respected, and gladly says yes to 15 minutes. | We are not trying to sell anything on this call. We are trying to earn 15 minutes with a busy owner who has never heard of us. If he feels respected, he says yes or he says no kindly and would take our call again. Both are wins. | Five steps. | 1. Hello. | Hi, is this Dave? Hey Dave, this is {me} with StarWell, here in Connecticut. Heating season's on, so I'll be quick. | O>Okay. What can I do for you? | We help Connecticut HVAC shops get found and catch more calls, and I had one question about Hillside Heating. | 2. Notice & ask. | I was looking at Hillside Heating. People mention Mike by name in your reviews. | Can I ask you one thing? When you're out on a job or after you close at 5, what happens when a customer calls? | O>Goes to voicemail, mostly. I call them back in the morning. | Got it. And on a cold Saturday night, how does that usually go? | 3. The one gift. | That's actually what we help with. | Then the line for the one gift that fits: answering line, website, getting found. | 4. The rest, and why it's free. | It's part of a small free starter set we're doing for Connecticut shops, a fresh website and help showing up on Google and ChatGPT too. | Honest reason: we're new here, and we'd rather earn real results and honest reviews than make a quick sale. | 5. Next step. | No commitment at all. Could I show you in 15 minutes? Would Tuesday at 7:30 or Wednesday afternoon work? | And what's the best email to send it to? | Thanks, Dave. I'll send it today. Good luck with the cold nights. | If he asks what is free: | The website, the pages and the search check are yours to keep. The one thing that costs us to run is the answering line, so that's a free 30-day trial. After that it's completely your call. No card, nothing automatic.`,
+/* step1 */ `Step 1. Hello. About 10 seconds. | He knows who you are and why you are calling, in ten seconds. | Say it like this. | Hi, is this Dave? Hey Dave, this is {me} with StarWell, here in Connecticut. Heating season's on, so I'll be quick. | O>Okay. What can I do for you? | We help Connecticut HVAC shops get found and catch more calls, and I had one question about Hillside Heating. | Why it works. | An unknown number makes an owner think sales or spam? before you say a word. Your name, StarWell and Connecticut answer who is this? | One plain reason answers his next thought: what do they want? Gong studied hundreds of millions of sales calls: callers who simply said why they were calling did about twice as well as callers who didn't. | I'll be quick respects his time before you take any of it, and then you keep that promise. | In his head. | He is on a roof, in a basement or driving between jobs. In the first ten seconds he decides one thing: is this person going to waste my time? A real name, a local company and one honest reason tell him no. | If he says: | O>I'm on a job right now. | Totally get it. Can I call you back at 4:30, or is tomorrow morning better? | If he says: | O>Who is this again? | {me}, with StarWell. We're a small Connecticut team that helps HVAC shops. | Quick check. Which line would you pick? Try it on the screen when you are parked.`,
+/* step2 */ `Step 2. Notice & ask. About 30 to 60 seconds. | Show you looked at his shop, then ask one real question and listen. | Say it like this. | I was looking at Hillside Heating. People mention Mike by name in your reviews. | Can I ask you one thing? When you're out on a job or after you close at 5, what happens when a customer calls? | O>Goes to voicemail, mostly. I call them back in the morning. | Got it. And on a cold Saturday night, how does that usually go? | Match the question to the gift. | When you're out on a job or after you close, what happens when a customer calls? | When someone finds you online at night, how do they usually reach you or book? | How do most of your new customers find you these days? | Why it works. | One specific detail he can check, a review, his hours, a service, proves you did homework. General praise sounds like flattery. | Ask instead of tell. If you say you're missing calls, he defends himself. If he tells you, he believes it, because people trust problems they name themselves. | The follow-up on his own words is where he feels heard. Harvard researchers, Huang and colleagues, 2017, found people who ask follow-up questions are liked more. | His answer tells you which gift to lead with. Prep picks your best guess; the call confirms it. | In his head. | They actually looked at my shop. Then: They're asking, not telling me I'm doing it wrong. He is proud of what he built. A real question gives him the floor, and most people enjoy talking about their own work more than callers expect. | If he says: | O>We have an answering service. It's fine. | That's great. How do they handle the no-heat calls on a busy night? | If he says: | O>Why are you asking? | Fair question. We help with exactly this, and I'd rather understand how you do it before I say anything. | Quick check. Which line would you pick? Try it on the screen when you are parked.`,
+/* step3 */ `Step 3. The one gift. About 20 seconds. | Offer ONE thing that fits what he just told you. | Say it like this. | That's actually what we help with. | Then the line for the one gift that fits. | We set up an answering line trained on your company. It picks up when you can't, answers the basics, and sends you the job details right away. You can call the demo number yourself first and hear it. | We build you a modern website that's easy to get around, builds trust, and makes it simple for homeowners to request service. We'd make the first version for Hillside Heating at no cost, and it's yours to keep. | When someone searches Google or asks ChatGPT for an HVAC company near Hamden, we help make sure Hillside Heating has a better chance of showing up. I can send you a one-page check of where you show up today, free. | Why it works. | One small, specific thing that fits his own words is easy to picture and easy to say yes to. That's what we help with proves you listened. | A big list sounds too good to be true and turns the call into a pitch. Owners hang up on pitches, not on help. | Something he can try himself, call a demo number, read one page about his shop, is easier to trust than anything you describe. | In his head. | That's exactly what I just told him about. One thing he can check from the couch feels safe. Five services in a row feels like every sales call he has ever hung up on. | If he says: | O>Huh. How does that work? | Give the what it is in two sentences, see the gift, then: Easier to show you than tell you. | Quick check. Which line would you pick? Try it on the screen when you are parked.`,
+/* step4 */ `Step 4. The rest, and why it's free. About 15 seconds. | Mention the rest in one line, say honestly why it's free, then stop and answer his question. | Say it like this. | It's part of a small free starter set we're doing for Connecticut shops, a fresh website and help showing up on Google and ChatGPT too. | Honest reason: we're new here, and we'd rather earn real results and honest reviews than make a quick sale. | Why it works. | Free with no reason makes people imagine a catch. Researchers call it persuasion knowledge: when people sense a hidden motive, they resist. Naming your real motive takes the hidden part away. | We're new and want honest reviews is a motive every small-business owner understands. He was new once too. | One line about the rest plants the seed without turning the call into a pitch. If he's curious, he will ask, and then it's his idea. | His question, the catch, the price, do I keep it?, is a good sign. People only ask about things they are considering. | In his head. | Okay, so what do they get out of it? gets answered before he asks it. Hearing the real reason, plus honest reviews, sounds like a person being straight with him, not a script. | If he says: | O>What's the catch? | Fair question. We're new here, and we'd rather earn real results and honest reviews than make a quick sale. What we make is yours to keep, and the answering line is a free 30-day trial. No card, nothing to sign. | If he says: | O>Do I get to keep it? | The website, the pages and the search check are yours to keep, with the web address in your name. The answering line is the one exception: it's a free 30-day trial, then your choice. | Quick check. Which line would you pick? Try it on the screen when you are parked.`,
+/* step5 */ `Step 5. Next step. About 15 seconds. | Ask for 15 minutes at a specific time, and his email. Then a warm goodbye, whatever he says. | Say it like this. | No commitment at all. Could I show you in 15 minutes? Would Tuesday at 7:30 or Wednesday afternoon work? | And what's the best email to send it to? | Thanks, Dave. I'll send it today. Good luck with the cold nights. | Why it works. | A specific time is easier to say yes to, and it actually happens. Sometime this week almost never does. | Two choices let him decide without a yes-or-no wall. | Saying no commitment and meaning it lowers pressure. Studies of the but you are free to say no technique found that reminding people of their choice roughly doubles how often they say yes. | The email turns the call into something real. Send the recap the same day, with the terms in writing. | A warm goodbye after a no protects StarWell's name. Owners talk to each other. | In his head. | Fifteen minutes, he named a time, nothing to sign. Small and specific feels easy. And if he says no, a kind goodbye means he would take your call again in the spring. | If he says: | O>Just send me an email. | Happy to. What's the best email? And so it doesn't sit in your inbox, could I take 15 minutes Tuesday at 7:30 to walk you through it? | If he says: | O>Not right now. Maybe after the season. | Totally fair. Would early spring be better? I'll send it now so it's waiting for you. | Quick check. Which line would you pick? Try it on the screen when you are parked.`,
+/* prepsheet */ `Your prep sheet. About ten minutes per shop. | Fill in the shop, the owner, one true thing you noticed, and the one gift that fits. The page writes your call card for that shop. | Before you dial, check: you know which one gift you are leading with, and why. You can say the free line from memory. You have two walkthrough times ready. The shop is checked against the do-not-call list. And a person always dials. We never use an AI voice to call owners.`,
+/* free */ `Free, honestly. | The website, the pages and the search check are yours to keep. The one thing that costs us to run is the answering line, so that's a free 30-day trial. After that it's completely your call. No card, nothing automatic. | We're new here, and we'd rather earn real results and honest reviews than make a quick sale. | Yours to keep. | The website, files and web address in his name, hosting free for the first year, | The service and town pages, and the answers to customer questions | The one-page search check | Google Business Profile tuning | A free trial. | The answering line: free demo number anytime, then a free 30-day live trial with a minute cap | Not free. | Custom tools built for his shop: a fixed quote up front, usually 1 to 2 weeks to build | Ongoing care, search work or the live answering line after the trial: priced per shop, in writing first | Every minute of a live call costs us money, so it's a trial, not a forever gift. Saying that up front is what keeps us honest. | No card, ever, for anything free. | Nothing renews or starts charging on its own. | The terms go in the follow-up email the same day. | Nothing goes live without his OK.`,
+/* g-phone */ `The answering line. Picks up when you can't. | What it is. | A phone line trained on the shop: its services, hours and service area. When the owner can't pick up, on a job, after hours, it answers, handles the basics, takes the caller's name, number and problem, and sends the owner the details right away so he can call back. It starts on its own demo number, so nothing touches his phones. | What you say. | We set up an answering line trained on your company. It picks up when you can't, answers the basics, and sends you the job details right away. You can call the demo number yourself first and hear it. | How the owner feels. | Peace of mind: customers are taken care of without him answering every call himself. | The value to him. | Fewer missed calls, faster replies to no-heat emergencies, less time chasing voicemails. | Keep it true. | Say answers and sends you the details. Only say it books appointments if it's connected to his calendar. | If a caller asks, it says it's an automated assistant for the shop. It never pretends to be him. | Nothing touches his real phone line unless he says yes. | The terms. | The demo number is free to try, with no limit. The live line is a free 30-day trial on his real after-hours calls, with a minute cap written in the email. After that it pauses unless he chooses a plan. He keeps the call recordings, transcripts and the setup. | Every minute of a live call costs us money, so it's a trial, not a forever gift. Saying that up front is what keeps us honest.`,
+/* g-site */ `The website. Turns visitors into booked jobs. | What it is. | A modern, fast website built for phones: clear services, service area, real reviews and photos, and an easy request service button. Built from his real business information and his own job photos. | What you say. | We build you a modern website that's easy to get around, builds trust, and makes it simple for homeowners to request service. We'd make the first version for Hillside Heating at no cost, and it's yours to keep. | How the owner feels. | Confidence that his website brings in customers even while he's busy running the business. | The value to him. | More service requests, installation estimates and maintenance bookings, because visitors trust the shop and can act fast. | Keep it true. | Never criticize his current site. Say the new one is built for how people look for help now: on their phone, often at night. | No promises about how many calls it will bring. | Nothing goes live until he approves it. | The terms. | Free and his to keep: the files, and the web address in his name. We host it free for the first year. Changes after launch are part of the optional care plan.`,
+/* g-found */ `Getting found. Show up on Google and in AI answers. | What it is. | Helping the shop show up when people search Google, look at the map, or ask ChatGPT or another AI assistant for an HVAC company nearby. It starts with the one-page search check, then a free starter pack: a page for each main service and top town written from real jobs, answers to the questions customers actually ask, and a tuned Google Business Profile. | What you say. | When someone searches Google or asks ChatGPT for an HVAC company near Hamden, we help make sure Hillside Heating has a better chance of showing up. I can send you a one-page check of where you show up today, free. | How the owner feels. | Confidence that more homeowners can find his business right when they need help. | The value to him. | More local visibility, more calls for repairs, installs and maintenance, and less reliance on paid ads. | Keep it true. | Never promise rankings or first page. Say a better chance of showing up. | Pages are written from his real jobs, not mass-produced. Google treats mass-produced pages as spam. | He approves every page before it's published. | The terms. | Free starter pack, his to keep. Ongoing work is the optional growth plan, priced in writing first. | The one-page search check. | One page we put together about the shop, showing how it shows up today when a homeowner looks for help. It takes about 15 minutes to make, and it's free. | What is on the page. | Where the shop appears for 2 or 3 real searches, like furnace repair Hamden and AC repair near me, on Google and on the map | What ChatGPT and Google's AI answer say when asked for an HVAC company in that town, and whether the shop is named | Its reviews next to the shops that show up first, how many, and the rating, | Its Google Business Profile basics: hours, services and photos filled in, or not | Three plain fixes, most useful first | It is the easiest gift to say yes to: no setup, nothing to approve, just useful facts about his own shop. It also shows exactly where the website and search help would make a difference, so the walkthrough has something real to talk about.`,
+/* walk */ `The fifteen minutes. | Bobby runs the walkthrough for now. Your job on the call is to book it and get the email. | If he asks what happens, say: | We show you what we made, ask how your week runs, and you decide if you want any of it. No pressure, no card. | Show what we made. The gift that fits, live on screen: the search check, the site preview, or the demo line. | Ask how his week runs. Calls, booking, how customers find him, what eats his time. This is where custom tools come up, if they do. | Plain terms. What is his to keep, what is a trial, and what costs money later, in writing. | He decides. A next step only if he wants one. | Custom tools. | Not on the first call, unless he names a problem himself. | We also build small tools for exactly that. Happy to show you in the 15 minutes. | Custom tools are quoted up front and usually take 1 to 2 weeks to build, test and launch.`,
+/* questions */ `What owners ask. His question is a good sign. Agree it is fair, answer straight, then stop talking. | O>What's the catch? | Fair question. We're new here, and we'd rather earn real results and honest reviews than make a quick sale. What we make is yours to keep, and the answering line is a free 30-day trial. No card, nothing to sign. | Agree it's fair, then give the real reason and the real terms. Suspicion feeds on what's left unsaid. | O>Do I get to keep it? | The website, the pages and the search check are yours to keep, with the web address in your name. The answering line is the one exception: it's a free 30-day trial, then your choice. | Exact terms, said first, mean nothing surprises him later. | O>Is the answering line free forever? | No, and I'd rather tell you now. The demo number is free to try anytime. The live line is a free 30-day trial, because every call costs us to run. After that it's your call. No card, and you keep the recordings and the setup. | Telling him the limit before he finds it is what makes everything else you said believable. | O>What's this going to cost me? | What I mentioned is free. If you ever want ongoing help, it's priced per shop, and you'd get it in writing first. No surprises. | A calm, straight answer builds trust. We'll talk about that later sounds like hiding. | O>What happens in the 15 minutes? | We show you what we made, ask how your week runs, and you decide if you want any of it. No pressure, no card. | Knowing exactly what happens makes a small yes easy. | O>Is this AI? I don't trust that stuff. | Smart to ask. What you'd see is simple: calls you miss get answered, and you get the details. It runs on its own number first, and nothing touches your phones unless you say yes. | Talk about what he gets and controls, not the technology. Control lowers fear. | O>How'd you get my number? Is this a scam? | Smart to ask. It's on your website and your Google listing. We're StarWell, here in Connecticut. Nothing to pay, nothing to sign, no logins. Look us up, and call me back on this number if you'd rather. | Say where you found the number. Named sources feel normal; hidden ones feel creepy. | O>We're all set. My nephew does our website. | That's great, sounds like you're covered there. Can I ask, when calls come in after you close, who picks those up? | Agree first, then ask about a different gap. No argument, nothing to defend. | O>We paid a marketing company before. Got nothing. | That's frustrating, and I'm sorry that happened. That's exactly why what we make is free and yours to keep. You'd judge it on your own results, not our promises. | Acknowledge the pain, then remove the risk. | O>Ninety percent of my work is word of mouth. | That's the best kind. When a neighbor recommends you, people still look you up before they call. This makes sure what they find matches what your neighbor said. | Honor what he's proud of, then show how the gift protects it. | O>Just send me an email. | Happy to. What's the best email? And so it doesn't sit in your inbox, could I take 15 minutes Tuesday at 7:30 to walk you through it? | Say yes to the request, then add one specific time. | O>I'm on a job right now. | Totally get it, I'll be quick. Can I call you back at 4:30, or is tomorrow morning better? | Respecting his time is the whole message. | O>Could you build something for how we schedule? | Probably, yes. That's custom work, quoted up front, usually one to two weeks. Happy to look at it in the 15 minutes. | Say yes honestly, give the terms, steer to the walkthrough.`,
+/* team */ `Team questions. So we never tell two owners two different things. | Which do we offer first: one gift or the whole package? | One gift, the one on that shop's prep sheet, confirmed by his answer in step 2. Everything else gets one line in step 4. Never list the whole package. | Is anything built before we dial? | Only what's quick to make ahead: the one-page search check, and a homepage preview if Bobby made one. Never say we built it unless it exists. The answering line and custom tools are built after he says yes. | When does custom software come up? | Not on the first call, unless he names a problem himself. Then one line: We also build small tools for exactly that. Happy to show you in the 15 minutes. | How much do I need to know about the 15 minutes? | One sentence: We show you what we made, ask how your week runs, and you decide if you want any of it. Bobby runs the walkthrough for now. Knowing the four parts, show, ask, terms, decide, is plenty. | Is the demo line just a sample, or does it answer his real calls? Does he keep it? | Both, in order. First a demo number he calls himself: free, no limit. Then, if he wants it, a free 30-day trial on his real after-hours calls. After that it pauses unless he chooses a plan. He keeps the recordings and the setup. | Which tool do I use for what? | The guide is for knowing what to say and why. The practice line is for saying it out loud until it sounds like you. Both use this same call card. | What if the guide and the practice line ever disagree? | They can't anymore: both read the same offer file. If something still looks off, tell Bobby. The offer card at the top of the guide shows the date it last changed.`,
+/* hisside */ `Hear it through his ears. He is on a roof unit, two trucks are out, and a no-heat call is waiting. | 1. Hello. | He is on a roof, in a basement or driving between jobs. In the first ten seconds he decides one thing: is this person going to waste my time? A real name, a local company and one honest reason tell him no. | 2. Notice & ask. | They actually looked at my shop. Then: They're asking, not telling me I'm doing it wrong. He is proud of what he built. A real question gives him the floor, and most people enjoy talking about their own work more than callers expect. | 3. The one gift. | That's exactly what I just told him about. One thing he can check from the couch feels safe. Five services in a row feels like every sales call he has ever hung up on. | 4. The rest, and why it's free. | Okay, so what do they get out of it? gets answered before he asks it. Hearing the real reason, plus honest reviews, sounds like a person being straight with him, not a script. | 5. Next step. | Fifteen minutes, he named a time, nothing to sign. Small and specific feels easy. And if he says no, a kind goodbye means he would take your call again in the spring. | Homework, the respectful way. Keep it about the shop, never his home or family. Say where you found each fact. And only say what you checked today.`,
+/* words */ `Words we use. | Say the answering line. Not AI voice agent, AI receptionist bot. | Say showing up on Google and ChatGPT. Not SEO, AEO, GEO. | Say the one-page search check. Not audit, analysis. | Say a fresh website. Not website revamp, redesign of your bad site. | Say 15 minutes. Not demo, presentation, meeting. | Say a small free starter set. Not package deal, bundle, special offer. | Say yours to keep / a free 30-day trial. Not free for now, free forever, for the answering line. | Our rules. | Never say this is a cold call. | Ask before you tell. He names the problem, not you. | One gift first. The rest in one line. | Every promise is true: no rankings, no never miss a call, no we built it unless it exists. | Say the terms before he asks: yours to keep, or a 30-day trial. | No card, no contract, nothing automatic, ever, for anything free. | A no gets a warm goodbye the same day, and he comes off the list if he asks. | Nothing goes live without his OK.`,
+/* followup */ `Voicemail and the same-day email. | No answer? One short voicemail. | Hi Dave, this is {me} with StarWell, here in Connecticut. I had one quick question about Hillside Heating. I'll try you again Thursday morning, or you can call me back. | Then send the email the same day, with the terms in plain words, and the time you booked. | If he named a time, call exactly then. If the email gets no reply, one friendly check-in about a week later, then stop. If he asks to come off the list, do it the same day.`,
+/* confidence */ `Nerves are normal. | Strangers like you more than you think. After a first conversation, people consistently underestimate how much the other person liked them. | Asking follow-up questions makes you more likable. Step two is built on that. | For your first two weeks, chase learning, not results. | And a no is not a failure. A warm goodbye means he would take your call again.`,
+/* sources */ null,
 ];
-
 
 /* ---------- SUBTLE SOUND EFFECTS (synthesized, no files) ---------- */
 const SFX = { on: store.get('sw_cc_sfx') !== '0', ctx: null };
@@ -1954,8 +1342,8 @@ document.getElementById('driveBtn').addEventListener('click',()=>{ if(D.on) exit
 document.querySelectorAll('[data-open-drive]').forEach(b=>b.addEventListener('click',openDrive));
 document.getElementById('closeDrive').addEventListener('click',()=>driveSheet.classList.remove('open'));
 driveSheet.addEventListener('click',e=>{ if(e.target===driveSheet) driveSheet.classList.remove('open'); });
-document.getElementById('dTop').addEventListener('click',()=>startDrive(true,'welcome'));
-document.getElementById('dSvc').addEventListener('click',()=>startDrive(true,'s-overview'));
+document.getElementById('dTop').addEventListener('click',()=>startDrive(true,'card'));
+document.getElementById('dSvc').addEventListener('click',()=>startDrive(true,'free'));
 document.getElementById('dHere').addEventListener('click',()=>startDrive(false));
 document.getElementById('dTest').addEventListener('click',()=>{
   if(haveClips){
@@ -1993,7 +1381,6 @@ if('mediaSession' in navigator){
 /* ---------- INIT ---------- */
 applyMe();
 paintVoiceNote();
-renderBrief(); renderBriefList();
 go(idx);
 })();
 </script>

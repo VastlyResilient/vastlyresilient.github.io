@@ -57,7 +57,7 @@ function makePersona(opt){
   const s = {last, town, first:ownerFirst, r3:Math.floor(r()*3)};
   const shop = b.shop || pick(r, A.gender === 'f' && !A.gk ? SHOP_PATTERNS.slice(1) : SHOP_PATTERNS)(s);
   // how people say it on the phone: no Inc./LLC/Co.
-  const said = shop.replace(/\s*\(.*?\)\s*/g, ' ').trim().replace(/,?\s*(inc\.?|incorporated|l\.?l\.?c\.?|corp\.?|co\.?|company|ltd\.?)\s*$/i, '').replace(/,?\s*(inc\.?|l\.?l\.?c\.?)\s*$/i, '').replace(/\s+/g, ' ').trim();
+  const said = shop.replace(/\s*\(.*?\)\s*/g, ' ').trim().replace(/,?\s*(inc\.?|incorporated|l\.?l\.?c\.?|corp\.?|co\.?|company|ltd\.?)\s*$/i, '').replace(/,?\s*(inc\.?|l\.?l\.?c\.?)\s*$/i, '').replace(/\s+(llc|l\.l\.c\.|inc\.?)(?=\s)/ig, '').replace(/\s+/g, ' ').trim();
   const afterKeys = Object.keys(A.reveal);
   const after = b.after ? ({'Voicemail':'voicemail','Answering service':'service',"Owner's cell":'cell'}[b.after] || pick(r, afterKeys)) : pick(r, afterKeys);
   const techs = 3 + Math.floor(r()*14);
@@ -85,6 +85,8 @@ function makePersona(opt){
   const objections = [];
   objections.push(pickW(r, A.objections));
   if(r() < 0.6) objections.push(pickW(r, A.objections, objections));
+  // about half the owners ask about the terms: "do I keep it?", "free forever?", "what's the 15 minutes?"
+  if(r() < 0.5){ const tq = lead === 'phone' ? (r() < 0.6 ? 'forever' : 'keep') : (r() < 0.6 ? 'keep' : 'walk'); if(!objections.includes(tq)) objections[objections.length > 1 ? 1 : objections.length] = tq; }
   const day = pick(r, DAYS), time = pick(r, TIMES);
   const am = time.startsWith('7');
   const p = {
@@ -155,13 +157,19 @@ function classify(stage, text, p, objKey){
     if(items >= 4) return 'ok';
     return has(t, /free|yours|keep it|separate|test number|show you/) ? 'best' : 'ok';
   }
+  if(stage === 'rest'){
+    if(has(t, pressure) || has(t, /free for now|limited time|this week only/)) return 'off';
+    const why = has(t, /new|reviews|results|track record|examples|earn/), brief = t.split(' ').length < 60;
+    return why && brief ? 'best' : why ? 'ok' : 'weak';
+  }
   if(stage === 'handle'){
     if(has(t, pressure) || has(t, critic)) return 'off';
     if(has(t, /fall behind|everyone's using|everyone is using|we have data|we have a lot of data/)) return 'weak';
-    const good = {catch:/new to connecticut|new to|rather show|show you|yours either way|stays yours|it's yours/, price:/300|three hundred|400|four hundred|in writing|free/,
+    const good = {catch:/new here|new to|reviews|rather show|show you|yours to keep|trial|it's yours/, price:/per shop|in writing|free|trial/,
+      keep:/yours to keep|trial|30|thirty|your name/, forever:/trial|30|thirty|no card|your call|your choice/, walk:/show you|how your week|you decide|no pressure/,
       allset:/after five|after hours|who picks|who answers|covered/, email:/(monday|tuesday|wednesday|thursday|friday|morning|afternoon|7|seven)/,
       busy:/(monday|tuesday|wednesday|thursday|friday|later|morning|email)/, ai:/separate|test number|nothing touches|say yes|your phones/,
-      agency:/sorry|frustrating|free first|your own numbers|stays yours/, wordofmouth:/best kind|look you up|neighbor|referral/,
+      agency:/sorry|frustrating|free|your own|yours to keep/, wordofmouth:/best kind|look you up|neighbor|referral/,
       scam:/website|google listing|look us up|nothing to pay|connecticut company/}[objKey];
     return good && has(t, good) ? 'best' : 'ok';
   }
@@ -184,15 +192,19 @@ let C = null;      // the current call
 /* every open turn registers a cleanup here; End runs them all */
 function onAbort(fn){ if(C) (C.aborts = C.aborts || []).push(fn); }
 function offAbort(fn){ if(C && C.aborts) C.aborts = C.aborts.filter(x => x !== fn); }
-const STAGE_ORDER = SCRIPT_LIB.stageOrder || ['greet','reason','noticed','follow','offer','questions','next','thanks'];
+const STAGE_ORDER = SCRIPT_LIB.stageOrder || ['greet','reason','noticed','follow','offer','rest','questions','next','thanks'];
 const OLD2NEW = {opener:'greet', truth:'noticed', discover:'follow', gift:'offer', handle:'questions', close:'next', wrap:'thanks'};
-const NEW2OLD = {greet:'opener', reason:'opener', noticed:'truth', follow:'discover', offer:'gift', questions:'handle', next:'close', thanks:'wrap'};
-/* one vocabulary for every screen */
-const STEP_NAMES = {greet:'Hello', reason:'Why you\'re calling', noticed:'What you noticed', follow:'Follow-up', offer:'The offer', questions:'Their questions', next:'Next step', thanks:'Goodbye'};
-STEPS.forEach(x => { if(STEP_NAMES[x[0]]) x[1] = STEP_NAMES[x[0]]; });
+const NEW2OLD = {greet:'opener', reason:'opener', noticed:'truth', follow:'discover', offer:'gift', rest:'rest', questions:'handle', next:'close', thanks:'wrap'};
+/* one vocabulary for every screen, from the shared offer card (offer.js) */
+const OFFER = window.STARWELL_OFFER;
+const CALL_STEPS = OFFER.steps;                                   // the five steps
+const STEP_OF = {}; CALL_STEPS.forEach(s => s.stages.forEach(st => STEP_OF[st] = s));
+const STEP_NAMES = {greet:'Hello', reason:'Hello: your reason', noticed:'Notice & ask', follow:'Notice & ask: follow-up', offer:'The one gift', rest:'The rest, and why it\'s free', questions:'His question', next:'Next step', thanks:'Next step: goodbye'};
+STEPS.length = 0; STAGE_ORDER.forEach(k => STEPS.push([k, STEP_NAMES[k] || k]));
 if(SCRIPT_LIB.labels) Object.assign(SCRIPT_LIB.labels, STEP_NAMES);
+const offerFill = (t, p) => OFFER.fill(t, p ? Object.assign({lead:p.lead, name:p.onLine, shop:p.shopSaid || p.shop, town:p.town, me:me || 'you', close:(p.facts && p.facts.close) || '5', day:p.day, time:p.time, day2:p.vars && p.vars.day2, tech:p.facts && p.facts.tech}) : {me:me || '[your name]'});
 const KIND_NAMES = {guided:'Guided call', free:'Live call', live:'Live call', drill:'Drill'};
-const DRILL_NAMES = {opener:'Hello drill', handle:'Questions drill', close:'Next-step drill'};
+const DRILL_NAMES = {opener:'Hello drill', handle:'Gift and questions drill', close:'Next-step drill'};
 const OUTCOME = {
   booked:{label:'Walkthrough booked', col:'green', icon:'✓'},
   email_only:{label:'Email only', col:'green', icon:'✓'},
@@ -350,9 +362,10 @@ function showCall(c){
 function paintSteps(){
   if(!C) return;
   const cur = C.kind === 'live' ? currentHintStage() : C.stage;
-  const list = C.stages ? STEPS.filter(x => C.stages.includes(x[0])) : STEPS;
-  const i = list.findIndex(x => x[0] === cur);
-  $('#cStepLine').innerHTML = i >= 0 ? `<span>Step ${i + 1} of ${list.length} · <b>${esc(list[i][1])}</b></span>` : '';
+  const list = C.stages ? CALL_STEPS.filter(s => s.stages.some(st => C.stages.includes(st))) : CALL_STEPS;
+  const i = list.findIndex(s => s.stages.includes(cur));
+  const sub = cur === 'questions' ? ' · his question' : cur === 'follow' ? ' · follow-up' : '';
+  $('#cStepLine').innerHTML = i >= 0 ? `<span>Step ${list[i].n} of 5 · <b>${esc(list[i].name)}</b>${sub}</span>` : '';
   $('#cSteps').innerHTML = list.map((x, k) => `<span class="${k < i ? 'done' : k === i ? 'on' : ''}"></span>`).join('');
 }
 function setTrust(c){ $('#cTrust').style.width = Math.max(4, Math.min(100, c.trust)) + '%'; }
@@ -614,7 +627,12 @@ async function runScripted(){
     c.stageQ[stage + (stage === 'questions' ? ':' + objKey : '')] = turn.q;
     applyTrust(turn);
     if(fit === 'off' && c.trust <= TRUST.hangup && stage !== 'thanks'){ await ownerSays(pick(p.r, REACT.hangup)); outcome = 'hung_up'; break; }
-    if(stage === 'offer'){
+    if(stage === 'offer' && !stages.includes('rest')){
+      objKey = p.objections[0];
+      await ownerSays(cheer(fit, reply(turn, f2) + ' ' + pick(p.r, OBJ[objKey].say)));
+    } else if(stage === 'offer'){
+      await ownerSays(cheer(fit, reply(turn, f2)));
+    } else if(stage === 'rest'){
       objKey = p.objections[0];
       await ownerSays(cheer(fit, reply(turn, f2, {objection:pick(p.r, OBJ[objKey].say)})));
     } else if(stage === 'questions'){
@@ -727,10 +745,11 @@ function currentHintStage(){
   const last = (C.lastOwner || '').toLowerCase();
   if(!/star ?well/.test(said)) return 'greet';
   if(C.turns.length < 2) return 'reason';
-  if(/catch|cost|price|how much|send me|\bai\b|robot|agency|marketing company|word of mouth|referral|scam|my number|on a job|all set/.test(last)) return 'questions';
+  if(/catch|cost|price|how much|send me|\bai\b|robot|agency|marketing company|word of mouth|referral|scam|my number|on a job|all set|keep it|forever|fifteen minutes/.test(last)) return 'questions';
   if(!/(reviews|website|site|book|after|facebook|google|closes|phone)/.test(said)) return 'noticed';
   if(C.turns.length < 4) return 'follow';
-  if(!/(free|yours|keep|example|show you)/.test(said)) return 'offer';
+  if(!/(answering line|website|search check|one-page|show up)/.test(said)) return 'offer';
+  if(!/(new here|reviews|starter|why free|honest reason)/.test(said)) return 'rest';
   if(!/email|text you|send it/.test(said)) return 'next';
   return 'thanks';
 }
@@ -798,14 +817,16 @@ function liveStageQ(c){
   i = find('discover', t => /(how|what|when|who)\b/.test(t) && /(last|this week|recently|night|cold)/.test(t));
   if(i < 0) i = find('discover', t => /(would you be interested|interested in)/.test(t));
   if(i >= 0){ out.discover = classify('discover', turns[i].text, p); idx.discover = i; } else out.discover = 'missing';
-  i = find('gift', t => /(demo|website|free|built|yours|phone answering|visibility)/.test(t));
+  i = find('gift', t => /(demo|website|answering line|search check|one-page|show up|phone answering|visibility)/.test(t));
   if(i >= 0){ out.gift = classify('gift', turns[i].text, p); idx.gift = i; } else out.gift = 'missing';
+  i = find('rest', t => /(starter|new here|reviews|why free|honest reason|we're new)/.test(t));
+  if(i >= 0){ out.rest = classify('rest', turns[i].text, p); idx.rest = i; } else out.rest = 'missing';
   // objection: caller turn right after the owner raised one
   const log = c.log; let objKey = null, hi = -1;
   for(let k = 0; k < log.length; k++){
     if(log[k].who !== 'o') continue;
     const o = log[k].text.toLowerCase();
-    const key = /what's the catch|the catch\b(?! your)|catch here/.test(o) && !/catch (your|the) name/.test(o) ? 'catch' : /(cost|price|how much)/.test(o) ? 'price' : /(\bai\b|robot)/.test(o) ? 'ai' : /(agency|marketing company|seo compan|waste of money)/.test(o) ? 'agency' : /(word of mouth|referral)/.test(o) ? 'wordofmouth' : /(scam|my number)/.test(o) ? 'scam' : /(send me an email|send me something)/.test(o) ? 'email' : /(all set|already have)/.test(o) ? 'allset' : /(on a job|can't talk|busy)/.test(o) ? 'busy' : null;
+    const key = /free forever|after the free|start paying/.test(o) ? 'forever' : /keep it|is it mine|take it back/.test(o) ? 'keep' : /fifteen minutes|15 minutes/.test(o) && /what happens|what's the|pitch/.test(o) ? 'walk' : /what's the catch|the catch\b(?! your)|catch here/.test(o) && !/catch (your|the) name/.test(o) ? 'catch' : /(cost|price|how much)/.test(o) ? 'price' : /(\bai\b|robot)/.test(o) ? 'ai' : /(agency|marketing company|seo compan|waste of money)/.test(o) ? 'agency' : /(word of mouth|referral)/.test(o) ? 'wordofmouth' : /(scam|my number)/.test(o) ? 'scam' : /(send me an email|send me something)/.test(o) ? 'email' : /(all set|already have)/.test(o) ? 'allset' : /(on a job|can't talk|busy)/.test(o) ? 'busy' : null;
     if(key){ const nx = log.slice(k + 1).find(x => x.who === 'c'); if(nx){ const ix = turns.findIndex((t, j) => t.text === nx.text && !used.has(j)); if(ix >= 0){ objKey = key; hi = ix; used.add(ix); break; } } }
   }
   if(objKey && hi >= 0){ out['handle:' + objKey] = classify('handle', turns[hi].text, p, objKey); idx['handle:' + objKey] = hi; }
@@ -925,7 +946,7 @@ const SKILL_NAMES = Object.assign({}, STEP_NAMES, {delivery:'Your voice'});
 const skillName = k => SKILL_NAMES[k] || SKILL_NAMES[OLD2NEW[k]] || (k ? String(k).charAt(0).toUpperCase() + String(k).slice(1) : 'Next time');
 function bar(name, v){ const col = v >= 80 ? 'var(--success)' : v >= 55 ? 'var(--accent)' : 'var(--warning)'; return `<div class="bar"><span>${esc(name)}</span><div class="t"><i style="width:${v}%;background:${col}"></i></div><b>${v}</b></div>`; }
 const playBtn = (url, label) => url ? `<button class="play" data-play="${url}"><svg viewBox="0 0 10 10"><path d="M2 1l7 4-7 4z"/></svg>${label || 'Hear yourself'}</button>` : '';
-const guideLink = id => id && CALL_GUIDE.steps[OLD2NEW[id] || id] ? `<button class="gl" data-guidecard="${OLD2NEW[id] || id}">See this step in the call guide →</button>` : '';
+const guideLink = id => id ? `<button class="gl" data-guidecard="${stepKeyOf(id)}">See this step in the call guide →</button>` : '';
 const outcomePill = k => { const o = outcomeOf(k); return `<span class="outcome ${o.col}"><span aria-hidden="true">${o.icon}</span>${esc(o.label)}</span>`; };
 const fmtDur = s => { s = Math.round(s || 0); return s < 60 ? `${s}s` : `${Math.floor(s/60)}m ${String(s%60).padStart(2, '0')}s`; };
 
@@ -1003,8 +1024,20 @@ function showReport(c, rep, fromHist){
   if(!fromHist) aiReview(c, rep);
   else if(c.ai) renderAI(c.ai, p);
 }
+/* stage scores rolled up into the five steps of the call card (plus your voice) */
+function stepScores(skills){
+  const out = [];
+  for(const s of CALL_STEPS){
+    const old = {greet:'opener', noticed:'truth', follow:'discover', offer:'gift', questions:'handle', next:'close', thanks:'wrap'};
+    const v = s.stages.map(st => skills[st] !== undefined ? skills[st] : skills[old[st]]).filter(x => x !== undefined);
+    if(v.length) out.push({key:s.key, name:`${s.n} · ${s.name}`, v:Math.round(v.reduce((a, b) => a + b, 0)/v.length)});
+  }
+  if(skills.delivery !== undefined) out.push({key:'delivery', name:'Your voice', v:skills.delivery});
+  return out;
+}
+const stepBars = skills => stepScores(skills).map(x => bar(x.name, x.v)).join('');
 function skillScores(rep){
-  return `<details><summary style="font-weight:600">Score by step</summary><div class="bars" style="margin:4px 0 8px">${Object.keys(SKILL_NAMES).filter(k => rep.skills[k] !== undefined).map(k => bar(SKILL_NAMES[k], rep.skills[k])).join('')}</div>
+  return `<details><summary style="font-weight:600">Score by step</summary><div class="bars" style="margin:4px 0 8px">${stepBars(rep.skills)}</div>
     <p class="note">Each step: great fit 100, also fits 85, didn't land 50, skipped 30. A step that came up twice is averaged. Your score is 70% steps and 30% voice.</p></details>`;
 }
 
@@ -1053,7 +1086,7 @@ function saveCallToHistory(c, rep){
    PREP SLIDES
    ====================================================================== */
 let pending = null;   // {kind, p}
-const GIFT_WORDS = {phone:'the demo line that answers when they can\'t', site:'a fresh website', found:'the one-page search check', social:'a month of posts from their real jobs'};
+const GIFT_WORDS = {phone:'the answering line (picks up when they can\'t)', site:'a fresh website', found:'getting found, starting with the one-page search check'};
 const OBJ_Q = {catch:/catch/i, price:/cost|price|how much/i, allset:/all set|already have|nephew/i, email:/email/i, busy:/busy|on a job|can't talk/i, ai:/\bAI\b|robot/i, agency:/agency|marketing|burned|SEO compan/i, wordofmouth:/word of mouth|referral/i, scam:/scam|number/i};
 const cap1 = t => String(t || '').charAt(0).toUpperCase() + String(t || '').slice(1);
 function slidesHTML(p, forPrep, stages){
@@ -1065,11 +1098,11 @@ function slidesHTML(p, forPrep, stages){
   const push = (k, h) => { keys.push(k); out.push(h); };
   out.keys = keys;
   const freeTalk = forPrep === 'live' || forPrep === 'free';
-  const list = stages ? STEPS.filter(x => stages.includes(x[0])) : STEPS;
+  const list = (stages ? CALL_STEPS.filter(s => s.stages.some(st => stages.includes(st))) : CALL_STEPS).map(s => [s.key, `${s.n} · ${s.name}`, s.goal]);
   if(forPrep) push('intro', `<div class="box"><div class="lbl">${stages ? 'This drill' : 'How this call goes'}</div>
-      <h3 style="font-size:20px">${stages ? `Practice ${list.length === 2 ? 'two steps' : 'these steps'}: ${esc(list.map(x => x[1]).join(' and '))}.` : `Your goal: ${esc(p.onLine)} feels noticed and respected, and gladly says yes to something useful.`}</h3>
-      ${freeTalk ? `<p class="prepnote">No lines here. Talk naturally. The Hint button is there if you freeze.${forPrep === 'free' && !stages ? ' The live AI owner is off on this phone, so a practice owner answers. Ask Bobby for your StarWell code to turn it on.' : ''}</p>` : `<p class="note">${stages ? '' : 'Start like a person, not a pitch. The offer comes after you understand how the owner\'s week goes. '}Each turn you'll see three good lines. Pick the one that fits ${esc(p.onLine)}, then say it out loud.</p>`}
-      <ol class="flow">${list.map(x => `<li><b>${esc(x[1])}</b> · ${esc(SCRIPT_LIB.arc[x[0]] || '')}</li>`).join('')}</ol></div>`);
+      <h3 style="font-size:20px">${stages ? `Practice ${list.length === 2 ? 'two steps' : list.length === 1 ? 'one step' : 'these steps'} of the call card.` : `Your goal: ${esc(p.onLine)} feels noticed and respected, and gladly says yes to 15 minutes.`}</h3>
+      ${freeTalk ? `<p class="prepnote">No lines here. Talk naturally. The Hint button is there if you freeze.${forPrep === 'free' && !stages ? ' The live AI owner is off on this phone, so a practice owner answers. Ask Bobby for your StarWell code to turn it on.' : ''}</p>` : `<p class="note">${stages ? '' : 'Five steps, the same five as the cold-call guide. Start like a person, not a pitch: the gift comes after he tells you how his week goes. '}Each turn you'll see three good lines. Pick the one that fits ${esc(p.onLine)}, then say it out loud.</p>`}
+      <ol class="flow">${list.map(x => `<li><b>${esc(x[1])}</b> · ${esc(x[2])}</li>`).join('')}</ol></div>`);
   if(p.real){
     const R = p.real;
     push('real', `<div class="box"><div class="lbl">Real shop · from public listings</div><h3 style="font-size:22px">${esc(R.name)}</h3>
@@ -1115,24 +1148,21 @@ function slidesHTML(p, forPrep, stages){
     <div class="flag good"><b>✓</b><span>Why now: heating season in Connecticut. First cold nights, no-heat calls after dinner.</span></div>
     ${eyes(f.hiring ? 'I need techs. My guys are stretched thin.' : 'Word of mouth has always worked. I don\'t have time to chase Google.')}
     ${say(`"I asked my phone for ${f.search || 'furnace repair'} in ${p.town}, and two other shops came up before ${p.shopSaid || p.shop}, even with your reviews. How do most new customers find you?"`, 'found')}
-    ${stale ? say(`"Your last post was ${f.lastPost}. People who hear about you from a neighbor often check there first."`, 'social') : ''}
     ${f.hiring ? say('"You\'re hiring, so the crew\'s stretched. That\'s usually when calls slip."', 'phone') : ''}</div>`);
-  // 5 · game plan
-  const second = p.lead !== 'site' && f.siteIssues.some(i => /book|tap-to-call|slow/.test(i)) ? 'site' : stale ? 'social' : 'found';
-  const reasons = {phone:`Every call after ${f.close} goes to ${f.afterLabel}. The demo line catches them, and ${p.onLine} can try it on its own number first.`, site:'People find the shop at night and can\'t book. A fresh site to look at before deciding.', found:'The reviews are better than the shops showing up first.', social:'Neighbors check the page before calling. Real job photos keep it alive.'};
-  const ready = Object.keys(A.objections).sort((a, b) => A.objections[b] - A.objections[a]).slice(0, 2)
-    .map(k => CALL_GUIDE.questions.find(q => OBJ_Q[k] && OBJ_Q[k].test(q.q))).filter(Boolean);
-  const dq = ((CALL_GUIDE.steps.follow || CALL_GUIDE.steps.discover || {say:['']}).say[0] || '');
-  push('plan', `<div class="box"><div class="lbl">Your game plan</div>
+  // 5 · game plan, in the same five steps as the call card
+  const G = OFFER.gifts[p.lead];
+  const reasons = {phone:`Calls after ${f.close} go to ${f.afterLabel}. The answering line catches them, and ${p.onLine} can try the demo number first.`, site:'People look at night, on their phones, and can\'t easily request service. A fresh site fixes that.', found:'The reviews are better than the shops showing up first. The search check shows it.'};
+  const readyKeys = Object.keys(A.objections).sort((a, b) => A.objections[b] - A.objections[a]).slice(0, 2).concat(p.lead === 'phone' ? 'forever' : 'keep');
+  const ready = readyKeys.map(k => OFFER.questions.find(q => q.key === k)).filter(Boolean);
+  const S2 = CALL_STEPS[1], S4 = CALL_STEPS[3];
+  push('plan', `<div class="box"><div class="lbl">Your game plan · the five steps for ${esc(p.shopSaid || p.shop)}</div>
     <div class="kv" style="grid-template-columns:1fr">
-      <div><small>Clue about who answers</small><span>${esc(A.clue)}</span></div>
-      <div><small>What to notice</small><span>${esc(A.notice || A.how)}</span></div>
-      <div><small>Main thing to offer</small><span>${esc(cap1(GIFT_WORDS[p.lead]))}. ${esc(reasons[p.lead])}</span></div>
-      <div><small>Mention in one line</small><span>${esc(cap1(GIFT_WORDS[second]))}</span></div>
-      <div><small>What you noticed</small><span>${esc(p.trueThing ? p.trueThing + '.' : sayAfter.replace(/"/g, ''))}</span></div>
-      <div><small>Follow-up question</small><span>${esc(gfill(dq, p).replace(/[“”]/g, ''))}</span></div>
-      <div><small>15-minute walkthrough time to offer</small><span>${esc(p.day)} at ${esc(p.time)}, ${esc(p.vars.when)}</span></div></div>
-    ${ready.length ? `<div class="lbl" style="margin-top:12px">Be ready for</div>${ready.map(q => `<details class="gq"><summary>${esc(gfill(q.q, p))}</summary><p>${esc(gfill(q.a, p))}</p></details>`).join('')}` : ''}
+      <div><small>1 · Hello</small><span>${esc(A.clue)}</span></div>
+      <div><small>2 · Notice & ask</small><span>${esc(p.trueThing ? p.trueThing + '.' : sayAfter.replace(/"/g, '').split(/(?<=[.!?])\s+/).filter(x => !/\?$/.test(x)).join(' '))}<br><b>Ask:</b> ${esc(gfill(S2.questions[p.lead], p))}</span></div>
+      <div><small>3 · The one gift: ${esc(G.name)}</small><span>${esc(reasons[p.lead])}<br><b>Say:</b> ${esc(gfill(G.say, p))}</span></div>
+      <div><small>4 · The rest, and why it's free</small><span>${esc(gfill(S4.say[0].t, p))} ${esc(OFFER.free.reason)}<br><b>Terms:</b> ${esc(cap1(G.termsShort))}.</span></div>
+      <div><small>5 · Next step</small><span>15 minutes, ${esc(p.day)} at ${esc(p.time)} or ${esc(p.vars.day2)} afternoon. Get the email.</span></div></div>
+    ${ready.length ? `<div class="lbl" style="margin-top:12px">Be ready for</div>${ready.map(q => `<details class="gq"><summary>${esc(gfill(q.q, p))}</summary><p>${esc(gfill(q.a, p))}</p><p class="note">${esc(q.why)}</p></details>`).join('')}` : ''}
     <p class="note" style="margin-top:12px">${p.brief ? 'Facts from your Prospect Brief or research. The owner\'s personality is still a surprise.' : p.real ? 'Real Connecticut shop, practice scenario. Every call is a new person and situation.' : 'Practice shop: invented for this call.'}</p></div>`);
   return out;
 }
@@ -1168,34 +1198,73 @@ $('#readyBtn').onclick = goCall; $('#sSkip').onclick = goCall;
 /* ======================================================================
    THE GUIDE, built into the app
    ====================================================================== */
-/* outside a call, the guide fills its lines with one consistent example shop */
-const SAMPLE_VARS = {name:'Dave', owner:'Dave', shop:'Hillside Heating', town:'Hamden', close:'5', rating:'4.8', reviews:'120', tech:'Mike', day:'Tuesday', time:'7:30', when:'before the trucks go out', email:'dave@hillsideheating.com', day2:'Wednesday', gk:'Linda'};
-function gfill(t, p){ const v = Object.assign({}, SAMPLE_VARS, {me: me || 'you'}, p ? p.vars : {}); return String(t).replace(/\{(\w+)\}/g, (m, k) => v[k] ?? m); }
+/* outside a call, the guide fills its lines with the offer card's example shop (Dave at Hillside Heating, Hamden) */
+const SAMPLE_VARS = Object.assign({owner:'Dave', rating:'4.8', reviews:'120', when:'before the trucks go out', email:'dave@hillsideheating.com', gk:'Linda'}, OFFER.example);
+function gfill(t, p){ return offerFill(t, p); }
+const stepKeyOf = id => { if(!id) return 'hello'; if(CALL_GUIDE.steps[id]) return id; const st = OLD2NEW[id] || id; return (STEP_OF[st] && STEP_OF[st].key) || 'hello'; };
+const lines = (arr, p) => arr.map(x => /^\(/.test(x.t) ? `<p class="note">${esc(gfill(x.t.replace(/^\(|\)$/g, ''), p))}</p>` : `<div class="gline ${x.who}"><small>${x.who === 'him' ? 'Owner' : 'You'}</small>${esc(gfill(x.t, p))}</div>`).join('');
+function giftHTML(g, p, open){
+  return `<details class="gift" ${open ? 'open' : ''}><summary><b>${esc(g.name)}</b>&nbsp;<span class="note">${esc(g.short)}</span></summary>
+    <div class="lbl">What it is</div><p>${esc(gfill(g.what, p))}</p>
+    <div class="lbl">What you say</div><div class="gline you">${esc(gfill(g.say, p))}</div>
+    <div class="owner"><small>How the owner feels</small>${esc(g.feels)}</div>
+    <div class="lbl">The value to him</div><p>${esc(g.value)}</p>
+    <div class="lbl">Keep it true</div><ul class="glist">${g.truth.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+    <div class="kv2"><div><small>Built before the call</small>${esc(g.before)}</div><div><small>After he says yes</small>${esc(g.after)}</div></div>
+    <div class="terms"><small>Terms</small>${esc(g.terms)}</div>${g.whyTrial ? `<p class="note">${esc(g.whyTrial)}</p>` : ''}</details>`;
+}
 function guideHTML(stage, p, tab){
-  const G = CALL_GUIDE; stage = OLD2NEW[stage] || stage; const st = G.steps[stage] ? stage : 'greet';
+  const key = stepKeyOf(stage), s = CALL_GUIDE.steps[key];
   tab = tab || 'step';
-  const chips = STEPS.map(x => `<button class="gchip ${x[0] === st && tab === 'step' ? 'on' : ''}" data-gstep="${x[0]}">${esc(x[1])}</button>`).join('');
-  const tabs = [['step','Steps'],['gifts','Offers'],['questions','FAQ'],['rules','Rules']].map(t => `<button class="gtab ${t[0] === tab ? 'on' : ''}" data-gtab="${t[0]}">${t[1]}</button>`).join('');
+  const tabs = [['step','Steps'],['gifts','Offers'],['questions','Questions'],['rules','Rules']].map(t => `<button class="gtab ${t[0] === tab ? 'on' : ''}" data-gtab="${t[0]}">${t[1]}</button>`).join('');
+  const chips = CALL_STEPS.map(x => `<button class="gchip ${x.key === key && tab === 'step' ? 'on' : ''}" data-gstep="${x.key}">${x.n} · ${esc(x.name)}</button>`).join('');
+  const lead = p ? p.lead : null;
   let body = '';
   if(tab === 'step'){
-    const s = G.steps[st];
-    body = `<div class="gstep"><h3>${esc(s.title)}</h3>${s.secs ? `<span class="chip">about ${s.secs} seconds</span>` : ''}
-      ${p ? '' : `<p class="note" style="margin:8px 0 0">Example shop: ${SAMPLE_VARS.shop} in ${SAMPLE_VARS.town}, owner ${SAMPLE_VARS.name}.</p>`}
-      <div class="lbl" style="margin-top:12px">What to say</div><ul class="glist">${s.say.map(x => `<li>${esc(gfill(x, p))}</li>`).join('')}</ul>
-      <div class="lbl">Why it works for the owner</div><p class="why">${esc(gfill(stripCite(s.why), p))}</p>
-      ${s.avoid && s.avoid.length ? `<div class="lbl">Skip</div><ul class="glist avoid">${s.avoid.map(x => `<li>${esc(gfill(x, p))}</li>`).join('')}</ul>` : ''}
-      ${SCRIPT_LIB.arc && SCRIPT_LIB.arc[st] ? `<p class="note"><b>Your tone here:</b> ${esc(SCRIPT_LIB.arc[st])}</p>` : ''}</div>`;
+    let extra = '';
+    if(key === 'notice'){
+      extra = `<div class="lbl">Match the question to the gift</div>${['phone','site','found'].map(k => `<div class="gline you ${lead === k ? 'pick' : ''}"><small>${esc(OFFER.gifts[k].name)}${lead === k ? ' · this shop' : ''}</small>${esc(gfill(s.questions[k], p))}</div>`).join('')}
+        <div class="lbl">Listen for</div><table class="gt">${s.listenFor.map(x => `<tr><td>${esc(x.heard)}</td><td>→ ${esc(OFFER.gifts[x.lead].name)}</td></tr>`).join('')}</table>`;
+    }
+    if(key === 'gift'){
+      const order = lead ? [lead].concat(['phone','site','found'].filter(k => k !== lead)) : ['phone','site','found'];
+      extra = `<div class="lbl">The line for each gift</div>${order.map(k => `<div class="gline you ${lead === k ? 'pick' : ''}"><small>${esc(OFFER.gifts[k].name)}${lead === k ? ' · this shop' : ''}</small>${esc(gfill(OFFER.gifts[k].say, p))}</div>`).join('')}`;
+    }
+    body = `<div class="gstep"><h3>Step ${s.n} · ${esc(s.name)}</h3><span class="chip">${esc(s.time)}</span>
+      <p class="goal">${esc(s.goal)}</p>
+      ${p ? '' : `<p class="note" style="margin:0 0 6px">Example: ${esc(SAMPLE_VARS.name)} at ${esc(SAMPLE_VARS.shop)}, ${esc(SAMPLE_VARS.town)}.</p>`}
+      <div class="lbl">What to say</div>${lines(s.say, p)}${extra}
+      <div class="lbl">Why it works</div><ul class="glist">${s.why.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+      <div class="owner"><small>How the owner hears it</small>${esc(gfill(s.owner, p))}</div>
+      ${s.ifHe && s.ifHe.length ? `<div class="lbl">If he says…</div>${s.ifHe.map(x => `<div class="ifhe"><div class="gline him"><small>Owner</small>${esc(gfill(x.he, p))}</div><div class="gline you"><small>You</small>${esc(gfill(x.you, p))}</div><p class="note">${esc(x.why)}</p></div>`).join('')}` : ''}
+      <div class="lbl">Skip</div><ul class="glist avoid">${s.avoid.map(x => `<li>${esc(gfill(x, p))}</li>`).join('')}</ul></div>`;
   } else if(tab === 'gifts'){
-    body = G.services.map(x => `<div class="item"><h4>${esc(x.name)}</h4><p>${esc(gfill(x.ownerWords, p))}</p><p class="note"><b>Picture it:</b> ${esc(x.analogy)}</p><p class="note"><b>Honest limits:</b> ${esc(x.honestLimits)}</p></div>`).join('');
+    const F = OFFER.free, SC = OFFER.searchCheck, W = OFFER.walkthrough;
+    body = `<div class="terms big"><small>Free, said honestly</small>${esc(F.line)}</div>
+      <p class="note"><b>Why it's free:</b> ${esc(F.reason)}</p>
+      ${(lead ? [lead].concat(['phone','site','found'].filter(k => k !== lead)) : ['phone','site','found']).map((k, i) => giftHTML(OFFER.gifts[k], p, i === 0 && !!lead)).join('')}
+      <details class="gift"><summary><b>${esc(SC.name)}</b>&nbsp;<span class="note">What is it?</span></summary><p>${esc(SC.what)}</p>
+        <div class="lbl">What's on the page</div><ul class="glist">${SC.includes.map(x => `<li>${esc(gfill(x, p))}</li>`).join('')}</ul>
+        <div class="lbl">Why it matters</div><p>${esc(SC.why)}</p><div class="owner"><small>How the owner sees it</small>${esc(SC.owner)}</div></details>
+      <details class="gift"><summary><b>The 15 minutes</b>&nbsp;<span class="note">What happens</span></summary><div class="gline you"><small>Say</small>${esc(W.sentence)}</div>
+        <ol class="glist">${W.agenda.map(x => `<li><b>${esc(x.t)}.</b> ${esc(x.d)}</li>`).join('')}</ol><p class="note">${esc(W.who)}</p></details>
+      <details class="gift"><summary><b>Custom tools</b>&nbsp;<span class="note">When they come up</span></summary><p>${esc(OFFER.custom.when)}</p><div class="gline you"><small>Say</small>${esc(OFFER.custom.line)}</div><p class="note">${esc(OFFER.custom.terms)}</p></details>
+      <div class="lbl">Yours to keep</div><ul class="glist">${F.keep.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+      <div class="lbl">Free trial</div><ul class="glist">${F.trial.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+      <div class="lbl">Not free</div><ul class="glist">${F.notFree.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
   } else if(tab === 'questions'){
-    body = G.questions.map(x => `<details class="gq"><summary>${esc(gfill(x.q, p))}</summary><p>${esc(gfill(x.a, p))}</p></details>`).join('');
+    body = `<p class="note" style="margin-top:0">What owners ask, the honest answer, and why it works.</p>` +
+      OFFER.questions.map(x => `<details class="gq"><summary>${esc(gfill(x.q, p))}</summary><div class="gline you"><small>You</small>${esc(gfill(x.a, p))}</div><p class="why">${esc(x.why)}</p><div class="owner"><small>How the owner hears it</small>${esc(x.owner)}</div></details>`).join('') +
+      `<div class="lbl" style="margin-top:14px">Team questions</div>` + OFFER.team.map(x => `<details class="gq"><summary>${esc(x.q)}</summary><p>${esc(x.a)}</p></details>`).join('');
   } else {
-    body = `<ul class="glist">${G.rules.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
+    body = `<div class="lbl" style="margin-top:0">Our rules</div><ul class="glist">${OFFER.rules.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+      <div class="lbl">Words we use</div><table class="gt"><tr><th>Say</th><th>Not</th></tr>${OFFER.words.map(w => `<tr><td>${esc(w.say)}</td><td>${esc(w.not)}</td></tr>`).join('')}</table>
+      <p class="note">Offer card updated ${esc(OFFER.updated)}. The cold-call guide uses this same card.</p>`;
   }
   return `<div class="gtabs">${tabs}</div>${tab === 'step' ? `<div class="gchips">${chips}</div>` : ''}<div class="gbody">${body}</div>`;
 }
-function mountGuide(el, stage, p){
-  let cur = stage, tab = 'step';
+function mountGuide(el, stage, p, tab0){
+  let cur = stepKeyOf(stage), tab = tab0 || 'step';
   const paint = () => { el.querySelector('.gwrap').innerHTML = guideHTML(cur, p, tab); };
   paint();
   el.onclick = e => {
@@ -1204,9 +1273,10 @@ function mountGuide(el, stage, p){
     if(b){ tab = b.dataset.gtab; paint(); }
   };
 }
-function openGuidePage(stage){
-  $('#guideIn').innerHTML = `<div class="ptop"><h2>Call guide</h2><button class="btn light x" data-close="guidePage">Close</button></div><div class="box gwrap"></div>`;
-  mountGuide($('#guideIn'), stage || 'greet', C && !C.ended ? C.p : null);
+function openGuidePage(stage, tab){
+  $('#guideIn').innerHTML = `<div class="ptop"><h2>Call guide</h2><button class="btn light x" data-close="guidePage">Close</button></div>
+    <p class="note" style="margin:0 0 10px">The same five steps as the full <a href="../starwell-cold-call/" target="_blank" rel="noopener">cold-call guide</a>. What to say, why it works, and how the owner hears it.</p><div class="box gwrap"></div>`;
+  mountGuide($('#guideIn'), stage || 'hello', C && !C.ended ? C.p : null, tab);
   openPage('guidePage');
 }
 document.addEventListener('click', e => { const g = e.target.closest('[data-guidecard]'); if(g) openGuidePage(g.dataset.guidecard); });
@@ -1258,7 +1328,8 @@ $('#bHint').onclick = () => {
   const st = currentHintStage(); const h = $('#hint');
   if(!h.classList.contains('hidden')){ h.classList.add('hidden'); return; }
   const H = SCRIPT_LIB.hints || {};
-  h.innerHTML = `<b>Hint · ${esc(STEP_NAMES[st] || st)}</b>${esc(fill(H[st] || H.greet || H.opener || '', C.p))}`;
+  const S = STEP_OF[st] || CALL_STEPS[0];
+  h.innerHTML = `<b>Hint · Step ${S.n}, ${esc(S.name)}</b>${esc(fill(H[st] || H.greet || '', C.p))}<span class="hwhy">${esc(C.p.onLine)} is thinking: ${esc(S.thinks)}</span>`;
   h.classList.remove('hidden'); clearTimeout(h._t); h._t = setTimeout(() => h.classList.add('hidden'), 12000);
   $('#cap').scrollTop = 1e6;
   if(C) C.hints = (C.hints || 0) + 1;
@@ -1332,7 +1403,7 @@ function startFlow(kind){
 function startDrill(stage){
   if(!me){ toast('Pick your name first'); return; }
   const p = makePersona();
-  const stages = stage === 'opener' ? ['greet','reason'] : stage === 'handle' ? ['offer','questions'] : ['next','thanks'];
+  const stages = stage === 'opener' ? ['greet','reason','noticed'] : stage === 'handle' ? ['offer','rest','questions'] : ['next','thanks'];
   pending = null;
   const kind = LS.get('sw_pl_mode', 'guided') === 'live' ? 'free' : 'guided';
   openPrep(kind, p, {stages, drill:stage});
@@ -1367,7 +1438,7 @@ function renderHome(){
   $('#mBooked').textContent = h.filter(x => x.outcome === 'booked').length;
   const g = guidedDone(), ai = Voice.can().xai, last = scored[scored.length - 1];
   const steps = [
-    ['Guided call 1', 'Learn the 8 steps. A tip on every line.'],
+    ['Guided call 1', 'Learn the 5 steps. A tip on every line.'],
     ['Guided call 2', 'Pick the best fit. Tips after you pick.'],
     ['Live call', ai ? 'Talk freely with the live AI owner. Hint only.' : 'Talk freely with a practice owner. Hint only.'],
     ['More practice', 'Guided or live calls, as many as you like.']
@@ -1383,7 +1454,7 @@ function renderHome(){
     <div class="box next fu" style="animation-delay:.1s">
       <div class="eyebrow">${g === 0 ? 'Start here' : 'Your next call'}</div>
       <h2>${g < 2 ? `Guided call ${g + 1}` : 'Live call'}</h2>
-      <p>${g === 0 ? 'You\'ll see three good lines at each step. Pick one, say it out loud, and the owner answers. About 4 minutes.' : g === 1 ? 'Same 8 steps, a new owner. Tips come after you pick. About 4 minutes.' : 'No lines on screen. Talk naturally; tap Hint if you freeze. About 5 minutes.'}</p>
+      <p>${g === 0 ? 'You\'ll see three good lines at each step. Pick one, say it out loud, and the owner answers. About 4 minutes.' : g === 1 ? 'Same 5 steps, a new owner. Tips come after you pick. About 4 minutes.' : 'No lines on screen. Talk naturally; tap Hint if you freeze. About 5 minutes.'}</p>
       ${sourceLine()}
       ${primary}
     </div>
@@ -1488,7 +1559,7 @@ function openHist(id){
       ${x.take ? `<div class="quote" style="margin-top:12px">${esc(x.owner)}: "${esc(x.take)}"</div>` : ''}</section>
     <section class="box"><h3>Try this next</h3><p class="why">${esc(x.drill)}</p>${(x.fixes || []).length ? `<p class="note" style="margin:8px 0 0">Steps to look at: ${x.fixes.map(esc).join(', ')}</p>` : ''}</section>
     <section class="box hidden" id="aiBox"></section>
-    <section class="box"><details><summary style="font-weight:600">Score by step</summary><div class="bars" style="margin:4px 0 8px">${Object.keys(SKILL_NAMES).filter(k => x.skills[k] !== undefined).map(k => bar(SKILL_NAMES[k], x.skills[k])).join('')}</div></details>
+    <section class="box"><details><summary style="font-weight:600">Score by step</summary><div class="bars" style="margin:4px 0 8px">${stepBars(x.skills)}</div></details>
       <details><summary style="font-weight:600">Transcript</summary><div class="tr">${x.log.map(l => `<p class="${l.who}"><b>${esc(l.who === 'o' ? x.owner : me)}:</b> ${esc(l.text)}</p>`).join('')}</div><p class="note">Recordings are kept only until you close or reload the page.</p></details></section>
     <div class="actions"><button class="btn light" data-close="report">Back</button></div>`;
   openPage('report');
@@ -1501,8 +1572,9 @@ function renderProgress(){
   const W = Math.max(280, Math.min(712, window.innerWidth - 80)), H = 220, padL = 40, padR = 16, padT = 14, padB = 30, n = h.length;
   const xs = i => padL + (n === 1 ? (W - padL - padR)/2 : i*(W - padL - padR)/(n - 1)), ys = v => H - padB - v*(H - padT - padB)/100;
   const pts = h.map((x, i) => `${xs(i)},${ys(x.aiScore || x.score)}`).join(' ');
-  const skillAvg = {}; for(const k of Object.keys(SKILL_NAMES)){ const v = h.filter(x => x.skills[k] !== undefined).map(x => x.skills[k]); if(v.length) skillAvg[k] = Math.round(v.reduce((a, b) => a + b, 0)/v.length); }
-  const weakest = Object.keys(skillAvg).filter(k => k !== 'delivery').sort((a, b) => skillAvg[a] - skillAvg[b])[0];
+  const stepAvg = {}, stepName = {}; h.forEach(x => stepScores(x.skills || {}).forEach(s => { (stepAvg[s.key] = stepAvg[s.key] || []).push(s.v); stepName[s.key] = s.name; }));
+  for(const k in stepAvg) stepAvg[k] = Math.round(stepAvg[k].reduce((a, b) => a + b, 0)/stepAvg[k].length);
+  const weakest = Object.keys(stepAvg).filter(k => k !== 'delivery').sort((a, b) => stepAvg[a] - stepAvg[b])[0];
   const wpm = h.filter(x => x.wpm).map(x => x.wpm);
   const colOf = k => ({green:'#1f7a4d', red:'#b42318', gray:'#5b6472', blue:'#2f5bd3'})[outcomeOf(k).col];
   const shape = (x, cx, cy) => { const o = outcomeOf(x.outcome), c = colOf(x.outcome), t = `<title>Call ${h.indexOf(x) + 1}: ${esc(x.owner)}, ${x.aiScore || x.score}, ${esc(o.label)}</title>`;
@@ -1514,8 +1586,8 @@ function renderProgress(){
     ${h.map((x, i) => i % every === 0 || i === n - 1 ? `<text x="${xs(i)}" y="${H - 8}" text-anchor="middle" font-size="12" fill="#5b6472">${i + 1}</text>` : '').join('')}
     <polyline points="${pts}" fill="none" stroke="#2f5bd3" stroke-width="2" stroke-linejoin="round"/>${h.map((x, i) => shape(x, xs(i), ys(x.aiScore || x.score))).join('')}</svg>
     <p class="note" style="margin:6px 0 0">Bottom numbers are your calls in order. <span style="color:var(--success)">●</span> booked or email · <span style="color:var(--muted)">○</span> not this time or ended · <span style="color:var(--danger)">✕</span> owner hung up · <span style="color:var(--accent)">◆</span> drill.</p></div>
-    <div class="box"><h3>Average by step</h3><div class="bars">${Object.keys(skillAvg).map(k => bar(SKILL_NAMES[k], skillAvg[k])).join('')}</div>
-    ${weakest ? `<p style="margin-top:12px"><b>Focus next:</b> ${esc(SKILL_NAMES[weakest])}. ${guideLink(weakest)}</p>` : ''}</div>
+    <div class="box"><h3>Average by step</h3><div class="bars">${Object.keys(stepAvg).map(k => bar(stepName[k], stepAvg[k])).join('')}</div>
+    ${weakest ? `<p style="margin-top:12px"><b>Focus next:</b> ${esc(stepName[weakest])}. ${guideLink(weakest)}</p>` : ''}</div>
     ${wpm.length ? `<div class="box"><h3>Your pace</h3><p style="margin:0 0 6px">${wpm.slice(-8).map(w => `<span class="chip">${w} words a minute</span>`).join('')}</p><p class="note" style="margin:0">Aim for ${DELIVERY.pace.target}.</p></div>` : ''}`;
 }
 

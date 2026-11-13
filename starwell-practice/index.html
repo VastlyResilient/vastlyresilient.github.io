@@ -601,6 +601,31 @@ svg.chart{max-height:260px}
 .signin button .wav{width:44px;height:44px;font-size:var(--fs-sm)}
 .signin button small{font-size:var(--fs-xs);color:var(--muted);font-weight:500}
 .signin button.last{box-shadow:inset 0 0 0 2px var(--accent)}
+
+/* call guide: lines, owner view, terms */
+.gline{background:var(--surface-2);border-radius:var(--r-md);padding:10px 12px;margin:6px 0;font-size:var(--fs-md);line-height:1.5;color:var(--ink)}
+.gline small{display:block;font-size:var(--fs-xs);font-weight:600;color:var(--muted);margin-bottom:2px}
+.gline.you{background:var(--accent-soft)}
+.gline.him{background:var(--surface-2)}
+.gline.pick{box-shadow:inset 0 0 0 2px var(--accent)}
+.owner{background:var(--warning-soft);border-radius:var(--r-md);padding:10px 12px;margin:10px 0;font-size:var(--fs-sm);line-height:1.5;color:var(--ink)}
+.owner small{display:block;font-size:var(--fs-xs);font-weight:700;color:var(--warning);margin-bottom:2px}
+.terms{background:var(--success-soft);border-radius:var(--r-md);padding:10px 12px;margin:10px 0;font-size:var(--fs-sm);line-height:1.5}
+.terms small{display:block;font-size:var(--fs-xs);font-weight:700;color:var(--success);margin-bottom:2px}
+.terms.big{font-size:var(--fs-md)}
+.goal{font-weight:600;margin:8px 0 6px}
+.kv2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.kv2>div{background:var(--surface-2);border-radius:var(--r-md);padding:8px 10px;font-size:var(--fs-sm)}
+.kv2 small{display:block;font-size:var(--fs-xs);color:var(--muted);font-weight:600}
+@media(max-width:420px){.kv2{grid-template-columns:1fr}}
+table.gt{width:100%;border-collapse:collapse;font-size:var(--fs-sm);margin:6px 0}
+table.gt td,table.gt th{border-top:1px solid var(--line);padding:7px 4px;text-align:left;vertical-align:top}
+table.gt th{color:var(--muted);font-weight:600;font-size:var(--fs-xs)}
+.ifhe{border-top:1px solid var(--line);padding-top:6px;margin-top:6px}
+details.gift{border-top:1px solid var(--line)}
+details.gift>summary{font-size:var(--fs-md)}
+details.gift[open]{padding-bottom:10px}
+.hint .hwhy{display:block;margin-top:6px;font-size:var(--fs-xs);color:var(--ink-2)}
 </style>
 </head>
 <body>
@@ -659,9 +684,9 @@ svg.chart{max-height:260px}
         <div class="fch"><span class="st"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span><h3>Quick drills</h3></div>
         <p class="note" style="margin:0">Practice two steps at a time. Drills don't unlock steps or change your average.</p>
         <div class="seg" id="modeToggle" role="group" aria-label="Drill style"><button data-mode="guided" class="on">With lines</button><button data-mode="live">Free talk</button></div>
-        <button class="fli" data-drill="opener"><span><b>Hello drill</b><small>Your first two lines</small></span><svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg></button>
-        <button class="fli" data-drill="handle"><span><b>Questions drill</b><small>Answer the owner's worry</small></span><svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg></button>
-        <button class="fli" data-drill="close"><span><b>Next-step drill</b><small>Email and one specific time</small></span><svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg></button>
+        <button class="fli" data-drill="opener"><span><b>Hello drill</b><small>Steps 1 and 2: hello, notice and ask</small></span><svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg></button>
+        <button class="fli" data-drill="handle"><span><b>Gift and questions drill</b><small>Steps 3 and 4: the gift, why it's free, his question</small></span><svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg></button>
+        <button class="fli" data-drill="close"><span><b>Next-step drill</b><small>Step 5: 15 minutes, a time, the email</small></span><svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg></button>
       </div>
     </section>
   </main>
@@ -707,6 +732,7 @@ svg.chart{max-height:260px}
 <div class="page hidden" id="settings"><div class="pin"><div class="ptop"><h2>Settings</h2><button class="btn light x" data-close="settings">Close</button></div><div id="setIn"></div></div></div>
 
 <script src="config.js"></script>
+<script src="offer.js"></script>
 <script src="script.js"></script>
 <script src="data.js"></script>
 <script src="owner.js"></script>
