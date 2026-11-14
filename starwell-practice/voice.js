@@ -2,7 +2,7 @@
    - xAI Grok: live owner (Voice Agent API, realtime), exact-line owner voice (TTS), AI call review.
    - ElevenLabs: second voice provider for exact lines.
    - Device voice: last-resort fallback.
-   Keys never live in this repo. They come from the team token server (config.js) or, on Bobby's own device,
+   Keys never live in this repo. They come from the team token server (config.js) or, on a partner's own device,
    from Settings (stored only in that browser). */
 'use strict';
 

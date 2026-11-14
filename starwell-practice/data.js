@@ -27,7 +27,7 @@ const SHOP_PATTERNS = [
   s => `${s.last} Brothers HVAC`,
   s => `All Seasons ${['Mechanical','Comfort','HVAC'][s.r3]}`
 ];
-const TECHS = ['Mike','Jose','Kyle','Danny','Matt','Luis','Ryan','Tyler','Bobby','Eddie','Jake','Anthony'];
+const TECHS = ['Mike','Jose','Kyle','Danny','Matt','Luis','Ryan','Tyler','Chris','Eddie','Jake','Anthony'];
 const SERVICES = ['boiler repair','furnace repair','oil-to-heat-pump conversions','ductless mini-splits','heat pump installs','AC tune-ups','oil burner service','water heaters'];
 const SITUATIONS = [
   {where:'on a roof unit', noise:'(wind on the line)'},

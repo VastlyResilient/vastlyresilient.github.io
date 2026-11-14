@@ -1101,7 +1101,7 @@ function slidesHTML(p, forPrep, stages){
   const list = (stages ? CALL_STEPS.filter(s => s.stages.some(st => stages.includes(st))) : CALL_STEPS).map(s => [s.key, `${s.n} · ${s.name}`, s.goal]);
   if(forPrep) push('intro', `<div class="box"><div class="lbl">${stages ? 'This drill' : 'How this call goes'}</div>
       <h3 style="font-size:20px">${stages ? `Practice ${list.length === 2 ? 'two steps' : list.length === 1 ? 'one step' : 'these steps'} of the call card.` : `Your goal: ${esc(p.onLine)} feels noticed and respected, and gladly says yes to 15 minutes.`}</h3>
-      ${freeTalk ? `<p class="prepnote">No lines here. Talk naturally. The Hint button is there if you freeze.${forPrep === 'free' && !stages ? ' The live AI owner is off on this phone, so a practice owner answers. Ask Bobby for your StarWell code to turn it on.' : ''}</p>` : `<p class="note">${stages ? '' : 'Five steps, the same five as the cold-call guide. Start like a person, not a pitch: the gift comes after he tells you how his week goes. '}Each turn you'll see three good lines. Pick the one that fits ${esc(p.onLine)}, then say it out loud.</p>`}
+      ${freeTalk ? `<p class="prepnote">No lines here. Talk naturally. The Hint button is there if you freeze.${forPrep === 'free' && !stages ? ' The live AI owner is off on this phone, so a practice owner answers. Ask a partner for the StarWell code to turn it on.' : ''}</p>` : `<p class="note">${stages ? '' : 'Five steps, the same five as the cold-call guide. Start like a person, not a pitch: the gift comes after he tells you how his week goes. '}Each turn you'll see three good lines. Pick the one that fits ${esc(p.onLine)}, then say it out loud.</p>`}
       <ol class="flow">${list.map(x => `<li><b>${esc(x[1])}</b> · ${esc(x[2])}</li>`).join('')}</ol></div>`);
   if(p.real){
     const R = p.real;
@@ -1501,7 +1501,7 @@ function openShops(){
       <p class="note">Grok searches the web for their reviews, hours and website, then builds your prep slides.</p>
       <div class="fld"><label>Shop name</label><input type="text" id="rShop" placeholder="Shop name"></div>
       <div class="fld"><label>Connecticut town</label><input type="text" id="rTown" placeholder="Town"></div>
-      <button class="btn black" id="rGo" ${Voice.can().xai ? '' : 'disabled'}>Research it</button> <span class="note" id="rMsg">${Voice.can().xai ? '' : 'Needs the AI coach turned on. Ask Bobby for your StarWell code.'}</span></div>`;
+      <button class="btn black" id="rGo" ${Voice.can().xai ? '' : 'disabled'}>Research it</button> <span class="note" id="rMsg">${Voice.can().xai ? '' : 'Needs the AI coach turned on. Ask a partner for the StarWell code.'}</span></div>`;
   paintShops();
   $('#shopQ').oninput = e => { shopFilter.q = e.target.value; paintShops(); };
   $('#shopAny').onclick = () => { source = {type:'random'}; closePage('shopsPage'); renderHome(); };
@@ -1593,14 +1593,14 @@ function renderProgress(){
 
 function renderSettings(){
   const c = Voice.can();
-  const status = c.xai ? 'On. Live AI owner, real voices and the AI coach are ready.' : c.el ? 'Real voices are on. The live AI owner and coach are off.' : 'Off. Practice calls use this device\'s voice. Ask Bobby for your StarWell code to turn on the AI.';
+  const status = c.xai ? 'On. Live AI owner, real voices and the AI coach are ready.' : c.el ? 'Real voices are on. The live AI owner and coach are off.' : 'Off. Practice calls use this device\'s voice. Ask a partner for the StarWell code to turn on the AI.';
   $('#setIn').innerHTML = `
     <section class="box"><h3>You</h3><div class="signin">${TEAM.map(n => `<button data-me="${n}" class="${n === me ? 'on' : ''}" aria-pressed="${n === me}">${n}</button>`).join('')}</div>
       <p class="note" style="margin:12px 0 0"><b>AI owner:</b> ${esc(status)}</p></section>
     <section class="box"><h3>Sound</h3>
       <label class="row"><input type="checkbox" id="sFx" ${CFG.phoneFx ? 'checked' : ''}> Make the owner sound like a phone line</label>
       <label class="row"><input type="checkbox" id="sNoise" ${CFG.noise ? 'checked' : ''}> Background noise (truck, office)</label></section>
-    <section class="box"><details ${CFG.xaiKey || CFG.elKey || CFG.server ? '' : ''}><summary style="font-weight:600">Team setup (for Bobby)</summary>
+    <section class="box"><details ${CFG.xaiKey || CFG.elKey || CFG.server ? '' : ''}><summary style="font-weight:600">Team setup</summary>
       <p class="note">Now using: <b>${esc(Voice.label())}</b>. The live owner and AI coach run on xAI Grok. Guided-call voices use xAI, then ElevenLabs, then this device.</p>
       ${hasVault() ? `<div class="fld"><label>StarWell code ${LS.get('sw_pl_vault', '') ? '· unlocked by ' + esc(LS.get('sw_pl_vault', '')) : ''}</label><div class="row"><input type="password" id="sCode" placeholder="xxxx-xxxx-xxxx-xxxx" autocomplete="off" style="flex:1;min-width:0"><button class="btn light" id="sUnlock">Unlock</button></div></div>` : ''}
       <div class="fld"><label>Team voice server URL</label><input type="text" id="sServer" value="${esc(CFG.server)}" placeholder="https://starwell-voice.example.workers.dev"></div>

@@ -12,7 +12,7 @@ window.STARWELL_OFFER = {
     'We lead with ONE gift that fits the shop, then mention the rest in one line.',
     'The answering line is a free 30-day trial (it costs us to run). Everything else we make is theirs to keep.',
     'We never say "we already built it" unless it exists.',
-    'The walkthrough is 15 minutes, and Bobby runs it for now.'
+    'The walkthrough is 15 minutes, and one partner runs it for now.'
   ],
   example: {name:'Dave', shop:'Hillside Heating', town:'Hamden', close:'5', day:'Tuesday', time:'7:30', day2:'Wednesday', tech:'Mike'},
 
@@ -157,7 +157,7 @@ window.STARWELL_OFFER = {
       feels:'Confidence that his website brings in customers even while he\'s busy running the business.',
       value:'More service requests, installation estimates and maintenance bookings, because visitors trust the shop and can act fast.',
       truth:['Never criticize his current site. Say the new one is built for how people look for help now: on their phone, often at night.','No promises about how many calls it will bring.','Nothing goes live until he approves it.'],
-      before:'Only if Bobby made a homepage preview for this shop. Mention it only if it exists.',
+      before:'Only if a homepage preview was made for this shop during prep. Mention it only if it exists.',
       after:'We finish it with his photos and details, he reviews it, and nothing goes live until he approves.',
       terms:'Free and his to keep: the files, and the web address in his name. We host it free for the first year. Changes after launch are part of the optional care plan.',
       termsShort:'yours to keep'},
@@ -201,7 +201,7 @@ window.STARWELL_OFFER = {
   /* ------------------------------------------------------------ the 15 minutes */
   walkthrough: {
     sentence:'We show you what we made, ask how your week runs, and you decide if you want any of it. No pressure, no card.',
-    who:'Bobby runs the walkthrough for now. Your job on the call is to book it and get the email.',
+    who:'One partner runs the walkthrough for now. Your job on the call is to book it and get the email.',
     agenda:[
       {t:'Show what we made', d:'The gift that fits, live on screen: the search check, the site preview, or the demo line.'},
       {t:'Ask how his week runs', d:'Calls, booking, how customers find him, what eats his time. This is where custom tools come up, if they do.'},
@@ -249,12 +249,12 @@ window.STARWELL_OFFER = {
   /* ------------------------------------------------------------ team questions (Dan and RJ) */
   team: [
     {q:'Which do we offer first: one gift or the whole package?', a:'One gift, the one on that shop\'s prep sheet, confirmed by his answer in step 2. Everything else gets one line in step 4. Never list the whole package.'},
-    {q:'Is anything built before we dial?', a:'Only what\'s quick to make ahead: the one-page search check, and a homepage preview if Bobby made one. Never say "we built it" unless it exists. The answering line and custom tools are built after he says yes.'},
+    {q:'Is anything built before we dial?', a:'Only what\'s quick to make ahead: the one-page search check, and a homepage preview if one was made for this shop. Never say "we built it" unless it exists. The answering line and custom tools are built after he says yes.'},
     {q:'When does custom software come up?', a:'Not on the first call, unless he names a problem himself. Then one line: "We also build small tools for exactly that. Happy to show you in the 15 minutes."'},
-    {q:'How much do I need to know about the 15 minutes?', a:'One sentence: "We show you what we made, ask how your week runs, and you decide if you want any of it." Bobby runs the walkthrough for now. Knowing the four parts (show, ask, terms, decide) is plenty.'},
+    {q:'How much do I need to know about the 15 minutes?', a:'One sentence: "We show you what we made, ask how your week runs, and you decide if you want any of it." One partner runs the walkthrough for now. Knowing the four parts (show, ask, terms, decide) is plenty.'},
     {q:'Is the demo line just a sample, or does it answer his real calls? Does he keep it?', a:'Both, in order. First a demo number he calls himself: free, no limit. Then, if he wants it, a free 30-day trial on his real after-hours calls. After that it pauses unless he chooses a plan. He keeps the recordings and the setup.'},
     {q:'Which tool do I use for what?', a:'The guide is for knowing what to say and why. The practice line is for saying it out loud until it sounds like you. Both use this same call card.'},
-    {q:'What if the guide and the practice line ever disagree?', a:'They can\'t anymore: both read the same offer file. If something still looks off, tell Bobby. The offer card at the top of the guide shows the date it last changed.'}
+    {q:'What if the guide and the practice line ever disagree?', a:'They can\'t anymore: both read the same offer file. If something still looks off, tell the team. The offer card at the top of the guide shows the date it last changed.'}
   ],
 
   /* ------------------------------------------------------------ words */
