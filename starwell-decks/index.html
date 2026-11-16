@@ -116,7 +116,7 @@ ul,ol{margin:6px 0 0;padding-left:20px} li{margin-bottom:5px}
   <a class="nav" data-n="s" href="#/systems/phone">Systems</a>
   <a class="nav" data-n="p" href="#/playbook">Playbook</a>
   <span class="sp"></span>
-  <label class="me"><span>Calling as</span><select id="me"><option>Bobby</option><option>Dan</option><option>RJ</option></select></label>
+  <label class="me"><span>Signed in as</span><select id="me"><option>Dan</option><option>RJ</option><option value="Bobby">Bobby (view all)</option></select></label>
 </div>
 <div class="shell">
   <aside class="side" id="side"></aside>
@@ -135,7 +135,7 @@ const SYS4 = ['phone','site','found','social'];
 const TAG = {phone:'Answering line', site:'Website', found:'Getting found', social:'Social posts', custom:'Custom tools'};
 const SCORE = ['Already strong','Small gaps','Clear gap','Urgent'];
 const STATUS = {ready:'Ready to call', check:'Check first', hold:'On hold'};
-let me = 'Bobby';
+let me = 'Dan', mine = true;
 try{ const m = localStorage.getItem('sw_cc_me'); if(m && D.callers[m]) me = m; }catch(e){}
 $('#me').value = me;
 $('#me').onchange = e => { me = e.target.value; try{ localStorage.setItem('sw_cc_me', me); }catch(x){} route(); };
@@ -145,7 +145,9 @@ const order = D.companies.slice().sort((a,b) => a.tier - b.tier || (b.total || 0
 order.forEach((c,i) => c.num = i + 1);
 const byId = id => D.companies.find(c => c.id === id);
 const first = c => c.first || ((c.ask === 'the owner' || / or /.test(c.ask)) ? '' : c.ask.split(' ')[0]);
-const fill = (t, c) => O.fill(t, {me, name:first(c) || 'there', shop:c.said, town:c.town.replace(' area',''), lead:c.lead});
+const voice = c => c.caller || (me === 'Bobby' ? 'Dan' : me);
+const isMine = c => me === 'Bobby' || !c.caller || c.caller === me;
+const fill = (t, c) => O.fill(t, {me:voice(c), name:first(c) || 'there', shop:c.said, town:c.town.replace(' area',''), lead:c.lead});
 const say = (t, lab) => `<div class="say"><small>${lab || 'You say'}</small>${esc(t)}</div>`;
 const him = t => `<div class="him"><small>He might say</small>${esc(t)}</div>`;
 const li = a => `<ul>${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
@@ -161,15 +163,19 @@ const lift = i => S.lifts[i % S.lifts.length];
 /* ---------- queue (left rail) ---------- */
 let filt = {q:'', lead:''};
 function side(activeId){
-  const rows = t => order.filter(c => c.tier === t && (!filt.lead || c.lead === filt.lead) && (!filt.q || (c.name + ' ' + c.town + ' ' + c.area + ' ' + c.ask).toLowerCase().includes(filt.q))).map(c =>
-    `<a class="row ${c.id === activeId ? 'on' : ''}" href="#/c/${c.id}"><span class="dot ${c.status}" title="${STATUS[c.status]}"></span><span class="b"><strong>${esc(c.said)}</strong><span class="s">${esc(c.town)}${c.total != null ? ' · need ' + c.total + '/12' : ''}</span></span>${c.status === 'hold' ? '' : `<span class="tag ${c.lead}">${TAG[c.lead]}</span>`}</a>`).join('');
+  const scope = c => me === 'Bobby' || !mine || c.caller === me || c.tier === 4;
+  const cnt = order.filter(c => c.caller === me).length;
+  const rows = t => order.filter(c => scope(c) && c.tier === t && (!filt.lead || c.lead === filt.lead) && (!filt.q || (c.name + ' ' + c.town + ' ' + c.area + ' ' + c.ask).toLowerCase().includes(filt.q))).map(c =>
+    `<a class="row ${c.id === activeId ? 'on' : ''}" href="#/c/${c.id}"><span class="dot ${c.status}" title="${STATUS[c.status]}"></span><span class="b"><strong>${esc(c.said)}</strong><span class="s">${esc(c.town)}${c.total != null ? ' · need ' + c.total + '/12' : ''}</span></span>${c.caller && (me === 'Bobby' || !mine) ? `<span class="tag custom">${c.caller}</span>` : ''}${c.status === 'hold' ? '' : `<span class="tag ${c.lead}">${TAG[c.lead]}</span>`}</a>`).join('');
   $('#side').innerHTML = `
+    ${me === 'Bobby' ? '' : `<div class="seg" style="display:flex;margin-bottom:8px"><button style="flex:1" class="${mine ? 'on' : ''}" data-mine="1">My shops (${cnt})</button><button style="flex:1" class="${mine ? '' : 'on'}" data-mine="">All shops</button></div>`}
     <input class="search" id="q" placeholder="Search shop, town or owner" value="${esc(filt.q)}">
     <div class="chips"><button class="chip ${!filt.lead ? 'on' : ''}" data-l="">All</button>${SYS4.map(k => `<button class="chip ${filt.lead === k ? 'on' : ''}" data-l="${k}">${TAG[k]}</button>`).join('')}</div>
     ${[1,2,3,4].map(t => { const r = rows(t); return r ? `<div class="grp"><span>${esc(D.groups[t].name)}</span><span>${(r.match(/class="row/g) || []).length}</span></div><p class="grpwhy">${esc(D.groups[t].why)}</p>${r}` : ''; }).join('') || '<p class="grpwhy" style="margin-top:14px">No match.</p>'}
     <p class="foot">Green dot: ready. Yellow: check first. Red: on hold. "Need" adds the four scores (0 to 3 each).</p>`;
   $('#q').oninput = e => { filt.q = e.target.value.toLowerCase().trim(); const pos = e.target.selectionStart; side(activeId); const q = $('#q'); q.focus(); q.setSelectionRange(pos,pos); };
   $$('#side .chip').forEach(b => b.onclick = () => { filt.lead = b.dataset.l; side(activeId); });
+  $$('[data-mine]').forEach(b => b.onclick = () => { mine = !!b.dataset.mine; side(activeId); });
 }
 
 /* ---------- company ---------- */
@@ -189,9 +195,9 @@ function scan(c){
   return `<div class="card"><h3>Where this shop needs help</h3><div class="scan">${SYS4.map(k => { const n = c.n.scores[k] || 0; return `<button class="scanrow ${k === c.lead ? 'lead' : ''}" data-ev="${k}"><b>${TAG[k]}${k === c.lead ? ' · lead' : k === c.second ? ' · second' : ''}</b>${pips(n)}<small>${SCORE[n]}</small></button>`; }).join('')}</div><p class="hint">Tap a row to see the proof.</p></div>`;
 }
 function callPane(c){
-  const g = O.gifts[c.lead], f = first(c), St = O.steps;
-  const hello = f ? `Hi, is this ${f}? Hey ${f}, this is ${me} with StarWell, here in Connecticut. Heating season's on, so I'll be quick.`
-                  : `Hi, could I speak with ${c.ask}, please? ... Hi, this is ${me} with StarWell, here in Connecticut. Heating season's on, so I'll be quick.`;
+  const g = O.gifts[c.lead], f = first(c), St = O.steps, who = voice(c);
+  const hello = f ? `Hi, is this ${f}? Hey ${f}, this is ${who} with StarWell, here in Connecticut. Heating season's on, so I'll be quick.`
+                  : `Hi, could I speak with ${c.ask}, please? ... Hi, this is ${who} with StarWell, here in Connecticut. Heating season's on, so I'll be quick.`;
   const body = [
     say(hello) + him('Okay. What can I do for you?') + say(`We help Connecticut HVAC shops get found and catch more calls, and I had one question about ${c.said}.`) + `<p class="hint">Someone else answers? "No problem. Who's the best person to ask about that, and when's a good time to catch them?"</p>`,
     say(c.notice) + say('Can I ask you one thing? ' + question(c)) + `<p class="hint"><b>Now stop and listen.</b> Follow up on what he actually says. If his answer points to a different need, offer the thing that fits his words, not this page.</p>`,
@@ -208,7 +214,7 @@ function callPane(c){
   return `<div class="call">
     <div class="card"><div class="steps">${St.map((s,i) => `<button class="stepb ${i ? '' : 'on'}" data-go="${i}"><b>STEP ${i + 1}</b><span class="nm">${esc(s.name)}</span></button>`).join('')}</div>${[0,1,2,3,4].map(stepHTML).join('')}</div>
     <div class="card"><h3>He says…</h3><div class="chips" style="margin-top:0">${S.branches.map(b => `<button class="chip" data-br="${b.key}">${esc(b.label)}</button>`).join('')}</div><div id="br"><p class="hint">Tap what he just said. You'll get what it means and one calm answer.</p></div>
-      <details style="margin-top:10px"><summary>"Who are you guys?"</summary>${say(D.company.line)}${say(D.callers[me].line)}<p class="hint">${esc(D.company.note)}</p></details></div>
+      <details style="margin-top:10px"><summary>"Who are you guys?"</summary>${say(D.company.line)}${say(D.callers[voice(c)].line)}<p class="hint">${esc(D.company.note)}</p></details></div>
   </div>`;
 }
 function branchHTML(b, c){
@@ -247,11 +253,12 @@ function shopPane(c){
 function company(id, tab){
   const c = byId(id); if(!c){ location.hash = '#/'; return; }
   document.body.classList.add('detail'); side(id);
-  const headHTML = `<a class="backm" href="#/">← Call queue</a><div class="head"><h1>${esc(c.name)}</h1><span class="pill ${c.status}">${STATUS[c.status]}</span><span class="sp"></span>
-      ${c.status === 'hold' ? '' : `<a class="btn" href="${tel(c.phone)}">Call ${esc(c.phone)}</a>`}<a class="btn ghost" href="${esc(c.site)}" target="_blank" rel="noopener">Their website ↗</a>
+  const headHTML = `<a class="backm" href="#/">← Call queue</a><div class="head"><h1>${esc(c.name)}</h1><span class="pill ${c.status}">${STATUS[c.status]}</span>
+      ${c.caller ? `<span class="pill" style="background:#eef0f3;color:var(--ink2)">${esc(c.caller)}'s shop</span>` : ''}<span class="sp"></span>${c.status === 'hold' || !isMine(c) || me === 'Bobby' ? '' : `<a class="btn" href="${tel(c.phone)}">Call ${esc(c.phone)}</a>`}<a class="btn ghost" href="${esc(c.site)}" target="_blank" rel="noopener">Their website ↗</a>
       <div class="meta">${esc(c.town)} · ${esc(c.area)} · ${esc(c.since)}</div></div>`;
   if(c.status === 'hold'){ $('#app').innerHTML = headHTML + `<div class="stop"><b>Do not call.</b> ${esc(c.flag || 'This shop is on hold.')}</div>${c.n ? `<div class="card"><h3>What the research found</h3><ul class="proof">${c.n.proof.map(p => `<li>${esc(p.t)}${src(p.u)}</li>`).join('')}</ul></div>` : ''}`; return; }
   $('#app').innerHTML = headHTML + `
+    ${!isMine(c) ? `<div class="stop"><b>This is ${esc(c.caller)}'s shop.</b> Don't call it. You can read it, but only ${esc(c.caller)} dials.</div>` : ''}
     ${c.flag ? `<div class="note"><b>Check first:</b> ${esc(c.flag)}</div>` : ''}${c.phoneNote ? `<div class="note"><b>Phone:</b> ${esc(c.phoneNote)}</div>` : ''}
     ${c.tier === 3 ? `<div class="note"><b>Strong shop.</b> The research found only small gaps. Lead with respect and one question. If nothing fits, thank him and move on.</div>` : ''}
     <div class="top">${brief(c)}${scan(c)}</div>
@@ -326,7 +333,7 @@ function playbook(){
 function home(){
   document.body.classList.remove('detail'); side('');
   const ready = order.filter(c => c.status === 'ready').length;
-  $('#app').innerHTML = `<div class="head"><h1>Call queue</h1><div class="meta">${order.length} shops, ${ready} ready to call. Pick a shop on the left.</div></div>
+  $('#app').innerHTML = `<div class="head"><h1>Call queue</h1><div class="meta">${me === 'Bobby' ? `${order.length} shops: ${order.filter(c => c.caller === 'Dan').length} for Dan, ${order.filter(c => c.caller === 'RJ').length} for RJ.` : `${me}, you have ${order.filter(c => c.caller === me).length} shops. They are yours alone, so nobody gets called twice.`} Pick a shop on the left.</div></div>
     <div class="lift" style="margin-bottom:14px">${esc(lift(new Date().getDate()))}</div>
     <div class="two"><div class="card"><h3>How the order is set</h3><p>Shops with first-hand proof of an urgent gap come first. Strong shops with little to fix come last. Nobody is called just to fill the list.</p></div>
     <div class="card"><h3>Before your first call today</h3><ol><li>Open a shop and read the 20-second brief.</li><li>Say the first two lines out loud once.</li><li>Have two real times ready for the walkthrough.</li></ol></div></div>`;

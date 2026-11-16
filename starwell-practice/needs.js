@@ -39,3 +39,11 @@ window.STARWELL_NEEDS = {"benedetto":{"checked":"2026-11-16","open":true,"owner"
     if(!KEEP[c.id]) c.careful = '';
   });
 })();
+
+/* Who calls which shop. Dan and RJ make the calls; each shop has one caller so
+   nobody is called twice. Fixed on purpose: do not reshuffle when scores change. */
+(function(){
+  const D = window.STARWELL_DECKS;
+  D.assign = {"masters":"Dan","seans":"RJ","climatepros":"Dan","superiorcomfort":"RJ","homehvac":"Dan","kevindean":"RJ","silvercity":"Dan","nutmeg":"RJ","rb":"Dan","giordanos":"RJ","mandr":"Dan","allamerican":"RJ","hellas":"Dan","benedetto":"RJ","corbett":"Dan","climatech":"RJ","centralair":"Dan","homecomfort":"RJ","airspecialties":"Dan","quietcorners":"RJ","chickos":"Dan","broadbrook":"RJ","modern":"Dan","rw":"RJ","nero":"Dan","airinc":"RJ","nathan":"Dan","onofreo":"RJ","dynamic":"Dan"};
+  D.companies.forEach(c => { c.caller = D.assign[c.id] || ''; });
+})();
