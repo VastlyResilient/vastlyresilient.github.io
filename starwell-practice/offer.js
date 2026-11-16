@@ -6,8 +6,10 @@
    ===================================================================== */
 'use strict';
 window.STARWELL_OFFER = {
-  updated: 'November 13, 2026',
+  updated: 'November 16, 2026',
   changes: [
+    'New: Call Decks. One read-along page for each of 30 real Connecticut shops, with prep notes and the lines for that shop.',
+    'New free gift: a starter month of social posts made from the shop\'s own job photos.',
     'Five steps instead of eight. The guide, the practice line and your prep sheet now use the same five.',
     'We lead with ONE gift that fits the shop, then mention the rest in one line.',
     'The answering line is a free 30-day trial (it costs us to run). Everything else we make is theirs to keep.',
@@ -171,7 +173,18 @@ window.STARWELL_OFFER = {
       before:'The one-page search check, if you made it during prep.',
       after:'We send the search check, then build the starter pack with his approval on each page.',
       terms:'Free starter pack, his to keep. Ongoing work is the optional growth plan, priced in writing first.',
-      termsShort:'yours to keep'}
+      termsShort:'yours to keep'},
+    social: {key:'social', name:'Social posts', short:'Your real jobs, seen by your neighbors.',
+      others:'a fresh website and help showing up on Google and ChatGPT',
+      what:'We turn the shop\'s own job photos into ready-to-post updates for Facebook, Instagram and its Google listing: the install, the town, one helpful tip. A starter month is free. The owner approves every post before it goes up.',
+      say:'A lot of people look a shop up on Facebook or Google before they call. We\'d put together a month of posts from your own job photos, free. You approve each one, and they\'re yours.',
+      feels:'Pride: the neighbors finally see the work the crew does every day, without him finding time to post.',
+      value:'A page that looks alive when a referral looks him up, more reasons for past customers to remember him, and no hours spent on it.',
+      truth:['Posts come from his real jobs and photos. No stock photos, no made-up reviews.','Never promise followers or "going viral". Say "your page stays current".','Nothing is posted without his OK.'],
+      before:'Nothing. We need his photos first.',
+      after:'He sends job photos (or we pull them from his site with permission), we draft a month of posts, he approves them.',
+      terms:'A free starter month of posts, his to keep and reuse. Posting for him after that is part of the optional care plan, priced in writing first.',
+      termsShort:'a free starter month, yours to keep'}
   },
 
   searchCheck: {
@@ -190,7 +203,7 @@ window.STARWELL_OFFER = {
 
   /* ------------------------------------------------------------ free, honestly */
   free: {
-    keep:['The website (files and web address in his name, hosting free for the first year)','The service and town pages, and the answers to customer questions','The one-page search check','Google Business Profile tuning'],
+    keep:['The website (files and web address in his name, hosting free for the first year)','The service and town pages, and the answers to customer questions','The one-page search check','Google Business Profile tuning','A starter month of social posts made from his own job photos'],
     trial:['The answering line: free demo number anytime, then a free 30-day live trial with a minute cap'],
     notFree:['Custom tools built for his shop: a fixed quote up front, usually 1 to 2 weeks to build','Ongoing care, search work or the live answering line after the trial: priced per shop, in writing first'],
     line:'The website, the pages and the search check are yours to keep. The one thing that costs us to run is the answering line, so that\'s a free 30-day trial. After that it\'s completely your call. No card, nothing automatic.',
@@ -211,6 +224,12 @@ window.STARWELL_OFFER = {
   },
 
   custom: {
+    name:'Custom tools',
+    plain:'Every shop has one job in the office that eats an hour a day: retyping, chasing, reminding. We build a small tool that does that one job, built around how his shop already works.',
+    say:'You know that one office job that eats an hour every day? We build a small tool that does just that job for you, set up around how you already work.',
+    examples:['Maintenance-plan renewals: reminds customers and books the tune-up, so nobody has to call down a list','Estimate follow-up: checks in on every quote that hasn\'t been answered, so jobs don\'t go cold','After-job review requests: asks each happy customer for a Google review the same day','Tech notes to invoice: turns what the tech says at the job into a clean invoice for the office'],
+    feels:'Relief: the thing he keeps meaning to get to finally gets done every day.',
+    value:'Hours back each week, fewer dropped follow-ups, and money that was slipping through (unrenewed plans, unanswered quotes).',
     when:'Not on the first call, unless he names a problem himself.',
     line:'We also build small tools for exactly that. Happy to show you in the 15 minutes.',
     terms:'Custom tools are quoted up front and usually take 1 to 2 weeks to build, test and launch.'

@@ -41,7 +41,7 @@ const N = {
   prepsheet: ['Your prep sheet. About ten minutes per shop.', 'Fill in the shop, the owner, one true thing you noticed, and the one gift that fits. The page writes your call card for that shop.',
     'Before you dial, check: you know which one gift you are leading with, and why. You can say the free line from memory. You have two walkthrough times ready. The shop is checked against the do-not-call list. And a person always dials. We never use an AI voice to call owners.'],
   free: ['Free, honestly.', clean(O.free.line), clean(O.free.reason), 'Yours to keep.', ...O.free.keep.map(clean), 'A free trial.', ...O.free.trial.map(clean), 'Not free.', ...O.free.notFree.map(clean), clean(O.gifts.phone.whyTrial), ...O.free.rules.map(clean)],
-  'g-phone': gift('phone'), 'g-site': gift('site'), 'g-found': gift('found'),
+  'g-phone': gift('phone'), 'g-site': gift('site'), 'g-found': gift('found'), 'g-social': gift('social'),
   walk: ['The fifteen minutes.', clean(O.walkthrough.who), 'If he asks what happens, say:', clean(O.walkthrough.sentence), ...O.walkthrough.agenda.map(a => clean(a.t + '. ' + a.d)), 'Custom tools.', clean(O.custom.when), clean(O.custom.line), clean(O.custom.terms)],
   questions: ['What owners ask. His question is a good sign. Agree it is fair, answer straight, then stop talking.', ...O.questions.flatMap(q => ['O>' + clean(q.q), clean(q.a), clean(q.why)])],
   team: ['Team questions. So we never tell two owners two different things.', ...O.team.flatMap(q => [clean(q.q), clean(q.a)])],

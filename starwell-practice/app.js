@@ -1243,6 +1243,7 @@ function guideHTML(stage, p, tab){
     body = `<div class="terms big"><small>Free, said honestly</small>${esc(F.line)}</div>
       <p class="note"><b>Why it's free:</b> ${esc(F.reason)}</p>
       ${(lead ? [lead].concat(['phone','site','found'].filter(k => k !== lead)) : ['phone','site','found']).map((k, i) => giftHTML(OFFER.gifts[k], p, i === 0 && !!lead)).join('')}
+      ${giftHTML(OFFER.gifts.social, p, false)}
       <details class="gift"><summary><b>${esc(SC.name)}</b>&nbsp;<span class="note">What is it?</span></summary><p>${esc(SC.what)}</p>
         <div class="lbl">What's on the page</div><ul class="glist">${SC.includes.map(x => `<li>${esc(gfill(x, p))}</li>`).join('')}</ul>
         <div class="lbl">Why it matters</div><p>${esc(SC.why)}</p><div class="owner"><small>How the owner sees it</small>${esc(SC.owner)}</div></details>
@@ -1275,7 +1276,7 @@ function mountGuide(el, stage, p, tab0){
 }
 function openGuidePage(stage, tab){
   $('#guideIn').innerHTML = `<div class="ptop"><h2>Call guide</h2><button class="btn light x" data-close="guidePage">Close</button></div>
-    <p class="note" style="margin:0 0 10px">The same five steps as the full <a href="../starwell-cold-call/" target="_blank" rel="noopener">cold-call guide</a>. What to say, why it works, and how the owner hears it.</p><div class="box gwrap"></div>`;
+    <p class="note" style="margin:0 0 10px">The same five steps as the full <a href="../starwell-cold-call/" target="_blank" rel="noopener">cold-call guide</a>. What to say, why it works, and how the owner hears it. Calling a real shop? Open its page in the <a href="../starwell-decks/" target="_blank" rel="noopener">Call Decks</a>.</p><div class="box gwrap"></div>`;
   mountGuide($('#guideIn'), stage || 'hello', C && !C.ended ? C.p : null, tab);
   openPage('guidePage');
 }

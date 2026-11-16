@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>StarWell Call Decks</title>
+<link rel="icon" href="../starwell-practice/assets/favicon-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef1f5; --surface:#fff; --surface-2:#f6f7f9; --ink:#1f2430; --ink-2:#3d4451; --muted:#5b6472; --faint:#8a93a0;
+  --line:#e3e6eb; --line-strong:#cfd4dc; --accent:#2f5bd3; --accent-soft:#eaf0fd;
+  --success:#1f7a4d; --success-soft:#e8f5ee; --warning:#8a5a00; --warning-soft:#fdf3e1;
+  --serif:"Instrument Serif","Iowan Old Style",Georgia,serif;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --r:12px; --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.04);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.wrap{max-width:760px;margin:0 auto;padding:16px 16px 80px}
+.top{display:flex;align-items:center;gap:12px;padding:8px 0 16px}
+.top img{height:28px}
+.top .sp{flex:1}
+.me{font-size:14px;color:var(--muted)}
+.me select{font:inherit;padding:8px 10px;border:1px solid var(--line-strong);border-radius:8px;background:#fff;min-height:40px}
+h1{font-family:var(--serif);font-weight:400;font-size:34px;line-height:1.1;margin:8px 0 6px}
+h2{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:28px 0 10px;font-weight:600}
+h3{font-size:17px;margin:0 0 4px}
+p{margin:0 0 10px}
+.sub{color:var(--muted);margin-bottom:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);margin-bottom:12px}
+.search{width:100%;padding:12px 14px;border:1px solid var(--line-strong);border-radius:10px;font:inherit;background:#fff;min-height:46px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.chip{padding:8px 14px;border-radius:999px;border:1px solid var(--line-strong);background:#fff;font-size:14px;min-height:38px}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.row{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border:1px solid var(--line);border-radius:var(--r);margin-bottom:8px;text-decoration:none;color:inherit;box-shadow:var(--shadow)}
+.row:hover{border-color:var(--accent)}
+.row .n{width:28px;height:28px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;font-size:13px;color:var(--muted);flex:none}
+.row .b{flex:1;min-width:0}
+.row .b strong{display:block}
+.row .b span{font-size:14px;color:var(--muted)}
+.tag{font-size:12px;padding:4px 10px;border-radius:999px;font-weight:600;white-space:nowrap;flex:none}
+.tag.phone{background:#eaf0fd;color:#2f5bd3}.tag.site{background:#f1ecfb;color:#6b3fc0}.tag.found{background:var(--success-soft);color:var(--success)}.tag.social{background:var(--warning-soft);color:var(--warning)}
+.back{display:inline-block;margin:4px 0 8px;font-size:14px;text-decoration:none}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;color:var(--muted);font-size:15px;margin-bottom:6px}
+.call{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;text-decoration:none;padding:10px 16px;border-radius:10px;font-weight:600;margin:8px 8px 4px 0}
+.ghost{display:inline-flex;padding:10px 16px;border-radius:10px;border:1px solid var(--line-strong);background:#fff;text-decoration:none;color:var(--ink);margin:8px 0 4px}
+.tabs{display:flex;gap:4px;background:#e3e7ee;padding:4px;border-radius:12px;margin:18px 0 16px;position:sticky;top:8px;z-index:5}
+.tab{flex:1;padding:10px 6px;border-radius:9px;font-weight:600;font-size:15px;color:var(--muted);min-height:44px}
+.tab.on{background:#fff;color:var(--ink);box-shadow:var(--shadow)}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:8px 14px;font-size:15px}
+.kv dt{color:var(--muted)}.kv dd{margin:0}
+ul{margin:0;padding-left:20px}li{margin-bottom:6px}
+.say{background:var(--accent-soft);border-left:4px solid var(--accent);border-radius:8px;padding:12px 14px;font-size:18px;line-height:1.45;margin:8px 0}
+.say small,.him small{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:2px}
+.him{background:var(--surface-2);border-left:4px solid var(--line-strong);border-radius:8px;padding:10px 14px;color:var(--ink-2);margin:8px 0}
+.stepn{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;font-size:13px;font-weight:700;margin-right:8px}
+.why{font-size:14px;color:var(--muted);margin-top:8px}
+.note{background:var(--warning-soft);color:#5c3d00;border-radius:10px;padding:12px 14px;font-size:15px;margin:10px 0}
+.good{background:var(--success-soft);color:#14532d;border-radius:10px;padding:12px 14px;font-size:15px;margin:10px 0}
+.fit{border-top:1px solid var(--line);padding:12px 0}
+.fit:first-child{border-top:0;padding-top:0}
+.fit b{display:flex;align-items:center;gap:8px;margin-bottom:2px}
+details{border-top:1px solid var(--line);padding:12px 0}
+details:first-of-type{border-top:0}
+summary{font-weight:600;cursor:pointer;min-height:28px}
+details .say{font-size:16px}
+.proof li{font-size:15px}.proof a{font-size:13px;color:var(--muted)}
+.three{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin:10px 0}
+.three div{background:var(--surface-2);border-radius:10px;padding:12px;font-size:15px}
+.three small{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:4px}
+.star{border:2px solid var(--accent)}
+.foot{font-size:13px;color:var(--faint);margin-top:28px}
+.hidden{display:none}
+@media (max-width:520px){.kv{grid-template-columns:1fr;gap:2px 0}.kv dt{margin-top:8px}h1{font-size:28px}.say{font-size:17px}}
+@media print{body{background:#fff}.tabs,.top .me,.back,.call,.ghost,.chips,.search{display:none!important}.pane{display:block!important}.card,.row{box-shadow:none;break-inside:avoid}.pane::before{content:attr(data-title);display:block;font-weight:700;font-size:20px;margin:18px 0 8px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a href="#/"><img src="../starwell-practice/assets/starwell-logo.png" alt="StarWell"></a>
+    <span class="sp"></span>
+    <label class="me">Calling as <select id="me"><option>Bobby</option><option>Dan</option><option>RJ</option></select></label>
+  </div>
+  <div id="app"></div>
+  <div class="foot" id="foot"></div>
+</div>
+<script src="../starwell-practice/offer.js"></script>
+<script src="../starwell-practice/decks.js"></script>
+<script>
+'use strict';
+const O = window.STARWELL_OFFER, D = window.STARWELL_DECKS;
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const GIFTS = ['phone','site','found','social'];
+const TAGS = {phone:'Answering line', site:'Website', found:'Getting found', social:'Social posts'};
+let me = 'Bobby';
+try{ const m = localStorage.getItem('sw_cc_me'); if(m && D.callers[m]) me = m; }catch(e){}
+$('#me').value = me;
+$('#me').onchange = e => { me = e.target.value; try{ localStorage.setItem('sw_cc_me', me); }catch(x){} route(); };
+
+const order = D.companies.slice().sort((a,b) => a.tier - b.tier);
+order.forEach((c,i) => c.n = i + 1);
+const first = c => (c.ask === 'the owner' || / or /.test(c.ask)) ? '' : c.ask.split(' ')[0];
+const fill = (t, c) => O.fill(t, {me, name:first(c) || 'there', shop:c.said, town:c.town, lead:c.lead});
+const say = t => `<div class="say"><small>You say</small>${esc(t)}</div>`;
+const him = t => `<div class="him"><small>He might say</small>${esc(t)}</div>`;
+const li = a => `<ul>${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
+const tel = p => 'tel:' + p.replace(/[^\d]/g,'');
+
+let filt = {q:'', lead:''};
+function home(){
+  const rows = t => order.filter(c => c.tier === t && (!filt.lead || c.lead === filt.lead) && (!filt.q || (c.name + ' ' + c.town + ' ' + c.area).toLowerCase().includes(filt.q))).map(c =>
+    `<a class="row" href="#/c/${c.id}"><span class="n">${c.n}</span><span class="b"><strong>${esc(c.said)}</strong><span>${esc(c.town)} · ${esc(c.since.split(',')[0])}</span></span><span class="tag ${c.lead}">${TAGS[c.lead]}</span></a>`).join('');
+  $('#app').innerHTML = `
+    <h1>Call decks</h1>
+    <p class="sub">One read-along per real Connecticut shop. Read <b>Prep</b> before you dial. Keep <b>On the call</b> open while you talk. For your eyes only.</p>
+    <a class="ghost" href="#/services">The five services, explained simply</a>
+    <input class="search" id="q" placeholder="Search a shop or town" value="${esc(filt.q)}" style="margin-top:12px">
+    <div class="chips"><button class="chip ${!filt.lead ? 'on' : ''}" data-l="">All</button>${['phone','site','found'].map(k => `<button class="chip ${filt.lead === k ? 'on' : ''}" data-l="${k}">Lead with: ${TAGS[k]}</button>`).join('')}</div>
+    <h2>Call first</h2><p class="sub">${esc(D.tiers[1])}</p>${rows(1) || '<p class="sub">No match.</p>'}
+    <h2>Call next</h2><p class="sub">${esc(D.tiers[2])}</p>${rows(2) || '<p class="sub">No match.</p>'}`;
+  $('#q').oninput = e => { filt.q = e.target.value.toLowerCase().trim(); const pos = e.target.selectionStart; home(); const q = $('#q'); q.focus(); q.setSelectionRange(pos,pos); };
+  document.querySelectorAll('.chip').forEach(b => b.onclick = () => { filt.lead = b.dataset.l; home(); });
+}
+
+function prep(c){
+  const g = O.gifts[c.lead];
+  return `
+  <div class="card"><h3>Who to ask for</h3><p><b>${esc(c.ask)}</b></p><p class="why">${esc(c.askNote)}</p></div>
+  <div class="card"><h3>What makes this shop good</h3>${li([c.since].concat(c.facts))}</div>
+  <div class="card"><h3>How a customer reaches them today</h3>
+    <dl class="kv"><dt>Hours</dt><dd>${esc(c.hours)}</dd><dt>After hours</dt><dd>${esc(c.emergency)}</dd><dt>Booking</dt><dd>${esc(c.booking)}</dd><dt>Reviews shown</dt><dd>${esc(c.reviews)}</dd><dt>Social</dt><dd>${esc(c.social)}</dd></dl></div>
+  <div class="card star"><h3>Lead with: ${esc(g.name)}</h3><p>${esc(c.why)}</p><p class="why">Terms: ${esc(g.termsShort)}.</p></div>
+  <div class="card"><h3>How each free thing fits this shop</h3>
+    ${[c.lead].concat(GIFTS.filter(k => k !== c.lead)).map(k => `<div class="fit"><b><span class="tag ${k}">${TAGS[k]}</span></b>${esc(c.fit[k])}</div>`).join('')}
+    <div class="fit"><b><span class="tag" style="background:#eee">Custom tool to listen for</span></b>${esc(c.custom)} <span class="why">Only bring it up if he names the problem himself. Quoted up front, never free.</span></div></div>
+  <div class="note"><b>Be careful:</b> ${esc(c.careful)}</div>
+  <div class="card"><h3>We don't know this yet. Ask, never assume.</h3>${li(c.unknown)}</div>
+  ${c.phoneNote ? `<div class="note"><b>Phone number:</b> ${esc(c.phoneNote)}</div>` : ''}`;
+}
+
+function oncall(c){
+  const S = O.steps, g = O.gifts[c.lead], f = first(c);
+  const hello = f ? `Hi, is this ${f}? Hey ${f}, this is ${me} with StarWell, here in Connecticut. Heating season's on, so I'll be quick.`
+                  : `Hi, could I speak with ${c.ask}, please? ... Hi, this is ${me} with StarWell, here in Connecticut. Heating season's on, so I'll be quick.`;
+  const step = (i, body) => `<div class="card"><h3><span class="stepn">${i + 1}</span>${esc(S[i].name)}</h3>${body}${S[i].why ? `<p class="why"><b>Why:</b> ${esc(fill(Array.isArray(S[i].why) ? S[i].why[0] : S[i].why, c))}</p>` : ''}</div>`;
+  return `
+  <div class="good"><b>The goal of this call:</b> a 15-minute walkthrough on the calendar. Nothing else.</div>
+  ${step(0, say(hello) + him('Okay. What can I do for you?') + say(`We help Connecticut HVAC shops get found and catch more calls, and I had one question about ${c.said}.`))}
+  ${step(1, say(c.notice) + say('Can I ask you one thing? ' + (c.q || D.questions[c.lead])) + `<p class="why">Then stop and listen. If his answer points somewhere else, follow him and offer the thing that fits what he said.</p>`)}
+  ${step(2, say("That's actually what we help with. " + fill(g.say, c)))}
+  ${step(3, S[3].say.filter(l => !/^\(/.test(l.t)).map(l => say(fill(l.t, c))).join('') + `<p class="why">Now stop talking. His question comes next. Answers are under "If he asks".</p>`)}
+  ${step(4, say(`No commitment at all. Could I show you in 15 minutes? Would tomorrow morning or the day after in the afternoon work better?`) + say('And what\'s the best email to send it to?') + say(`Thanks${f ? ', ' + f : ''}. I'll send it today. Good luck with the cold nights.`) + `<p class="why">Offer two real times from your own calendar.</p>`)}
+  <div class="card"><h3>If he says no</h3>${say("No problem at all. Thanks for taking the call, and good luck this season.")}<p class="why">A kind goodbye is still a good call. He may remember it.</p></div>`;
+}
+
+function asks(c){
+  const C = D.callers[me];
+  return `
+  <div class="card"><h3>"Who are you guys?"</h3>${say(D.company.line)}${say(C.line)}<p class="why">${esc(C.use)} ${esc(D.company.note)}</p></div>
+  <div class="card"><h3>His questions, answered straight</h3>
+    ${O.questions.map(q => `<details><summary>${esc(q.q)}</summary>${say(fill(q.a, c))}</details>`).join('')}
+    <details><summary>Is it really free? What's the catch with each one?</summary>${say(O.free.line)}${li(O.free.rules)}</details>
+    <details><summary>He names an office headache (scheduling, renewals, paperwork)</summary>${say(O.custom.line)}<p class="why">For this shop, listen for: ${esc(c.custom)}</p></details>
+  </div>`;
+}
+
+function company(id){
+  const c = D.companies.find(x => x.id === id);
+  if(!c){ location.hash = '#/'; return; }
+  $('#app').innerHTML = `
+    <a class="back" href="#/">← All shops</a>
+    <h1>${esc(c.name)}</h1>
+    <div class="head"><span>${esc(c.town)} · ${esc(c.area)}</span><span>${esc(c.since)}</span></div>
+    <a class="call" href="${tel(c.phone)}">Call ${esc(c.phone)}</a><a class="ghost" href="${esc(c.site)}" target="_blank" rel="noopener">Open their website</a>
+    <div class="tabs">${[['prep','Prep'],['call','On the call'],['asks','If he asks']].map((t,i) => `<button class="tab ${i ? '' : 'on'}" data-t="${t[0]}">${t[1]}</button>`).join('')}</div>
+    <div class="pane" id="p-prep" data-title="Prep">${prep(c)}</div>
+    <div class="pane hidden" id="p-call" data-title="On the call">${oncall(c)}</div>
+    <div class="pane hidden" id="p-asks" data-title="If he asks">${asks(c)}</div>`;
+  document.querySelectorAll('.tab').forEach(b => b.onclick = () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x === b));
+    document.querySelectorAll('.pane').forEach(p => p.classList.toggle('hidden', p.id !== 'p-' + b.dataset.t));
+    window.scrollTo({top:0});
+  });
+}
+
+function services(){
+  const proof = k => `<ul class="proof">${D.proof[k].map(p => `<li>${esc(p.t)} ${p.u ? `<a href="${esc(p.u)}" target="_blank" rel="noopener">${esc(p.s)}</a>` : `<span class="why">${esc(p.s)}</span>`}</li>`).join('')}</ul>`;
+  const ex = {name:'', shop:'your shop', town:'your town'};
+  const svc = k => { const g = O.gifts[k]; return `<div class="card"><h3><span class="tag ${k}">${TAGS[k]}</span> ${esc(g.short)}</h3>
+    ${say(O.fill(g.say, Object.assign({lead:k, me}, ex)))}
+    <div class="three"><div><small>How he feels</small>${esc(g.feels)}</div><div><small>Time and money</small>${esc(g.value)}</div><div><small>What it costs him</small>${esc(g.terms)}</div></div>
+    ${k === 'site' ? `<details><summary>What a rebuilt site includes</summary>${D.rebuild.map(r => `<p><b>${esc(r.t)}.</b> ${esc(r.d)}</p>`).join('')}</details>` : ''}
+    ${k === 'found' ? `<details><summary>What is the one-page search check?</summary><p>${esc(O.searchCheck.what)}</p></details>` : ''}
+    <details><summary>Proof it helps</summary>${proof(k)}</details></div>`; };
+  const cu = O.custom;
+  $('#app').innerHTML = `
+    <a class="back" href="#/">← All shops</a>
+    <h1>The five services, explained simply</h1>
+    <p class="sub">One sentence each. Say it the way you'd say it to a neighbor. Never use the words SEO, AEO, GEO or AI agent with an owner.</p>
+    ${GIFTS.map(svc).join('')}
+    <div class="card star"><h3>${esc(cu.name)}: the biggest value we offer</h3>
+      <p>${esc(cu.plain)}</p>${say(cu.say)}
+      <div class="three"><div><small>How he feels</small>${esc(cu.feels)}</div><div><small>Time and money</small>${esc(cu.value)}</div><div><small>What it costs him</small>${esc(cu.terms)}</div></div>
+      <details><summary>Examples for an HVAC shop</summary>${li(cu.examples)}</details>
+      <details><summary>Proof it helps</summary>${proof('custom')}</details>
+      <p class="why"><b>When:</b> ${esc(cu.when)}</p></div>
+    <h2>What's free, and what isn't</h2>
+    <div class="card"><p><b>His to keep:</b></p>${li(O.free.keep)}<p style="margin-top:10px"><b>Free trial:</b></p>${li(O.free.trial)}<p style="margin-top:10px"><b>Not free:</b></p>${li(O.free.notFree)}${say(O.free.line)}</div>
+    <h2>Who we are, if he asks</h2>
+    <div class="card">${say(D.company.line)}<p class="why">${esc(D.company.note)}</p>${Object.keys(D.callers).map(n => `<div class="fit"><b>${n}</b>${say(D.callers[n].line)}<span class="why">${esc(D.callers[n].use)}</span></div>`).join('')}</div>`;
+}
+
+function route(){
+  const h = location.hash || '#/';
+  if(h.startsWith('#/c/')) company(h.slice(4)); else if(h === '#/services') services(); else home();
+  window.scrollTo({top:0});
+}
+$('#foot').textContent = 'Shop facts were read on each company\'s own website on ' + D.checked + '. Sites change, so glance at theirs before you dial. Offer terms last changed ' + (O.updated || '') + '.';
+window.addEventListener('hashchange', route);
+route();
+</script>
+</body>
+</html>
