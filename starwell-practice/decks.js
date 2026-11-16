@@ -405,3 +405,58 @@ window.STARWELL_DECKS = {
      unknown:['Google review count','How after-hours calls are handled'], careful:'They already do most things right. Be humble and offer only the check.'}
   ]
 };
+
+/* =====================================================================
+   UPDATES from the research check on November 16, 2026
+   (CT business registry, each shop's own site, Google Maps).
+   Applied on top of the records above. Each value replaces the old one.
+   ===================================================================== */
+(function(){
+  const D = window.STARWELL_DECKS;
+  D.researchChecked = 'November 16, 2026';
+  D.tiers[3] = 'On hold. Something needs to be confirmed before anyone dials.';
+  const FORFEIT = 'The state registry lists this LLC as forfeited. That is a paperwork status and the shop may be working as normal. Confirm it is open before you call, and never mention the registry on the call.';
+  const U = {
+    benedetto: {askNote:'The site lists "Joe Benedetto, Founder". The state registry shows Joseph P. Benedetto.', reviews:'4.9 on Google from 145 reviews',
+      facts:{'4.9 on Google with 75+ reviews shown':'4.9 on Google from 145 reviews'}, unknown:['What happens to non-member calls after hours']},
+    rw: {ask:'Rick Hatch', askNote:'The site says "Owner Rick Hatch". The state registry lists Wanda Hatch as a principal.', hours:'Mon to Fri, 8 to 4:30', unknown:['What happens to non-contract calls after 4:30']},
+    masters: {ask:'Thomas Dunkin', askNote:'The site names Thomas Dunkin as president. The legal name is Master\'s Heating and Air Conditioning, Inc.', unknown:['Office hours','Google rating']},
+    nutmeg: {ask:'Steve or Henry Wierzbicki', askNote:'The site names Steve and Henry Wierzbicki as founders. The registry lists Stephen and Henry Jr. as officers.', unknown:['Office hours','Google rating']},
+    rb: {ask:'Russ Amato or Brian Mackenzie', askNote:'The site lists Russ Amato and Brian Mackenzie as owners. Their site spells the second name "Mackenize", so check how he says it.', hours:'Mon to Fri, 8 to 4:30 on the contact page (the footer still says 8 to 5)', unknown:['Google rating']},
+    homehvac: {ask:'Dave Teodosio', askNote:'The site says "Dave Teodosio, Owner".', unknown:['Hours and after-hours handling','Google rating']},
+    onofreo: {ask:'Mark Onofreo', askNote:'The site names Mark Onofreo as founder and owner.', reviews:'4.9 on Google from 737 reviews', unknown:['Who covers Saturday calls']},
+    airinc: {ask:'Wayne Krasnow', askNote:'The site names Wayne Krasnow as president and founder.', phoneNote:'Their Google profile shows a different number, (203) 315-0323. The number here is the one on their website.', unknown:['Google rating']},
+    nathan: {ask:'Jake Nathan', askNote:'The site says Jake took on the role of owner. The registry shows Jacob Nathan.', unknown:['Google review count']},
+    homecomfort: {ask:'Steve Viglione', askNote:'The site says "Steve Viglione Jr., Owner".', unknown:['Google rating']},
+    centralair: {hours:'Mon to Fri, 8 to 4:30', why:'The office closes at 4:30 and the site doesn\'t say what happens after that, so the question is natural.',
+      phoneNote:'Their Google profile shows a different number, (203) 546-7776. The number here is the one on their website.', unknown:['Owner\'s name','After-hours handling','Google rating']},
+    mandr: {phoneNote:'Three numbers are in use: 203-874-7914 (our record), (475) 306-7914 on Google and 475-549-1913 on the live site. Open their website and dial the number shown there today.'},
+    allamerican: {phoneNote:'Their Google profile shows a different number, (203) 879-4928. The number here is the one on their website.'},
+    dynamic: {reviews:'4.7 on Google from 322 reviews (the site says 4.9)', facts:{'4.9 on Google':'4.7 on Google from 322 reviews'},
+      notice:'I saw you do geothermal, which not many shops around here take on, and you have over 300 Google reviews.', unknown:['How after-hours calls are handled']},
+    airspecialties: {reviews:'4.6 on Google from 288 reviews. The 5 stars from 100 on the site is a mix of platforms.', facts:{'5 stars from 100 reviews across Google, Yelp and Facebook':'4.6 on Google from 288 reviews'},
+      fit:{found:'288 Google reviews and a 1952 start should put them near the top of AI answers. The check shows if they are.'}},
+    climatepros: {askNote:'No owner name on the site. Google lists the address as 132 Pepes Farm Rd in Milford, while the site says Orange. Say "Orange" unless he corrects you.'},
+    nero: {ask:'Sue or Steve Nero', askNote:'The site is signed "Sue & Steve" but doesn\'t call them owners. The registry lists Suzanne and Michael Nero as officers. Ask for either by first name.',
+      notice:'I saw Nero has been serving since 1988, you\'re a Trane Comfort Specialist, and you have an A+ with the BBB.', unknown:['Who the owner is today','Google rating and count','Who answers after 4']},
+    silvercity: {askNote:'A review on the site names the owner as John. No last name is given. Google lists the shop as "Silver City Heating and Cooling" at the same address and phone.'},
+    hellas: {phone:'(203) 354-9398', phoneNote:'This is the number on their website. Google shows (203) 852-0666. The old directory number, (475) 208-4828, is on neither, so don\'t use it.', hours:'Mon to Fri, 8 to 4:30 on the site (Google says 8 to 3:30)', unknown:['Owner\'s name','Google rating']},
+    giordanos: {hours:'Mon to Fri, 8 to 4:30. Closed weekends.', why:'The office closes at 4:30 and is closed weekends, and the site says nothing about after hours.',
+      q:'After 4:30 or on a weekend, what happens when a customer calls?', phoneNote:'Their Google profile shows a different number, (203) 734-7648. The number here is the one on their website.',
+      unknown:['Owner\'s name','After-hours handling','Google rating','Which legal entity runs the shop today (the one matching name in the state registry is dissolved)']},
+    seans: {ask:'Sean Auddino', askNote:'The state registry lists Sean G. Auddino as principal.', hours:'Mon to Fri, 8 to 5', flag:FORFEIT, unknown:['Google rating']},
+    kevindean: {flag:FORFEIT, reviews:'None on the site, and no Google profile was found',
+      why:'Forty years of experience, but no reviews on the site and no Google profile that we could find. The search check is an easy, useful first gift.',
+      fit:{found:'We couldn\'t find a Google profile for the shop. The check would show that, and setting one up is part of the free starter pack.'}, unknown:['Whether a Google profile exists under another name','How after-hours calls are handled']},
+    heatpeople: {tier:3, flag:'Do not call yet. Google Maps shows this shop as permanently closed and the state registry lists it as dissolved. Their website still loads. Confirm it is open first.'}
+  };
+  D.companies.forEach(c => {
+    const u = U[c.id]; if(!u) return;
+    Object.keys(u).forEach(k => {
+      if(k === 'facts') c.facts = c.facts.map(f => u.facts[f] || f);
+      else if(k === 'fit') Object.assign(c.fit, u.fit);
+      else c[k] = u[k];
+    });
+    c.updated = true;
+  });
+})();

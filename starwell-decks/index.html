@@ -107,6 +107,7 @@ $('#me').onchange = e => { me = e.target.value; try{ localStorage.setItem('sw_cc
 const order = D.companies.slice().sort((a,b) => a.tier - b.tier);
 order.forEach((c,i) => c.n = i + 1);
 const first = c => (c.ask === 'the owner' || / or /.test(c.ask)) ? '' : c.ask.split(' ')[0];
+const flag = c => c.flag ? `<div class="note"><b>Check first:</b> ${esc(c.flag)}</div>` : '';
 const fill = (t, c) => O.fill(t, {me, name:first(c) || 'there', shop:c.said, town:c.town, lead:c.lead});
 const say = t => `<div class="say"><small>You say</small>${esc(t)}</div>`;
 const him = t => `<div class="him"><small>He might say</small>${esc(t)}</div>`;
@@ -116,7 +117,7 @@ const tel = p => 'tel:' + p.replace(/[^\d]/g,'');
 let filt = {q:'', lead:''};
 function home(){
   const rows = t => order.filter(c => c.tier === t && (!filt.lead || c.lead === filt.lead) && (!filt.q || (c.name + ' ' + c.town + ' ' + c.area).toLowerCase().includes(filt.q))).map(c =>
-    `<a class="row" href="#/c/${c.id}"><span class="n">${c.n}</span><span class="b"><strong>${esc(c.said)}</strong><span>${esc(c.town)} · ${esc(c.since.split(',')[0])}</span></span><span class="tag ${c.lead}">${TAGS[c.lead]}</span></a>`).join('');
+    `<a class="row" href="#/c/${c.id}"><span class="n">${c.n}</span><span class="b"><strong>${esc(c.said)}</strong><span>${esc(c.town)} · ${esc(c.since.split(',')[0])}</span></span>${c.flag ? '<span class="tag social">Check first</span>' : ''}<span class="tag ${c.lead}">${TAGS[c.lead]}</span></a>`).join('');
   $('#app').innerHTML = `
     <h1>Call decks</h1>
     <p class="sub">One read-along per real Connecticut shop. Read <b>Prep</b> before you dial. Keep <b>On the call</b> open while you talk. For your eyes only.</p>
@@ -124,14 +125,15 @@ function home(){
     <input class="search" id="q" placeholder="Search a shop or town" value="${esc(filt.q)}" style="margin-top:12px">
     <div class="chips"><button class="chip ${!filt.lead ? 'on' : ''}" data-l="">All</button>${['phone','site','found'].map(k => `<button class="chip ${filt.lead === k ? 'on' : ''}" data-l="${k}">Lead with: ${TAGS[k]}</button>`).join('')}</div>
     <h2>Call first</h2><p class="sub">${esc(D.tiers[1])}</p>${rows(1) || '<p class="sub">No match.</p>'}
-    <h2>Call next</h2><p class="sub">${esc(D.tiers[2])}</p>${rows(2) || '<p class="sub">No match.</p>'}`;
+    <h2>Call next</h2><p class="sub">${esc(D.tiers[2])}</p>${rows(2) || '<p class="sub">No match.</p>'}
+    ${rows(3) ? `<h2>On hold</h2><p class="sub">${esc(D.tiers[3])}</p>${rows(3)}` : ''}`;
   $('#q').oninput = e => { filt.q = e.target.value.toLowerCase().trim(); const pos = e.target.selectionStart; home(); const q = $('#q'); q.focus(); q.setSelectionRange(pos,pos); };
   document.querySelectorAll('.chip').forEach(b => b.onclick = () => { filt.lead = b.dataset.l; home(); });
 }
 
 function prep(c){
   const g = O.gifts[c.lead];
-  return `
+  return `${flag(c)}
   <div class="card"><h3>Who to ask for</h3><p><b>${esc(c.ask)}</b></p><p class="why">${esc(c.askNote)}</p></div>
   <div class="card"><h3>What makes this shop good</h3>${li([c.since].concat(c.facts))}</div>
   <div class="card"><h3>How a customer reaches them today</h3>
@@ -150,7 +152,7 @@ function oncall(c){
   const hello = f ? `Hi, is this ${f}? Hey ${f}, this is ${me} with StarWell, here in Connecticut. Heating season's on, so I'll be quick.`
                   : `Hi, could I speak with ${c.ask}, please? ... Hi, this is ${me} with StarWell, here in Connecticut. Heating season's on, so I'll be quick.`;
   const step = (i, body) => `<div class="card"><h3><span class="stepn">${i + 1}</span>${esc(S[i].name)}</h3>${body}${S[i].why ? `<p class="why"><b>Why:</b> ${esc(fill(Array.isArray(S[i].why) ? S[i].why[0] : S[i].why, c))}</p>` : ''}</div>`;
-  return `
+  return `${flag(c)}
   <div class="good"><b>The goal of this call:</b> a 15-minute walkthrough on the calendar. Nothing else.</div>
   ${step(0, say(hello) + him('Okay. What can I do for you?') + say(`We help Connecticut HVAC shops get found and catch more calls, and I had one question about ${c.said}.`))}
   ${step(1, say(c.notice) + say('Can I ask you one thing? ' + (c.q || D.questions[c.lead])) + `<p class="why">Then stop and listen. If his answer points somewhere else, follow him and offer the thing that fits what he said.</p>`)}
@@ -222,7 +224,7 @@ function route(){
   if(h.startsWith('#/c/')) company(h.slice(4)); else if(h === '#/services') services(); else home();
   window.scrollTo({top:0});
 }
-$('#foot').textContent = 'Shop facts were read on each company\'s own website on ' + D.checked + '. Sites change, so glance at theirs before you dial. Offer terms last changed ' + (O.updated || '') + '.';
+$('#foot').textContent = 'Shop facts were read on each company\'s own website on ' + D.checked + '. Owner names, hours, phone numbers and Google ratings were then checked against the state business registry and Google Maps. Sites change, so glance at theirs before you dial. Offer terms last changed ' + (O.updated || '') + '.';
 window.addEventListener('hashchange', route);
 route();
 </script>
