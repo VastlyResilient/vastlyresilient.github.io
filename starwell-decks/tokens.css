@@ -1,0 +1,30 @@
+/* StarWell Call Decks design tokens. Use only these. See DESIGN.md. */
+:root{
+  /* spacing: 4/8-point scale */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s6:24px; --s8:32px; --s12:48px; --s16:64px;
+  /* type: one family, five sizes */
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --t-xs:.75rem; --t-sm:.875rem; --t-md:1rem; --t-lg:1.25rem; --t-xl:1.75rem;
+  /* neutrals */
+  --n0:#FFFFFF; --n50:#F3F5F8; --n100:#E9ECF1; --n200:#DCE0E7; --n400:#858E9E; --n600:#566074; --n800:#2B3240; --n900:#141821;
+  /* colour: five tokens */
+  --accent:#2A52C4; --accent-soft:#E8EEFD; --success:#17693F; --warning:#7A4E00; --danger:#B42318;
+  --success-soft:#E6F4EC; --warning-soft:#FCF1DC; --danger-soft:#FDECEA; --on-accent:#FFFFFF;
+  /* radius, shadow, motion: three each */
+  --r-sm:8px; --r-md:12px; --r-lg:20px;
+  --sh-1:0 1px 2px rgba(20,24,33,.06); --sh-2:0 8px 24px rgba(20,24,33,.10); --sh-3:0 24px 64px rgba(20,24,33,.18);
+  --m-fast:150ms; --m-mid:200ms; --m-slow:300ms; --ease:cubic-bezier(.2,.8,.2,1);
+  /* glass: only for layers that float above content */
+  --glass:rgba(255,255,255,.66); --glass-edge:rgba(255,255,255,.8); --glass-line:rgba(20,24,33,.10);
+  --bg-a:#DCE6FB; --bg-b:#E3F1EC;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --n0:#1B1E26; --n50:#111318; --n100:#262A34; --n200:#333845; --n400:#7C8596; --n600:#A9B1C0; --n800:#D5DAE3; --n900:#F3F5F8;
+    --accent:#8FAAF5; --accent-soft:#232C47; --success:#6FCF9B; --warning:#E7B75C; --danger:#F2948B;
+    --success-soft:#1B3327; --warning-soft:#3A2E14; --danger-soft:#3D1F1C; --on-accent:#10131A;
+    --sh-1:0 1px 2px rgba(0,0,0,.4); --sh-2:0 8px 24px rgba(0,0,0,.45); --sh-3:0 24px 64px rgba(0,0,0,.6);
+    --glass:rgba(27,30,38,.62); --glass-edge:rgba(255,255,255,.14); --glass-line:rgba(255,255,255,.08);
+    --bg-a:#1A2340; --bg-b:#14261F;
+  }
+}
