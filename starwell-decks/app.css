@@ -2,7 +2,7 @@
 *{box-sizing:border-box}
 html{font-size:100%;-webkit-text-size-adjust:100%}
 body{margin:0;min-height:100vh;font-family:var(--font);font-size:var(--t-md);line-height:1.5;color:var(--n900);
-  background:radial-gradient(900px 600px at 0% 0%,var(--bg-a),transparent 70%),radial-gradient(900px 700px at 100% 10%,var(--bg-b),transparent 70%),var(--n50);background-attachment:fixed;-webkit-font-smoothing:antialiased}
+  background:var(--n0);-webkit-font-smoothing:antialiased}
 h1,h2,h3,p,ul,ol,dl,dd,figure,fieldset{margin:0;padding:0;border:0}
 ul,ol{list-style:none}
 h1{font-size:var(--t-xl);line-height:1.2;font-weight:600}
@@ -158,4 +158,3 @@ body:has(.callbar) .toast{bottom:112px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media print{.bar,.callbar,.toast{display:none!important} body{background:#fff} .panel{box-shadow:none}}
 
-@media (prefers-color-scheme:dark){.brand img{filter:invert(1)}}

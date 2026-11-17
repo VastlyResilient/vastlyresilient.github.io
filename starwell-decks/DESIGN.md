@@ -3,7 +3,7 @@
 Use only the tokens in `tokens.css`. No one-off values.
 
 ## Direction
-Calm, professional, Apple-style. Solid, readable content on a soft background; glass only on the layer that floats.
+Calm, professional, Apple-style. White throughout. Solid, readable content; glass only on the layer that floats. Light theme only.
 One accent colour. One font family. Line icons, never emoji.
 
 ## Tokens
