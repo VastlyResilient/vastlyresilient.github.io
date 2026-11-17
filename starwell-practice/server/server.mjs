@@ -1,7 +1,9 @@
 /* Run the StarWell voice server on Node 18+ (Railway, Render, a VPS, or your laptop).
-   No dependencies. Set XAI_API_KEY (and optionally ELEVENLABS_API_KEY, TEAM_CODE, ALLOWED_ORIGIN), then: node server.mjs */
+   No dependencies. Set XAI_API_KEY (and optionally ELEVENLABS_API_KEY, TEAM_CODE, ALLOWED_ORIGIN), then: node server.mjs
+   The caller dashboard (calls.mjs) also needs PASS_DAN, PASS_RJ, PASS_BOBBY and a DATA_DIR on a volume. */
 import http from 'node:http';
 import { handle } from './worker.js';
+import { handleCalls, isCallsPath } from './calls.mjs';
 
 const PORT = process.env.PORT || 8787;
 const hits = new Map();   // simple per-IP limit: 120 requests / 10 minutes
@@ -13,8 +15,14 @@ http.createServer(async (req, res) => {
   const now = Date.now(), h = (hits.get(ip) || []).filter(t => now - t < 600000);
   h.push(now); hits.set(ip, h);
   if(h.length > 120){ res.writeHead(429, {'Content-Type':'application/json'}); res.end('{"error":"Slow down"}'); return; }
-  const chunks = []; for await (const ch of req) chunks.push(ch);
+  const chunks = []; let size = 0;
+  for await (const ch of req){ size += ch.length; if(size > 45 * 1024 * 1024){ res.writeHead(413, {'Content-Type':'application/json'}); res.end('{"error":"Too large"}'); req.destroy(); return; } chunks.push(ch); }
   const body = Buffer.concat(chunks);
+  if(isCallsPath((req.url || '').split('?')[0])){   // caller dashboard: sign-in, call logs, recordings
+    const r = await handleCalls(new Request('http://local' + req.url, {method:req.method, headers:req.headers}), process.env, body, ip);
+    const headers = {}; r.headers.forEach((v, k) => headers[k] = v);
+    res.writeHead(r.status, headers); res.end(Buffer.from(await r.arrayBuffer())); return;
+  }
   const request = new Request('http://local' + req.url, {method:req.method, headers:req.headers, body:['GET','HEAD','OPTIONS'].includes(req.method) ? undefined : body});
   const r = await handle(request, process.env);
   const headers = {}; r.headers.forEach((v, k) => headers[k] = v);

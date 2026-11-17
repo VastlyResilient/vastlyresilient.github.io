@@ -107,6 +107,36 @@ ul,ol{margin:6px 0 0;padding-left:20px} li{margin-bottom:5px}
   .stepb .nm{display:none} .stepb b{font-size:12px} .nav{white-space:nowrap}
 }
 @media print{.bar,.side,.tabs,.steps,.nextrow,.btn,.backm{display:none!important}.shell{display:block;height:auto}.main{overflow:visible}.pane,.stepp{display:block!important}.card{box-shadow:none;break-inside:avoid;margin-bottom:10px}}
+
+/* ---- My calls dashboard ---- */
+.linkb{color:var(--accent);font-size:13px;text-decoration:underline;padding:4px}
+.signin{max-width:380px;margin:40px auto}
+.err{color:var(--bad);font-size:13.5px;min-height:20px;margin-top:6px}
+.tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:14px} .tiles.t2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;box-shadow:var(--shadow)}
+.tile b{display:block;font-size:26px;line-height:1.1} .tile span{font-size:13px;color:var(--ink2)} .tile small{display:block;font-size:12px;color:var(--ok);margin-top:2px}
+.read{display:grid;grid-template-columns:34px 1fr;gap:10px;padding:10px 0;border-top:1px solid var(--line)} .read:first-of-type{border-top:0;padding-top:0}
+.read>span{font-size:22px} .read small{display:block;font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:700} .read p{color:var(--ink2);font-size:14px;margin-top:2px}
+.badge{background:var(--ok-soft);color:#14532d;border-radius:999px;padding:5px 11px;font-size:13px;font-weight:600}
+.crow{display:flex;gap:10px;padding:9px 6px;border-top:1px solid var(--line);text-decoration:none;color:inherit;border-radius:6px} .crow:first-of-type{border-top:0} .crow:hover{background:var(--soft)}
+.crow .ci{font-size:20px;width:26px;text-align:center} .crow .b{flex:1;min-width:0} .crow strong{display:block;font-size:14.5px} .crow .s{display:block;font-size:12.5px;color:var(--muted)} .crow .w{color:var(--ok)}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:7px 0;cursor:pointer;font-size:15px} .chk input{width:20px;height:20px;margin-top:1px;flex:none;accent-color:var(--accent)} .chk .s{color:var(--muted);font-size:13px}
+.call2{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:14px;align-items:start;padding-bottom:70px}
+.outs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.out{border:1px solid var(--line2);border-radius:10px;padding:10px 6px;font-size:13.5px;font-weight:600;line-height:1.25;min-height:74px;background:#fff} .out span{display:block;font-size:22px;margin-bottom:2px} .out.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.ql{font-weight:600;margin:14px 0 6px}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px} .scale button{border:1px solid var(--line2);border-radius:8px;min-height:42px;font-weight:700;background:#fff} .scale button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.scl{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:3px}
+.fq{display:block;font-weight:600;margin-top:12px} .fq textarea{display:block;width:100%;margin-top:6px;min-height:68px;padding:9px 11px;border:1px solid var(--line2);border-radius:8px;font:inherit;font-weight:400;resize:vertical}
+.wfl{display:grid;gap:8px} .box.ok{background:var(--ok-soft);color:#14532d}
+.talkbar{height:10px;border-radius:5px;background:var(--line);overflow:hidden} .talkbar i{display:block;height:100%;background:var(--accent)}
+.stp{display:grid;grid-template-columns:1fr;padding:6px 0;border-top:1px solid var(--line);font-size:14px;color:var(--muted)} .stp.y b{color:var(--ok)} .stp span{color:var(--ink2)}
+.mom{border-left:3px solid var(--line2);padding:4px 0 4px 12px;margin:8px 0;font-size:14.5px} .mq{font-style:italic;color:var(--ink2)}
+.trs{max-height:420px;overflow:auto;margin-top:8px} .trs p{margin:0 0 8px;padding:8px 10px;border-radius:8px;font-size:14px;background:var(--soft)} .trs p.me{background:var(--accent-soft)} .trs small{display:block;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.savebar{position:fixed;left:310px;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:10px 24px;display:flex;gap:12px;align-items:center;z-index:15}
+.back2{display:inline-block;margin-bottom:8px;font-size:14px;text-decoration:none}
+@media (max-width:980px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.call2{grid-template-columns:1fr}.savebar{left:0;padding:10px 14px}.outs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media print{.savebar{display:none!important}}
 </style>
 </head>
 <body>
@@ -115,13 +145,16 @@ ul,ol{margin:6px 0 0;padding-left:20px} li{margin-bottom:5px}
   <a class="nav" data-n="q" href="#/">Call queue</a>
   <a class="nav" data-n="s" href="#/systems/phone">Systems</a>
   <a class="nav" data-n="p" href="#/playbook">Playbook</a>
+  <a class="nav" data-n="m" href="#/calls">My calls</a>
   <span class="sp"></span>
+  <span class="me" id="who"></span>
   <label class="me"><span>Signed in as</span><select id="me"><option>Dan</option><option>RJ</option><option value="Bobby">Bobby (view all)</option></select></label>
 </div>
 <div class="shell">
   <aside class="side" id="side"></aside>
   <main class="main"><div class="wrap" id="app"></div></main>
 </div>
+<script src="../starwell-practice/config.js"></script>
 <script src="../starwell-practice/offer.js"></script>
 <script src="../starwell-practice/decks.js"></script>
 <script src="../starwell-practice/needs.js"></script>
@@ -138,6 +171,7 @@ const STATUS = {ready:'Ready to call', check:'Check first', hold:'On hold'};
 let me = 'Dan', mine = true;
 try{ const m = localStorage.getItem('sw_cc_me'); if(m && D.callers[m]) me = m; }catch(e){}
 $('#me').value = me;
+window.setMe = u => { if(D.callers[u]){ me = u; $('#me').value = u; } };
 $('#me').onchange = e => { me = e.target.value; try{ localStorage.setItem('sw_cc_me', me); }catch(x){} route(); };
 
 D.companies.forEach(c => { if(!c.status) c.status = c.flag ? 'check' : 'ready'; if(c.tier === 4) c.status = 'hold'; });
@@ -166,7 +200,7 @@ function side(activeId){
   const scope = c => me === 'Bobby' || !mine || c.caller === me || c.tier === 4;
   const cnt = order.filter(c => c.caller === me).length;
   const rows = t => order.filter(c => scope(c) && c.tier === t && (!filt.lead || c.lead === filt.lead) && (!filt.q || (c.name + ' ' + c.town + ' ' + c.area + ' ' + c.ask).toLowerCase().includes(filt.q))).map(c =>
-    `<a class="row ${c.id === activeId ? 'on' : ''}" href="#/c/${c.id}"><span class="dot ${c.status}" title="${STATUS[c.status]}"></span><span class="b"><strong>${esc(c.said)}</strong><span class="s">${esc(c.town)}${c.total != null ? ' · need ' + c.total + '/12' : ''}</span></span>${c.caller && (me === 'Bobby' || !mine) ? `<span class="tag custom">${c.caller}</span>` : ''}${c.status === 'hold' ? '' : `<span class="tag ${c.lead}">${TAG[c.lead]}</span>`}</a>`).join('');
+    `<a class="row ${c.id === activeId ? 'on' : ''}" href="#/c/${c.id}"><span class="dot ${c.status}" title="${STATUS[c.status]}"></span><span class="b"><strong>${esc(c.said)}</strong><span class="s">${esc(c.town)}${c.total != null ? ' · need ' + c.total + '/12' : ''}${typeof SWC !== 'undefined' && SWC.lastFor(c.id) ? ' · ' + SWC.lastFor(c.id).i + ' ' + SWC.lastFor(c.id).t : ''}</span></span>${c.caller && (me === 'Bobby' || !mine) ? `<span class="tag custom">${c.caller}</span>` : ''}${c.status === 'hold' ? '' : `<span class="tag ${c.lead}">${TAG[c.lead]}</span>`}</a>`).join('');
   $('#side').innerHTML = `
     ${me === 'Bobby' ? '' : `<div class="seg" style="display:flex;margin-bottom:8px"><button style="flex:1" class="${mine ? 'on' : ''}" data-mine="1">My shops (${cnt})</button><button style="flex:1" class="${mine ? '' : 'on'}" data-mine="">All shops</button></div>`}
     <input class="search" id="q" placeholder="Search shop, town or owner" value="${esc(filt.q)}">
@@ -254,7 +288,7 @@ function company(id, tab){
   const c = byId(id); if(!c){ location.hash = '#/'; return; }
   document.body.classList.add('detail'); side(id);
   const headHTML = `<a class="backm" href="#/">← Call queue</a><div class="head"><h1>${esc(c.name)}</h1><span class="pill ${c.status}">${STATUS[c.status]}</span>
-      ${c.caller ? `<span class="pill" style="background:#eef0f3;color:var(--ink2)">${esc(c.caller)}'s shop</span>` : ''}<span class="sp"></span>${c.status === 'hold' || !isMine(c) || me === 'Bobby' ? '' : `<a class="btn" href="${tel(c.phone)}">Call ${esc(c.phone)}</a>`}<a class="btn ghost" href="${esc(c.site)}" target="_blank" rel="noopener">Their website ↗</a>
+      ${c.caller ? `<span class="pill" style="background:#eef0f3;color:var(--ink2)">${esc(c.caller)}'s shop</span>` : ''}<span class="sp"></span>${c.status === 'hold' || !isMine(c) || me === 'Bobby' ? '' : `<a class="btn" href="${tel(c.phone)}">Call ${esc(c.phone)}</a>`}${c.status !== 'hold' && isMine(c) && me !== 'Bobby' ? `<a class="btn ghost" href="#/calls/new/${c.id}">📝 Log this call</a>` : ''}<a class="btn ghost" href="${esc(c.site)}" target="_blank" rel="noopener">Their website ↗</a>
       <div class="meta">${esc(c.town)} · ${esc(c.area)} · ${esc(c.since)}</div></div>`;
   if(c.status === 'hold'){ $('#app').innerHTML = headHTML + `<div class="stop"><b>Do not call.</b> ${esc(c.flag || 'This shop is on hold.')}</div>${c.n ? `<div class="card"><h3>What the research found</h3><ul class="proof">${c.n.proof.map(p => `<li>${esc(p.t)}${src(p.u)}</li>`).join('')}</ul></div>` : ''}`; return; }
   $('#app').innerHTML = headHTML + `
@@ -340,13 +374,15 @@ function home(){
 }
 function route(){
   const h = location.hash || '#/', p = h.slice(2).split('/');
-  $$('.nav').forEach(a => a.classList.toggle('on', a.dataset.n === (p[0] === 'systems' ? 's' : p[0] === 'playbook' ? 'p' : 'q')));
-  if(p[0] === 'c') company(p[1], p[2]); else if(p[0] === 'systems') systems(p[1]); else if(p[0] === 'playbook') playbook(); else home();
+  $$('.nav').forEach(a => a.classList.toggle('on', a.dataset.n === (p[0] === 'systems' ? 's' : p[0] === 'playbook' ? 'p' : p[0] === 'calls' ? 'm' : 'q')));
+  if(p[0] === 'calls'){ if(typeof SWC !== 'undefined') SWC.show(p); }
+  else if(p[0] === 'c') company(p[1], p[2]); else if(p[0] === 'systems') systems(p[1]); else if(p[0] === 'playbook') playbook(); else home();
   $('.main').scrollTop = 0; window.scrollTo({top:0});
 }
 document.addEventListener('keydown', e => { if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) return; const on = $('.stepb.on'); if(!on || !$('#p-call') || $('#p-call').classList.contains('hidden')) return; const i = $$('.stepb').indexOf(on); if(e.key === 'ArrowRight' && i < 4) $$('.stepb')[i + 1].click(); if(e.key === 'ArrowLeft' && i > 0) $$('.stepb')[i - 1].click(); });
 window.addEventListener('hashchange', route);
 route();
 </script>
+<script src="calls.js"></script>
 </body>
 </html>

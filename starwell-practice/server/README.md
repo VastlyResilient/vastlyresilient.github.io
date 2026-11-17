@@ -27,3 +27,16 @@ Run `npx wrangler deploy worker.js --name starwell-voice`. Then add the secrets 
 Open `https://YOUR-SERVER/health`. You should see `{"ok":true,"xai":true,...}`.
 
 The server only answers requests that carry your team code and come from `https://vastlyresilient.github.io` or localhost. It also limits text-to-speech to the listed voices and to short lines, pins the AI model, and caps the length of every request.
+
+## Caller dashboard (sign-in, call logs, recordings)
+
+The Call Decks dashboard uses this same server. Add these in Railway:
+
+1. **Variables** (service → Variables):
+   - `PASS_DAN`, `PASS_RJ`, `PASS_BOBBY`: each person's password. Spaces and capitals don't matter when they type it.
+   - `DATA_DIR` = `/data`
+   - `SESSION_SECRET` (optional): any long random phrase.
+2. **Volume** (service → Settings → Volumes → New Volume): mount path `/data`. Without it, call logs are erased on every redeploy.
+3. Redeploy, then open `https://YOUR-SERVER/calls/health`. You should see `{"ok":true,"signIn":true,"keepsData":true,"xai":true}`.
+
+Passwords live only in Railway. Recordings are sent to xAI for transcription and are not stored; only the transcript is kept, in the caller's own log file.
