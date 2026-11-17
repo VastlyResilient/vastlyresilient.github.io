@@ -200,13 +200,13 @@ function side(activeId){
   const scope = c => me === 'Bobby' || !mine || c.caller === me || c.tier === 4;
   const cnt = order.filter(c => c.caller === me).length;
   const rows = t => order.filter(c => scope(c) && c.tier === t && (!filt.lead || c.lead === filt.lead) && (!filt.q || (c.name + ' ' + c.town + ' ' + c.area + ' ' + c.ask).toLowerCase().includes(filt.q))).map(c =>
-    `<a class="row ${c.id === activeId ? 'on' : ''}" href="#/c/${c.id}"><span class="dot ${c.status}" title="${STATUS[c.status]}"></span><span class="b"><strong>${esc(c.said)}</strong><span class="s">${esc(c.town)}${c.total != null ? ' · need ' + c.total + '/12' : ''}${typeof SWC !== 'undefined' && SWC.lastFor(c.id) ? ' · ' + SWC.lastFor(c.id).i + ' ' + SWC.lastFor(c.id).t : ''}</span></span>${c.caller && (me === 'Bobby' || !mine) ? `<span class="tag custom">${c.caller}</span>` : ''}${c.status === 'hold' ? '' : `<span class="tag ${c.lead}">${TAG[c.lead]}</span>`}</a>`).join('');
+    `<a class="row ${c.id === activeId ? 'on' : ''}" href="#/c/${c.id}"><span class="dot ${c.status}" title="${STATUS[c.status]}"></span><span class="b"><strong>${esc(c.said)}</strong><span class="s">${esc(c.town)}${c.status === 'hold' ? '' : c.tier === 3 ? ' · Already strong' : ' · Biggest gap: ' + TAG[c.lead].toLowerCase()}${typeof SWC !== 'undefined' && SWC.lastFor(c.id) ? ' · ' + SWC.lastFor(c.id).i + ' ' + SWC.lastFor(c.id).t : ''}</span></span>${c.caller && (me === 'Bobby' || !mine) ? `<span class="tag custom">${c.caller}</span>` : ''}</a>`).join('');
   $('#side').innerHTML = `
     ${me === 'Bobby' ? '' : `<div class="seg" style="display:flex;margin-bottom:8px"><button style="flex:1" class="${mine ? 'on' : ''}" data-mine="1">My shops (${cnt})</button><button style="flex:1" class="${mine ? '' : 'on'}" data-mine="">All shops</button></div>`}
     <input class="search" id="q" placeholder="Search shop, town or owner" value="${esc(filt.q)}">
     <div class="chips"><button class="chip ${!filt.lead ? 'on' : ''}" data-l="">All</button>${SYS4.map(k => `<button class="chip ${filt.lead === k ? 'on' : ''}" data-l="${k}">${TAG[k]}</button>`).join('')}</div>
     ${[1,2,3,4].map(t => { const r = rows(t); return r ? `<div class="grp"><span>${esc(D.groups[t].name)}</span><span>${(r.match(/class="row/g) || []).length}</span></div><p class="grpwhy">${esc(D.groups[t].why)}</p>${r}` : ''; }).join('') || '<p class="grpwhy" style="margin-top:14px">No match.</p>'}
-    <p class="foot">Green dot: ready. Yellow: check first. Red: on hold. "Need" adds the four scores (0 to 3 each).</p>`;
+    <p class="foot">Green dot: ready. Yellow: check first. Red: on hold.</p>`;
   $('#q').oninput = e => { filt.q = e.target.value.toLowerCase().trim(); const pos = e.target.selectionStart; side(activeId); const q = $('#q'); q.focus(); q.setSelectionRange(pos,pos); };
   $$('#side .chip').forEach(b => b.onclick = () => { filt.lead = b.dataset.l; side(activeId); });
   $$('[data-mine]').forEach(b => b.onclick = () => { mine = !!b.dataset.mine; side(activeId); });
