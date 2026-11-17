@@ -1,0 +1,52 @@
+/* Additions to the selected UI for real data: rich Prepare, evidence, readiness, account. Same tokens as styles.css. */
+.icon{width:1.15em;height:1.15em;fill:currentColor;stroke:none;flex:none}
+.icon.sm{width:1em;height:1em}
+.header-user{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:15px;color:var(--muted);white-space:nowrap}
+.header-user strong{color:var(--ink);font-weight:600}
+.app-header .mode-nav{margin-left:auto;margin-right:auto}
+.notice{display:flex;gap:10px;align-items:flex-start;margin:14px 0 0;padding:10px 12px;border:1px solid var(--rule);border-radius:10px;background:#fffdfb;font-size:15px;line-height:1.45;color:var(--ink)}
+.notice.warn{border-color:#e2c58a;background:#fdf6e6} .notice.stop{border-color:#e7b0aa;background:#fdf0ee}
+.notice .icon{margin-top:2px}
+.page-notice{margin:0 40px 0}
+.readiness{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:14px;font-weight:600;color:var(--muted)}
+.readiness.ready{color:#17693f} .readiness.check,.readiness.conflict{color:#7a4e00} .readiness.hold{color:#b42318}
+.turns{display:flex;gap:6px;margin:14px 0 0} .turns i{width:22px;height:3px;border-radius:2px;background:var(--rule)} .turns i.on{background:var(--brand)}
+.said{margin:0 0 10px;font-size:15px;font-weight:600;color:var(--muted)}
+.inline-capture .pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.prep-lede{margin:6px 0 0;color:var(--muted);font-size:16px}
+.prep-essentials p{margin:2px 0 0}
+.prep-essentials .src,.ev .src{font-size:13px;color:var(--muted)} .prep-essentials .src a,.ev .src a{text-decoration:underline}
+.prep-deep{margin-top:34px;border-top:1px solid var(--rule)}
+.prep-deep>h3{margin:22px 0 4px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.prep-section{border-bottom:1px solid var(--rule)}
+.prep-section>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:54px;padding:8px 0;font-size:18px;font-weight:600;cursor:pointer;list-style:none}
+.prep-section>summary::-webkit-details-marker{display:none}
+.prep-section>summary small{font-size:13px;font-weight:500;color:var(--muted);margin-left:auto}
+.prep-section>summary .icon{transition:transform .14s;color:var(--muted)} .prep-section[open]>summary .icon{transform:rotate(180deg)}
+.prep-section>div{padding:0 0 20px;display:grid;gap:12px}
+.ev{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.ev li{padding-left:14px;border-left:2px solid var(--rule);font-size:16px;line-height:1.5}
+.ev li.private{border-left-color:#e2c58a}
+.facts{display:grid;grid-template-columns:150px 1fr;gap:6px 16px;font-size:16px;margin:0} .facts dt{color:var(--muted)} .facts dd{margin:0}
+.tri{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 16px;font-size:15px;margin:0;padding:0;list-style:none}
+.tri .y{color:#17693f} .tri .n{color:#b42318} .tri .u{color:var(--muted)}
+.sub{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:6px 0 0}
+.wrap-status{font-size:14px;color:var(--muted);min-height:20px}
+.outcome-options.ten{grid-template-columns:repeat(2,minmax(0,1fr))}
+.dialog .ev li{font-size:15px}
+.queue-row.held{opacity:.7}
+.queue-row small.who{display:block;color:var(--muted)}
+.page{max-width:1232px}
+@media (max-width:760px){.facts{grid-template-columns:1fr;gap:0} .facts dt{margin-top:8px} .header-user strong{display:none} .page-notice{margin:0 16px} .inline-capture .pair{grid-template-columns:1fr} .tri{grid-template-columns:1fr}}
+@media print{.app-header,.company-navigation,.dial-button,.prep-actions,.prep-notes,.toast,.company-picker{display:none!important} .workspace{display:block} details>div{display:grid!important}}
+.mode-nav .icon{width:23px;height:23px} .back-queue .icon{width:24px;height:24px} .company-picker .icon{width:24px;height:24px}
+.dial-button .icon{width:27px;height:27px} .company-brief h2 .icon{width:28px;height:28px} .brief-list dt .icon{width:27px;height:27px}
+.brief-toggle .icon{width:22px;height:22px} .company-navigation .icon{width:24px;height:24px} .stage-dot .icon{width:18px;height:18px}
+.coaching-label .icon{width:25px;height:25px} .response-list .icon{width:24px;height:24px} .call-actions .primary .icon{width:28px;height:28px}
+.source-link .icon{width:21px;height:21px} .more-responses .icon{width:20px;height:20px} .toast>.icon{width:22px;height:22px}
+.queue-row>.icon{width:23px;height:23px} .queue-status .icon{width:19px;height:19px} .search-field .icon{width:21px;height:21px}
+.header-user{margin-left:8px;flex:none}
+.speech-area{scroll-margin-top:14px}
+@media (max-width:900px){.header-user strong{display:none}}
+@media (max-width:760px){.mode-nav button{min-height:44px}}
+@media (max-width:900px){.back-queue span{display:none} .header-rule{display:none}}
