@@ -69,3 +69,45 @@
 .prep-deep>h3+.prep-section{border-top:1px solid var(--rule)}
 @media (max-width:760px){.opener-pick button{flex:1 1 100%}.opener{margin-bottom:18px}}
 @media print{.opener{display:none}}
+
+/* Prepare, decluttered: a glance row, four short cards, everything else folded away */
+.glance{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 28px;margin:26px 0 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.glance>div{padding:14px 0}
+.glance dt{font-size:14px;color:var(--muted);margin-bottom:4px}
+.glance dd{margin:0;font-size:17px;line-height:1.4;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.glance strong{font-weight:600}
+.tag{display:inline-flex;align-items:center;min-height:24px;padding:2px 10px;border-radius:999px;font-size:12.5px;font-weight:600;letter-spacing:.1px;white-space:nowrap}
+.tag.ok{background:#e6f4ea;color:#17663a}
+.tag.ask{background:#fdf1d8;color:#7a5200}
+.brief-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:22px}
+.brief-card{border:1px solid var(--rule);border-radius:14px;background:#fffdfb;padding:18px 20px 16px}
+.brief-card h3{display:flex;align-items:center;gap:10px;margin:0 0 10px;font:600 17px/1.3 "DM Sans",sans-serif;letter-spacing:0}
+.brief-card h3 .icon{width:20px;height:20px;flex:none}
+.brief-card h3 .tag{margin-left:auto}
+.brief-card.pain h3 .icon{color:#b4491f}.brief-card.good h3 .icon{color:#17663a}.brief-card.unsure h3 .icon{color:#7a5200}.brief-card.never h3 .icon{color:#a12b2b}
+.brief-card ul,.brief-card ol{margin:0;padding-left:22px;display:grid;gap:8px;font-size:16px;line-height:1.45}
+.brief-card ul{list-style:disc}.brief-card ol{list-style:decimal}.brief-card li::marker{color:var(--muted)}
+.brief-card p{margin:0;font-size:16px;line-height:1.45}
+.brief-card .src{font-size:13px;white-space:nowrap}
+.shot{display:block;position:relative;width:100%;height:170px;margin:0 0 12px;padding:0;border:1px solid var(--rule);border-radius:10px;overflow:hidden;background:#f3efec;cursor:zoom-in}
+.shot img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+.shot span{position:absolute;right:8px;bottom:8px;display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;background:rgba(17,19,34,.82);color:#fff;font-size:13px;font-weight:600}
+.shot span .icon{width:15px;height:15px}
+.shot-list{display:grid;gap:22px}
+.shot-list figure{margin:0}
+.shot-list img{max-width:100%;max-height:70vh;border:1px solid var(--rule);border-radius:10px;display:block;margin:0 auto}
+.shot-list figcaption{margin-top:8px;font-size:15px;line-height:1.45;text-align:center}
+.prep-all{margin-top:26px;border-top:1px solid var(--rule)}
+.prep-all>summary{display:flex;align-items:center;gap:10px;min-height:56px;font-size:17px;font-weight:600;cursor:pointer;list-style:none}
+.prep-all>summary::-webkit-details-marker{display:none}
+.prep-all>summary .icon:last-child{margin-left:auto;color:var(--muted);transition:transform .14s}
+.prep-all[open]>summary .icon:last-child{transform:rotate(180deg)}
+.prep-all .prep-deep{margin-top:0}
+/* opener picker, compact */
+.opener{margin:0 0 22px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px}
+.opener-pick button{min-height:44px;padding:6px 14px 6px 8px;grid-template-columns:auto auto}
+.opener-pick small{grid-column:2}
+.opener-pick span{font-size:15px}
+@media (max-width:900px){.brief-grid{grid-template-columns:minmax(0,1fr)}.glance{grid-template-columns:minmax(0,1fr)}.glance>div{padding:10px 0}.glance>div+div{border-top:1px solid var(--rule)}}
+@media (max-width:760px){.opener-pick button{flex:1 1 auto}}
+@media print{.prep-all>summary{display:none}.shot{height:auto}.shot img{height:auto}}

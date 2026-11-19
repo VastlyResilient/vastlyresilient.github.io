@@ -424,8 +424,8 @@ function script(c){
   if(sx){ const v = sx.introduce[opener(c)], a = splitAsk(tok(sx.ask.say, c));
     return [
       {turns:[tok(v.beat_1, c), tok(v.beat_2, c)], cues:['Say it, then stop. Let them answer before the next line.', sx.introduce.cue], scripted:true},
-      {turns:[a[0]], cues:[sx.ask.cue + (a[1] ? ' ' + a[1].replace(/[.!]$/, '') + '.' : '')]},
-      {turns:[tok(sx.offer.say, c)], cues:[sx.offer.cue]},
+      {turns:[a[0]].concat((sx.ask.more || []).map(t => tok(t, c))), cues:[sx.ask.cue + (sx.ask.back ? ' Back pocket, only if he leans in: ' + sx.ask.back.replace(/[.!]$/, '') + '.' : a[1] ? ' ' + a[1].replace(/[.!]$/, '') + '.' : '')]},
+      {turns:[tok(sx.offer.say, c)].concat(sx.offer.then ? [tok(sx.offer.then, c)] : []), cues:[sx.offer.cue]},
       {turns:[tok(sx.next_step.say, c)], cues:[sx.next_step.cue]}
     ]; }
   const g = O.gifts[c.lead], f = first(c), who = c.caller || me();
@@ -533,7 +533,7 @@ function queueView(){
 }
 
 /* ---------- workspace ---------- */
-function companyPanel(c, list, i){
+function companyPanel(c, list, i, mode){
   const rd = ready(c), n = c.n, note = n ? (proofOf({proof:(n.proof || []).map(p => ({system:p.s, finding:p.t}))}, c.lead)[0] || {}).finding : '';
   const short = t => { t = String(t || ''); const s = t.split(/(?<=[.!?])\s/)[0]; return s.length > 84 ? s.slice(0, 81).replace(/\s+\S*$/, '') + '…' : s; };
   const d = draft(c.id), contact = d.contact ? d.contact + ' (as told on the call)' : c.ask;
@@ -546,14 +546,14 @@ function companyPanel(c, list, i){
       <button class="icon-button" aria-label="Next company" id="nxt" ${i >= list.length - 1 ? 'disabled' : ''}>${pi('caret-right')}</button></div>
     ${rd[0] === 'hold' ? `<div class="phone-unavailable">${pi('pause-circle')}On hold. Do not dial.</div>` : c.phone ? `<a class="button dial-button" href="tel:${esc(String(c.phone).replace(/[^\d]/g,''))}">${pi('phone-l')}<span>Dial ${esc(c.phone)}</span></a>` : `<div class="phone-unavailable">${pi('phone')}Phone not supplied</div>`}
     ${rd[0] !== 'ready' ? `<p class="number-caution"><b>${esc(rd[1])}.</b> ${esc(rd[2])} <button data-src>Review sources</button>.</p>` : ''}
-    <section class="company-brief" id="brief"><h2>${pi('file-text-l')}Company brief</h2>
+    ${mode === 'prepare' ? '' : `<section class="company-brief" id="brief"><h2>${pi('file-text-l')}Company brief</h2>
       <button class="brief-toggle" id="bt" aria-expanded="false">${pi('file-text-l')}Company brief${pi('caret-down')}</button>
       <div class="brief-content"><dl class="brief-list">
         <div><dt>${pi('user-l')}<span class="sr-only">Contact</span></dt><dd><strong>Talk to ${esc(c.ask)}</strong></dd></div>
         <div><dt>${pi('desktop-l')}<span class="sr-only">Topic</span></dt><dd><strong>Lead with:</strong> ${SYSN[c.lead] || 'Not set'}</dd></div>
         <div><dt>${pi('file-text-l')}<span class="sr-only">Research</span></dt><dd><strong>Research note:</strong> ${esc(short(note) || 'Company-specific research has not been supplied.')}</dd></div>
         <div><dt>${pi('chat-circle-l')}<span class="sr-only">Reminder</span></dt><dd>${esc(short((c.unknown || [])[0] ? 'Not confirmed: ' + c.unknown[0] : 'Ask how it works today. Let them tell you.'))}</dd></div>
-      </dl><button class="source-link text-button" data-src>View sources${pi('arrow-square-out')}</button></div></section></aside>`;
+      </dl><button class="source-link text-button" data-src>View sources${pi('arrow-square-out')}</button></div></section>`}</aside>`;
 }
 function prepareHTML(c){
   const R = RAW && RAW[c.id], n = c.n, rd = ready(c), rel = relationship(c), sc = script(c), g = O.gifts[c.lead], d = draft(c.id);
@@ -562,13 +562,27 @@ function prepareHTML(c){
   const strong = R && R.strengths && R.strengths[0] ? pt(R.strengths[0]) : c.facts[0];
   const reach = [c.hours && 'Hours: ' + c.hours, c.emergency && 'After hours: ' + c.emergency, (w.booking || c.booking) && 'Booking: ' + (w.booking || c.booking)].filter(Boolean);
   const unknown = (R && R.not_confirmed) || c.unknown || [];
-  const ess = `<div class="prep-essentials">
-      <div><span>Who and where</span><strong>${esc(c.ask)}</strong><p>${esc(c.name)}, ${esc(c.town)}. ${esc(c.askNote || '')}</p><p class="src">${c.site ? `<a href="${esc(c.site)}" target="_blank" rel="noopener">${esc(c.site.replace(/^https?:\/\//,''))}</a>` : 'No website found'} · ${esc(c.phone)}</p>${sn.tie.length ? `<p class="src">Local tie: ${sn.tie.map(esc).join(' ')}</p>` : ''}</div>
-      <div><span>What deserves respect</span><p>${esc(strong || c.since)}</p></div>
-      <div><span>How customers reach them now</span>${reach.map(x => `<p>${esc(x)}</p>`).join('') || '<p>Not confirmed. Ask.</p>'}</div>
-      <div><span>Lead with, and why</span><strong>${SYSN[c.lead]}</strong>${(lead.length ? lead.slice(0,2).map(p => `<p>${esc(p.finding)} ${srcHTML(p.source_url, p.seen_on)}</p>`).join('') : `<p>${esc(whyLine(c))}</p>`)}<p class="src">${sx && n && n.say ? 'In plain words: ' + esc(n.say) : 'Offer: ' + esc(g.termsShort) + '.'}</p></div>
-      <div><span>Where things stand</span><p>${esc(rel.text)}</p>${rel.sub ? `<p>${esc(rel.sub)}</p>` : ''}${rel.quote ? `<p class="src">Your note: "${esc(rel.quote)}"</p>` : ''}<p class="src">${sx ? 'Goal of this call: leave him glad he picked up. Offer to text the screenshot.' : 'Goal of this call: a 15-minute walkthrough, if he wants one.'}</p></div>
-      ${rd[0] !== 'ready' ? `<div class="prep-check">${pi('warning')}<p><b>${esc(rd[1])}.</b> ${esc(rd[2])}</p></div>` : ''}${dns.length && rd[0] !== 'hold' ? `<div class="prep-check">${pi('warning')}<p><b>Do not say:</b> ${dns.map(esc).join(' ')}</p></div>` : rd[0] === 'ready' && unknown[0] ? `<div class="prep-check">${pi('info')}<p><b>Don't assume:</b> ${esc(unknown[0])}</p></div>` : ''}
+  const SHOTS = window.STARWELL_SHOTS || {}, shots = SHOTS[c.id] || [];
+  const order = [c.lead, c.second].concat(['site','phone','found','social']).filter((k,i,a) => k && a.indexOf(k) === i);
+  const pains = n ? order.reduce((a,k) => a.concat(n.proof.filter(x => x.s === k && !x.note)), []).slice(0, 3) : [];
+  const goods = (n ? n.strengths : c.facts || []).slice(0, 3), asks = unknown.slice(0, 3);
+  const seen = n && n.checked ? 'Verified ' + nice(n.checked) : 'Verified';
+  const conf = n && n.conf ? (n.conf === 'confirmed' ? ['ok','Confirmed'] : ['ask', n.conf.charAt(0).toUpperCase() + n.conf.slice(1) + '. Check on the call.']) : null;
+  const ess = `${rd[0] !== 'ready' ? `<p class="notice warn">${pi('warning')}<span><b>${esc(rd[1])}.</b> ${esc(rd[2])}</span></p>` : ''}
+    <dl class="glance">
+      <div><dt>Ask for</dt><dd><strong>${esc(c.ask)}</strong>${conf ? `<span class="tag ${conf[0]}">${esc(conf[1])}</span>` : ''}</dd></div>
+      <div><dt>Lead with</dt><dd><strong>${SYSN[c.lead] || 'Not set'}</strong></dd></div>
+      <div><dt>Last call</dt><dd>${esc(rel.text)}${rel.sub ? ' ' + esc(rel.sub) : ''}</dd></div>
+    </dl>
+    ${sn.tie.length ? `<p class="field-help">Local tie: ${sn.tie.map(esc).join(' ')}</p>` : ''}
+    <div class="brief-grid">
+      <section class="brief-card pain"><h3>${pi('warning')}Pain points<span class="tag ok">${esc(seen)}</span></h3>
+        ${shots.length ? `<button class="shot" id="shot" aria-label="Open the screenshots for ${esc(c.said)}"><img src="${esc(shots[0].f)}" alt="${esc(shots[0].t)}" loading="lazy"><span>${pi('magnifying-glass')}${shots.length} screenshot${shots.length === 1 ? '' : 's'}</span></button>` : ''}
+        ${pains.length ? `<ol>${pains.map(x => `<li>${esc(x.p || x.t)}${isUrl(x.u) ? ` <a class="src" href="${esc(String(x.u).split(' ')[0])}" target="_blank" rel="noopener">Source</a>` : ''}</li>`).join('')}</ol>` : '<p>No verified gap on file. Ask how things work today.</p>'}</section>
+      <section class="brief-card good"><h3>${pi('check-circle')}Strengths<span class="tag ok">${esc(seen)}</span></h3>
+        ${goods.length ? `<ul>${goods.map(x => `<li>${esc(pt(x))}</li>`).join('')}</ul>` : '<p>None on file yet.</p>'}</section>
+      ${asks.length ? `<section class="brief-card unsure"><h3>${pi('question-l')}Ask, don't assume<span class="tag ask">Not verified</span></h3><ul>${asks.map(x => `<li>${esc(x)}</li>`).join('')}</ul></section>` : ''}
+      ${dns.length && rd[0] !== 'hold' ? `<section class="brief-card never"><h3>${pi('x')}Do not say</h3><ul>${dns.map(x => `<li>${esc(x)}</li>`).join('')}</ul></section>` : ''}
     </div>`;
   let deep = '';
   if(rawState === 'loading' || rawState === 'idle') deep = `<p class="field-help" role="status">Loading the full research…</p>`;
@@ -594,12 +608,13 @@ function prepareHTML(c){
       + sec('Prior calls', callsOf(c.id).length + ' logged', callsOf(c.id).length ? evList(callsOf(c.id).slice().reverse().map(x => `${esc(nice(x.at))}: <b>${esc(outLabel(x))}</b>${x.next && x.next.action ? '. Next step: ' + esc(x.next.action) + (x.next.date ? ' by ' + esc(nice(x.next.date)) : '') + (x.next.done ? ' (marked done)' : ' (open)') : ''}${x.notes ? '. Note: ' + esc(x.notes) : ''}${x.quote ? '. His words: "' + esc(x.quote) + '"' : ''}${x.opener ? '. Opener: ' + esc(x.opener.toUpperCase()) : ''}`)) : '<p>No prior call recorded.</p>')
       + sec('Unknowns and cautions', unknown.length, `${evList(unknown.map(esc))}${(R.conflicts || []).length ? `<p class="sub">Where sources disagree. Ask, never assume.</p>${evList(R.conflicts.map(x => `${esc(x.what)}: ${esc(String(x.source_a).split(' (http')[0])} / ${esc(String(x.source_b).split(' (http')[0])}`))}` : ''}${dns.length ? `<p class="sub">Do not say</p>${evList(dns.map(esc))}` : ''}<p><b>Never say:</b> ${esc(S.evidence[c.lead].never)}</p><p class="field-help">${esc(S.evidence[c.lead].not)}</p>${(R.changes_from_record || []).length ? `<p class="sub">Corrections since our first record</p>${evList(R.changes_from_record.map(esc))}` : ''}`);
   }
-  return `<main class="prepare-panel" id="main-content" tabindex="-1"><p class="eyebrow">PREPARE FOR THIS COMPANY</p><h2>Before you call</h2>
+  return `<main class="prepare-panel" id="main-content" tabindex="-1"><p class="eyebrow">PREPARE</p><h2>Before you call</h2>
     ${ess}
-    ${rd[0] === 'hold' ? '' : `<div class="opening-preview"><span class="speech-label">YOUR OPENING${sx ? ' · ' + esc(openerTag(opener(c)).toUpperCase()) : ''}</span><p>${esc(sc[sx ? 0 : 1].turns[0])}</p><p>${esc(sc[sx ? 0 : 1].turns[1])}</p></div>
-    <div class="prep-actions"><button class="button primary" id="open">Open call guide${pi('arrow-right')}</button><button class="text-button" data-src>All evidence</button><button class="text-button" id="print">${pi('printer')}Print</button></div>`}
+    ${rd[0] === 'hold' ? '' : `<div class="opening-preview"><span class="speech-label">YOUR FIRST LINE${sx ? ' · ' + esc(openerTag(opener(c)).toUpperCase()) : ''}</span><p>${esc(sc[sx ? 0 : 1].turns[0])}</p></div>
+    <div class="prep-actions"><button class="button primary" id="open">Open call guide${pi('arrow-right')}</button><button class="text-button" id="print">${pi('printer')}Print</button></div>`}
     <details class="prep-notes" ${d.prep ? 'open' : ''}><summary>${pi('note-pencil')}A note to keep in mind <span>(optional)</span></summary><label class="sr-only" for="prep-note">A note to keep in mind</label><textarea id="prep-note" placeholder="Something helpful to remember on this call…">${esc(d.prep || '')}</textarea><p class="field-help">Kept on this device.</p></details>
-    <section class="prep-deep" aria-label="Full research">${sx && rd[0] !== 'hold' ? `<h3>Your script for this shop</h3><details class="prep-section"><summary>If you reach voicemail${pi('caret-down')}</summary><div><p>${esc(tok(sx.voicemail, c))}</p></div></details><details class="prep-section"><summary>If he pushes back<small>${(sx.pushback || []).length} written for this shop</small>${pi('caret-down')}</summary><div>${(sx.pushback || []).map(x => `<p><b>He says:</b> ${esc(x.they_say)}</p><p><b>You say:</b> ${esc(tok(x.say, c))}</p>`).join('')}</div></details>` : ''}${deep}</section></main>`;
+    <details class="prep-all" id="prep-all"><summary>${pi('file-text-l')}All research and sources${pi('caret-down')}</summary>
+    <section class="prep-deep" aria-label="Full research">${sx && rd[0] !== 'hold' ? `<h3>Your script for this shop</h3><details class="prep-section"><summary>If you reach voicemail${pi('caret-down')}</summary><div><p>${esc(tok(sx.voicemail, c))}</p></div></details><details class="prep-section"><summary>If he pushes back<small>${(sx.pushback || []).length} written for this shop</small>${pi('caret-down')}</summary><div>${(sx.pushback || []).map(x => `<p><b>He says:</b> ${esc(x.they_say)}</p><p><b>You say:</b> ${esc(tok(x.say, c))}</p>`).join('')}</div></details>` : ''}${deep}</section></details></main>`;
 }
 function callHTML(c){
   const d = draft(c.id), sc = script(c), st = sc[d.stage], rp = d.response ? reply(d.response, c) : null;
@@ -612,7 +627,7 @@ function callHTML(c){
     : rp && rp.field === 'callback' ? `<form class="inline-capture" id="cap" novalidate><label for="cb-date">Better time, only if he gave one</label><div class="pair"><input id="cb-date" type="date" value="${esc(d.cbDate)}" aria-label="Call back date"><input id="cb-time" type="text" value="${esc(d.cbTime)}" placeholder="Time he said, e.g. after 3" aria-label="Call back time"></div><div><button class="button primary" type="submit">Save &amp; return${pi('arrow-right')}</button></div><p class="field-help">Leave it blank if nothing was agreed.</p></form>`
     : rp && rp.field === 'contact' ? `<form class="inline-capture" id="cap" novalidate><label for="ct-name">Who should we ask for?</label><div><input id="ct-name" type="text" value="${esc(d.contact)}" placeholder="Name and role, as they told you" autocomplete="off"><button class="button primary" type="submit">Save &amp; return${pi('arrow-right')}</button></div><p class="field-help">Saved as "told on the call". Our researched contact stays on file.</p></form>` : '';
   const shown = d.more ? rl : rl.slice(0, 4);
-  const pick = sx && !rp && d.stage === 0 ? `<div class="opener"><div class="opener-pick" role="group" aria-label="Opening style">${VARS.map((v,i) => `<button data-open="${v[0]}" aria-pressed="${ok === v[0]}" class="${ok === v[0] ? 'active' : ''}"><kbd>${i + 1}</kbd><span>${v[1]}</span><small>${recFor(c) === v[0] ? 'Your default' : v[2]}</small></button>`).join('')}</div><p class="field-help">${esc(mine((SC.call_method.variation_guide || {})[ok], c))}</p><label class="opener-keep"><input type="checkbox" id="okeep" ${keptOpener() ? 'checked' : ''}><span>Keep my selected style for every shop</span></label></div>` : '';
+  const pick = sx && !rp && d.stage === 0 ? `<div class="opener"><div class="opener-pick" role="group" aria-label="Opening style">${VARS.map((v,i) => `<button data-open="${v[0]}" aria-pressed="${ok === v[0]}" class="${ok === v[0] ? 'active' : ''}" title="${esc(v[2])}"><kbd>${i + 1}</kbd><span>${v[1]}</span>${recFor(c) === v[0] ? '<small>Your default</small>' : ''}</button>`).join('')}</div><label class="opener-keep"><input type="checkbox" id="okeep" ${keptOpener() ? 'checked' : ''}><span>Keep my selected style for every shop</span></label></div>` : '';
   return `<main class="call-panel" id="main-content" tabindex="-1">
     <nav class="stage-nav" aria-label="Conversation stages"><ol>${STAGE4.map((s,i) => `<li class="${i < d.stage ? 'complete' : ''} ${i === d.stage ? 'current' : ''}"><button data-stage="${i}" ${i === d.stage ? 'aria-current="step"' : ''}><span class="stage-dot">${i < d.stage ? pi('check') : ''}</span><span>${s}</span></button></li>`).join('')}</ol></nav>
     <section class="speech-area" aria-label="Current call guidance" aria-live="polite">
@@ -674,20 +689,21 @@ function workspaceView(p){
   if(rd[0] === 'hold') mode = 'prepare';
   const list = scope().includes(c) ? scope() : [c], i = list.indexOf(c), d = draft(c.id), sameCo = mounted === 'ws' && app.dataset.co === c.id;
   loadRaw(); shell(mode, c.id); mounted = 'ws'; app.dataset.co = c.id; app.className = '';
-  app.innerHTML = `<div class="workspace">${companyPanel(c, list, i)}${mode === 'call' ? callHTML(c) : mode === 'wrap' ? wrapHTML(c) : prepareHTML(c)}</div>`;
+  app.innerHTML = `<div class="workspace">${companyPanel(c, list, i, mode)}${mode === 'call' ? callHTML(c) : mode === 'wrap' ? wrapHTML(c) : prepareHTML(c)}</div>`;
   const rer = focusId => { keep(); workspaceView(p); if(focusId){ const el = document.getElementById(focusId); if(el){ el.focus({preventScroll:true}); if(window.innerWidth < 761) ($('.speech-area') || el).scrollIntoView({block:'start'}); } } };
   /* rail */
   $('#pick').onclick = () => pickerDialog(c, list);
   $('#prv').onclick = () => go('#/w/' + list[i - 1].id + '/' + (mode === 'wrap' ? 'prepare' : mode));
   $('#nxt').onclick = () => go('#/w/' + list[i + 1].id + '/' + (mode === 'wrap' ? 'prepare' : mode));
   $$('[data-src]').forEach(b => b.onclick = () => sourcesDialog(c));
-  const bt = $('#bt'); bt.onclick = () => { const open = $('#brief').classList.toggle('is-open'); bt.setAttribute('aria-expanded', open); };
+  const bt = $('#bt'); if(bt) bt.onclick = () => { const open = $('#brief').classList.toggle('is-open'); bt.setAttribute('aria-expanded', open); };
   if(!sameCo && window.innerWidth >= 761){ const m = $('#main-content'); if(m) window.scrollTo(0, 0); }
   /* prepare */
   if(mode === 'prepare'){
     const op = $('#open'); if(op) op.onclick = () => go('#/w/' + c.id + '/call');
     const pn = $('#prep-note'); pn.oninput = () => { d.prep = pn.value; keep(); };
     const pr = $('#print'); if(pr) pr.onclick = () => { $$('details').forEach(x => x.open = true); window.print(); };
+    const sh = $('#shot'); if(sh) sh.onclick = () => { const L = (window.STARWELL_SHOTS || {})[c.id] || []; dialog('What a customer sees', `<div class="shot-list">${L.map(i => `<figure><img src="${esc(i.f)}" alt="${esc(i.t)}"><figcaption>${esc(i.t)}</figcaption></figure>`).join('')}<p class="field-help">Captured by the research on ${esc(nice((c.n || {}).checked))}. Recheck before you describe it as live.</p></div>`, true); };
     const rr = $('#rawretry'); if(rr) rr.onclick = () => { rawState = 'idle'; RAW = null; loadRaw(); };
   }
   /* call */
