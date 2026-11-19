@@ -32,8 +32,8 @@ const LINE = {
   notint:'No problem. Thanks for picking up, and good luck this season.',
   hung:'Hi, it\'s {me}. I\'m local, here in Connecticut. Did I catch you mid-job?'
 };
-const FOCUS = ['Name, one true detail, then the question, inside ten seconds.', 'After his answer, offer one gift in one sentence.', 'Say why it\'s free, then stop talking.', 'Ask for the 15 minutes before the call ends.', 'Confirm his email and a time before you hang up.'];
-const DRILL = ['Say your first two lines ten times on the Practice Line. Under ten seconds each.', 'Read the notice and the question back to back for three of your shops.', 'Say the 15-second line for your lead gift five times, then once without looking.', 'Say "we\'re new, so we do a few of these free" five times, then stay silent for three seconds.', 'Say the ask ten times: "Could I show you in 15 minutes?" Then wait three seconds.'];
+const FOCUS = ['A friendly hello and a real question about his day, before anything about the shop.', 'After his answer, offer one gift in one sentence.', 'Say why it\'s free, then stop talking.', 'Ask for the 15 minutes before the call ends.', 'Confirm his email and a time before you hang up.'];
+const DRILL = ['Say your hello and "How\'s your day going so far?" ten times out loud, smiling. Then practice answering three different replies.', 'Read the notice and the question back to back for three of your shops.', 'Say the 15-second line for your lead gift five times, then once without looking.', 'Say "we\'re new, so we do a few of these free" five times, then stay silent for three seconds.', 'Say the ask ten times: "Could I show you in 15 minutes?" Then wait three seconds.'];
 
 /* ---------------- sign-in, storage, server ---------------- */
 let auth = null, calls = [], team = null, loaded = false, loadErr = '', guest = 'Dan';
@@ -236,7 +236,22 @@ function methodView(){
         <ol class="stack s2">${(M.four_stage_architecture || []).map((x,i) => `<li class="row top"><span class="num">${i + 1}</span><span class="sm"><b>${esc(String(x.stage).replace(/^\d+\.\s*/, ''))}</b> · ${esc(x.time_target)}<br>${esc(x.goal)}<br><span class="muted">${esc(x.rule)}</span></span></li>`).join('')}</ol></section>
       <section class="panel pad stack"><h2>When he pushes back</h2><div>${(Q.busy_and_guarded_owners || []).map(x => `<details class="d qi"><summary>${esc(tok(x.they_say, c).replace(/^\[(.*)\]$/, '$1'))}${ic('chevron-right','sm')}</summary><div><div class="say small"><p>${esc(tok(x.response, c))}</p></div><p class="sm muted">Why they say it: ${esc(x.psychology)}</p></div></details>`).join('')}</div></section>
       <section class="panel pad stack"><h2>Straight answers</h2><div>${(Q.skeptical_and_operational_qa || []).map(x => `<details class="d qi"><summary>${esc(x.question)}${ic('chevron-right','sm')}</summary><div><div class="say small"><p>${esc(tok(x.answer, c))}</p></div></div></details>`).join('')}</div></section></div>
-    <div class="stack s6"><section class="panel pad stack"><h2>Three ways to open</h2><ul class="stack s2">${VARS.map((v,i) => `<li class="sm"><b>${i + 1}. ${v[1]}.</b> ${esc(mine((M.variation_guide || {})[v[0]], c))}</li>`).join('')}</ul></section>
+    <div class="stack s6"><section class="panel pad stack"><h2>When to make small talk</h2>
+        <ul class="stack s2">
+          <li class="row sm top">${ic('check','sm')}<span><b>Right after your hello.</b> Ask how his day is going, then answer what he says with one real line. Follow his pace.</span></li>
+          <li class="row sm top">${ic('check','sm')}<span><b>While you ask.</b> Stay on him: his shop, his crew, how long he has been at it.</span></li>
+          <li class="row sm top">${ic('check','sm')}<span><b>At the goodbye.</b> Thank him by name and mention one thing he told you.</span></li>
+          <li class="row sm top">${ic('x','sm')}<span><b>Not</b> right after you ask a question, not during the offer, and not when he sounds rushed. Then go straight to the heads-up.</span></li></ul>
+        <p class="sm muted">Why: in Gong's review of 90,380 recorded cold calls, opening with a "how are you" question booked meetings 3.4 times as often as the average call. <a class="link" href="https://www.gong.io/blog/cold-call-opening-lines" target="_blank" rel="noopener">Gong Labs</a></p></section>
+      <section class="panel pad stack"><h2>Give him the stage</h2>
+        <div class="share" role="img" aria-label="While you ask, aim for him talking about 80 percent of the time and you about 20"><span>He talks 80%</span><span>You 20%</span></div>
+        <ul class="stack s2">
+          <li class="row sm top">${ic('check','sm')}<span>The 80/20 rule is for the <b>Ask</b> stage. You carry the first twenty seconds, then hand him the floor.</span></li>
+          <li class="row sm top">${ic('check','sm')}<span>When you do talk, talk about his shop, in his words.</span></li>
+          <li class="row sm top">${ic('check','sm')}<span>Keep him going: ${KEEP.map(k => '"' + esc(k) + '"').join(' ')}</span></li>
+          <li class="row sm top">${ic('check','sm')}<span>Use his name. Let him finish. Never talk over him.</span></li></ul>
+        <p class="sm muted">Dale Carnegie: be a good listener and talk in terms of the other person's interests. Brian Tracy: the best salespeople listen far more than they talk. Robert Cialdini: give first, and people say yes to those they like.</p></section>
+      <section class="panel pad stack"><h2>Three ways to open</h2><ul class="stack s2">${VARS.map((v,i) => `<li class="sm"><b>${i + 1}. ${v[1]}.</b> ${esc(mine((M.variation_guide || {})[v[0]], c))}</li>`).join('')}</ul></section>
       <section class="panel pad stack"><h2>Ground rules</h2><ul class="stack s2">${(M.five_non_negotiable_ground_rules || []).map(x => `<li class="row sm top">${ic('check','sm')}<span>${esc(x)}</span></li>`).join('')}</ul></section>
       <section class="panel pad stack"><h2>What changed in the opening</h2><ul class="stack s2">${(M.five_carnegie_stage_1_upgrades || []).map(x => `<li class="row sm top">${ic('check','sm')}<span>${esc(x)}</span></li>`).join('')}</ul></section>
       <section class="panel pad"><details class="d"><summary>Why it works${ic('chevron-right','sm')}</summary><div>${(M.evidence_base || []).map(x => `<p class="sm"><b>${esc(x.principle)}.</b> ${esc(mine(x.takeaway, c))} <span class="muted">${esc(x.source)}</span></p>`).join('')}</div></details></section></div></div>`;
@@ -346,14 +361,14 @@ let RAW = null, rawState = 'idle';
 async function loadRaw(){
   if(RAW || rawState === 'loading') return;
   rawState = 'loading';
-  try{ const r = await fetch('../starwell-practice/research/starwell_needs.json?v=20261118'); if(!r.ok) throw new Error(r.status);
+  try{ const r = await fetch('../starwell-practice/research/starwell_needs.json?v=20261119b'); if(!r.ok) throw new Error(r.status);
     const arr = await r.json(); RAW = {}; arr.forEach(x => { if(x && x.id && x.scores) RAW[x.id] = x; }); rawState = 'ok'; }
   catch(e){ rawState = 'error'; }
   if(mounted === 'ws') render();
 }
-const tri = v => v === true ? ['y','Yes'] : v === false ? ['n','No'] : ['u', v == null || v === '' ? 'Not confirmed' : String(v)];
+const tri = v => v === true ? ['y','Yes'] : v === false ? ['n','No'] : ['u', v == null || v === '' ? '' : String(v)];
 const isUrl = u => /^https?:\/\//.test(String(u || ''));
-const srcHTML = (u, seen, shot) => `<span class="src">${seen ? 'Seen ' + esc(nice(String(seen).slice(0,10))) : ''}${isUrl(u) ? `${seen ? ' · ' : ''}<a href="${esc(String(u).split(' ')[0])}" target="_blank" rel="noopener">Source</a>` : ''}${shot ? ` · Capture "${esc(shot)}" is not stored in this app` : ''}</span>`;
+const srcHTML = (u, seen, shot) => `<span class="src">${seen ? 'Seen ' + esc(nice(String(seen).slice(0,10))) : ''}${isUrl(u) ? `${seen ? ' · ' : ''}<a href="${esc(String(u).split(' ')[0])}" target="_blank" rel="noopener">Source</a>` : ''}</span>`;
 const evList = (items, cls) => items.length ? `<ul class="ev">${items.map(i => `<li class="${cls || ''}">${i}</li>`).join('')}</ul>` : '';
 const proofOf = (R, k) => (R.proof || []).filter(p => p.system === k && !/^Score note/i.test(p.finding || ''));
 
@@ -362,8 +377,7 @@ function ready(c){
   const n = c.n;
   if(c.tier === 4 || (n && n.open === false)) return ['hold','On hold', c.flag || 'Research found this business closed. Do not call until that is reviewed.'];
   if(c.flag) return ['check','Check first', c.flag];
-  if(c.phoneNote || (n && n.phone && n.phone.match === false)) return ['conflict','Source conflict', c.phoneNote || 'The site and Google show different phone numbers. Ask which line is the main one.'];
-  if(!n) return ['incomplete','Research incomplete', 'No research record is attached to this company. Ask neutral questions.'];
+  if(!n) return ['incomplete','Research to come', 'Ask how things work today, and let them tell you.'];
   return ['ready','Ready', ''];
 }
 
@@ -419,14 +433,23 @@ function respList(c){
 }
 
 /* ---------- words for one company ---------- */
+/* When to chat, and when to stay quiet. One entry per line of each stage. */
+const HELLO_ALT = 'Other easy ones: "Staying warm out there?" or "Busy week with the cold?"';
+const B1CUE = {v1_total_control_neighbor:'Give him the easy out, and mean it. If he says he is busy, ask when is better and let him go.', v2_sincere_appreciation:'One real compliment, said slowly. Let him enjoy it before you move on.', v3_helpful_first:'Say what you saw, plainly. No blame in your voice.'};
+const CHAT = {yes:['chat-circle-l','Small talk: yes'], wait:['chat-circle-l','Small talk: follow his lead'], no:['pause-circle','Small talk: not now']};
+const KEEP = ['Tell me more.','How so?','What happened then?','How long has it been that way?'];
 function script(c){
   const sx = shopScript(c);
-  if(sx){ const v = sx.introduce[opener(c)], a = splitAsk(tok(sx.ask.say, c));
+  if(sx){ const ok = opener(c), v = sx.introduce[ok], a = splitAsk(tok(sx.ask.say, c)), f = first(c), h = v.beat_0 ? 1 : 0;
     return [
-      {turns:[tok(v.beat_1, c), tok(v.beat_2, c)], cues:['Say it, then stop. Let them answer before the next line.', sx.introduce.cue], scripted:true},
-      {turns:[a[0]].concat((sx.ask.more || []).map(t => tok(t, c))), cues:[sx.ask.cue + (sx.ask.back ? ' Back pocket, only if he leans in: ' + sx.ask.back.replace(/[.!]$/, '') + '.' : a[1] ? ' ' + a[1].replace(/[.!]$/, '') + '.' : '')]},
-      {turns:[tok(sx.offer.say, c)].concat(sx.offer.then ? [tok(sx.offer.then, c)] : []), cues:[sx.offer.cue]},
-      {turns:[tok(sx.next_step.say, c)], cues:[sx.next_step.cue]}
+      {turns:(h ? [v.beat_0] : []).concat([v.beat_1, v.beat_2]).map(t => tok(t, c)),
+       cues:(h ? ['Smile, say it, then stop and listen. ' + HELLO_ALT] : []).concat([B1CUE[ok] || sx.introduce.cue, 'Ask it, then stay quiet until he answers. The silence is his turn.']),
+       chat:(h ? [['yes','Answer him like a neighbor would: one real line about his day, the cold, the busy season. If he is short with you, move straight on.']] : []).concat([['wait','Only if he starts it. Then stay with him.'],['no','Let him answer your question first.']]), scripted:true},
+      {turns:[a[0]].concat((sx.ask.more || []).map(t => tok(t, c))), cues:['Ask, then listen. Skip anything he already answered.'], back:(sx.ask.back || a[1] || '').replace(/[.!]$/, ''),
+       chat:[['yes','About him: his shop, his crew, how long he has been at it. Stay on whatever he brings up.']], share:true},
+      {turns:[tok(sx.offer.say, c)].concat(sx.offer.then ? [tok(sx.offer.then, c)] : []), cues:[sx.offer.cue], chat:[['no','Give the fix, ask the question, then stop.']]},
+      {turns:[tok(sx.next_step.say, c), `Thanks${f && !/\./.test(f) ? ', ' + f : ''}. I appreciate you giving me a few minutes. Have a good one.`], cues:[sx.next_step.cue, 'End warm, whatever he decided. He should hang up glad he answered.'],
+       chat:[['no','Ask, then wait for his answer.'],['yes','To close. If he mentioned a job, the cold or his family, name it once on your way out.']]}
     ]; }
   const g = O.gifts[c.lead], f = first(c), who = c.caller || me();
   const intro = f ? `Hi, is this ${f}? Hey ${f}, this is ${who} with StarWell, here in Connecticut. Heating season's on, so I'll be quick.`
@@ -467,7 +490,7 @@ function relationship(c){
   const cs = callsOf(c.id), last = cs[cs.length - 1];
   if(!last) return {text:'No prior call recorded.', sub:''};
   const open = cs.slice().reverse().find(x => x.next && x.next.action && !x.next.done);
-  return {text:`${outLabel(last)} on ${nice(last.at)}${cs.length > 1 ? ` (${cs.length} calls logged)` : ''}.`, sub:open ? `Open next step: ${open.next.action}${open.next.date ? ' by ' + nice(open.next.date) : ''}. This is a plan, not proof it was done.` : '', quote:last.quote || last.notes || ''};
+  return {text:`${outLabel(last)} on ${nice(last.at)}${cs.length > 1 ? ` (${cs.length} calls logged)` : ''}.`, sub:open ? `Open next step: ${open.next.action}${open.next.date ? ' by ' + nice(open.next.date) : ''}.` : '', quote:last.quote || last.notes || ''};
 }
 
 /* ---------- header, toast, dialog ---------- */
@@ -551,8 +574,8 @@ function companyPanel(c, list, i, mode){
       <div class="brief-content"><dl class="brief-list">
         <div><dt>${pi('user-l')}<span class="sr-only">Contact</span></dt><dd><strong>Talk to ${esc(c.ask)}</strong></dd></div>
         <div><dt>${pi('desktop-l')}<span class="sr-only">Topic</span></dt><dd><strong>Lead with:</strong> ${SYSN[c.lead] || 'Not set'}</dd></div>
-        <div><dt>${pi('file-text-l')}<span class="sr-only">Research</span></dt><dd><strong>Research note:</strong> ${esc(short(note) || 'Company-specific research has not been supplied.')}</dd></div>
-        <div><dt>${pi('chat-circle-l')}<span class="sr-only">Reminder</span></dt><dd>${esc(short((c.unknown || [])[0] ? 'Not confirmed: ' + c.unknown[0] : 'Ask how it works today. Let them tell you.'))}</dd></div>
+        <div><dt>${pi('file-text-l')}<span class="sr-only">Research</span></dt><dd><strong>Research note:</strong> ${esc(short(note) || 'Ask how things work today.')}</dd></div>
+        <div><dt>${pi('chat-circle-l')}<span class="sr-only">Reminder</span></dt><dd>Ask how it works today. Let them tell you.</dd></div>
       </dl><button class="source-link text-button" data-src>View sources${pi('arrow-square-out')}</button></div></section>`}</aside>`;
 }
 function prepareHTML(c){
@@ -561,13 +584,12 @@ function prepareHTML(c){
   const pt = x => x && typeof x === 'object' ? x.point : x, sx = shopScript(c), sn = shopNotes(c), dns = sn.dns;
   const strong = R && R.strengths && R.strengths[0] ? pt(R.strengths[0]) : c.facts[0];
   const reach = [c.hours && 'Hours: ' + c.hours, c.emergency && 'After hours: ' + c.emergency, (w.booking || c.booking) && 'Booking: ' + (w.booking || c.booking)].filter(Boolean);
-  const unknown = (R && R.not_confirmed) || c.unknown || [];
   const SHOTS = window.STARWELL_SHOTS || {}, shots = SHOTS[c.id] || [];
   const order = [c.lead, c.second].concat(['site','phone','found','social']).filter((k,i,a) => k && a.indexOf(k) === i);
   const pains = n ? order.reduce((a,k) => a.concat(n.proof.filter(x => x.s === k && !x.note)), []).slice(0, 3) : [];
-  const goods = (n ? n.strengths : c.facts || []).slice(0, 3), asks = unknown.slice(0, 3);
+  const goods = (n ? n.strengths : c.facts || []).slice(0, 3), fx = (n && n.fx) || [];
   const seen = n && n.checked ? 'Verified ' + nice(n.checked) : 'Verified';
-  const conf = n && n.conf ? (n.conf === 'confirmed' ? ['ok','Confirmed'] : ['ask', n.conf.charAt(0).toUpperCase() + n.conf.slice(1) + '. Check on the call.']) : null;
+  const conf = n && n.conf === 'confirmed' ? ['ok','Confirmed'] : null;
   const ess = `${rd[0] !== 'ready' ? `<p class="notice warn">${pi('warning')}<span><b>${esc(rd[1])}.</b> ${esc(rd[2])}</span></p>` : ''}
     <dl class="glance">
       <div><dt>Ask for</dt><dd><strong>${esc(c.ask)}</strong>${conf ? `<span class="tag ${conf[0]}">${esc(conf[1])}</span>` : ''}</dd></div>
@@ -576,42 +598,47 @@ function prepareHTML(c){
     </dl>
     ${sn.tie.length ? `<p class="field-help">Local tie: ${sn.tie.map(esc).join(' ')}</p>` : ''}
     <div class="brief-grid">
-      <section class="brief-card pain"><h3>${pi('warning')}Pain points<span class="tag ok">${esc(seen)}</span></h3>
-        ${shots.length ? `<button class="shot" id="shot" aria-label="Open the screenshots for ${esc(c.said)}"><img src="${esc(shots[0].f)}" alt="${esc(shots[0].t)}" loading="lazy"><span>${pi('magnifying-glass')}${shots.length} screenshot${shots.length === 1 ? '' : 's'}</span></button>` : ''}
-        ${pains.length ? `<ol>${pains.map(x => `<li>${esc(x.p || x.t)}${isUrl(x.u) ? ` <a class="src" href="${esc(String(x.u).split(' ')[0])}" target="_blank" rel="noopener">Source</a>` : ''}</li>`).join('')}</ol>` : '<p>No verified gap on file. Ask how things work today.</p>'}</section>
+      <section class="brief-card pain wide"><h3>${pi('warning')}Pain points<span class="tag ok">${esc(seen)}</span></h3>
+        ${shots.length ? `<div class="shots">${shots.map((x,i) => `<button class="shot" data-shot="${i}" aria-label="Open screenshot ${i + 1} of ${shots.length} for ${esc(c.said)}"><img src="${esc(x.f)}" alt="${esc(x.t)}" loading="lazy">${i === 0 ? `<span>${pi('magnifying-glass')}${shots.length} screenshot${shots.length === 1 ? '' : 's'}</span>` : ''}</button>`).join('')}</div>` : ''}
+        ${fx.length ? `<ol class="fx">${fx.map(f => `<li><span class="fx-sys">${SYSN[f.s] || ''}</span><dl><div><dt>What we saw</dt><dd>${esc(f.see)}</dd></div>${f.why ? `<div><dt>Why it matters</dt><dd>${esc(f.why)}${isUrl(f.u) ? ` <a class="src" href="${esc(f.u)}" target="_blank" rel="noopener">${esc(f.src)}</a>` : ''}</dd></div>` : ''}${f.fix ? `<div><dt>The fix</dt><dd>${esc(f.fix)}</dd></div>` : ''}</dl></li>`).join('')}</ol>`
+          : pains.length ? `<ol>${pains.map(x => `<li>${esc(x.p || x.t)}${isUrl(x.u) ? ` <a class="src" href="${esc(String(x.u).split(' ')[0])}" target="_blank" rel="noopener">Source</a>` : ''}</li>`).join('')}</ol>` : '<p>Ask how things work today, and let them tell you.</p>'}</section>
       <section class="brief-card good"><h3>${pi('check-circle')}Strengths<span class="tag ok">${esc(seen)}</span></h3>
-        ${goods.length ? `<ul>${goods.map(x => `<li>${esc(pt(x))}</li>`).join('')}</ul>` : '<p>None on file yet.</p>'}</section>
-      ${asks.length ? `<section class="brief-card unsure"><h3>${pi('question-l')}Ask, don't assume<span class="tag ask">Not verified</span></h3><ul>${asks.map(x => `<li>${esc(x)}</li>`).join('')}</ul></section>` : ''}
+        ${goods.length ? `<ul>${goods.map(x => `<li>${esc(pt(x))}</li>`).join('')}</ul>` : '<p>Ask what he is proudest of.</p>'}</section>
       ${dns.length && rd[0] !== 'hold' ? `<section class="brief-card never"><h3>${pi('x')}Do not say</h3><ul>${dns.map(x => `<li>${esc(x)}</li>`).join('')}</ul></section>` : ''}
     </div>`;
   let deep = '';
   if(rawState === 'loading' || rawState === 'idle') deep = `<p class="field-help" role="status">Loading the full research…</p>`;
-  else if(rawState === 'error' || !R) deep = `<p class="notice warn">${pi('warning')}<span>${R === undefined && rawState === 'ok' ? 'No research record exists for this company.' : 'The full research could not be loaded. The summary above still stands.'} <button class="text-button" id="rawretry">Try again</button></span></p>`;
+  else if(rawState === 'error' || !R) deep = `<p class="notice warn">${pi('warning')}<span>${R === undefined && rawState === 'ok' ? 'Ask how things work today, and let them tell you.' : 'The full research could not be loaded. The summary above still stands.'} <button class="text-button" id="rawretry">Try again</button></span></p>`;
   else {
     const sec = (title, count, body) => body ? `<details class="prep-section"><summary>${esc(title)}${count != null ? `<small>${count}</small>` : ''}${pi('caret-down')}</summary><div>${body}</div></details>` : '';
-    const pl = k => evList(proofOf(R, k).map(p => `${esc(p.finding)} ${srcHTML(p.source_url, p.seen_on, p.screenshot)}`));
+    const pl = k => evList(proofOf(R, k).map(p => `${esc(p.finding)} ${srcHTML(p.source_url, p.seen_on)}`));
     const fs = w.first_screen || {}, FL = {trade_and_town:'Trade and town stated', phone_visible:'Phone number visible', tap_to_call:'Tap-to-call', book_button:'Book or request button', rating_shown:'Star rating shown', real_photo:'Real team or truck photo'};
     const quotes = R.review_quotes || [], good = quotes.filter(q => !/not getting through/i.test(q.kind || '')), bad = quotes.filter(q => /not getting through/i.test(q.kind || '')).concat((R.call_complaints || []).map(q => ({quote:q.quote, reviewer:q.reviewer, date:q.date})));
     const fixes = (R.fixes || []).filter(f => f.system === c.lead), hrs = R.hours || {};
     const qli = q => `"${esc(q.quote)}" (${esc(q.reviewer || 'reviewer')}${q.date ? ', ' + esc(String(q.date).slice(0, 40)) : ''}) ${srcHTML(q.review_link || q.source_url)}`;
     const others = ['phone','site','found','social'].filter(k => k !== c.lead);
+    const fact = (k, v) => v == null || v === '' || /^not (confirmed|stated|found)\.?$/i.test(String(v).trim()) ? '' : `<dt>${k}</dt><dd>${v}</dd>`;
+    const facts = rows => { const h = rows.join(''); return h ? `<dl class="facts">${h}</dl>` : ''; };
+    const yn = v => v === true ? 'Yes' : v === false ? 'No' : v == null ? '' : esc(String(v));
+    const ph = R.phone || {}, fsk = Object.keys(FL).filter(k => fs[k] != null && fs[k] !== '');
+    const maps = (R.maps_rank || []).filter(m => m.position != null && m.position !== ''), ais = (R.ai_answers || []).filter(a => a.named != null && a.named !== '');
     deep = `<h3>Research, checked ${esc(nice(R.checked))}</h3>`
-      + sec('Business and people', null, `<dl class="facts"><dt>Name</dt><dd>${esc(c.name)}</dd><dt>Since</dt><dd>${esc(c.since)}</dd><dt>Contact</dt><dd>${esc((R.owner && R.owner.name) || 'Not confirmed')}</dd><dt>Role, as sourced</dt><dd>${esc((R.owner && R.owner.title) || 'Not confirmed')} ${srcHTML(R.owner && R.owner.source_url)}</dd><dt>Ask for</dt><dd>${esc(c.ask)}. ${esc(c.askNote || '')}</dd></dl>`)
-      + sec('Hours, phone and booking', null, `<dl class="facts"><dt>Phone on site</dt><dd>${esc((R.phone && R.phone.site) || 'Not confirmed')}</dd><dt>Phone on Google</dt><dd>${esc((R.phone && R.phone.google) || 'Not confirmed')}</dd><dt>Do they match?</dt><dd>${tri(R.phone && R.phone.match)[1]}</dd><dt>We dial</dt><dd>${esc(c.phone)}${c.phoneNote ? '. ' + esc(c.phoneNote) : ''}</dd><dt>Hours on site</dt><dd>${esc(hrs.site || 'Not stated')}</dd><dt>Hours on Google</dt><dd>${esc(gp.hours || hrs.google || 'Not confirmed')}</dd><dt>After hours</dt><dd>${esc(hrs.after_hours_note || c.emergency)}</dd><dt>Booking</dt><dd>${esc(w.booking || c.booking || 'Not confirmed')}</dd></dl>${pl('phone')}`)
-      + sec('Reputation and strengths', good.length + (good.length === 1 ? ' quote' : ' quotes'), `<dl class="facts"><dt>Google profile</dt><dd>${esc(gp.name || 'Not found')}</dd><dt>Rating</dt><dd>${gp.rating != null && gp.rating !== '' ? esc(gp.rating) + ' from ' + esc(gp.reviews) + ' reviews' : 'Not confirmed'} ${srcHTML(gp.source_url)}</dd><dt>Newest review</dt><dd>${esc(gp.newest_review || 'Not confirmed')}</dd><dt>Owner replies</dt><dd>${tri(gp.owner_replies)[1]}</dd><dt>Reviews on site</dt><dd>${esc(w.reviews_on_site || 'Not confirmed')}</dd></dl>${evList((R.strengths || []).map(x => `${esc(pt(x))} ${srcHTML(x && x.source_url, x && x.seen_on)}`))}${good.length ? `<p class="sub">Kind words you may mention</p>${evList(good.map(qli))}` : ''}${bad.length ? `<p class="sub">Private. Never quote these to the owner.</p>${evList(bad.map(qli), 'private')}` : ''}`)
-      + sec('Website experience', (w.problems || []).length + ' observations', `<p class="sub">First screen on a phone</p><ul class="tri">${Object.keys(FL).map(k => { const t = tri(fs[k]); return `<li class="${t[0]}">${FL[k]}: ${esc(t[1])}</li>`; }).join('')}</ul><dl class="facts"><dt>Phone speed score</dt><dd>${w.pagespeed_mobile != null && w.pagespeed_mobile !== '' ? esc(w.pagespeed_mobile) + ' of 100' : 'Not confirmed'}${w.lcp_seconds ? ', main content in ' + esc(w.lcp_seconds) + ' s' : ''}</dd><dt>Already answers</dt><dd>${esc(w.answers_that_stop_calls || 'Not confirmed')}</dd><dt>Service and town pages</dt><dd>${esc(w.service_and_town_pages || 'Not confirmed')}</dd><dt>Secure, footer year</dt><dd>${tri(w.https)[1]}${w.copyright ? ', ' + esc(w.copyright) : ''}</dd></dl>${(R.website_positives || []).length ? `<p class="sub">What the site already does well</p>${evList(R.website_positives.map(x => `${esc(pt(x))} ${srcHTML(x.source_url)}`))}<p class="sub">What a customer runs into</p>` : ''}${evList((w.problems || []).map(p => `${esc(p.finding)} ${srcHTML(p.source_url, null, p.screenshot)}`))}<p class="field-help">A speed number is a test result on one day. It is not proof that customers leave.</p>`)
-      + sec('Getting found', (R.maps_rank || []).length + ' searches, ' + (R.ai_answers || []).length + ' AI checks', `${pl('found')}<p class="sub">Google Maps, on the day checked</p>${evList((R.maps_rank || []).map(m => `"${esc(m.query)}": ${/^\d+$/.test(String(m.position)) ? 'position ' + esc(m.position) : esc(m.position == null ? 'not confirmed' : m.position)}${(m.top_three || []).length ? '. First three: ' + m.top_three.map(t => esc(t.name)).join(', ') : ''} ${srcHTML(m.source_url, null, m.screenshot)}`))}<p class="sub">AI answers</p>${evList((R.ai_answers || []).map(a => `${esc(a.tool)}: ${a.named === true ? 'named' + (a.position ? ', position ' + esc(a.position) : '') : a.named === false ? 'not named' : esc(a.named == null ? 'not confirmed' : a.named)} for "${esc(a.question)}"${a.note ? '. ' + esc(a.note) : ''}`))}<p class="field-help">Results change by day and by where the searcher is. Never say "you don't show up".</p>`)
-      + sec('Social presence', (R.social || []).length + ((R.social || []).length === 1 ? ' page' : ' pages'), `${evList((R.social || []).map(s => `${esc(s.platform)}: ${s.live === false ? 'link does not lead to a live page' : s.live === true ? 'live' : 'not confirmed'}${s.followers != null ? ', ' + esc(s.followers) + ' followers' : ''}${s.last_post ? ', last post ' + esc(String(s.last_post).slice(0, 30)) : ''}${s.posts_last_90_days != null ? ', ' + esc(s.posts_last_90_days) + ' posts in 90 days' : ''}, own job photos: ${esc(tri(s.own_job_photos)[1].toLowerCase())} ${srcHTML(s.url, null, s.screenshot)}`))}${pl('social')}`)
+      + sec('Business and people', null, facts([fact('Name', esc(c.name)), fact('Since', esc(c.since)), fact('Contact', esc(R.owner && R.owner.name)), fact('Role', R.owner && R.owner.title ? esc(R.owner.title) + ' ' + srcHTML(R.owner.source_url) : ''), fact('Ask for', esc(c.ask) + (c.askNote ? '. ' + esc(c.askNote) : ''))]))
+      + sec('Hours, phone and booking', null, facts([fact('Phone on site', esc(ph.site)), fact('Phone on Google', esc(ph.google)), fact('We dial', esc(c.phone)), fact('Hours on site', esc(hrs.site)), fact('Hours on Google', esc(gp.hours || hrs.google)), fact('After hours', esc(hrs.after_hours_note || c.emergency)), fact('Booking', esc(w.booking || c.booking))]) + pl('phone'))
+      + sec('Reputation and strengths', good.length + (good.length === 1 ? ' quote' : ' quotes'), `${facts([fact('Google profile', esc(gp.name)), fact('Rating', gp.rating != null && gp.rating !== '' ? esc(gp.rating) + ' from ' + esc(gp.reviews) + ' reviews ' + srcHTML(gp.source_url) : ''), fact('Newest review', esc(gp.newest_review)), fact('Owner replies', yn(gp.owner_replies)), fact('Reviews on site', esc(w.reviews_on_site))])}${evList((R.strengths || []).map(x => `${esc(pt(x))} ${srcHTML(x && x.source_url, x && x.seen_on)}`))}${good.length ? `<p class="sub">Kind words you may mention</p>${evList(good.map(qli))}` : ''}${bad.length ? `<p class="sub">Private. Never quote these to the owner.</p>${evList(bad.map(qli), 'private')}` : ''}`)
+      + sec('Website experience', (w.problems || []).length + ' observations', `${fsk.length ? `<p class="sub">First screen on a phone</p><ul class="tri">${fsk.map(k => { const t = tri(fs[k]); return `<li class="${t[0]}">${FL[k]}: ${esc(t[1])}</li>`; }).join('')}</ul>` : ''}${facts([fact('Phone speed score', w.pagespeed_mobile != null && w.pagespeed_mobile !== '' ? esc(w.pagespeed_mobile) + ' of 100' + (w.lcp_seconds ? ', main content in ' + esc(w.lcp_seconds) + ' s' : '') : ''), fact('Already answers', esc(w.answers_that_stop_calls)), fact('Service and town pages', esc(w.service_and_town_pages)), fact('Secure, footer year', yn(w.https) + (w.copyright ? (yn(w.https) ? ', ' : '') + esc(w.copyright) : ''))])}${(R.website_positives || []).length ? `<p class="sub">What the site already does well</p>${evList(R.website_positives.map(x => `${esc(pt(x))} ${srcHTML(x.source_url)}`))}<p class="sub">What a customer runs into</p>` : ''}${evList((w.problems || []).map(p => `${esc(p.finding)} ${srcHTML(p.source_url)}`))}`)
+      + sec('Getting found', maps.length + ' searches, ' + ais.length + ' AI checks', `${pl('found')}${maps.length ? `<p class="sub">Google Maps, on the day checked</p>${evList(maps.map(m => `"${esc(m.query)}": ${/^\d+$/.test(String(m.position)) ? 'position ' + esc(m.position) : esc(m.position)}${(m.top_three || []).length ? '. First three: ' + m.top_three.map(t => esc(t.name)).join(', ') : ''} ${srcHTML(m.source_url)}`))}` : ''}${ais.length ? `<p class="sub">AI answers</p>${evList(ais.map(a => `${esc(a.tool)}: ${a.named === true ? 'named' + (a.position ? ', position ' + esc(a.position) : '') : a.named === false ? 'not named' : esc(a.named)} for "${esc(a.question)}"${a.note ? '. ' + esc(a.note) : ''}`))}` : ''}`)
+      + sec('Social presence', (R.social || []).length + ((R.social || []).length === 1 ? ' page' : ' pages'), `${evList((R.social || []).map(s => `${esc(s.platform)}${s.live === false ? ': link does not lead to a live page' : s.live === true ? ': live' : ''}${s.followers != null ? ', ' + esc(s.followers) + ' followers' : ''}${s.last_post ? ', last post ' + esc(String(s.last_post).slice(0, 30)) : ''}${s.posts_last_90_days != null ? ', ' + esc(s.posts_last_90_days) + ' posts in 90 days' : ''}${s.own_job_photos === true ? ', shows their own job photos' : s.own_job_photos === false ? ', no photos of their own jobs' : ''} ${srcHTML(s.url)}`))}${pl('social')}`)
       + sec('Recommended offer: ' + SYSN[c.lead], null, `<p>${esc(S[c.lead].one)}</p>${fixes.map(f => `<dl class="facts"><dt>Customer sees</dt><dd>${esc(f.what_customer_sees)}</dd>${f.why_it_costs ? `<dt>Why it matters</dt><dd>${esc(f.why_it_costs)} ${f.study ? srcHTML(f.study.source_url) + ' <span class="src">' + esc(f.study.what_it_measured || '') + '</span>' : ''}</dd>` : ''}<dt>The fix</dt><dd>${esc(f.the_fix)}</dd><dt>How it helps</dt><dd>${esc(f.how_it_helps)}</dd></dl>`).join('')}<dl class="facts"><dt>Say</dt><dd>${esc(sx ? tok(sx.offer.say, c) : fill(g.say, c))}</dd>${sx ? '' : `<dt>What he keeps</dt><dd>${esc(g.terms)}</dd>`}<dt>Limits</dt><dd>${esc(S[c.lead].notDo[0])}</dd></dl>${sx ? '<p class="field-help">Share a study figure only if he asks why it matters.</p>' : ''}<p><a href="#/systems/${c.lead}">Everything about the ${SYSN[c.lead].toLowerCase()}</a></p>`)
-      + sec('Other services, if he steers there', null, others.map(k => `<p><b>${SYSN[k]}${R.second_need === k ? ' (second need)' : ''}.</b> ${esc((proofOf(R, k)[0] || {}).finding || 'No specific finding.')} <a href="#/systems/${k}">Details</a></p>`).join(''))
-      + sec('Office work and custom tools', (R.office_signals || []).length + ' signals', `${evList((R.office_signals || []).map(o => `${esc(o.signal || o)} ${srcHTML(o.source_url)}`))}<p>${esc(c.custom)}</p><p class="field-help">A signal is not a problem. Only raise custom tools if he names the headache. They are quoted up front, never free.</p>`)
+      + sec('Other services, if he steers there', null, others.map(k => `<p><b>${SYSN[k]}${R.second_need === k ? ' (second need)' : ''}.</b> ${esc((proofOf(R, k)[0] || {}).finding || 'Ask how it works today.')} <a href="#/systems/${k}">Details</a></p>`).join(''))
+      + sec('Office work and custom tools', (R.office_signals || []).length + ' signals', `${evList((R.office_signals || []).map(o => `${esc(o.signal || o)} ${srcHTML(o.source_url)}`))}<p>${esc(c.custom)}</p><p class="field-help">Only raise custom tools if he names the headache. They are quoted up front, never free.</p>`)
       + sec('Prior calls', callsOf(c.id).length + ' logged', callsOf(c.id).length ? evList(callsOf(c.id).slice().reverse().map(x => `${esc(nice(x.at))}: <b>${esc(outLabel(x))}</b>${x.next && x.next.action ? '. Next step: ' + esc(x.next.action) + (x.next.date ? ' by ' + esc(nice(x.next.date)) : '') + (x.next.done ? ' (marked done)' : ' (open)') : ''}${x.notes ? '. Note: ' + esc(x.notes) : ''}${x.quote ? '. His words: "' + esc(x.quote) + '"' : ''}${x.opener ? '. Opener: ' + esc(x.opener.toUpperCase()) : ''}`)) : '<p>No prior call recorded.</p>')
-      + sec('Unknowns and cautions', unknown.length, `${evList(unknown.map(esc))}${(R.conflicts || []).length ? `<p class="sub">Where sources disagree. Ask, never assume.</p>${evList(R.conflicts.map(x => `${esc(x.what)}: ${esc(String(x.source_a).split(' (http')[0])} / ${esc(String(x.source_b).split(' (http')[0])}`))}` : ''}${dns.length ? `<p class="sub">Do not say</p>${evList(dns.map(esc))}` : ''}<p><b>Never say:</b> ${esc(S.evidence[c.lead].never)}</p><p class="field-help">${esc(S.evidence[c.lead].not)}</p>${(R.changes_from_record || []).length ? `<p class="sub">Corrections since our first record</p>${evList(R.changes_from_record.map(esc))}` : ''}`);
+      + sec('Do not say', null, `${dns.length ? evList(dns.map(esc)) : ''}<p><b>Never say:</b> ${esc(S.evidence[c.lead].never)}</p>`);
   }
   return `<main class="prepare-panel" id="main-content" tabindex="-1"><p class="eyebrow">PREPARE</p><h2>Before you call</h2>
     ${ess}
     ${rd[0] === 'hold' ? '' : `<div class="opening-preview"><span class="speech-label">YOUR FIRST LINE${sx ? ' · ' + esc(openerTag(opener(c)).toUpperCase()) : ''}</span><p>${esc(sc[sx ? 0 : 1].turns[0])}</p></div>
-    <div class="prep-actions"><button class="button primary" id="open">Open call guide${pi('arrow-right')}</button><button class="text-button" id="print">${pi('printer')}Print</button></div>`}
+    <div class="prep-actions"><button class="button primary" id="open">Open call guide${pi('arrow-right')}</button>${d.stage > 0 || d.turn > 0 ? `<button class="text-button" id="resume">Resume at ${STAGE4[d.stage].toLowerCase()}</button>` : ''}<button class="text-button" id="print">${pi('printer')}Print</button></div>`}
     <details class="prep-notes" ${d.prep ? 'open' : ''}><summary>${pi('note-pencil')}A note to keep in mind <span>(optional)</span></summary><label class="sr-only" for="prep-note">A note to keep in mind</label><textarea id="prep-note" placeholder="Something helpful to remember on this call…">${esc(d.prep || '')}</textarea><p class="field-help">Kept on this device.</p></details>
     <details class="prep-all" id="prep-all"><summary>${pi('file-text-l')}All research and sources${pi('caret-down')}</summary>
     <section class="prep-deep" aria-label="Full research">${sx && rd[0] !== 'hold' ? `<h3>Your script for this shop</h3><details class="prep-section"><summary>If you reach voicemail${pi('caret-down')}</summary><div><p>${esc(tok(sx.voicemail, c))}</p></div></details><details class="prep-section"><summary>If he pushes back<small>${(sx.pushback || []).length} written for this shop</small>${pi('caret-down')}</summary><div>${(sx.pushback || []).map(x => `<p><b>He says:</b> ${esc(x.they_say)}</p><p><b>You say:</b> ${esc(tok(x.say, c))}</p>`).join('')}</div></details>` : ''}${deep}</section></details></main>`;
@@ -627,6 +654,11 @@ function callHTML(c){
     : rp && rp.field === 'callback' ? `<form class="inline-capture" id="cap" novalidate><label for="cb-date">Better time, only if he gave one</label><div class="pair"><input id="cb-date" type="date" value="${esc(d.cbDate)}" aria-label="Call back date"><input id="cb-time" type="text" value="${esc(d.cbTime)}" placeholder="Time he said, e.g. after 3" aria-label="Call back time"></div><div><button class="button primary" type="submit">Save &amp; return${pi('arrow-right')}</button></div><p class="field-help">Leave it blank if nothing was agreed.</p></form>`
     : rp && rp.field === 'contact' ? `<form class="inline-capture" id="cap" novalidate><label for="ct-name">Who should we ask for?</label><div><input id="ct-name" type="text" value="${esc(d.contact)}" placeholder="Name and role, as they told you" autocomplete="off"><button class="button primary" type="submit">Save &amp; return${pi('arrow-right')}</button></div><p class="field-help">Saved as "told on the call". Our researched contact stays on file.</p></form>` : '';
   const shown = d.more ? rl : rl.slice(0, 4);
+  const chat = !rp && st.chat ? st.chat[Math.min(ti, st.chat.length - 1)] : null;
+  const upText = rp ? '' : more ? lines[ti + 1] : !inExtra && d.stage < 3 ? sc[d.stage + 1].turns[0] : '';
+  const upLabel = more ? 'Next line' : 'Next, ' + (STAGE4[d.stage + 1] || '').toLowerCase();
+  const canBack = !rp && (ti > 0 || d.stage > 0 || inExtra);
+  const aids = chat ? `<div class="guide-aids"><p class="chat ${chat[0]}">${pi(CHAT[chat[0]][0])}<span><b>${CHAT[chat[0]][1]}.</b> ${esc(chat[1])}</span></p>${st.share ? `<div class="share" role="img" aria-label="In this part, aim for him talking about 80 percent of the time and you about 20"><span>He talks 80%</span><span>You 20%</span></div><p class="keep-talking"><b>Keep him talking:</b> ${KEEP.map(k => '"' + k + '"').join(' ')}</p>${st.back ? `<p class="keep-talking"><b>Back pocket, only if he leans in:</b> ${esc(st.back)}.</p>` : ''}` : ''}</div>` : '';
   const pick = sx && !rp && d.stage === 0 ? `<div class="opener"><div class="opener-pick" role="group" aria-label="Opening style">${VARS.map((v,i) => `<button data-open="${v[0]}" aria-pressed="${ok === v[0]}" class="${ok === v[0] ? 'active' : ''}" title="${esc(v[2])}"><kbd>${i + 1}</kbd><span>${v[1]}</span>${recFor(c) === v[0] ? '<small>Your default</small>' : ''}</button>`).join('')}</div><label class="opener-keep"><input type="checkbox" id="okeep" ${keptOpener() ? 'checked' : ''}><span>Keep my selected style for every shop</span></label></div>` : '';
   return `<main class="call-panel" id="main-content" tabindex="-1">
     <nav class="stage-nav" aria-label="Conversation stages"><ol>${STAGE4.map((s,i) => `<li class="${i < d.stage ? 'complete' : ''} ${i === d.stage ? 'current' : ''}"><button data-stage="${i}" ${i === d.stage ? 'aria-current="step"' : ''}><span class="stage-dot">${i < d.stage ? pi('check') : ''}</span><span>${s}</span></button></li>`).join('')}</ol></nav>
@@ -634,10 +666,13 @@ function callHTML(c){
       ${rp ? `<div class="reply-context">They say: ${esc((rl.find(r => r[0] === d.response) || [])[1])}<button class="text-button" id="back">Back to script</button></div>` : inExtra ? `<div class="reply-context">${esc(st.extraLabel)}<button class="text-button" id="backoffer">Back to the offer</button></div>` : ''}
       ${pick}<div class="speech-label">${rp ? (d.response === 'vm' ? 'LEAVE THIS MESSAGE' : 'YOUR REPLY') : 'SAY THIS'}</div>
       <p class="script-text" id="call-guidance-text" tabindex="-1">${esc(text)}</p>
-      ${!rp && st.scripted && ti === 0 ? `<p class="pause-mark">${pi('pause-circle')}Pause. Let them answer.</p>` : ''}
+      ${!rp && (st.scripted || /\?$/.test(String(text).trim())) ? `<p class="pause-mark">${pi('pause-circle')}Pause. Let him answer.</p>` : ''}
       ${!rp && lines.length > 1 ? `<div class="turns" role="img" aria-label="Line ${ti + 1} of ${lines.length}">${lines.map((x,i) => `<i class="${i <= ti ? 'on' : ''}"></i>`).join('')}</div>` : ''}
       <div class="coaching"><span class="coaching-label">${pi('sparkle-l')}FOR YOU</span><p>${esc(cue)}</p></div>
-      ${capture || `<div class="call-actions"><button class="button primary" id="go">${esc(nextLabel)}${pi('arrow-right')}</button>${!rp && d.stage === 3 && !more ? '' : `<button class="button secondary" id="log">Log outcome</button>`}</div>
+      ${aids}
+      ${capture || `<div class="call-actions">${canBack ? `<button class="text-button back-line" id="prevline">${pi('arrow-left')}Back a line</button>` : ''}<button class="button primary" id="go">${esc(nextLabel)}${pi('arrow-right')}</button>${!rp && d.stage === 3 && !more ? '' : `<button class="button secondary" id="log">Log outcome</button>`}</div>
+      ${upText ? `<p class="next-up"><span>${esc(upLabel)}</span>${esc(upText)}</p>` : ''}
+      <p class="key-hint">Space or the right arrow moves to the next line. Left arrow goes back.${pick ? ' 1, 2 and 3 switch the opening.' : ''}</p>
       ${!rp && d.stage === 2 && st.extra && !inExtra && !more ? `<p><button class="text-button" id="rest">${esc(st.extraLabel)}${pi('caret-right')}</button></p>` : ''}`}
     </section>
     <section class="responses" aria-label="Common responses"><h2>They say...</h2><div class="response-list">${shown.map(r => `<button class="${d.response === r[0] ? 'selected' : ''}" aria-pressed="${d.response === r[0]}" data-resp="${r[0]}"><span>${r[1]}</span>${pi('caret-right')}</button>`).join('')}</div>
@@ -665,10 +700,10 @@ function wrapHTML(c){
 }
 function sourcesDialog(c){
   const R = RAW && RAW[c.id];
-  if(!R){ dialog('Company research', `<div class="source-detail"><p class="eyebrow">${esc(c.name)}</p><h3>${rawState === 'loading' ? 'Loading the research…' : 'Research not available'}</h3><p>${rawState === 'error' ? 'The research file could not be loaded. Check your connection and try again.' : 'No research record is attached to this company. Ask neutral questions and let the contact explain.'}</p></div>`, true); return; }
+  if(!R){ dialog('Company research', `<div class="source-detail"><p class="eyebrow">${esc(c.name)}</p><h3>${rawState === 'loading' ? 'Loading the research…' : 'Research not available'}</h3><p>${rawState === 'error' ? 'The research file could not be loaded. Check your connection and try again.' : 'Ask how things work today, and let the contact explain.'}</p></div>`, true); return; }
   const by = k => (R.proof || []).filter(p => p.system === k);
   dialog('Company research', `<div class="source-detail"><p class="eyebrow">${esc(c.name)} · checked ${esc(nice(R.checked))}</p>
-    <div class="research-provenance"><strong>Source: StarWell research snapshot, ${esc(nice(R.checked))}</strong><p>Each line is what was seen that day. Recheck before speaking as if it is still true. Captures named here are kept in the research folder, not in this app.</p></div>
+    <div class="research-provenance"><strong>Source: StarWell research snapshot, ${esc(nice(R.checked))}</strong><p>Each line is what was seen on that day.</p></div>
     ${['phone','site','found','social'].map(k => by(k).length ? `<h3>${SYSN[k]} · ${R.scores[k] == null ? 'not scored' : 'need ' + esc(R.scores[k]) + ' of 3'} · ${by(k).length} findings</h3>${evList(by(k).map(p => `${esc(p.finding)} ${srcHTML(p.source_url, p.seen_on, p.screenshot)}`))}` : '').join('')}
     ${(R.review_quotes || []).length ? `<h3>Review quotes · ${(R.review_quotes || []).length}</h3>${evList(R.review_quotes.map(q => `[${esc(q.kind || 'quote')}] "${esc(q.quote)}" (${esc(q.reviewer || '')}${q.date ? ', ' + esc(String(q.date).slice(0, 40)) : ''}) ${srcHTML(q.review_link || q.source_url, null, q.screenshot)}`), '')}` : ''}
     <p class="field-help">Need scores (0 to 3) rate how much room there is to help. They are not ratings of the business.</p></div>`, true);
@@ -700,10 +735,13 @@ function workspaceView(p){
   if(!sameCo && window.innerWidth >= 761){ const m = $('#main-content'); if(m) window.scrollTo(0, 0); }
   /* prepare */
   if(mode === 'prepare'){
-    const op = $('#open'); if(op) op.onclick = () => go('#/w/' + c.id + '/call');
+    const op = $('#open'); if(op) op.onclick = () => { d.stage = 0; d.turn = 0; d.response = ''; keep(); go('#/w/' + c.id + '/call'); };
+    const rs = $('#resume'); if(rs) rs.onclick = () => go('#/w/' + c.id + '/call');
     const pn = $('#prep-note'); pn.oninput = () => { d.prep = pn.value; keep(); };
     const pr = $('#print'); if(pr) pr.onclick = () => { $$('details').forEach(x => x.open = true); window.print(); };
-    const sh = $('#shot'); if(sh) sh.onclick = () => { const L = (window.STARWELL_SHOTS || {})[c.id] || []; dialog('What a customer sees', `<div class="shot-list">${L.map(i => `<figure><img src="${esc(i.f)}" alt="${esc(i.t)}"><figcaption>${esc(i.t)}</figcaption></figure>`).join('')}<p class="field-help">Captured by the research on ${esc(nice((c.n || {}).checked))}. Recheck before you describe it as live.</p></div>`, true); };
+    $$('[data-shot]').forEach(b => b.onclick = () => { const L = (window.STARWELL_SHOTS || {})[c.id] || [];
+      dialog('What a customer sees', `<div class="shot-list">${L.map((x,i) => `<figure id="shot-${i}"><img src="${esc(x.f)}" alt="${esc(x.t)}">${/^Also seen/.test(x.t) ? '' : `<figcaption>${esc(x.t)}</figcaption>`}</figure>`).join('')}<p class="field-help">Captured on ${esc(nice((c.n || {}).checked))}.</p></div>`, true);
+      const f = document.getElementById('shot-' + b.dataset.shot); if(f && +b.dataset.shot) f.scrollIntoView({block:'start'}); });
     const rr = $('#rawretry'); if(rr) rr.onclick = () => { rawState = 'idle'; RAW = null; loadRaw(); };
   }
   /* call */
@@ -718,6 +756,10 @@ function workspaceView(p){
     const bo = $('#backoffer'); if(bo) bo.onclick = () => { d.turn = 0; rer('call-guidance-text'); };
     const rest = $('#rest'); if(rest) rest.onclick = () => { d.turn = st.turns.length; rer('call-guidance-text'); };
     const lg = $('#log'); if(lg) lg.onclick = () => go('#/w/' + c.id + '/wrap');
+    const pv = $('#prevline'); if(pv) pv.onclick = () => {
+      const inX = d.stage === 2 && !!st.extra && d.turn >= st.turns.length, cur = inX ? d.turn : Math.min(d.turn, st.turns.length - 1);
+      if(cur > 0) d.turn = cur - 1; else if(d.stage > 0){ d.stage--; d.turn = sc[d.stage].turns.length - 1; }
+      rer('call-guidance-text'); };
     const g = $('#go'); if(g) g.onclick = () => {
       if(rp){ if(rp.outcome){ d.outcome = rp.outcome; d.response = ''; keep(); go('#/w/' + c.id + '/wrap'); return; } if(rp.next != null){ d.stage = rp.next; d.turn = 0; } d.response = ''; rer('call-guidance-text'); return; }
       const inExtra = d.stage === 2 && !!st.extra && d.turn >= st.turns.length, lines = inExtra ? st.extra : st.turns, ti = inExtra ? d.turn - st.turns.length : Math.min(d.turn, st.turns.length - 1);
@@ -785,12 +827,17 @@ async function render(){
   if(logId){ const bob = user() === 'Bobby'; logSheet(logId, '#/' + base, bob, bob ? ((team && team[who]) || []).map(fromServer) : null); }
   document.title = (p[0] === 'w' && byId(p[1]) ? byId(p[1]).said : ({systems:'Systems', progress:'Progress', signin:'Sign in'}[p[0]] || 'Queue')) + ' · StarWell Call Decks';
 }
-/* 1, 2, 3 switch the opening style while the picker is on screen */
+/* Keys for reading along: 1, 2, 3 switch the opening; Space, Enter or the right arrow move on; the left arrow goes back. */
 document.addEventListener('keydown', e => {
-  if(e.altKey || e.ctrlKey || e.metaKey || !['1','2','3'].includes(e.key)) return;
-  const t = e.target; if(t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
-  if(document.querySelector('dialog[open]')) return;
-  const b = document.querySelectorAll('[data-open]')[+e.key - 1]; if(b){ e.preventDefault(); b.click(); }
+  if(e.altKey || e.ctrlKey || e.metaKey) return;
+  const t = e.target, tag = (t && t.tagName) || '';
+  if(/^(INPUT|TEXTAREA|SELECT)$/.test(tag) || document.querySelector('dialog[open]') || document.querySelector('.sheetwrap')) return;
+  if(['1','2','3'].includes(e.key)){ const b = document.querySelectorAll('[data-open]')[+e.key - 1]; if(b){ e.preventDefault(); b.click(); } return; }
+  if(!document.querySelector('.call-panel')) return;
+  const fwd = e.key === ' ' || e.key === 'Enter' || e.key === 'ArrowRight';
+  if((e.key === ' ' || e.key === 'Enter') && /^(BUTTON|A|SUMMARY)$/.test(tag)) return;
+  if(fwd){ const g = document.getElementById('go'); if(g){ e.preventDefault(); g.click(); } }
+  else if(e.key === 'ArrowLeft'){ const b = document.getElementById('prevline'); if(b){ e.preventDefault(); b.click(); } }
 });
 window.addEventListener('hashchange', render);
 render();

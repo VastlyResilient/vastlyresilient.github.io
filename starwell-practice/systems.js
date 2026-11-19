@@ -123,7 +123,7 @@ window.STARWELL_SYSTEMS = {
       'Answer format: the answer first in 40 to 60 words, then detail, then a next step. Owner-verified facts only.',
       'Google and FAQ boxes: Google limited FAQ rich results in August 2023 and stopped showing them for everyone on May 7, 2026. Google also says no special markup is needed for its AI features.',
       'Never: copy the same 10 questions onto every town page, or mass-produce pages that swap the town name. Google treats that as spam.',
-      'Outside claim we do not repeat to owners: one consultant reports big booking numbers from this layout. We have not verified it.'
+      'Outside claim we do not repeat to owners: one consultant reports big booking numbers from this layout.'
     ]
   },
 
