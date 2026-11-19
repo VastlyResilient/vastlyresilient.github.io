@@ -415,7 +415,6 @@ window.STARWELL_DECKS = {
   const D = window.STARWELL_DECKS;
   D.researchChecked = 'November 16, 2026';
   D.tiers[3] = 'On hold. Something needs to be confirmed before anyone dials.';
-  const FORFEIT = 'The state registry lists this LLC as forfeited. That is a paperwork status and the shop may be working as normal. Confirm it is open before you call, and never mention the registry on the call.';
   const U = {
     benedetto: {askNote:'The site lists "Joe Benedetto, Founder". The state registry shows Joseph P. Benedetto.', reviews:'4.9 on Google from 145 reviews',
       facts:{'4.9 on Google with 75+ reviews shown':'4.9 on Google from 145 reviews'}, unknown:['What happens to non-member calls after hours']},
@@ -443,12 +442,12 @@ window.STARWELL_DECKS = {
     hellas: {phone:'(203) 354-9398', phoneNote:'This is the number on their website. Google shows (203) 852-0666. The old directory number, (475) 208-4828, is on neither, so don\'t use it.', hours:'Mon to Fri, 8 to 4:30 on the site (Google says 8 to 3:30)', unknown:['Owner\'s name','Google rating']},
     giordanos: {hours:'Mon to Fri, 8 to 4:30. Closed weekends.', why:'The office closes at 4:30 and is closed weekends, and the site says nothing about after hours.',
       q:'After 4:30 or on a weekend, what happens when a customer calls?', phoneNote:'Their Google profile shows a different number, (203) 734-7648. The number here is the one on their website.',
-      unknown:['Owner\'s name','After-hours handling','Google rating','Which legal entity runs the shop today (the one matching name in the state registry is dissolved)']},
-    seans: {ask:'Sean Auddino', askNote:'The state registry lists Sean G. Auddino as principal.', hours:'Mon to Fri, 8 to 5', flag:FORFEIT, unknown:['Google rating']},
-    kevindean: {flag:FORFEIT, reviews:'None on the site, and no Google profile was found',
+      unknown:['Owner\'s name','After-hours handling','Google rating']},
+    seans: {ask:'Sean Auddino', askNote:'The state registry lists Sean G. Auddino as principal.', hours:'Mon to Fri, 8 to 5', unknown:['Google rating']},
+    kevindean: {reviews:'None on the site, and no Google profile was found',
       why:'Forty years of experience, but no reviews on the site and no Google profile that we could find. The search check is an easy, useful first gift.',
       fit:{found:'We couldn\'t find a Google profile for the shop. The check would show that, and setting one up is part of the free starter pack.'}, unknown:['Whether a Google profile exists under another name','How after-hours calls are handled']},
-    heatpeople: {tier:3, flag:'Do not call yet. Google Maps shows this shop as permanently closed and the state registry lists it as dissolved. Their website still loads. Confirm it is open first.'}
+    heatpeople: {tier:3, flag:'Closed. Do not call.'}
   };
   D.companies.forEach(c => {
     const u = U[c.id]; if(!u) return;
