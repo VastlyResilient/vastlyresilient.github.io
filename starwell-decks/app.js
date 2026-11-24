@@ -431,7 +431,7 @@ function respList(c){
   const cut = t => { t = String(t || '').replace(/^["“]|["”]$/g, ''); return t.length > 64 ? t.slice(0, 61).replace(/\s+\S*$/, '') + '…' : t; };
   return [['email','Send an email'],['busy','I\'m busy'],['price','What does it cost?'],['allset','Already have help']]
     .concat((s.pushback || []).map((p,i) => ['push' + i, cut(p.they_say)]))
-    .concat([['no','Not interested'],['booked','We\'re booked solid'],['wom','It\'s all word of mouth'],['who','Who are you? How did you get my number?'],['gate','The office answers'],['catch','What\'s the catch?'],['own','Do I own my site and number?'],['mess','Will it mess up my phones?'],['time','How long does it take?'],['yes','I\'m interested'],['wrong','Wrong person'],['vm','You reach voicemail']]);
+    .concat([['no','Not interested'],['booked','We\'re booked solid'],['wom','It\'s all word of mouth'],['who','Who are you? How did you get my number?'],['gate','The owner isn\'t there'],['catch','What\'s the catch?'],['own','Do I own my site and number?'],['mess','Will it mess up my phones?'],['time','How long does it take?'],['yes','I\'m interested'],['wrong','Wrong person'],['vm','You reach voicemail']]);
 }
 
 /* ---------- words for one company ---------- */
@@ -474,8 +474,24 @@ function script(c){
     {turns:['No commitment at all. Could I show you in 15 minutes? Would tomorrow morning or the day after in the afternoon work better?', "And what's the best email to send it to?", `Thanks${f && !/\./.test(f) ? ', ' + f : ''}. I'll send it today. Good luck with the cold nights.`]}
   ];
 }
+/* the owner isn't there: talk with whoever picked up, as an ally, and leave with a name, a way to send it and a time */
+function allyPath(c, sx){
+  const f = first(c) && !/\./.test(first(c)) ? first(c) : 'the owner', iv = sx.introduce.v4_one_true_thing || sx.introduce.v3_helpful_first || {}, tc = testCall(c);
+  const truth = tok(tc ? tc[0] : iv.beat_1 || (c.n && c.n.say) || '', c);
+  return {lines:["No problem at all. Who do I have the pleasure of speaking with?",
+      "Good to meet you. It's not a service call, and I'm not selling anything. " + truth,
+      'Is that something you look after, or does ' + f + ' handle it?',
+      'Would it help if I sent you a quick screenshot, so you can pass it along to ' + f + "? What's the best email for that?",
+      "Thank you, you've been a real help. When's a good time to catch " + f + ', morning or afternoon?'],
+    cues:["Get their name and use it. They know the owner's day better than anyone, and they are not in your way.",
+      'Say their name first. Then tell them the same true thing you would tell the owner. No blame in your voice.',
+      'Listen. If they talk about the phones or the office, stay there. They often know more than the owner does.',
+      'Send it to them, not around them. You will write the email down on the next screen.',
+      'Thank them by name. Then log it: their name, the email and the time they gave.']};
+}
 function reply(key, c){
   const sx = shopScript(c), Q = SC.qa_matrix || {};
+  if(sx && key === 'gate'){ const p = allyPath(c, sx); return {lines:p.lines, cues:p.cues, text:p.lines[0], cue:p.cues[0], action:'Log who you spoke with', outcome:'office'}; }
   if(sx){
     const one = c.n && c.n.say ? ' The one thing for this shop: ' + c.n.say : '';
     if(key in QB && (Q.busy_and_guarded_owners || [])[QB[key]]){ const b = Q.busy_and_guarded_owners[QB[key]], r = {text:tok(b.response, c), cue:'Why they say it: ' + b.psychology + one};
@@ -653,15 +669,16 @@ function prepareHTML(c){
     <div class="prep-actions"><button class="button primary" id="open">Open call guide${pi('arrow-right')}</button>${d.stage > 0 || d.turn > 0 ? `<button class="text-button" id="resume">Resume at ${STAGE4[d.stage].toLowerCase()}</button>` : ''}<button class="text-button" id="print">${pi('printer')}Print</button></div>`}
     <details class="prep-notes" ${d.prep ? 'open' : ''}><summary>${pi('note-pencil')}A note to keep in mind <span>(optional)</span></summary><label class="sr-only" for="prep-note">A note to keep in mind</label><textarea id="prep-note" placeholder="Something helpful to remember on this call…">${esc(d.prep || '')}</textarea><p class="field-help">Kept on this device.</p></details>
     <details class="prep-all" id="prep-all"><summary>${pi('file-text-l')}All research and sources${pi('caret-down')}</summary>
-    <section class="prep-deep" aria-label="Full research">${sx && rd[0] !== 'hold' ? `<h3>Your script for this shop</h3><details class="prep-section"><summary>If you reach voicemail${pi('caret-down')}</summary><div><p>${esc(tok(sx.voicemail, c))}</p></div></details><details class="prep-section"><summary>If he pushes back<small>${(sx.pushback || []).length} written for this shop</small>${pi('caret-down')}</summary><div>${(sx.pushback || []).map(x => `<p><b>He says:</b> ${esc(x.they_say)}</p><p><b>You say:</b> ${esc(tok(x.say, c))}</p>`).join('')}</div></details>` : ''}${deep}</section></details></main>`;
+    <section class="prep-deep" aria-label="Full research">${sx && rd[0] !== 'hold' ? `<h3>Your script for this shop</h3><details class="prep-section"><summary>If the owner isn't there<small>talk with whoever picked up</small>${pi('caret-down')}</summary><div>${allyPath(c, sx).lines.map(l => `<p>${esc(l)}</p>`).join('')}<p class="field-help">Leave with three things: their name, a way to send the screenshot, and a good time to call back.</p></div></details><details class="prep-section"><summary>If you reach voicemail${pi('caret-down')}</summary><div><p>${esc(tok(sx.voicemail, c))}</p></div></details><details class="prep-section"><summary>If he pushes back<small>${(sx.pushback || []).length} written for this shop</small>${pi('caret-down')}</summary><div>${(sx.pushback || []).map(x => `<p><b>He says:</b> ${esc(x.they_say)}</p><p><b>You say:</b> ${esc(tok(x.say, c))}</p>`).join('')}</div></details>` : ''}${deep}</section></details></main>`;
 }
 function callHTML(c){
   const d = draft(c.id), sc = script(c), st = sc[d.stage], rp = d.response ? reply(d.response, c) : null;
   const inExtra = !rp && d.stage === 2 && !!st.extra && d.turn >= st.turns.length, lines = inExtra ? st.extra : st.turns, ti = inExtra ? d.turn - st.turns.length : Math.min(d.turn, st.turns.length - 1);
-  const text = rp ? rp.text : lines[ti], more = !rp && ti < lines.length - 1;
-  const sx = shopScript(c), ok = opener(c), rl = respList(c);
-  const cue = rp ? rp.cue : st.cues ? st.cues[Math.min(ti, st.cues.length - 1)] : inExtra ? 'Say the honest reason, then stop talking.' : d.stage === 2 ? CUES[2] + ' ' + O.gifts[c.lead].termsShort + '.' : CUES[d.stage];
-  const nextLabel = rp ? (rp.action || 'Back to script') : more ? 'Next line' : inExtra ? 'Agree a next step' : ['Continue to ask','Continue to offer','Agree a next step','Log the outcome'][d.stage];
+  const text = rp ? (rp.lines ? rp.lines[Math.min(d.rt || 0, rp.lines.length - 1)] : rp.text) : lines[ti], more = !rp && ti < lines.length - 1;
+  const sx = shopScript(c), ok = opener(c), rl0 = respList(c), gate = rl0.find(r => r[0] === 'gate'), rl = gate && d.stage === 0 ? [gate].concat(rl0.filter(r => r !== gate)) : rl0;
+  const rt = rp && rp.lines ? Math.min(d.rt || 0, rp.lines.length - 1) : 0, rmore = !!(rp && rp.lines && rt < rp.lines.length - 1);
+  const cue = rp ? (rp.cues ? rp.cues[rt] : rp.cue) : st.cues ? st.cues[Math.min(ti, st.cues.length - 1)] : inExtra ? 'Say the honest reason, then stop talking.' : d.stage === 2 ? CUES[2] + ' ' + O.gifts[c.lead].termsShort + '.' : CUES[d.stage];
+  const nextLabel = rp ? (rmore ? 'Next line' : rp.action || 'Back to script') : more ? 'Next line' : inExtra ? 'Agree a next step' : ['Continue to ask','Continue to offer','Agree a next step','Log the outcome'][d.stage];
   const capture = rp && rp.field === 'email' ? `<form class="inline-capture" id="cap" novalidate><label for="call-email">Email address</label><div><input id="call-email" type="email" autocomplete="off" inputmode="email" value="${esc(d.email)}" placeholder="Enter the address they give you" aria-describedby="cap-help cap-err"><button class="button primary" type="submit">Save email &amp; return${pi('arrow-right')}</button></div><p class="field-error" id="cap-err" role="alert" hidden></p><p class="field-help" id="cap-help">This only keeps the address. Sending is a separate step you do after the call.</p></form>`
     : rp && rp.field === 'callback' ? `<form class="inline-capture" id="cap" novalidate><label for="cb-date">Better time, only if he gave one</label><div class="pair"><input id="cb-date" type="date" value="${esc(d.cbDate)}" aria-label="Call back date"><input id="cb-time" type="text" value="${esc(d.cbTime)}" placeholder="Time he said, e.g. after 3" aria-label="Call back time"></div><div><button class="button primary" type="submit">Save &amp; return${pi('arrow-right')}</button></div><p class="field-help">Leave it blank if nothing was agreed.</p></form>`
     : rp && rp.field === 'contact' ? `<form class="inline-capture" id="cap" novalidate><label for="ct-name">Who should we ask for?</label><div><input id="ct-name" type="text" value="${esc(d.contact)}" placeholder="Name and role, as they told you" autocomplete="off"><button class="button primary" type="submit">Save &amp; return${pi('arrow-right')}</button></div><p class="field-help">Saved as "told on the call". Our researched contact stays on file.</p></form>` : '';
@@ -669,7 +686,7 @@ function callHTML(c){
   const chat = !rp && st.chat ? st.chat[Math.min(ti, st.chat.length - 1)] : null;
   const upText = rp ? '' : more ? lines[ti + 1] : !inExtra && d.stage < 3 ? sc[d.stage + 1].turns[0] : '';
   const upLabel = more ? 'Next line' : 'Next, ' + (STAGE4[d.stage + 1] || '').toLowerCase();
-  const canBack = !rp && (ti > 0 || d.stage > 0 || inExtra);
+  const canBack = rp ? rt > 0 : (ti > 0 || d.stage > 0 || inExtra);
   const aids = chat ? `<div class="guide-aids"><p class="chat ${chat[0]}">${pi(CHAT[chat[0]][0])}<span><b>${CHAT[chat[0]][1]}.</b> ${esc(chat[1])}</span></p>${st.share ? `<div class="share" role="img" aria-label="In this part, aim for him talking about 80 percent of the time and you about 20"><span>He talks 80%</span><span>You 20%</span></div><p class="keep-talking"><b>Keep him talking:</b> ${KEEP.map(k => '"' + k + '"').join(' ')}</p>${st.back ? `<p class="keep-talking"><b>Back pocket, only if he leans in:</b> ${esc(st.back)}.</p>` : ''}` : ''}</div>` : '';
   const pick = sx && !rp && d.stage === 0 ? `<div class="opener"><div class="opener-pick" role="group" aria-label="Opening style">${VARS.map((v,i) => `<button data-open="${v[0]}" aria-pressed="${ok === v[0]}" class="${ok === v[0] ? 'active' : ''}" title="${esc(v[2])}"><kbd>${i + 1}</kbd><span>${v[1]}</span>${recFor(c) === v[0] ? '<small>Your default</small>' : ''}</button>`).join('')}</div><label class="opener-keep"><input type="checkbox" id="okeep" ${keptOpener() ? 'checked' : ''}><span>Keep my selected style for every shop</span></label></div>` : '';
   return `<main class="call-panel" id="main-content" tabindex="-1">
@@ -680,6 +697,7 @@ function callHTML(c){
       <p class="script-text" id="call-guidance-text" tabindex="-1">${esc(text)}</p>
       ${!rp && (st.scripted || /\?$/.test(String(text).trim())) ? `<p class="pause-mark">${pi('pause-circle')}Pause. Let him answer.</p>` : ''}
       ${!rp && lines.length > 1 ? `<div class="turns" role="img" aria-label="Line ${ti + 1} of ${lines.length}">${lines.map((x,i) => `<i class="${i <= ti ? 'on' : ''}"></i>`).join('')}</div>` : ''}
+      ${rp && rp.lines ? `<div class="turns" role="img" aria-label="Line ${rt + 1} of ${rp.lines.length}">${rp.lines.map((x,i) => `<i class="${i <= rt ? 'on' : ''}"></i>`).join('')}</div>` : ''}
       <div class="coaching"><span class="coaching-label">${pi('sparkle-l')}FOR YOU</span><p>${esc(cue)}</p></div>
       ${aids}
       ${capture || `<div class="call-actions">${canBack ? `<button class="text-button back-line" id="prevline">${pi('arrow-left')}Back a line</button>` : ''}<button class="button primary" id="go">${esc(nextLabel)}${pi('arrow-right')}</button>${!rp && d.stage === 3 && !more ? '' : `<button class="button secondary" id="log">Log outcome</button>`}</div>
@@ -696,7 +714,7 @@ function wrapHTML(c){
   return `<main class="wrap-panel" id="main-content" tabindex="-1"><p class="eyebrow">WRAP UP</p><h2>What happened?</h2><p class="section-intro">Keep the useful details. Then move on.</p>
     <form id="wf" novalidate>
       <fieldset class="outcome-fieldset"><legend>How did the call end?</legend><div class="outcome-options ten">${OUTS.map(x => `<label class="${o === x[0] ? 'selected' : ''}"><input type="radio" name="outcome" value="${x[0]}" ${o === x[0] ? 'checked' : ''}><span>${x[1]}</span>${o === x[0] ? pi('check') : ''}</label>`).join('')}</div></fieldset>
-      ${o === 'info' ? `<label class="form-label">Email address <span>(if confirmed)</span><input type="email" id="w-email" autocomplete="off" value="${esc(d.email)}" placeholder="No email captured yet"></label>` : ''}
+      ${o === 'info' || o === 'office' ? `<label class="form-label">Email address <span>(if confirmed)</span><input type="email" id="w-email" autocomplete="off" value="${esc(d.email)}" placeholder="No email captured yet"></label>` : ''}
       ${o === 'office' || o === 'wrong' ? `<label class="form-label">Who you spoke with, or who to ask for <span>(optional)</span><input type="text" id="w-contact" value="${esc(d.contact)}" autocomplete="off"></label>` : ''}
       ${canFollow ? `<div class="followup-fields"><label class="form-label">Next action <span>(optional)</span><input id="w-next" value="${esc(d.nextAction)}" placeholder="What did you agree to do?"></label>
         <label class="form-label">${needDate ? 'Agreed date' : 'Follow-up date'} ${needDate ? '' : '<span>(optional)</span>'}<input type="date" id="w-date" value="${esc(d.date || d.cbDate)}"></label></div>
@@ -760,20 +778,22 @@ function workspaceView(p){
   if(mode === 'call'){
     const sc = script(c), st = sc[d.stage], rp = d.response ? reply(d.response, c) : null;
     $$('[data-stage]').forEach(b => b.onclick = () => { d.stage = +b.dataset.stage; d.turn = 0; d.response = ''; rer('call-guidance-text'); });
-    $$('[data-resp]').forEach(b => b.onclick = () => { d.response = b.dataset.resp; d.lastResponse = d.response; rer('call-guidance-text'); });
+    $$('[data-resp]').forEach(b => b.onclick = () => { d.response = b.dataset.resp; d.lastResponse = d.response; d.rt = 0; rer('call-guidance-text'); });
     $('#more').onclick = () => { d.more = !d.more; rer('more'); };
     $$('[data-open]').forEach(b => b.onclick = () => { d.opener = b.dataset.open; if(keptOpener()) setKept(d.opener); d.turn = 0; rer('call-guidance-text'); });
     const okp = $('#okeep'); if(okp) okp.onchange = () => { setKept(okp.checked ? opener(c) : ''); };
-    const back = $('#back'); if(back) back.onclick = () => { d.response = ''; rer('call-guidance-text'); };
+    const back = $('#back'); if(back) back.onclick = () => { d.response = ''; d.rt = 0; rer('call-guidance-text'); };
     const bo = $('#backoffer'); if(bo) bo.onclick = () => { d.turn = 0; rer('call-guidance-text'); };
     const rest = $('#rest'); if(rest) rest.onclick = () => { d.turn = st.turns.length; rer('call-guidance-text'); };
     const lg = $('#log'); if(lg) lg.onclick = () => go('#/w/' + c.id + '/wrap');
     const pv = $('#prevline'); if(pv) pv.onclick = () => {
+      if(rp){ if((d.rt || 0) > 0) d.rt--; rer('call-guidance-text'); return; }
       const inX = d.stage === 2 && !!st.extra && d.turn >= st.turns.length, cur = inX ? d.turn : Math.min(d.turn, st.turns.length - 1);
       if(cur > 0) d.turn = cur - 1; else if(d.stage > 0){ d.stage--; d.turn = sc[d.stage].turns.length - 1; }
       rer('call-guidance-text'); };
     const g = $('#go'); if(g) g.onclick = () => {
-      if(rp){ if(rp.outcome){ d.outcome = rp.outcome; d.response = ''; keep(); go('#/w/' + c.id + '/wrap'); return; } if(rp.next != null){ d.stage = rp.next; d.turn = 0; } d.response = ''; rer('call-guidance-text'); return; }
+      if(rp && rp.lines && (d.rt || 0) < rp.lines.length - 1){ d.rt = (d.rt || 0) + 1; rer('call-guidance-text'); return; }
+      if(rp){ d.rt = 0; if(rp.outcome){ d.outcome = rp.outcome; d.response = ''; keep(); go('#/w/' + c.id + '/wrap'); return; } if(rp.next != null){ d.stage = rp.next; d.turn = 0; } d.response = ''; rer('call-guidance-text'); return; }
       const inExtra = d.stage === 2 && !!st.extra && d.turn >= st.turns.length, lines = inExtra ? st.extra : st.turns, ti = inExtra ? d.turn - st.turns.length : Math.min(d.turn, st.turns.length - 1);
       if(ti < lines.length - 1){ d.turn++; rer('call-guidance-text'); return; }
       if(d.stage === 3){ keep(); go('#/w/' + c.id + '/wrap'); return; }
@@ -805,10 +825,10 @@ function workspaceView(p){
       const o = d.outcome, needDate = o === 'booked' || o === 'callback', date = d.date || (needDate || o === 'notnow' || o === 'info' || o === 'office' ? d.cbDate : '');
       if(!o) return fail('Choose how the call ended.', '[name=outcome]');
       if(needDate && !date) return fail('Add the agreed date before saving. If no date was agreed, choose "Not now" or "Asked for info".', '#w-date');
-      if(o === 'info' && d.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email.trim())) return fail('Check the email address before saving.', '#w-email');
+      if((o === 'info' || o === 'office') && d.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email.trim())) return fail('Check the email address before saving.', '#w-email');
       const talk = TALK.includes(o), follow = needDate || ['info','notnow','office'].includes(o);
       const call = {id:d.callId || (d.callId = newId()), caller:user(), shop:c.id, shopName:c.said, at:d.at || (d.at = new Date().toISOString()), kind:talk ? 'talk' : 'quick', outcome:o,
-        stage:talk ? (+($('#w-reached') || {}).value || d.reached || 1) : 0, turn:talk ? (($('#w-turn') || {}).value || '') : '', notes:d.note || '', quote:talk ? d.quote || '' : '', email:o === 'info' ? (d.email || '').trim() : '', time:needDate ? (d.time || d.cbTime || '') : '', contact:d.contact || '', opener:shopScript(c) ? opener(c).slice(0, 2) : '',
+        stage:talk ? (+($('#w-reached') || {}).value || d.reached || 1) : 0, turn:talk ? (($('#w-turn') || {}).value || '') : '', notes:d.note || '', quote:talk ? d.quote || '' : '', email:o === 'info' || o === 'office' ? (d.email || '').trim() : '', time:needDate ? (d.time || d.cbTime || '') : '', contact:d.contact || '', opener:shopScript(c) ? opener(c).slice(0, 2) : '',
         next:follow && (d.nextAction || date) ? {action:(d.nextAction || (o === 'office' ? 'Call back' : 'Follow up')) + (needDate && (d.time || d.cbTime) ? ' at ' + (d.time || d.cbTime) : ''), date:date || ''} : {}};
       keep(); saving = true; $('#w-status').textContent = 'Saving…'; $$('.wrap-actions button').forEach(b => b.disabled = true);
       try{ await api('/calls/save', {call:toServer(call)}); }

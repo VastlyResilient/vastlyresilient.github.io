@@ -35,3 +35,11 @@ window.STARWELL_SCRIPTS._meta.total_open_shops = 229;
    result is 'voicemail' or 'no answer'. demo is true only once that shop's own demo line exists.
    A call older than 7 days is ignored, so re-test before using it again. ---- */
 window.STARWELL_TESTCALLS = window.STARWELL_TESTCALLS || {};
+
+/* ---- Nov 24, 2026: when the owner isn't there, talk with whoever picked up. Same words as the call screen. ---- */
+(function(){
+  const q = ((window.STARWELL_SCRIPTS.qa_matrix || {}).busy_and_guarded_owners || [])[7]; if(!q) return;
+  q.they_say = "[The owner isn't there]";
+  q.psychology = "Whoever answers is protecting the owner's time. They also know his day, and often run the phones and the office.";
+  q.response = "No problem at all. Who do I have the pleasure of speaking with? Good to meet you. It's not a service call, and I'm not selling anything. [1-line bug] Is that something you look after, or does [Owner] handle it? Would it help if I sent you a quick screenshot, so you can pass it along? And when's a good time to catch [Owner], morning or afternoon?";
+})();
