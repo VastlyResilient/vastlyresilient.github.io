@@ -300,7 +300,7 @@ function progressView(parts){
       <div class="split">
         <section class="panel pad stack"><h2>How far conversations got</h2>${talks.length ? `<div class="bars">${STAGES.map((s,i) => { const k = talks.filter(c => (c.stage || 1) >= i + 1).length; return `<div><span>${i + 1}. ${s}</span><span class="talk" role="img" aria-label="${k} of ${talks.length}"><span style="width:${Math.round(k / talks.length * 100)}%"></span></span><b>${k}</b></div>`; }).join('')}</div>` : `<p class="sm muted">No conversations yet.</p>`}
           ${r ? `<div class="stack s2"><p class="label">This week's 2-minute drill</p><p class="sm">${esc(DRILL[Math.min(4, Math.max(0, r.stage - 1))])}</p><a class="link" href="../starwell-practice/" target="_blank" rel="noopener">Open the Practice Line</a></div>` : ''}
-          ${list.some(c => c.opener) ? `<div class="stack s2"><p class="label">Openers used, and how many became conversations</p><div class="bars">${VARS.map((v,i) => { const k = 'v' + (i + 1), a = list.filter(c => c.opener === k), t = a.filter(c => c.kind === 'talk').length; return `<div><span>V${i + 1} ${v[1]}</span><span class="talk" role="img" aria-label="${t} of ${a.length}"><span style="width:${a.length ? Math.round(t / a.length * 100) : 0}%"></span></span><b>${t}/${a.length}</b></div>`; }).join('')}</div></div>` : ''}</section>
+          ${list.some(c => c.opener) ? `<div class="stack s2"><p class="label">Openers used, and how many became conversations</p><div class="bars">${VARS.map(v => [v[0].slice(0, 2), v[1]]).concat(list.some(c => c.opener === 'v1') ? [['v1', 'Total control (retired)']] : []).map(v => { const k = v[0], a = list.filter(c => c.opener === k), t = a.filter(c => c.kind === 'talk').length; return `<div><span>${v[1]}</span><span class="talk" role="img" aria-label="${t} of ${a.length}"><span style="width:${a.length ? Math.round(t / a.length * 100) : 0}%"></span></span><b>${t}/${a.length}</b></div>`; }).join('')}</div></div>` : ''}</section>
         <section class="panel pad stack"><h2>Follow-ups</h2>${due.length ? `<div>${due.map(c => `<label class="check sm"><input type="checkbox" data-done="${esc(c.id)}" ${bob ? 'disabled' : ''}><span><b>${esc(c.shopName)}</b><br>${esc(c.next.action)}${c.next.date ? ' · ' + nice(c.next.date) : ''}</span></label>`).join('')}</div>` : `<p class="sm muted">Nothing open.</p>`}</section>
       </div>
       <section class="panel"><div class="panelhead"><h2>Calls</h2><p class="sm muted">${list.length} logged</p></div>
@@ -389,8 +389,9 @@ const draft = id => drafts[id] || (drafts[id] = {stage:0, turn:0, response:'', e
 const keep = () => { try{ localStorage.setItem(dKey(), JSON.stringify(drafts)); }catch(e){} };
 const scope = () => myShops();
 
-/* ---------- the Nov 18 call scripts: three openers, four stages, shared answers ---------- */
-const VARS = [['v1_total_control_neighbor','Total control','Gives him an easy out first'],['v2_sincere_appreciation','Appreciation','Opens with one real compliment'],['v3_helpful_first','Helpful first','For busy mornings and veterans']];
+/* ---------- the call scripts: three openers, four stages, shared answers ---------- */
+const OPN = {v1:'Total control', v2:'Appreciation', v3:'Helpful first', v4:'One true thing'};
+const VARS = [['v4_one_true_thing','One true thing','One true thing we checked, then one small gift'],['v2_sincere_appreciation','Appreciation','Opens with one real compliment'],['v3_helpful_first','Helpful first','For busy mornings and veterans']];
 /* Each caller has their own account. Nothing on screen names the other caller. */
 const recFor = c => ((SC._meta || {}).recommended_defaults || {})[callerOf(c)] || '';
 const mine = (t, c) => { const who = callerOf(c), ct = ((SC._meta || {}).caller_tokens || {})[who] || who; return String(t || '').replace(/Best for (Dan|RJ)\.\s*/g, (m, n) => n === who ? 'Your default. ' : '').replace(/'Dan over in Shelton' or 'RJ down in Bridgeport'/g, "'" + ct + "'"); };
@@ -400,7 +401,7 @@ const keepKey = () => 'sw_opener_' + (user() || 'guest');
 const keptOpener = () => { try{ return localStorage.getItem(keepKey()) || ''; }catch(e){ return ''; } };
 const setKept = v => { try{ if(v) localStorage.setItem(keepKey(), v); else localStorage.removeItem(keepKey()); }catch(e){} };
 const opener = c => { const d = draft(c.id), def = keptOpener() || ((SC._meta || {}).recommended_defaults || {})[callerOf(c)] || VARS[0][0]; return VARS.some(v => v[0] === d.opener) ? d.opener : VARS.some(v => v[0] === def) ? def : VARS[0][0]; };
-const openerTag = k => { const i = VARS.findIndex(v => v[0] === k); return i < 0 ? '' : 'V' + (i + 1) + ' ' + VARS[i][1]; };
+const openerTag = k => { const i = VARS.findIndex(v => v[0] === k); return i < 0 ? '' : VARS[i][1]; };
 function shopNotes(c){
   const sx = shopScript(c), who = callerOf(c), other = who === 'Dan' ? 'RJ' : 'Dan', bob = user() === 'Bobby', dns = [], tie = [];
   ((sx && sx.do_not_say) || []).forEach(t => { t = String(t).replace(/\s*\(null\)/g, '');
@@ -436,12 +437,22 @@ function respList(c){
 /* ---------- words for one company ---------- */
 /* When to chat, and when to stay quiet. One entry per line of each stage. */
 const HELLO_ALT = 'Other easy ones: "Staying warm out there?" or "Busy week with the cold?"';
-const B1CUE = {v1_total_control_neighbor:'Give him the easy out, and mean it. If he says he is busy, ask when is better and let him go.', v2_sincere_appreciation:'One real compliment, said slowly. Let him enjoy it before you move on.', v3_helpful_first:'Say what you saw, plainly. No blame in your voice.'};
+const B1CUE = {v4_one_true_thing:'Say what we checked, plainly. No blame in your voice.', v2_sincere_appreciation:'One real compliment, said slowly. Let him enjoy it before you move on.', v3_helpful_first:'Say what you saw, plainly. No blame in your voice.'};
 const CHAT = {yes:['chat-circle-l','Small talk: yes'], wait:['chat-circle-l','Small talk: follow his lead'], no:['pause-circle','Small talk: not now']};
 const KEEP = ['Tell me more.','How so?','What happened then?','How long has it been that way?'];
+/* a real after-hours test call, if one is on file and no older than 7 days, becomes the "One true thing" line */
+function testCall(c){
+  const t = (window.STARWELL_TESTCALLS || {})[c.id]; if(!t || !t.at || !/^(voicemail|no answer)$/.test(t.result || '')) return null;
+  const at = new Date(t.at), age = (Date.now() - at.getTime()) / 864e5; if(!(age >= 0 && age <= 7)) return null;
+  const who = t.by && t.by === callerOf(c) ? 'I' : 'We';
+  const hr = at.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit'}).replace(':00', '').replace(' AM', ' am').replace(' PM', ' pm');
+  const day = at.toLocaleDateString('en-US', {weekday:'long'});
+  return [`${who} called your line at ${hr} on ${day}, the way a homeowner with no heat would, and ${t.result === 'voicemail' ? 'got voicemail' : 'nobody picked up'}.`,
+          `${who} ${t.demo ? 'built something small to fix that' : 'can set up something small to fix that'}, and it's yours, no charge. Want to try it for a week?`];
+}
 function script(c){
   const sx = shopScript(c);
-  if(sx){ const ok = opener(c), v = sx.introduce[ok], a = splitAsk(tok(sx.ask.say, c)), f = first(c), h = v.beat_0 ? 1 : 0;
+  if(sx){ const ok = opener(c), iv = sx.introduce[ok] || sx.introduce.v3_helpful_first, tc = ok === 'v4_one_true_thing' ? testCall(c) : null, v = tc ? {beat_0:iv.beat_0, beat_1:tc[0], beat_2:tc[1]} : iv, a = splitAsk(tok(sx.ask.say, c)), f = first(c), h = v.beat_0 ? 1 : 0;
     return [
       {turns:(h ? [v.beat_0] : []).concat([v.beat_1, v.beat_2]).map(t => tok(t, c)),
        cues:(h ? ['Smile, say it, then stop and listen. ' + HELLO_ALT] : []).concat([B1CUE[ok] || sx.introduce.cue, 'Ask it, then stay quiet until he answers. The silence is his turn.']),
@@ -633,7 +644,7 @@ function prepareHTML(c){
       + sec('Recommended offer: ' + SYSN[c.lead], null, `<p>${esc(S[c.lead].one)}</p>${fixes.map(f => `<dl class="facts"><dt>Customer sees</dt><dd>${esc(f.what_customer_sees)}</dd>${f.why_it_costs ? `<dt>Why it matters</dt><dd>${esc(f.why_it_costs)} ${f.study ? srcHTML(f.study.source_url) + ' <span class="src">' + esc(f.study.what_it_measured || '') + '</span>' : ''}</dd>` : ''}<dt>The fix</dt><dd>${esc(f.the_fix)}</dd><dt>How it helps</dt><dd>${esc(f.how_it_helps)}</dd></dl>`).join('')}<dl class="facts"><dt>Say</dt><dd>${esc(sx ? tok(sx.offer.say, c) : fill(g.say, c))}</dd>${sx ? '' : `<dt>What he keeps</dt><dd>${esc(g.terms)}</dd>`}<dt>Limits</dt><dd>${esc(S[c.lead].notDo[0])}</dd></dl>${sx ? '<p class="field-help">Share a study figure only if he asks why it matters.</p>' : ''}<p><a href="#/systems/${c.lead}">Everything about the ${SYSN[c.lead].toLowerCase()}</a></p>`)
       + sec('Other services, if he steers there', null, others.map(k => `<p><b>${SYSN[k]}${R.second_need === k ? ' (second need)' : ''}.</b> ${esc((proofOf(R, k)[0] || {}).finding || 'Ask how it works today.')} <a href="#/systems/${k}">Details</a></p>`).join(''))
       + sec('Office work and custom tools', (R.office_signals || []).length + ' signals', `${evList((R.office_signals || []).map(o => `${esc(o.signal || o)} ${srcHTML(o.source_url)}`))}<p>${esc(c.custom)}</p><p class="field-help">Only raise custom tools if he names the headache. They are quoted up front, never free.</p>`)
-      + sec('Prior calls', callsOf(c.id).length + ' logged', callsOf(c.id).length ? evList(callsOf(c.id).slice().reverse().map(x => `${esc(nice(x.at))}: <b>${esc(outLabel(x))}</b>${x.next && x.next.action ? '. Next step: ' + esc(x.next.action) + (x.next.date ? ' by ' + esc(nice(x.next.date)) : '') + (x.next.done ? ' (marked done)' : ' (open)') : ''}${x.notes ? '. Note: ' + esc(x.notes) : ''}${x.quote ? '. His words: "' + esc(x.quote) + '"' : ''}${x.opener ? '. Opener: ' + esc(x.opener.toUpperCase()) : ''}`)) : '<p>No prior call recorded.</p>')
+      + sec('Prior calls', callsOf(c.id).length + ' logged', callsOf(c.id).length ? evList(callsOf(c.id).slice().reverse().map(x => `${esc(nice(x.at))}: <b>${esc(outLabel(x))}</b>${x.next && x.next.action ? '. Next step: ' + esc(x.next.action) + (x.next.date ? ' by ' + esc(nice(x.next.date)) : '') + (x.next.done ? ' (marked done)' : ' (open)') : ''}${x.notes ? '. Note: ' + esc(x.notes) : ''}${x.quote ? '. His words: "' + esc(x.quote) + '"' : ''}${x.opener ? '. Opener: ' + esc(OPN[x.opener] || x.opener.toUpperCase()) : ''}`)) : '<p>No prior call recorded.</p>')
       + sec('Do not say', null, `${dns.length ? evList(dns.map(esc)) : ''}<p><b>Never say:</b> ${esc(S.evidence[c.lead].never)}</p>`);
   }
   return `<main class="prepare-panel" id="main-content" tabindex="-1"><p class="eyebrow">PREPARE</p><h2>Before you call</h2>
