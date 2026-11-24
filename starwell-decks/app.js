@@ -356,13 +356,14 @@ const TALK = ['booked','callback','info','notnow','notint','early'];
 const RESP2TURN = {email:'email', busy:'busy', price:'cost', allset:'have', ai:'ai', no:'notint', scam:'selling', wrong:'office'};
 const SYSN = {phone:'Answering line', site:'Website', found:'Getting found', social:'Social posts'};
 
-/* ---------- research: the Nov 18 snapshot, loaded once ---------- */
+/* ---------- research: the Nov 18 and Nov 24 snapshots, loaded once ---------- */
 let RAW = null, rawState = 'idle';
 async function loadRaw(){
   if(RAW || rawState === 'loading') return;
   rawState = 'loading';
-  try{ const r = await fetch('../starwell-practice/research/starwell_needs.json?v=20261119b'); if(!r.ok) throw new Error(r.status);
-    const arr = await r.json(); RAW = {}; arr.forEach(x => { if(x && x.id && x.scores) RAW[x.id] = x; }); rawState = 'ok'; }
+  try{ const get = async (f, must) => { try{ const r = await fetch('../starwell-practice/research/' + f); if(!r.ok) throw new Error(r.status); return await r.json(); }catch(e){ if(must) throw e; return []; } };
+    const parts = await Promise.all([get('starwell_needs.json?v=20261119b', true), get('starwell_needs_nov24.json?v=20261124a', false)]);
+    RAW = {}; parts.forEach(arr => arr.forEach(x => { if(x && x.id && x.scores) RAW[x.id] = x; })); rawState = 'ok'; }
   catch(e){ rawState = 'error'; }
   if(mounted === 'ws') render();
 }
