@@ -558,12 +558,38 @@ function dialog(title, body, wide, after){
 /* ---------- queue ---------- */
 /* search: name, town, area and contact as before, plus phone numbers typed in any format */
 const digitsOf = s => { const d = String(s || '').replace(/\D/g, ''); return d.length === 11 && d[0] === '1' ? d.slice(1) : d; };
+/* a search made of digits (with any brackets, dashes or spaces) is a phone search, from the first digit typed */
+const isNumQ = q => { q = String(q || ''); return /\d/.test(q) && !/[a-z]/i.test(q); };
+/* every phone number on file for a shop: the one the deck dials, then any other on its website or Google listing */
+function numbersOf(c){
+  const ph = (c.n && c.n.phone) || {}, seen = {}, out = [];
+  [[c.phone, ''], [ph.site, 'website'], [ph.google, 'Google']].forEach(x => {
+    (String(x[0] || '').match(/(?:\+?1[\s.-]?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/g) || []).forEach(m => { const d = digitsOf(m); if(d.length !== 10 || seen[d]) return; seen[d] = 1; out.push({d, label:x[1]}); }); });
+  return out;
+}
+/* where the typed digits sit in a number: [start, length], or null. A leading 1 (country code) is allowed. */
+function digitHit(d, qd){
+  if(!qd) return null; const i = d.indexOf(qd); if(i >= 0) return [i, qd.length];
+  return qd[0] === '1' && qd.length > 1 && d.indexOf(qd.slice(1)) === 0 ? [0, qd.length - 1] : null;
+}
 function shopMatch(c, q){
   q = String(q || '').toLowerCase().trim(); if(!q) return true;
   if((c.name + ' ' + c.said + ' ' + c.town + ' ' + c.area + ' ' + c.ask).toLowerCase().includes(q)) return true;
-  const qd = digitsOf(q); if(qd.length < 3 || /[a-z]/.test(q)) return false;
-  const ph = (c.n && c.n.phone) || {};
-  return [c.phone, ph.site, ph.google].some(p => digitsOf(p).includes(qd));
+  if(!isNumQ(q)) return false;
+  const qd = String(q).replace(/\D/g, ''); return numbersOf(c).some(x => digitHit(x.d, qd));
+}
+/* the shop's numbers for a phone search, with the typed digits marked. Empty for a word search. */
+function phoneHits(c, q){
+  if(!isNumQ(q)) return '';
+  const qd = String(q).replace(/\D/g, ''), all = numbersOf(c).map(x => ({d:x.d, label:x.label, h:digitHit(x.d, qd)}));
+  const hit = all.filter(x => x.h), show = hit.length ? hit : all.slice(0, 1);
+  return show.map(x => { const f = '(' + x.d.slice(0, 3) + ') ' + x.d.slice(3, 6) + '-' + x.d.slice(6), from = x.h ? x.h[0] : -1, to = x.h ? x.h[0] + x.h[1] - 1 : -1;
+    let n = -1, out = '', open = false;
+    for(const ch of f){ const dig = /\d/.test(ch); if(dig) n++;
+      if(dig && n === from && !open){ out += '<mark>'; open = true; }
+      out += ch;
+      if(dig && open && n === to){ out += '</mark>'; open = false; } }
+    return '<span class="ph-num">' + out + (x.label ? ' <i>' + x.label + '</i>' : '') + '</span>'; }).join('');
 }
 let qFilter = 'all', qSearch = '';
 function queueView(){
@@ -583,7 +609,7 @@ function queueView(){
     <div class="queue-tools"><nav class="queue-filters" aria-label="Filter companies">${filters.map(f => `<button class="${qFilter === f[0] ? 'active' : ''}" aria-pressed="${qFilter === f[0]}" data-f="${f[0]}">${f[1]}<span>${count(f[0])}</span></button>`).join('')}</nav>
       <div class="search-field">${pi('magnifying-glass')}<input type="search" id="qs" aria-label="Search calling queue" placeholder="Find a company or phone number…" value="${esc(qSearch)}"></div></div>
     <div class="queue-list">${shown.map(({c, k, s}) => `<button class="queue-row ${k === 'hold' ? 'held' : ''}" data-id="${c.id}"><span class="queue-status ${k}">${k === 'follow-up' ? pi('clock') : k === 'done' ? pi('check-circle') : k === 'hold' ? pi('pause-circle') : '<span class="queue-status-dot"></span>'}${esc(k === 'to-call' && s.icon === 'circle' ? 'To call' : s.label)}</span>
-        <span class="queue-company"><strong>${esc(c.said)}</strong><small>${esc(c.town)} · Ask for ${esc(c.ask)}${bob && c.caller ? ' · ' + esc(c.caller) + '\'s' : ''}</small></span><span class="queue-result">${esc(s.last || SYSN[c.lead] || '')}</span>${pi('caret-right')}</button>`).join('')
+        <span class="queue-company"><strong>${esc(c.said)}</strong>${phoneHits(c, qSearch) ? `<span class="phone-hits">${phoneHits(c, qSearch)}</span>` : ''}<small>${esc(c.town)} · Ask for ${esc(c.ask)}${bob && c.caller ? ' · ' + esc(c.caller) + '\'s' : ''}</small></span><span class="queue-result">${esc(s.last || SYSN[c.lead] || '')}</span>${pi('caret-right')}</button>`).join('')
       || `<div class="empty-state"><h2>${items.length ? 'No companies match' : 'No companies assigned'}</h2><p>${items.length ? 'Try another search or filter.' : 'Nothing is assigned to this account yet.'}</p>${items.length ? '<button class="text-button" id="clr">Show all companies</button>' : ''}</div>`}</div></main>`;
   $$('[data-f]').forEach(b => b.onclick = () => { qFilter = b.dataset.f; queueView(); });
   $$('.queue-row').forEach(b => b.onclick = () => go('#/w/' + b.dataset.id + '/prepare'));
@@ -751,7 +777,7 @@ function pickerDialog(c, list){
   dialog('Choose a company', `<div class="search-field">${pi('magnifying-glass')}<input aria-label="Search companies" placeholder="Search company, town, contact or phone" type="search" id="ps"></div><p class="list-count" id="pc"></p><div class="picker-list" id="pl"></div>`, false, (d, close) => {
     const paint = () => { const v = $('#ps', d).value.toLowerCase().trim(), res = list.filter(x => shopMatch(x, v));
       $('#pc', d).textContent = res.length + (res.length === 1 ? ' company' : ' companies');
-      $('#pl', d).innerHTML = res.map(x => `<button data-id="${x.id}" class="${x.id === c.id ? 'selected' : ''}"><span><strong>${esc(x.said)}</strong><small>${esc(x.town)} · ${esc(x.ask)} · ${esc(state(x).label)}</small></span>${x.id === c.id ? pi('check') : pi('caret-right')}</button>`).join('') || `<div class="empty-state"><h3>No matching companies</h3><p>Try another name, town, contact or phone number.</p></div>`;
+      $('#pl', d).innerHTML = res.map(x => `<button data-id="${x.id}" class="${x.id === c.id ? 'selected' : ''}"><span><strong>${esc(x.said)}</strong>${phoneHits(x, v) ? `<span class="phone-hits">${phoneHits(x, v)}</span>` : ''}<small>${esc(x.town)} · ${esc(x.ask)} · ${esc(state(x).label)}</small></span>${x.id === c.id ? pi('check') : pi('caret-right')}</button>`).join('') || `<div class="empty-state"><h3>No matching companies</h3><p>Try another name, town, contact or phone number.</p></div>`;
       $$('[data-id]', d).forEach(b => b.onclick = () => { close(); go('#/w/' + b.dataset.id + '/prepare'); }); };
     $('#ps', d).oninput = paint; paint();
   });
